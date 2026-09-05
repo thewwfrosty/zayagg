@@ -2,59 +2,129 @@
 // ZAYAGG PET DATA
 // ===============================
 const pets = [
-  { name: "Shadow Dragon", value: 100, emoji: "🌑" },
-  { name: "Bat Dragon", value: 95, emoji: "🦇" },
-  { name: "Giraffe", value: 90, emoji: "🦒" },
-  { name: "Frost Dragon", value: 85, emoji: "❄️" },
-  { name: "Owl", value: 70, emoji: "🦉" },
-  { name: "Parrot", value: 65, emoji: "🦜" },
-  { name: "Evil Unicorn", value: 55, emoji: "🦄" },
-  { name: "Crow", value: 22, emoji: "🐦‍⬛" },
-  { name: "Arctic Reindeer", value: 14, emoji: "🦌" },
-  { name: "Turtle", value: 8, emoji: "🐢" },
-  { name: "Kangaroo", value: 7, emoji: "🦘" },
-  { name: "Frost Fury", value: 6, emoji: "🐲" },
-  { name: "Albino Monkey", value: 5, emoji: "🐵" },
-  { name: "Lion", value: 3, emoji: "🦁" },
-  { name: "Unicorn", value: 2, emoji: "✨" },
-  { name: "Dragon", value: 1.5, emoji: "🐉" }
+  { name: "Shadow Dragon", value: 100, emoji: "🌑", rarity: "legendary" },
+  { name: "Bat Dragon", value: 95, emoji: "🦇", rarity: "legendary" },
+  { name: "Giraffe", value: 90, emoji: "🦒", rarity: "legendary" },
+  { name: "Frost Dragon", value: 85, emoji: "❄️", rarity: "legendary" },
+  { name: "Owl", value: 70, emoji: "🦉", rarity: "legendary" },
+  { name: "Parrot", value: 65, emoji: "🦜", rarity: "legendary" },
+  { name: "Evil Unicorn", value: 55, emoji: "🦄", rarity: "legendary" },
+  { name: "Crow", value: 22, emoji: "🐦‍⬛", rarity: "legendary" },
+  { name: "Arctic Reindeer", value: 14, emoji: "🦌", rarity: "legendary" },
+  { name: "Turtle", value: 8, emoji: "🐢", rarity: "legendary" },
+  { name: "Kangaroo", value: 7, emoji: "🦘", rarity: "legendary" },
+  { name: "Frost Fury", value: 6, emoji: "🐲", rarity: "legendary" },
+  { name: "Albino Monkey", value: 5, emoji: "🐵", rarity: "legendary" },
+  { name: "Lion", value: 3, emoji: "🦁", rarity: "ultra" },
+  { name: "Unicorn", value: 2, emoji: "✨", rarity: "legendary" },
+  { name: "Dragon", value: 1.5, emoji: "🐉", rarity: "legendary" }
 ];
-// ===============================
-// VARIANTS
-// ===============================
-const variants = [
-  { name: "Normal", multiplier: 1 },
-  { name: "Fly", multiplier: 1.1, fly: true },
-  { name: "Ride", multiplier: 1.1, ride: true },
-  { name: "Fly Ride", multiplier: 1.2, fly: true, ride: true },
-  { name: "Neon", multiplier: 4, neon: true },
-  { name: "Neon Fly", multiplier: 4.1, neon: true, fly: true },
-  { name: "Neon Ride", multiplier: 4.1, neon: true, ride: true },
-  { name: "Neon Fly Ride", multiplier: 4.2, neon: true, fly: true, ride: true },
-  { name: "Mega Neon", multiplier: 16, mega: true },
-  { name: "Mega Fly", multiplier: 16.1, mega: true, fly: true },
-  { name: "Mega Ride", multiplier: 16.1, mega: true, ride: true },
-  { name: "Mega Fly Ride", multiplier: 16.2, mega: true, fly: true, ride: true }
-];
-// ===============================
-// TRADE STATE
-// ===============================
-let state = {
-  you: [],
-  them: []
+
+const rarityLabels = {
+  all: "Tümü",
+  legendary: "Legendary",
+  ultra: "Ultra-Rare",
+  rare: "Rare",
+  uncommon: "Uncommon",
+  common: "Common"
 };
+
+let state = { you: [], them: [] };
 let currentSide = null;
-let currentPet = null;
-// ===============================
-// PET IMAGE
-// ===============================
+let picker = {
+  petIndex: null,
+  form: "normal",
+  fly: false,
+  ride: false,
+  rarity: "all"
+};
+
+function iconFly(size = 18) {
+  return `<svg class="am-icon icon-fly" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Fly" fill="none">
+    <path d="M12 4c2.2 3.2 3 6.2 3 9.2 0 2.6-1.2 5.3-3 7.8-1.8-2.5-3-5.2-3-7.8C9 10.2 9.8 7.2 12 4Z" fill="#38bdf8"/>
+    <path d="M7 9.5c-2.4.4-4.2 1.6-5 3.4 1.8.3 3.6-.1 5.2-1.2.4-.8.7-1.6.8-2.2Zm10 0c2.4.4 4.2 1.6 5 3.4-1.8.3-3.6-.1-5.2-1.2-.4-.8-.7-1.6-.8-2.2Z" fill="#7dd3fc"/>
+    <path d="M12 11.2c.9 0 1.5.8 1.3 1.7l-.8 4.2h-1l-.8-4.2c-.2-.9.4-1.7 1.3-1.7Z" fill="#e0f2fe"/>
+  </svg>`;
+}
+function iconRide(size = 18) {
+  return `<svg class="am-icon icon-ride" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Ride" fill="none">
+    <path d="M8 5.5c0-1.4 1.2-2.5 2.6-2.5h2.8C14.8 3 16 4.1 16 5.5V8H8V5.5Z" fill="#f0abfc"/>
+    <path d="M7 8h10l.8 2.2c.3.9-.3 1.8-1.2 2L16 13v4.2c0 .7-.6 1.3-1.3 1.3h-1.2c-.6 0-1.1-.4-1.2-1l-.3-1.5h-.1l-.3 1.5c-.1.6-.6 1-1.2 1H9.3C8.6 18.5 8 17.9 8 17.2V13l-.6-.8c-.9-.2-1.5-1.1-1.2-2L7 8Z" fill="#e879f9"/>
+    <path d="M9.2 10.2h5.6c.4 0 .7.4.6.8l-.2.7H8.8l-.2-.7c-.1-.4.2-.8.6-.8Z" fill="#fce7f3"/>
+  </svg>`;
+}
+function iconNeon(size = 18) {
+  return `<svg class="am-icon icon-neon" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Neon" fill="none">
+    <path d="M12 2.4 14.2 9l7 1-5.2 4.6 1.6 6.8L12 17.8 6.4 21.4 8 14.6 2.8 10l7-1L12 2.4Z" fill="#22d3ee"/>
+    <path d="M12 6.2 13.3 10l2.9.4-2.2 1.9.7 2.8L12 13.6l-2.7 1.5.7-2.8-2.2-1.9 2.9-.4L12 6.2Z" fill="#ecfeff"/>
+  </svg>`;
+}
+function iconMega(size = 18) {
+  const id = "megaGrad" + Math.random().toString(36).slice(2, 8);
+  return `<svg class="am-icon icon-mega" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Mega" fill="none">
+    <defs>
+      <linearGradient id="${id}" x1="2" y1="3" x2="22" y2="21">
+        <stop stop-color="#ff4d6d"/>
+        <stop offset=".25" stop-color="#f5c451"/>
+        <stop offset=".5" stop-color="#35d399"/>
+        <stop offset=".75" stop-color="#38bdf8"/>
+        <stop offset="1" stop-color="#a78bfa"/>
+      </linearGradient>
+    </defs>
+    <path d="M12 2 14.6 8.2 21.5 9l-5 4.4 1.5 6.8L12 16.8 6 20.2l1.5-6.8-5-4.4 6.9-.8L12 2Z" fill="url(#${id})"/>
+  </svg>`;
+}
+function iconNormal(size = 18) {
+  return `<svg class="am-icon icon-normal" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Normal" fill="none">
+    <circle cx="12" cy="12" r="8" fill="#334155"/>
+    <circle cx="12" cy="12" r="3.2" fill="#cbd5e1"/>
+  </svg>`;
+}
+
+function buildVariant(form, fly, ride) {
+  return {
+    name: variantLabel(form, fly, ride),
+    form,
+    fly,
+    ride,
+    neon: form === "neon",
+    mega: form === "mega",
+    multiplier: getMultiplier(form, fly, ride)
+  };
+}
+function getMultiplier(form, fly, ride) {
+  let m = form === "mega" ? 16 : form === "neon" ? 4 : 1;
+  if (fly) m += 0.1;
+  if (ride) m += 0.1;
+  return m;
+}
+function variantLabel(form, fly, ride) {
+  const parts = [];
+  if (form === "mega") parts.push("Mega");
+  else if (form === "neon") parts.push("Neon");
+  if (fly && ride) parts.push("Fly Ride");
+  else if (fly) parts.push("Fly");
+  else if (ride) parts.push("Ride");
+  return parts.join(" ") || "Normal";
+}
+function variantChipsHTML(variant) {
+  const chips = [];
+  if (variant.mega) chips.push(`<span class="vchip mega">${iconMega(14)} Mega</span>`);
+  else if (variant.neon) chips.push(`<span class="vchip neon">${iconNeon(14)} Neon</span>`);
+  if (variant.fly) chips.push(`<span class="vchip fly">${iconFly(14)} Fly</span>`);
+  if (variant.ride) chips.push(`<span class="vchip ride">${iconRide(14)} Ride</span>`);
+  if (!chips.length) chips.push(`<span class="vchip normal">${iconNormal(14)} Normal</span>`);
+  return `<div class="vchip-row">${chips.join("")}</div>`;
+}
 function petImageHTML(pet, variant) {
-  let badges = "";
-  if (variant && variant.fly) badges += `<span class="pet-badge fly">F</span>`;
-  if (variant && variant.ride) badges += `<span class="pet-badge ride">R</span>`;
   let effects = "";
   if (variant && variant.neon) effects += `<div class="neon-effect"></div>`;
   if (variant && variant.mega) effects += `<div class="mega-effect"></div>`;
+  let badges = "";
+  if (variant && variant.fly) badges += `<span class="pet-badge fly" title="Fly">${iconFly(12)}</span>`;
+  if (variant && variant.ride) badges += `<span class="pet-badge ride" title="Ride">${iconRide(12)}</span>`;
+  if (variant && variant.mega) badges += `<span class="pet-badge mega" title="Mega">${iconMega(12)}</span>`;
+  else if (variant && variant.neon) badges += `<span class="pet-badge neon" title="Neon">${iconNeon(12)}</span>`;
   return `
     <div class="pet-image-wrap">
       ${effects}
@@ -74,135 +144,162 @@ function addItem(side) {
 // PET MODAL
 // ===============================
 function openPetModal() {
+  picker = { petIndex: null, form: "normal", fly: false, ride: false, rarity: "all" };
   let oldModal = document.getElementById("petModal");
-  if (oldModal) {
-    oldModal.remove();
-  }
+  if (oldModal) oldModal.remove();
+
   const modal = document.createElement("div");
   modal.id = "petModal";
   modal.className = "pet-modal";
   modal.innerHTML = `
-    <div class="pet-modal-window">
-      <button class="pet-modal-close" onclick="closePetModal()">×</button>
-      <h2>Pet Seç</h2>
+    <div class="pet-modal-window picker-window">
+      <div class="picker-head">
+        <div>
+          <div class="eyebrow">ELVEBREDD TARZI</div>
+          <h2>Pet Ekle</h2>
+        </div>
+        <button class="pet-modal-close" onclick="closePetModal()">×</button>
+      </div>
       <input
         id="petSearch"
         class="pet-search"
-        placeholder="🔎 Pet ara..."
+        placeholder="Pet ara..."
         oninput="renderPetChoices()"
       >
+      <div class="rarity-filters" id="rarityFilters"></div>
       <div id="petChoices" class="pet-choice-grid"></div>
+      <div id="pickerBar" class="picker-bar hidden"></div>
     </div>
   `;
   document.body.appendChild(modal);
   modal.addEventListener("click", function (event) {
     if (event.target === modal) closePetModal();
   });
+  renderRarityFilters();
   renderPetChoices();
 }
 function closePetModal() {
   const modal = document.getElementById("petModal");
-  if (modal) {
-    modal.remove();
-  }
-  currentPet = null;
+  if (modal) modal.remove();
+  picker.petIndex = null;
 }
-// ===============================
-// PET CHOICES
-// ===============================
+function closeVariantModal() {
+  closePetModal();
+}
+function renderRarityFilters() {
+  const wrap = document.getElementById("rarityFilters");
+  if (!wrap) return;
+  const keys = ["all", "legendary", "ultra", "rare", "uncommon", "common"];
+  wrap.innerHTML = keys.map((key) => `
+    <button
+      class="rarity-chip ${picker.rarity === key ? "active" : ""} ${key}"
+      onclick="setRarityFilter('${key}')">
+      ${rarityLabels[key]}
+    </button>
+  `).join("");
+}
+function setRarityFilter(key) {
+  picker.rarity = key;
+  renderRarityFilters();
+  renderPetChoices();
+}
 function renderPetChoices() {
   const container = document.getElementById("petChoices");
   if (!container) return;
   const searchInput = document.getElementById("petSearch");
-  const search = searchInput
-    ? searchInput.value.toLowerCase()
-    : "";
-  const filteredPets = pets.filter(pet =>
-    pet.name.toLowerCase().includes(search)
-  );
-  container.innerHTML = filteredPets.map((pet, index) => {
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
+  const filteredPets = pets.filter((pet) => {
+    const matchesSearch = pet.name.toLowerCase().includes(search);
+    const matchesRarity = picker.rarity === "all" || pet.rarity === picker.rarity;
+    return matchesSearch && matchesRarity;
+  });
+  if (!filteredPets.length) {
+    container.innerHTML = `<div class="empty-items">Pet bulunamadı.</div>`;
+    return;
+  }
+  container.innerHTML = filteredPets.map((pet) => {
+    const index = pets.indexOf(pet);
+    const selected = picker.petIndex === index ? "selected" : "";
     return `
-      <button
-        class="pet-choice"
-        onclick="selectPet(${pets.indexOf(pet)})">
+      <button class="pet-choice ${selected}" onclick="selectPet(${index})">
         <div class="pet-emoji">${pet.emoji || "🐾"}</div>
         <strong>${pet.name}</strong>
         <span>${pet.value} Value</span>
+        <small class="rarity-tag ${pet.rarity}">${rarityLabels[pet.rarity] || pet.rarity}</small>
       </button>
     `;
   }).join("");
 }
-// ===============================
-// SELECT PET
-// ===============================
 function selectPet(index) {
-  currentPet = pets[index];
-  openVariantSelector();
+  picker.petIndex = index;
+  renderPetChoices();
+  renderPickerBar();
 }
-// ===============================
-// VARIANT SELECTOR
-// ===============================
-function openVariantSelector() {
-  let modal = document.getElementById("variantModal");
-  if (modal) {
-    modal.remove();
+function setForm(form) {
+  picker.form = form;
+  renderPickerBar();
+}
+function togglePotion(type) {
+  picker[type] = !picker[type];
+  renderPickerBar();
+}
+function renderPickerBar() {
+  const bar = document.getElementById("pickerBar");
+  if (!bar) return;
+  if (picker.petIndex === null) {
+    bar.classList.add("hidden");
+    bar.innerHTML = "";
+    return;
   }
-  modal = document.createElement("div");
-  modal.id = "variantModal";
-  modal.className = "pet-modal";
-  modal.innerHTML = `
-    <div class="pet-modal-window variant-window">
-      <button
-        class="pet-modal-close"
-        onclick="closeVariantModal()">
-        ×
-      </button>
-      <div class="variant-preview">
-        <div class="pet-emoji big">${currentPet.emoji || "🐾"}</div>
-        <h2>${currentPet.name}</h2>
-      </div>
-      <h3>Variant Seç</h3>
-      <div class="variant-grid">
-        ${variants.map((variant, index) => `
-          <button
-            class="variant-card"
-            onclick="addSelectedVariant(${index})">
-            ${petImageHTML(currentPet, variant)}
-            <strong>${variant.name}</strong>
-            <span>
-              ${(currentPet.value * variant.multiplier).toFixed(1)}
-            </span>
-          </button>
-        `).join("")}
+  const pet = pets[picker.petIndex];
+  const variant = buildVariant(picker.form, picker.fly, picker.ride);
+  const value = (pet.value * variant.multiplier).toFixed(1);
+  bar.classList.remove("hidden");
+  bar.innerHTML = `
+    <div class="picker-preview">
+      ${petImageHTML(pet, variant)}
+      <div>
+        <strong>${pet.name}</strong>
+        ${variantChipsHTML(variant)}
       </div>
     </div>
+    <div class="picker-controls">
+      <div class="form-toggles">
+        <button class="form-btn ${picker.form === "normal" ? "active" : ""}" onclick="setForm('normal')">
+          ${iconNormal(16)} Normal
+        </button>
+        <button class="form-btn neon ${picker.form === "neon" ? "active" : ""}" onclick="setForm('neon')">
+          ${iconNeon(16)} Neon
+        </button>
+        <button class="form-btn mega ${picker.form === "mega" ? "active" : ""}" onclick="setForm('mega')">
+          ${iconMega(16)} Mega
+        </button>
+      </div>
+      <div class="potion-toggles">
+        <button class="potion-btn fly ${picker.fly ? "active" : ""}" onclick="togglePotion('fly')">
+          ${iconFly(18)} Fly
+        </button>
+        <button class="potion-btn ride ${picker.ride ? "active" : ""}" onclick="togglePotion('ride')">
+          ${iconRide(18)} Ride
+        </button>
+      </div>
+    </div>
+    <div class="picker-add">
+      <div class="picker-value">${value}</div>
+      <button class="add-confirm" onclick="confirmAddPet()">Trade'e Ekle</button>
+    </div>
   `;
-  document.body.appendChild(modal);
-  modal.addEventListener("click", function (event) {
-    if (event.target === modal) closeVariantModal();
-  });
 }
-function closeVariantModal() {
-  const modal = document.getElementById("variantModal");
-  if (modal) {
-    modal.remove();
-  }
-  currentPet = null;
-}
-// ===============================
-// ADD SELECTED VARIANT
-// ===============================
-function addSelectedVariant(index) {
-  if (!currentPet || !currentSide) return;
-  const variant = variants[index];
-  const item = {
+function confirmAddPet() {
+  if (picker.petIndex === null || !currentSide) return;
+  const pet = pets[picker.petIndex];
+  const variant = buildVariant(picker.form, picker.fly, picker.ride);
+  state[currentSide].push({
     id: Date.now() + Math.random(),
-    pet: currentPet,
-    variant: variant,
-    value: currentPet.value * variant.multiplier
-  };
-  state[currentSide].push(item);
-  closeVariantModal();
+    pet,
+    variant,
+    value: pet.value * variant.multiplier
+  });
   closePetModal();
   renderTrade();
   calculateWFL();
@@ -237,10 +334,8 @@ function renderSide(side) {
         </div>
         <div class="trade-item-info">
           <strong>${item.pet.name}</strong>
-          <span>${item.variant.name}</span>
-          <small>
-            Value: ${item.value.toFixed(1)}
-          </small>
+          ${variantChipsHTML(item.variant)}
+          <small>Value: ${item.value.toFixed(1)}</small>
         </div>
         <button
           class="remove-item"
