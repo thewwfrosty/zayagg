@@ -448,6 +448,23 @@ textarea {
 .result-card.fair .result-number {
   color: var(--yellow);
 }
+.result-card.small-win {
+  border-color: rgba(163, 230, 53, 0.25);
+  background: rgba(163, 230, 53, 0.055);
+}
+
+.result-card.small-win .result-number {
+  color: #a3e635;
+}
+
+.result-card.small-lose {
+  border-color: rgba(251, 146, 60, 0.25);
+  background: rgba(251, 146, 60, 0.055);
+}
+
+.result-card.small-lose .result-number {
+  color: #fb923c;
+}
 
 .values {
   padding-bottom: 100px;
