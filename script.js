@@ -96,9 +96,27 @@ let selectedPet = null;
    FAVORITES
    ========================================================= */
 
-let favorites = JSON.parse(
-  localStorage.getItem("zayaggFavorites") || "[]"
-);
+let favorites = [];
+
+try {
+  const savedFavorites =
+    localStorage.getItem("zayaggFavorites");
+
+  favorites = savedFavorites
+    ? JSON.parse(savedFavorites)
+    : [];
+
+  if (!Array.isArray(favorites)) {
+    favorites = [];
+  }
+
+} catch (error) {
+
+  console.warn("Favoriler sıfırlandı.");
+
+  favorites = [];
+
+}
 
 
 /* =========================================================
@@ -1215,13 +1233,19 @@ function closePetModal() {
    INITIALIZE
    ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+document.addEventListener("DOMContentLoaded", () => {
 
+  try {
     renderValues();
-
     renderTrade();
-
+  } catch (error) {
+    console.error("Zayagg Script Hatası:", error);
   }
-);
+
+  const clearButton = document.getElementById("clearBtn");
+
+  if (clearButton) {
+    clearButton.addEventListener("click", clearTrade);
+  }
+
+});
