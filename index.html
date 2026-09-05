@@ -1,18 +1,14 @@
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Zayagg — Adopt Me Trading</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -20,7 +16,6 @@
 <body>
 
   <header class="navbar">
-
     <a href="#" class="logo">Zayagg</a>
 
     <nav id="mainNav">
@@ -30,13 +25,7 @@
     </nav>
 
     <div class="nav-actions">
-
-      <button
-        type="button"
-        id="profileBtn"
-        class="login"
-        onclick="openProfile()"
-      >
+      <button type="button" id="profileBtn" class="login" onclick="openProfile()">
         👤 Profil
       </button>
 
@@ -48,16 +37,12 @@
       >
         ☰
       </button>
-
     </div>
-
   </header>
-
 
   <main>
 
     <section class="hero">
-
       <div class="hero-content">
 
         <div class="badge">
@@ -79,24 +64,14 @@
         </a>
 
       </div>
-
     </section>
-
 
     <section id="calculator" class="section">
 
       <div class="section-head">
-
         <div>
-
-          <div class="eyebrow">
-            TRADE CALCULATOR
-          </div>
-
-          <h2>
-            W/F/L Calculator
-          </h2>
-
+          <div class="eyebrow">TRADE CALCULATOR</div>
+          <h2>W/F/L Calculator</h2>
         </div>
 
         <button
@@ -107,30 +82,18 @@
         >
           Temizle
         </button>
-
       </div>
-
 
       <div class="trade-grid">
 
         <div class="trade-box">
 
           <div class="box-head">
-
-            <h3>
-              Senin teklifin
-            </h3>
-
-            <span id="youTotal">
-              0.0
-            </span>
-
+            <h3>Senin teklifin</h3>
+            <span id="youTotal">0.0</span>
           </div>
 
-          <div
-            id="youItems"
-            class="items"
-          >
+          <div id="youItems" class="items">
             <div class="empty-items">
               Henüz pet eklenmedi
             </div>
@@ -146,30 +109,16 @@
 
         </div>
 
-
-        <div class="vs">
-          VS
-        </div>
-
+        <div class="vs">VS</div>
 
         <div class="trade-box">
 
           <div class="box-head">
-
-            <h3>
-              Karşı taraf
-            </h3>
-
-            <span id="themTotal">
-              0.0
-            </span>
-
+            <h3>Karşı taraf</h3>
+            <span id="themTotal">0.0</span>
           </div>
 
-          <div
-            id="themItems"
-            class="items"
-          >
+          <div id="themItems" class="items">
             <div class="empty-items">
               Henüz pet eklenmedi
             </div>
@@ -187,22 +136,14 @@
 
       </div>
 
-
-      <div
-        id="resultCard"
-        class="result-card"
-      >
+      <div id="resultCard" class="result-card">
 
         <div>
-
-          <small>
-            TRADE SONUCU
-          </small>
+          <small>TRADE SONUCU</small>
 
           <h3 id="resultStatusText">
             Pet ekleyerek başla
           </h3>
-
         </div>
 
         <div
@@ -216,44 +157,29 @@
 
     </section>
 
-
-    <section
-      id="values"
-      class="section values"
-    >
+    <section id="values" class="section values">
 
       <div class="section-head">
 
         <div>
-
-          <div class="eyebrow">
-            POPULAR VALUES
-          </div>
-
-          <h2>
-            Popüler Pet Değerleri
-          </h2>
-
+          <div class="eyebrow">POPULAR VALUES</div>
+          <h2>Popüler Pet Değerleri</h2>
         </div>
 
         <input
           id="search"
           type="search"
-          placeholder="🔎 Pet ara..."
+          placeholder="🔎 Pet ara... (Shadow, Turtle, Dragon...)"
           autocomplete="off"
         >
 
       </div>
 
-      <div
-        id="valueGrid"
-        class="value-grid"
-      ></div>
+      <div id="valueGrid" class="value-grid"></div>
 
     </section>
 
   </main>
-
 
   <!-- PET PICKER -->
 
@@ -272,7 +198,6 @@
       <div class="profile-header">
 
         <div>
-
           <div class="profile-eyebrow">
             SEÇİM YAP
           </div>
@@ -280,7 +205,6 @@
           <h2 id="petPickerTitle">
             Pet veya Eşya Ekle
           </h2>
-
         </div>
 
         <button
@@ -292,7 +216,6 @@
         </button>
 
       </div>
-
 
       <div class="modal-search">
 
@@ -306,12 +229,10 @@
 
       </div>
 
-
       <div
         id="pickerPetList"
         class="pet-choice-grid"
       ></div>
-
 
       <div class="picker-settings">
 
@@ -324,7 +245,6 @@
             id="pickerPreview"
             class="picker-preview"
           ></div>
-
 
           <div class="picker-options">
 
@@ -350,7 +270,6 @@
 
             </div>
 
-
             <div class="potion-toggles">
 
               <button
@@ -374,7 +293,6 @@
             </div>
 
           </div>
-
 
           <div class="picker-add">
 
@@ -403,7 +321,6 @@
 
   </div>
 
-
   <!-- PROFILE -->
 
   <div
@@ -421,15 +338,11 @@
       <div class="profile-header">
 
         <div>
-
           <div class="profile-eyebrow">
             ZAYAGG PROFILE
           </div>
 
-          <h2>
-            Profil
-          </h2>
-
+          <h2>Profil</h2>
         </div>
 
         <button
@@ -441,7 +354,6 @@
         </button>
 
       </div>
-
 
       <div class="profile-main">
 
@@ -470,7 +382,6 @@
 
       </div>
 
-
       <div class="profile-stats">
 
         <div class="profile-stat">
@@ -495,7 +406,6 @@
 
       </div>
 
-
       <button
         type="button"
         id="profileEditBtn"
@@ -505,23 +415,19 @@
         Profili Düzenle
       </button>
 
-
       <form
         id="profileEditForm"
         class="profile-form hidden"
         onsubmit="saveEditedProfile(event)"
       >
 
-        <label for="editName">
-          Ad
-        </label>
+        <label for="editName">Ad</label>
 
         <input
           id="editName"
           maxlength="24"
           required
         >
-
 
         <label for="editUsername">
           Kullanıcı adı
@@ -533,7 +439,6 @@
           required
         >
 
-
         <label for="editBio">
           Biyografi
         </label>
@@ -544,7 +449,6 @@
           rows="3"
         ></textarea>
 
-
         <div class="avatar-pick-label">
           Avatar
         </div>
@@ -553,7 +457,6 @@
           id="avatarPick"
           class="avatar-pick"
         ></div>
-
 
         <div class="form-actions">
 
@@ -580,13 +483,12 @@
 
   </div>
 
-
   <footer>
     Zayagg © 2026 — Adopt Me Trading Values
   </footer>
-
 
   <script src="script.js"></script>
 
 </body>
 </html>
+```
