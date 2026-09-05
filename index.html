@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeValue — Adopt Me Trading</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">Trade<span>Value</span></div>
+    <nav>
+      <a class="active" href="#">Ana Sayfa</a>
+      <a href="#calculator">W/F/L Calculator</a>
+      <a href="#values">Değerler</a>
+      <a href="#">Trade İlanları</a>
+    </nav>
+    <button class="login">Giriş Yap</button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="badge">🐾 Adopt Me Trading</div>
+        <h1>Trade'inin değerini<br><span>anında öğren.</span></h1>
+        <p>Petlerini seç, iki tarafı karşılaştır ve trade'inin Win, Fair veya Lose olduğunu saniyeler içinde gör.</p>
+        <a class="hero-btn" href="#calculator">Calculator'ı Aç →</a>
+      </div>
+      <div class="hero-card">
+        <div class="mini-title">Sonuç</div>
+        <div class="result win">WIN</div>
+        <div class="compare"><b>Sen</b><strong>25.4</strong></div>
+        <div class="compare"><b>Karşı Taraf</b><strong>21.7</strong></div>
+      </div>
+    </section>
+
+    <section id="calculator" class="section">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">TRADE CALCULATOR</div>
+          <h2>W/F/L Calculator</h2>
+        </div>
+        <button id="clearBtn" class="ghost">Temizle</button>
+      </div>
+
+      <div class="trade-grid">
+        <div class="trade-box">
+          <div class="box-head"><h3>Senin teklifin</h3><span id="youTotal">0</span></div>
+          <div id="youItems" class="items"></div>
+          <button class="add" onclick="addItem('you')">＋ Pet / Item Ekle</button>
+        </div>
+
+        <div class="vs">VS</div>
+
+        <div class="trade-box">
+          <div class="box-head"><h3>Karşı taraf</h3><span id="themTotal">0</span></div>
+          <div id="themItems" class="items"></div>
+          <button class="add" onclick="addItem('them')">＋ Pet / Item Ekle</button>
+        </div>
+      </div>
+
+      <div id="resultCard" class="result-card neutral">
+        <div>
+          <small>TRADE SONUCU</small>
+          <h3>Pet ekleyerek başla</h3>
+        </div>
+        <div class="result-number">—</div>
+      </div>
+    </section>
+
+    <section id="values" class="section values">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">POPULAR VALUES</div>
+          <h2>Popüler Pet Değerleri</h2>
+        </div>
+        <input id="search" placeholder="🔎 Pet ara..." oninput="renderValues()">
+      </div>
+      <div id="valueGrid" class="value-grid"></div>
+    </section>
+  </main>
+
+  <footer>TradeValue © 2026 — Fan-made trading value platform</footer>
+  <script src="script.js"></script>
+</body>
+</html>
