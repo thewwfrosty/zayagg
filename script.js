@@ -15,50 +15,48 @@ const pets = [
   {name:"Frost Fury",icon:"🐉",value:75,rarity:"Legendary",demand:"High",trend:"↑"},
   {name:"Golden Rat",icon:"🐀",value:55,rarity:"Legendary",demand:"Good",trend:"→"},
   {name:"Dancing Dragon",icon:"🐲",value:45,rarity:"Legendary",demand:"Good",trend:"↑"},
+  {name:"Shark",icon:"🦈",value:35,rarity:"Legendary",demand:"Good",trend:"↑"},
+  {name:"Octopus",icon:"🐙",value:30,rarity:"Legendary",demand:"Good",trend:"↑"},
+  {name:"Kitsune",icon:"🦊",value:25,rarity:"Legendary",demand:"Normal",trend:"→"},
+  {name:"Cerberus",icon:"🐺",value:20,rarity:"Legendary",demand:"Normal",trend:"→"},
   {name:"Dragon",icon:"🐉",value:10,rarity:"Legendary",demand:"Normal",trend:"→"},
 
   // ULTRA RARE
   {name:"Dalmatian",icon:"🐕",value:90,rarity:"Ultra Rare",demand:"High",trend:"↑"},
   {name:"Flamingo",icon:"🦩",value:85,rarity:"Ultra Rare",demand:"High",trend:"→"},
   {name:"Lion",icon:"🦁",value:80,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Blue Dog",icon:"🐕",value:75,rarity:"Ultra Rare",demand:"High",trend:"→"},
-  {name:"Pink Cat",icon:"🐱",value:70,rarity:"Ultra Rare",demand:"Good",trend:"↑"},
-  {name:"Cow",icon:"🐮",value:70,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Elephant",icon:"🐘",value:65,rarity:"Ultra Rare",demand:"High",trend:"→"},
-  {name:"Hyena",icon:"🐕",value:60,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Crooked Love",icon:"💗",value:50,rarity:"Ultra Rare",demand:"Good",trend:"↑"},
-  {name:"Turkey",icon:"🦃",value:45,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Pig",icon:"🐷",value:40,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Shark",icon:"🦈",value:35,rarity:"Ultra Rare",demand:"Good",trend:"↑"},
-  {name:"Octopus",icon:"🐙",value:30,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Kitsune",icon:"🦊",value:25,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Cerberus",icon:"🐺",value:20,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
+  {name:"Red Panda",icon:"🦊",value:7,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
+  {name:"Bee",icon:"🐝",value:7,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
 
   // RARE
+  {name:"Blue Dog",icon:"🐕",value:75,rarity:"Rare",demand:"High",trend:"→"},
+  {name:"Pink Cat",icon:"🐱",value:70,rarity:"Rare",demand:"Good",trend:"↑"},
+  {name:"Cow",icon:"🐮",value:70,rarity:"Rare",demand:"High",trend:"↑"},
+  {name:"Elephant",icon:"🐘",value:65,rarity:"Rare",demand:"High",trend:"→"},
+  {name:"Hyena",icon:"🐕",value:60,rarity:"Rare",demand:"Good",trend:"→"},
+  {name:"Turkey",icon:"🦃",value:45,rarity:"Rare",demand:"Good",trend:"→"},
+  {name:"Pig",icon:"🐷",value:40,rarity:"Rare",demand:"Good",trend:"→"},
   {name:"Beaver",icon:"🦫",value:18,rarity:"Rare",demand:"Good",trend:"→"},
   {name:"Rabbit",icon:"🐰",value:16,rarity:"Rare",demand:"Good",trend:"↑"},
   {name:"Snow Puma",icon:"🐆",value:15,rarity:"Rare",demand:"Normal",trend:"→"},
   {name:"Bunny",icon:"🐇",value:14,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Zebra",icon:"🦓",value:13,rarity:"Rare",demand:"Normal",trend:"→"},
   {name:"Monkey",icon:"🐒",value:12,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Dilophosaurus",icon:"🦖",value:11,rarity:"Rare",demand:"Normal",trend:"↑"},
-  {name:"Emu",icon:"🐦",value:10,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Puma",icon:"🐆",value:9,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Woolly Mammoth",icon:"🦣",value:9,rarity:"Rare",demand:"Normal",trend:"→"},
   {name:"Seahorse",icon:"🌊",value:8,rarity:"Rare",demand:"Normal",trend:"→"},
   {name:"Narwhal",icon:"🐋",value:8,rarity:"Rare",demand:"Normal",trend:"↑"},
-  {name:"Bees",icon:"🐝",value:7,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Red Panda",icon:"🦊",value:7,rarity:"Rare",demand:"Normal",trend:"→"},
   {name:"Snow Monkey",icon:"🐒",value:6,rarity:"Rare",demand:"Normal",trend:"→"},
 
   // UNCOMMON
+  {name:"Zebra",icon:"🦓",value:13,rarity:"Uncommon",demand:"Normal",trend:"→"},
+  {name:"Dilophosaurus",icon:"🦖",value:11,rarity:"Uncommon",demand:"Normal",trend:"↑"},
+  {name:"Emu",icon:"🐦",value:10,rarity:"Uncommon",demand:"Normal",trend:"→"},
+  {name:"Puma",icon:"🐆",value:9,rarity:"Uncommon",demand:"Normal",trend:"→"},
+  {name:"Woolly Mammoth",icon:"🦣",value:9,rarity:"Uncommon",demand:"Normal",trend:"→"},
   {name:"Fennec Fox",icon:"🦊",value:5,rarity:"Uncommon",demand:"Good",trend:"→"},
   {name:"Meerkat",icon:"🦦",value:5,rarity:"Uncommon",demand:"Good",trend:"↑"},
   {name:"Swan",icon:"🦢",value:5,rarity:"Uncommon",demand:"Good",trend:"→"},
   {name:"Capybara",icon:"🦫",value:4,rarity:"Uncommon",demand:"Good",trend:"↑"},
   {name:"Dingo",icon:"🐕",value:4,rarity:"Uncommon",demand:"Normal",trend:"→"},
   {name:"Glyptodon",icon:"🦎",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Snow Cat",icon:"🐱",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
   {name:"Chocolate Labrador",icon:"🐕",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
   {name:"Pterodactyl",icon:"🦅",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
   {name:"Wolf",icon:"🐺",value:3,rarity:"Uncommon",demand:"Good",trend:"↑"},
@@ -76,6 +74,7 @@ const pets = [
   {name:"Tasmanian Tiger",icon:"🐯",value:1,rarity:"Common",demand:"Normal",trend:"→"}
 ];
 
+
 const state = {
   you: [],
   them: []
@@ -84,16 +83,20 @@ const state = {
 let currentSide = null;
 let currentFilter = "All";
 
+
 function addItem(side) {
   currentSide = side;
+  currentFilter = "All";
   openPetSelector();
 }
+
 
 function openPetSelector() {
   const old = document.getElementById("petModal");
   if (old) old.remove();
 
   const modal = document.createElement("div");
+
   modal.id = "petModal";
   modal.className = "pet-modal";
 
@@ -105,6 +108,7 @@ function openPetSelector() {
           <small>ZAYAGG VALUES</small>
           <h2>Pet / Item Ekle</h2>
         </div>
+
         <button onclick="closePetSelector()">✕</button>
       </div>
 
@@ -113,7 +117,7 @@ function openPetSelector() {
         class="pet-search"
         placeholder="🔎 Pet ara..."
         oninput="searchPets()"
-        autofocus
+        autocomplete="off"
       >
 
       <div class="pet-filters">
@@ -135,28 +139,41 @@ function openPetSelector() {
   `;
 
   document.body.appendChild(modal);
+
   renderPetSelector();
+
+  setTimeout(() => {
+    const search = document.getElementById("petSearch");
+    if (search) search.focus();
+  }, 50);
 }
+
 
 function closePetSelector() {
   const modal = document.getElementById("petModal");
-  if (modal) modal.remove();
+
+  if (modal) {
+    modal.remove();
+  }
 }
+
 
 function setFilter(filter) {
   currentFilter = filter;
   renderPetSelector();
 }
 
+
 function renderPetSelector() {
   const container = document.getElementById("petList");
+
   if (!container) return;
 
-  const search = document
-    .getElementById("petSearch")
-    ?.value
-    .toLowerCase()
-    .trim() || "";
+  const searchInput = document.getElementById("petSearch");
+
+  const search = searchInput
+    ? searchInput.value.toLowerCase().trim()
+    : "";
 
   let results = pets.filter(pet =>
     pet.name.toLowerCase().includes(search)
@@ -174,14 +191,20 @@ function renderPetSelector() {
         😕 Pet bulunamadı
       </div>
     `;
+
     return;
   }
 
   container.innerHTML = results.map(pet => {
+
     const index = pets.indexOf(pet);
 
     return `
-      <button class="pet-option" onclick="selectPet(${index})">
+      <button
+        class="pet-option"
+        onclick="selectPet(${index})"
+        type="button"
+      >
 
         <div class="pet-option-icon">
           ${pet.icon}
@@ -198,19 +221,24 @@ function renderPetSelector() {
 
       </button>
     `;
+
   }).join("");
 }
+
 
 function searchPets() {
   renderPetSelector();
 }
+
 
 function selectPet(index) {
   const pet = pets[index];
 
   if (!pet || !currentSide) return;
 
-  state[currentSide].push({...pet});
+  state[currentSide].push({
+    ...pet
+  });
 
   renderTrade(currentSide);
   updateResult();
@@ -218,11 +246,16 @@ function selectPet(index) {
   closePetSelector();
 }
 
-function removeItem(side,index) {
-  state[side].splice(index,1);
+
+function removeItem(side, index) {
+  if (!state[side]) return;
+
+  state[side].splice(index, 1);
+
   renderTrade(side);
   updateResult();
 }
+
 
 function renderTrade(side) {
   const box = document.getElementById(side + "Items");
@@ -231,13 +264,16 @@ function renderTrade(side) {
   if (!box || !totalElement) return;
 
   if (state[side].length === 0) {
+
     box.innerHTML = `
       <div class="empty-trade">
         Henüz pet eklenmedi
       </div>
     `;
+
   } else {
-    box.innerHTML = state[side].map((pet,index) => `
+
+    box.innerHTML = state[side].map((pet, index) => `
       <div class="item">
 
         <div class="item-left">
@@ -248,14 +284,18 @@ function renderTrade(side) {
 
           <div>
             <strong>${pet.name}</strong>
-            <small>${pet.rarity} • Value: ${pet.value}</small>
+
+            <small>
+              ${pet.rarity} • Value: ${pet.value}
+            </small>
           </div>
 
         </div>
 
         <button
           class="remove-item"
-          onclick="removeItem('${side}',${index})"
+          onclick="removeItem('${side}', ${index})"
+          type="button"
         >
           ✕
         </button>
@@ -265,78 +305,123 @@ function renderTrade(side) {
   }
 
   const total = state[side].reduce(
-    (sum,pet) => sum + pet.value,
+    (sum, pet) => sum + pet.value,
     0
   );
 
   totalElement.textContent = Math.round(total);
 }
 
+
 function updateResult() {
+
   const youTotal = state.you.reduce(
-    (sum,pet) => sum + pet.value,
+    (sum, pet) => sum + pet.value,
     0
   );
 
   const themTotal = state.them.reduce(
-    (sum,pet) => sum + pet.value,
+    (sum, pet) => sum + pet.value,
     0
   );
 
   const card = document.getElementById("resultCard");
+
   if (!card) return;
 
   const title = card.querySelector("h3");
   const number = card.querySelector(".result-number");
 
+  if (!title || !number) return;
+
+
   if (youTotal === 0 && themTotal === 0) {
+
     card.className = "result-card neutral";
+
     title.textContent = "Pet ekleyerek başla";
     number.textContent = "—";
+
     return;
   }
+
 
   if (youTotal === 0 || themTotal === 0) {
+
     card.className = "result-card neutral";
+
     title.textContent = "İki tarafa da pet ekle";
     number.textContent = "—";
+
     return;
   }
 
+
   const difference = themTotal - youTotal;
-  const percentage = Math.abs(difference / youTotal) * 100;
+
+  const percentage =
+    Math.abs(difference / youTotal) * 100;
+
 
   let result;
   let className;
 
+
   if (percentage <= 10) {
+
     result = "FAIR";
     className = "fair";
+
   } else if (difference > 0) {
+
     result = "WIN";
     className = "win";
+
   } else {
+
     result = "LOSE";
     className = "lose";
+
   }
 
+
   card.className = "result-card " + className;
+
   title.textContent = result;
+
   number.textContent =
-    (difference >= 0 ? "+" : "") + Math.round(difference);
+    (difference >= 0 ? "+" : "") +
+    Math.round(difference);
 }
 
+
 function renderValues() {
+
   const input = document.getElementById("search");
   const grid = document.getElementById("valueGrid");
 
   if (!input || !grid) return;
 
-  const query = input.value.toLowerCase().trim();
+  const query =
+    input.value.toLowerCase().trim();
+
 
   const results = pets.filter(pet =>
     pet.name.toLowerCase().includes(query)
   );
+
+
+  if (results.length === 0) {
+
+    grid.innerHTML = `
+      <div class="no-results">
+        😕 Pet bulunamadı
+      </div>
+    `;
+
+    return;
+  }
+
 
   grid.innerHTML = results.map(pet => `
     <div class="value-card">
@@ -361,20 +446,30 @@ function renderValues() {
   `).join("");
 }
 
-const clearBtn = document.getElementById("clearBtn");
+
+const clearBtn =
+  document.getElementById("clearBtn");
+
 
 if (clearBtn) {
+
   clearBtn.onclick = function() {
+
     state.you = [];
     state.them = [];
 
     renderTrade("you");
     renderTrade("them");
+
     updateResult();
   };
 }
 
+
 renderValues();
+
 renderTrade("you");
+
 renderTrade("them");
+
 updateResult();
