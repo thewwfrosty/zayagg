@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -8,7 +7,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,6 +19,7 @@
 <body>
 
   <header class="navbar">
+
     <a href="#" class="logo">Zayagg</a>
 
     <nav id="mainNav">
@@ -25,7 +29,13 @@
     </nav>
 
     <div class="nav-actions">
-      <button type="button" id="profileBtn" class="login" onclick="openProfile()">
+
+      <button
+        type="button"
+        id="profileBtn"
+        class="login"
+        onclick="openProfile()"
+      >
         👤 Profil
       </button>
 
@@ -37,12 +47,16 @@
       >
         ☰
       </button>
+
     </div>
+
   </header>
+
 
   <main>
 
     <section class="hero">
+
       <div class="hero-content">
 
         <div class="badge">
@@ -64,14 +78,22 @@
         </a>
 
       </div>
+
     </section>
+
 
     <section id="calculator" class="section">
 
       <div class="section-head">
+
         <div>
-          <div class="eyebrow">TRADE CALCULATOR</div>
-          <h2>W/F/L Calculator</h2>
+          <div class="eyebrow">
+            TRADE CALCULATOR
+          </div>
+
+          <h2>
+            W/F/L Calculator
+          </h2>
         </div>
 
         <button
@@ -82,89 +104,246 @@
         >
           Temizle
         </button>
-      </div>
-
-      <div class="trade-grid">
-
-        <div class="trade-box">
-
-          <div class="box-head">
-            <h3>Senin teklifin</h3>
-            <span id="youTotal">0.0</span>
-          </div>
-
-          <div id="youItems" class="items">
-            <div class="empty-items">
-              Henüz pet eklenmedi
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="add"
-            onclick="openPetPicker('you')"
-          >
-            ＋ Pet / Item Ekle
-          </button>
-
-        </div>
-
-        <div class="vs">VS</div>
-
-        <div class="trade-box">
-
-          <div class="box-head">
-            <h3>Karşı taraf</h3>
-            <span id="themTotal">0.0</span>
-          </div>
-
-          <div id="themItems" class="items">
-            <div class="empty-items">
-              Henüz pet eklenmedi
-            </div>
-          </div>
-
-          <button
-            type="button"
-            class="add"
-            onclick="openPetPicker('them')"
-          >
-            ＋ Pet / Item Ekle
-          </button>
-
-        </div>
 
       </div>
 
-      <div id="resultCard" class="result-card">
 
-        <div>
-          <small>TRADE SONUCU</small>
+      <div
+        class="trade-status-bar"
+        id="tradeStatusBar"
+      >
 
-          <h3 id="resultStatusText">
-            Pet ekleyerek başla
-          </h3>
+        <div class="trade-status-pill">
+
+          <span class="status-dot"></span>
+
+          <span id="tradeStatusLabel">
+            TRADE HAZIR
+          </span>
+
         </div>
 
         <div
+          class="trade-status-diff"
           id="resultDiffNumber"
-          class="result-number"
         >
           —
         </div>
 
       </div>
 
+
+      <div class="trade-grid">
+
+
+        <div class="trade-box trade-box-you">
+
+          <div class="box-head trade-box-head">
+
+            <div>
+
+              <span class="trade-side-label">
+                SEN
+              </span>
+
+              <h3>
+                Senin teklifin
+              </h3>
+
+            </div>
+
+            <div class="trade-total-wrap">
+
+              <span class="trade-total-label">
+                VALUE
+              </span>
+
+              <span
+                id="youTotal"
+                class="trade-total"
+              >
+                0.0
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="youItems"
+            class="items trade-items-grid"
+          >
+
+            <div class="empty-items trade-empty">
+
+              <span class="empty-plus">
+                ＋
+              </span>
+
+              <strong>
+                Henüz pet eklenmedi
+              </strong>
+
+              <small>
+                Teklifini oluşturmak için pet ekle
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="add trade-add"
+            onclick="openPetPicker('you')"
+          >
+            <span>＋</span>
+            Pet Ekle
+          </button>
+
+        </div>
+
+
+        <div class="vs trade-vs">
+
+          <div class="vs-ring">
+            <span>VS</span>
+          </div>
+
+        </div>
+
+
+        <div class="trade-box trade-box-them">
+
+          <div class="box-head trade-box-head">
+
+            <div>
+
+              <span class="trade-side-label">
+                KARŞI TARAF
+              </span>
+
+              <h3>
+                Karşı taraf
+              </h3>
+
+            </div>
+
+            <div class="trade-total-wrap">
+
+              <span class="trade-total-label">
+                VALUE
+              </span>
+
+              <span
+                id="themTotal"
+                class="trade-total"
+              >
+                0.0
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div
+            id="themItems"
+            class="items trade-items-grid"
+          >
+
+            <div class="empty-items trade-empty">
+
+              <span class="empty-plus">
+                ＋
+              </span>
+
+              <strong>
+                Henüz pet eklenmedi
+              </strong>
+
+              <small>
+                Karşı tarafın teklifini oluştur
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="add trade-add"
+            onclick="openPetPicker('them')"
+          >
+            <span>＋</span>
+            Pet Ekle
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="resultCard"
+        class="result-card trade-result-card"
+      >
+
+        <div class="result-main">
+
+          <div class="result-kicker">
+            TRADE ANALİZİ
+          </div>
+
+          <h3 id="resultStatusText">
+            Pet ekleyerek başla
+          </h3>
+
+          <p id="resultHint">
+            İki tarafa da pet eklediğinde avantajı burada göreceksin.
+          </p>
+
+        </div>
+
+        <div class="result-score">
+
+          <span class="result-score-label">
+            FARK
+          </span>
+
+          <strong id="resultDiffDisplay">
+            —
+          </strong>
+
+        </div>
+
+      </div>
+
     </section>
 
-    <section id="values" class="section values">
+
+    <section
+      id="values"
+      class="section values"
+    >
 
       <div class="section-head">
 
         <div>
-          <div class="eyebrow">POPULAR VALUES</div>
-          <h2>Popüler Pet Değerleri</h2>
+
+          <div class="eyebrow">
+            POPULAR VALUES
+          </div>
+
+          <h2>
+            Popüler Pet Değerleri
+          </h2>
+
         </div>
+
 
         <input
           id="search"
@@ -175,11 +354,16 @@
 
       </div>
 
-      <div id="valueGrid" class="value-grid"></div>
+
+      <div
+        id="valueGrid"
+        class="value-grid"
+      ></div>
 
     </section>
 
   </main>
+
 
   <!-- PET PICKER -->
 
@@ -198,6 +382,7 @@
       <div class="profile-header">
 
         <div>
+
           <div class="profile-eyebrow">
             SEÇİM YAP
           </div>
@@ -205,7 +390,9 @@
           <h2 id="petPickerTitle">
             Pet veya Eşya Ekle
           </h2>
+
         </div>
+
 
         <button
           type="button"
@@ -216,6 +403,7 @@
         </button>
 
       </div>
+
 
       <div class="modal-search">
 
@@ -229,10 +417,12 @@
 
       </div>
 
+
       <div
         id="pickerPetList"
         class="pet-choice-grid"
       ></div>
+
 
       <div class="picker-settings">
 
@@ -245,6 +435,7 @@
             id="pickerPreview"
             class="picker-preview"
           ></div>
+
 
           <div class="picker-options">
 
@@ -270,6 +461,7 @@
 
             </div>
 
+
             <div class="potion-toggles">
 
               <button
@@ -293,6 +485,7 @@
             </div>
 
           </div>
+
 
           <div class="picker-add">
 
@@ -321,6 +514,7 @@
 
   </div>
 
+
   <!-- PROFILE -->
 
   <div
@@ -338,12 +532,17 @@
       <div class="profile-header">
 
         <div>
+
           <div class="profile-eyebrow">
             ZAYAGG PROFILE
           </div>
 
-          <h2>Profil</h2>
+          <h2>
+            Profil
+          </h2>
+
         </div>
+
 
         <button
           type="button"
@@ -355,6 +554,7 @@
 
       </div>
 
+
       <div class="profile-main">
 
         <div
@@ -363,6 +563,7 @@
         >
           🐉
         </div>
+
 
         <div class="profile-info">
 
@@ -382,29 +583,62 @@
 
       </div>
 
+
       <div class="profile-stats">
 
         <div class="profile-stat">
-          <strong id="tradeCount">0</strong>
-          <span>Trade</span>
+
+          <strong id="tradeCount">
+            0
+          </strong>
+
+          <span>
+            Trade
+          </span>
+
         </div>
+
 
         <div class="profile-stat win-stat">
-          <strong id="winCount">0</strong>
-          <span>WIN</span>
+
+          <strong id="winCount">
+            0
+          </strong>
+
+          <span>
+            WIN
+          </span>
+
         </div>
+
 
         <div class="profile-stat fair-stat">
-          <strong id="fairCount">0</strong>
-          <span>FAIR</span>
+
+          <strong id="fairCount">
+            0
+          </strong>
+
+          <span>
+            FAIR
+          </span>
+
         </div>
 
+
         <div class="profile-stat lose-stat">
-          <strong id="loseCount">0</strong>
-          <span>LOSE</span>
+
+          <strong id="loseCount">
+            0
+          </strong>
+
+          <span>
+            LOSE
+          </span>
+
         </div>
 
       </div>
+
 
       <button
         type="button"
@@ -415,19 +649,23 @@
         Profili Düzenle
       </button>
 
+
       <form
         id="profileEditForm"
         class="profile-form hidden"
         onsubmit="saveEditedProfile(event)"
       >
 
-        <label for="editName">Ad</label>
+        <label for="editName">
+          Ad
+        </label>
 
         <input
           id="editName"
           maxlength="24"
           required
         >
+
 
         <label for="editUsername">
           Kullanıcı adı
@@ -439,6 +677,7 @@
           required
         >
 
+
         <label for="editBio">
           Biyografi
         </label>
@@ -449,14 +688,17 @@
           rows="3"
         ></textarea>
 
+
         <div class="avatar-pick-label">
           Avatar
         </div>
+
 
         <div
           id="avatarPick"
           class="avatar-pick"
         ></div>
+
 
         <div class="form-actions">
 
@@ -483,12 +725,13 @@
 
   </div>
 
+
   <footer>
     Zayagg © 2026 — Adopt Me Trading Values
   </footer>
+
 
   <script src="script.js"></script>
 
 </body>
 </html>
-```
