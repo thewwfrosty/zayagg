@@ -3300,3 +3300,235 @@ body.modal-open {
   }
 
 }
+/* =========================================
+   ELVEBREDD STYLE TRADE SLOTS
+   ========================================= */
+
+.trade-items-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 9px !important;
+  align-content: start;
+  padding: 8px;
+  min-height: 235px;
+}
+
+.trade-slot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-width: 0;
+  padding: 7px 5px 5px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,.07), transparent 55%),
+    rgba(10, 14, 23, 0.75);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 5px 15px rgba(0,0,0,.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+
+.trade-slot:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.18);
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255,255,255,.10), transparent 55%),
+    rgba(14, 19, 30, 0.9);
+}
+
+.trade-slot-image {
+  position: relative;
+  width: 100%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trade-slot-photo {
+  width: 63px !important;
+  height: 63px !important;
+  object-fit: contain;
+  display: block;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.28));
+}
+
+.trade-slot-name {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 3px;
+  margin-top: 2px;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.15;
+  text-align: center;
+  color: #f3f5fa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trade-slot-value {
+  font-size: 9px;
+  font-weight: 800;
+  color: #9faabd;
+  margin-top: 2px;
+}
+
+.trade-slot-badges {
+  position: absolute;
+  left: 3px;
+  bottom: 3px;
+  z-index: 5;
+  display: flex;
+  gap: 2px;
+}
+
+.trade-slot-badge {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 900;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(10,10,15,.82);
+}
+
+.trade-slot-badge.neon {
+  box-shadow: 0 0 10px rgba(98,255,151,.35);
+}
+
+.trade-slot-badge.mega {
+  box-shadow: 0 0 10px rgba(198,113,255,.4);
+}
+
+.trade-slot-badge.fly {
+  color: #8ed8ff;
+}
+
+.trade-slot-badge.ride {
+  color: #ffd58a;
+}
+
+.trade-slot > .remove-item {
+  position: absolute !important;
+  top: 4px !important;
+  right: 4px !important;
+  width: 19px !important;
+  height: 19px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  background: rgba(0,0,0,.65) !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  line-height: 19px !important;
+  text-align: center !important;
+  z-index: 10;
+  opacity: 0;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.trade-slot:hover > .remove-item {
+  opacity: 1;
+}
+
+.trade-empty {
+  grid-column: 1 / -1 !important;
+  min-height: 225px !important;
+  border: 1px dashed rgba(255,255,255,.09);
+  border-radius: 14px;
+}
+
+/* Neon / Mega efekt */
+.trade-slot .neon-effect,
+.trade-slot .mega-effect {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .55;
+}
+
+.trade-slot .neon-effect {
+  background: radial-gradient(
+    circle,
+    rgba(85,255,150,.22),
+    transparent 65%
+  );
+  animation: neonPulse 1.8s ease-in-out infinite;
+}
+
+.trade-slot .mega-effect {
+  background: radial-gradient(
+    circle,
+    rgba(177,92,255,.24),
+    transparent 65%
+  );
+  animation: megaPulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%,100% {
+    transform: scale(.9);
+    opacity: .35;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: .7;
+  }
+}
+
+@keyframes megaPulse {
+  0%,100% {
+    transform: scale(.9);
+    opacity: .35;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: .7;
+  }
+}
+
+@media (max-width: 700px) {
+  .trade-items-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    padding: 6px;
+  }
+
+  .trade-slot-image {
+    height: 55px;
+  }
+
+  .trade-slot-photo {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .trade-slot-name {
+    font-size: 8px;
+  }
+
+  .trade-slot-value {
+    font-size: 8px;
+  }
+
+  .trade-slot > .remove-item {
+    opacity: 1;
+  }
+}
