@@ -945,3 +945,621 @@ footer {
   }
 
 }
+/* =========================================================
+   ZAYAGG — PROFILE SYSTEM
+   ========================================================= */
+
+/* Profil modalı */
+.profile-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .72);
+  backdrop-filter: blur(12px);
+  z-index: 2000;
+}
+
+.profile-modal.show {
+  display: flex;
+}
+
+/* Profil kutusu */
+.profile-window {
+  position: relative;
+  width: min(460px, 100%);
+  padding: 35px;
+  text-align: center;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(139, 92, 246, .16),
+      transparent 45%
+    ),
+    linear-gradient(145deg, #111423, #0b0d18);
+
+  border: 1px solid rgba(139, 92, 246, .25);
+  border-radius: 25px;
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, .65),
+    0 0 60px rgba(139, 92, 246, .08);
+
+  animation: profileOpen .22s ease;
+}
+
+@keyframes profileOpen {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* X butonu */
+.profile-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+
+  width: 34px;
+  height: 34px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--card-2);
+  color: var(--muted);
+
+  font-size: 22px;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: .2s;
+}
+
+.profile-close:hover {
+  color: white;
+  border-color: rgba(139, 92, 246, .5);
+  background: rgba(139, 92, 246, .12);
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 92px;
+  height: 92px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 48px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(139, 92, 246, .2),
+      rgba(139, 92, 246, .05)
+    );
+
+  border: 2px solid rgba(139, 92, 246, .45);
+
+  box-shadow:
+    0 0 35px rgba(139, 92, 246, .18),
+    inset 0 0 20px rgba(139, 92, 246, .08);
+}
+
+/* Profil adı */
+.profile-window h2 {
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+/* Kullanıcı adı */
+.profile-username {
+  color: var(--purple-light);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* Bio */
+.profile-bio {
+  max-width: 350px;
+  margin: 0 auto 25px;
+
+  padding: 13px 16px;
+
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+
+  background: rgba(255, 255, 255, .025);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* İstatistikler */
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  margin-bottom: 25px;
+}
+
+.profile-stats div {
+  padding: 13px 7px;
+
+  background: rgba(255, 255, 255, .025);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.profile-stats strong {
+  display: block;
+
+  color: white;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.profile-stats span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* Düzenle butonu */
+.edit-profile-btn {
+  width: 100%;
+
+  padding: 13px;
+
+  border: 1px solid rgba(139, 92, 246, .4);
+  border-radius: 11px;
+
+  background: rgba(139, 92, 246, .12);
+  color: white;
+
+  font-weight: 800;
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.edit-profile-btn:hover {
+  background: rgba(139, 92, 246, .2);
+  border-color: var(--purple);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   PET MODAL — JS İLE UYUMLU
+   ========================================================= */
+
+.pet-modal-window {
+  position: relative;
+
+  width: min(760px, 100%);
+  max-height: 88vh;
+
+  overflow-y: auto;
+
+  padding: 25px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #111423,
+      #0b0d18
+    );
+
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 22px;
+
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .55);
+
+  animation: profileOpen .2s ease;
+}
+
+.pet-modal-window::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pet-modal-window::-webkit-scrollbar-thumb {
+  background: #292d40;
+  border-radius: 10px;
+}
+
+.pet-modal-window h2 {
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+.pet-modal-window h3 {
+  margin: 18px 0 12px;
+}
+
+/* Pet modal X */
+.pet-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+
+  width: 35px;
+  height: 35px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: var(--card-2);
+  color: white;
+
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.pet-modal-close:hover {
+  border-color: rgba(139, 92, 246, .5);
+}
+
+/* Pet seçenekleri */
+.pet-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.pet-choice {
+  min-height: 150px;
+
+  padding: 14px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, .025);
+  color: white;
+
+  cursor: pointer;
+  transition: .2s;
+}
+
+.pet-choice:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139, 92, 246, .5);
+  background: rgba(139, 92, 246, .08);
+}
+
+.pet-choice img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.pet-choice strong {
+  font-size: 13px;
+}
+
+.pet-choice span {
+  color: var(--purple-light);
+  font-size: 11px;
+}
+
+/* Variant önizleme */
+.variant-preview {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.variant-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.variant-preview h2 {
+  margin-top: 5px;
+}
+
+/* Pet görseli */
+.pet-image-wrap {
+  position: relative;
+
+  width: 72px;
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: auto;
+}
+
+.pet-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* F/R rozetleri */
+.pet-badges {
+  position: absolute;
+  right: -5px;
+  bottom: -3px;
+
+  display: flex;
+  gap: 3px;
+
+  z-index: 5;
+}
+
+.pet-badge {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+
+  border: 2px solid #111423;
+}
+
+.pet-badge.fly {
+  background: #38bdf8;
+}
+
+.pet-badge.ride {
+  background: #a855f7;
+}
+
+/* Neon efekti */
+.neon-effect {
+  position: absolute;
+  inset: 5px;
+
+  border-radius: 50%;
+
+  background: rgba(56, 189, 248, .12);
+
+  box-shadow:
+    0 0 15px #22d3ee,
+    0 0 30px rgba(139, 92, 246, .7);
+
+  animation: neonPulse 1.8s infinite alternate;
+
+  z-index: 1;
+}
+
+@keyframes neonPulse {
+  from {
+    opacity: .45;
+    transform: scale(.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+/* Mega efekti */
+.mega-effect {
+  position: absolute;
+  inset: 1px;
+
+  border-radius: 50%;
+
+  border: 3px solid transparent;
+
+  background:
+    linear-gradient(#111423, #111423) padding-box,
+    linear-gradient(
+      45deg,
+      #ff4d6d,
+      #f5c451,
+      #35d399,
+      #38bdf8,
+      #a78bfa,
+      #ff4d6d
+    ) border-box;
+
+  animation: megaRotate 3s linear infinite;
+
+  z-index: 1;
+}
+
+@keyframes megaRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   ADVANCED W/F/L
+   ========================================================= */
+
+.result-card.advanced {
+  display: block;
+}
+
+.wfl-top {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  align-items: center;
+  gap: 20px;
+}
+
+.wfl-total {
+  text-align: center;
+}
+
+.wfl-total small {
+  display: block;
+}
+
+.wfl-total strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 25px;
+}
+
+.wfl-circle {
+  width: 85px;
+  height: 85px;
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 18px;
+  font-weight: 900;
+
+  border: 2px solid currentColor;
+}
+
+.result-card.win .wfl-circle {
+  color: var(--green);
+  background: rgba(53, 211, 153, .08);
+}
+
+.result-card.fair .wfl-circle {
+  color: var(--yellow);
+  background: rgba(245, 196, 81, .08);
+}
+
+.result-card.lose .wfl-circle {
+  color: var(--red);
+  background: rgba(255, 102, 125, .08);
+}
+
+.wfl-subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.wfl-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.wfl-details div {
+  padding: 12px;
+  text-align: center;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, .025);
+}
+
+.wfl-details span {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+
+.wfl-details strong {
+  font-size: 15px;
+}
+
+.comparison-bar {
+  height: 8px;
+
+  margin-top: 18px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, .07);
+}
+
+.comparison-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: linear-gradient(
+    90deg,
+    var(--purple),
+    var(--purple-light)
+  );
+
+  transition: width .5s ease;
+}
+
+
+/* =========================================================
+   MOBILE PROFILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .profile-window {
+    padding: 30px 20px;
+  }
+
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pet-choice-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wfl-top {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .wfl-circle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .wfl-details {
+    grid-template-columns: 1fr;
+  }
+
+  /* Profil butonu mobilde de görünsün */
+  .login {
+    display: block;
+  }
+
+}
