@@ -1,74 +1,82 @@
 /* =========================================================
-   ZAYAGG — TRADE CALCULATOR & PET SYSTEM
+   ADOPT ME TRADE CALCULATOR & PET SYSTEM (OFFICIAL ASSETS)
    ========================================================= */
 
-// 1. ÖRNEK PET VERİ TABANI (Tüm Görsel ve Rozet Desteği)
+// 1. OYUN İÇİ ORİJİNAL ROZET VE İKON URL'LERİ
+const BADGES = {
+  fly: "https://static.wikia.nocookie.net/adoptme/images/1/1a/Fly_Potion.png",
+  ride: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Ride_Potion.png",
+  neon: "https://static.wikia.nocookie.net/adoptme/images/7/77/Neon_Icon.png",
+  mega: "https://static.wikia.nocookie.net/adoptme/images/3/30/Mega_Neon_Icon.png"
+};
+
+// 2. PET VERİ TABANI
 const PET_DATABASE = [
   {
     id: "shadow_dragon",
     name: "Shadow Dragon",
     rarity: "legendary",
     value: 125,
-    image: "https://images.wikia.com/adoptme/images/a/a6/Shadow_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/a/a6/Shadow_Dragon.png"
   },
   {
     id: "bat_dragon",
     name: "Bat Dragon",
     rarity: "legendary",
     value: 110,
-    image: "https://images.wikia.com/adoptme/images/8/87/Bat_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/8/87/Bat_Dragon.png"
   },
   {
     id: "frost_dragon",
     name: "Frost Dragon",
     rarity: "legendary",
     value: 58,
-    image: "https://images.wikia.com/adoptme/images/3/36/Frost_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/3/36/Frost_Dragon.png"
   },
   {
     id: "giraffe",
     name: "Giraffe",
     rarity: "legendary",
     value: 70,
-    image: "https://images.wikia.com/adoptme/images/e/e0/Giraffe.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/e/e0/Giraffe.png"
   },
   {
     id: "crow",
     name: "Crow",
     rarity: "legendary",
     value: 28,
-    image: "https://images.wikia.com/adoptme/images/a/a3/Crow.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Crow.png"
   },
   {
     id: "turtle",
     name: "Turtle",
     rarity: "ultra",
     value: 12,
-    image: "https://images.wikia.com/adoptme/images/0/0a/Turtle.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/0/0a/Turtle.png"
   }
 ];
 
-// Takas Durum Verileri
+// Uygulama Durum Değişkenleri
 let leftTrade = [];
 let rightTrade = [];
 let activeSide = null; // 'left' veya 'right'
 let selectedPet = null;
 
-// Seçenek Durumları (Modal İçi)
+// Seçenek Durumları
 let isFly = false;
 let isRide = false;
 let petForm = "regular"; // 'regular', 'neon', 'mega'
 
-// DOM Yükleme Sonrası Başlatma
+// Sayfa Yüklendiğinde Başlat
 document.addEventListener("DOMContentLoaded", () => {
   renderValueList();
   updateTradeUI();
   setupEventListeners();
 });
 
-// Event Listener'lar
+// Event Listener Kurulumları
 function setupEventListeners() {
-  // Modal Kapatma
+  // Modal Kapatma Butonları
   document.querySelectorAll(".pet-modal-close").forEach(btn => {
     btn.addEventListener("click", closeModal);
   });
@@ -81,16 +89,16 @@ function setupEventListeners() {
     });
   }
 
-  // Potion ve Form Butonları
+  // Fly / Ride / Neon / Mega Butonları
   document.getElementById("btnFly")?.addEventListener("click", () => {
     isFly = !isFly;
-    document.getElementById("btnFly").classList.toggle("active", isFly);
+    document.getElementById("btnFly")?.classList.toggle("active", isFly);
     updatePickerBar();
   });
 
   document.getElementById("btnRide")?.addEventListener("click", () => {
     isRide = !isRide;
-    document.getElementById("btnRide").classList.toggle("active", isRide);
+    document.getElementById("btnRide")?.classList.toggle("active", isRide);
     updatePickerBar();
   });
 
@@ -106,7 +114,7 @@ function setupEventListeners() {
     updatePickerBar();
   });
 
-  // Pet Ekleme Onayı
+  // Pet Ekleme Onay Butonu
   document.getElementById("confirmAddPet")?.addEventListener("click", confirmAddPet);
 }
 
@@ -115,7 +123,7 @@ function updateFormButtons() {
   document.getElementById("btnMega")?.classList.toggle("active", petForm === "mega");
 }
 
-// Modal Açma Fonksiyonu (Sol veya Sağ Kutu için)
+// Modal Açma / Kapatma Fonksiyonları
 function openPetModal(side) {
   activeSide = side;
   resetPickerState();
@@ -123,7 +131,7 @@ function openPetModal(side) {
   const modal = document.getElementById("petModal");
   if (modal) {
     modal.classList.remove("hidden");
-    document.body.classList.add("profile-open");
+    document.body.classList.add("modal-open");
     renderPetModalList();
   }
 }
@@ -132,7 +140,7 @@ function closeModal() {
   const modal = document.getElementById("petModal");
   if (modal) {
     modal.classList.add("hidden");
-    document.body.classList.remove("profile-open");
+    document.body.classList.remove("modal-open");
   }
 }
 
@@ -150,7 +158,7 @@ function resetPickerState() {
   if (pickerBar) pickerBar.classList.add("hidden");
 }
 
-// Modal İçindeki Pet Listesini Oluşturma
+// Modal İçinde Pet Listeleme
 function renderPetModalList(filterText = "") {
   const grid = document.getElementById("petChoiceGrid");
   if (!grid) return;
@@ -176,7 +184,7 @@ function renderPetModalList(filterText = "") {
   });
 }
 
-// Modalda Pet Seçildiğinde
+// Modalda Pet Seçimi
 function selectPetInModal(pet) {
   selectedPet = pet;
   renderPetModalList(document.getElementById("petSearchInput")?.value || "");
@@ -187,7 +195,7 @@ function selectPetInModal(pet) {
   updatePickerBar();
 }
 
-// Seçili Pet Hesaplaması ve Alt Bar Güncellemesi
+// Değer Hesaplama Mantığı
 function calculatePetValue(baseVal, form, fly, ride) {
   let multiplier = 1;
   if (form === "neon") multiplier = 4;
@@ -200,27 +208,27 @@ function calculatePetValue(baseVal, form, fly, ride) {
   return Number(((baseVal * multiplier) + extra).toFixed(1));
 }
 
+// Seçim Alanı / Önizleme Güncelleme
 function updatePickerBar() {
   if (!selectedPet) return;
 
   const calculatedVal = calculatePetValue(selectedPet.value, petForm, isFly, isRide);
-  
-  // Önizleme Alanı ve Görsel Efektleri
   const previewWrap = document.getElementById("pickerPreview");
+
   if (previewWrap) {
-    let effectClass = "";
-    if (petForm === "neon") effectClass = '<div class="neon-effect"></div>';
-    if (petForm === "mega") effectClass = '<div class="mega-effect"></div>';
+    let glow = "";
+    if (petForm === "neon") glow = '<div class="neon-glow"></div>';
+    if (petForm === "mega") glow = '<div class="mega-glow"></div>';
 
     previewWrap.innerHTML = `
       <div class="pet-image-wrap">
-        ${effectClass}
+        ${glow}
         <img src="${selectedPet.image}" class="pet-photo" alt="${selectedPet.name}">
         <div class="pet-badges">
-          ${isFly ? '<span class="pet-badge fly">F</span>' : ''}
-          ${isRide ? '<span class="pet-badge ride">R</span>' : ''}
-          ${petForm === "neon" ? '<span class="pet-badge neon">N</span>' : ''}
-          ${petForm === "mega" ? '<span class="pet-badge mega">M</span>' : ''}
+          ${isFly ? `<img src="${BADGES.fly}" class="badge-img" title="Fly">` : ''}
+          ${isRide ? `<img src="${BADGES.ride}" class="badge-img" title="Ride">` : ''}
+          ${petForm === "neon" ? `<img src="${BADGES.neon}" class="badge-img" title="Neon">` : ''}
+          ${petForm === "mega" ? `<img src="${BADGES.mega}" class="badge-img" title="Mega Neon">` : ''}
         </div>
       </div>
       <div>
@@ -238,7 +246,7 @@ function updatePickerBar() {
   if (valDisplay) valDisplay.textContent = calculatedVal;
 }
 
-// Takasa Pet Ekleme Onayı
+// Ekleme Onayı
 function confirmAddPet() {
   if (!selectedPet || !activeSide) return;
 
@@ -264,7 +272,7 @@ function confirmAddPet() {
   closeModal();
 }
 
-// Takas Ekranını / Listeleri Güncelleme
+// Takas Ekranı Güncelleme
 function updateTradeUI() {
   renderTradeList("leftItems", leftTrade, "left");
   renderTradeList("rightItems", rightTrade, "right");
@@ -281,6 +289,7 @@ function updateTradeUI() {
   calculateWFL(leftTotal, rightTotal);
 }
 
+// Takas Listesi İtemlerini Render Etme
 function renderTradeList(elementId, list, side) {
   const container = document.getElementById(elementId);
   if (!container) return;
@@ -291,20 +300,20 @@ function renderTradeList(elementId, list, side) {
   }
 
   container.innerHTML = list.map(item => {
-    let effectClass = "";
-    if (item.form === "neon") effectClass = '<div class="neon-effect"></div>';
-    if (item.form === "mega") effectClass = '<div class="mega-effect"></div>';
+    let glow = "";
+    if (item.form === "neon") glow = '<div class="neon-glow"></div>';
+    if (item.form === "mega") glow = '<div class="mega-glow"></div>';
 
     return `
       <div class="trade-item">
         <div class="pet-image-wrap">
-          ${effectClass}
+          ${glow}
           <img src="${item.image}" class="pet-photo" alt="${item.name}">
           <div class="pet-badges">
-            ${item.isFly ? '<span class="pet-badge fly">F</span>' : ''}
-            ${item.isRide ? '<span class="pet-badge ride">R</span>' : ''}
-            ${item.form === "neon" ? '<span class="pet-badge neon">N</span>' : ''}
-            ${item.form === "mega" ? '<span class="pet-badge mega">M</span>' : ''}
+            ${item.isFly ? `<img src="${BADGES.fly}" class="badge-img" title="Fly">` : ''}
+            ${item.isRide ? `<img src="${BADGES.ride}" class="badge-img" title="Ride">` : ''}
+            ${item.form === "neon" ? `<img src="${BADGES.neon}" class="badge-img" title="Neon">` : ''}
+            ${item.form === "mega" ? `<img src="${BADGES.mega}" class="badge-img" title="Mega Neon">` : ''}
           </div>
         </div>
         <div class="trade-item-info">
@@ -317,6 +326,7 @@ function renderTradeList(elementId, list, side) {
   }).join("");
 }
 
+// Pet Silme
 function removePet(side, id) {
   if (side === "left") {
     leftTrade = leftTrade.filter(i => i.id !== id);
@@ -326,7 +336,7 @@ function removePet(side, id) {
   updateTradeUI();
 }
 
-// WFL (Win / Fair / Lose) Mantığı
+// WFL Hesaplayıcı
 function calculateWFL(left, right) {
   const resCard = document.getElementById("resultCard");
   const resText = document.getElementById("resultStatus");
@@ -353,7 +363,7 @@ function calculateWFL(left, right) {
   }
 }
 
-// Alt Sayfa Değer Listesini Render Etme
+// Değer Listesi Tablosu
 function renderValueList() {
   const grid = document.getElementById("valueGrid");
   if (!grid) return;
