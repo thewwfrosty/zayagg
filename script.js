@@ -1,183 +1,173 @@
 /* =========================================================
-   ZAYAGG — TRADING VALUE SYSTEM
+   ZAYAGG — TRADING CALCULATOR
    ========================================================= */
-
-/* =========================
-   PET DATA
-   ========================= */
 
 const pets = [
 
-  /* LEGENDARY */
-  {name:"Bat Dragon",icon:"🦇",value:1000,rarity:"Legendary",demand:"Very High",trend:"↑"},
-  {name:"Shadow Dragon",icon:"🐉",value:850,rarity:"Legendary",demand:"Very High",trend:"↑"},
-  {name:"Frost Dragon",icon:"🐲",value:700,rarity:"Legendary",demand:"Very High",trend:"↑"},
-  {name:"Giraffe",icon:"🦒",value:580,rarity:"Legendary",demand:"Very High",trend:"↑"},
-  {name:"Owl",icon:"🦉",value:400,rarity:"Legendary",demand:"Very High",trend:"→"},
-  {name:"Parrot",icon:"🦜",value:320,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Crow",icon:"🐦‍⬛",value:250,rarity:"Legendary",demand:"High",trend:"→"},
-  {name:"Evil Unicorn",icon:"🦄",value:220,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Arctic Reindeer",icon:"🦌",value:150,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Turtle",icon:"🐢",value:100,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Kangaroo",icon:"🦘",value:85,rarity:"Legendary",demand:"Good",trend:"→"},
-  {name:"Albino Monkey",icon:"🐒",value:80,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Frost Fury",icon:"🐉",value:75,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Golden Rat",icon:"🐀",value:55,rarity:"Legendary",demand:"Good",trend:"→"},
-  {name:"Dancing Dragon",icon:"🐲",value:45,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Shark",icon:"🦈",value:35,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Octopus",icon:"🐙",value:30,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Kitsune",icon:"🦊",value:25,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Cerberus",icon:"🐺",value:20,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Dragon",icon:"🐉",value:10,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"King Bee",icon:"🐝",value:18,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Golden Penguin",icon:"🐧",value:17,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Golden Griffin",icon:"🦅",value:14,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Golden Unicorn",icon:"🦄",value:20,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Golden Dragon",icon:"🐉",value:15,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Diamond Dragon",icon:"🐲",value:30,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Diamond Griffin",icon:"🦅",value:25,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Diamond Unicorn",icon:"🦄",value:35,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Ninja Monkey",icon:"🐒",value:22,rarity:"Legendary",demand:"Good",trend:"→"},
-  {name:"Guardian Lion",icon:"🦁",value:18,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Snow Owl",icon:"🦉",value:28,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"King Monkey",icon:"🐒",value:70,rarity:"Legendary",demand:"High",trend:"↑"},
-  {name:"Queen Bee",icon:"🐝",value:24,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Dodo",icon:"🦤",value:24,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"T-Rex",icon:"🦖",value:24,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Skele-Rex",icon:"🦖",value:30,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Goldhorn",icon:"🐐",value:18,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Phoenix",icon:"🔥",value:20,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Winged Horse",icon:"🐴",value:22,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Axolotl",icon:"🦎",value:16,rarity:"Legendary",demand:"Normal",trend:"→"},
-  {name:"Lava Dragon",icon:"🐉",value:32,rarity:"Legendary",demand:"Good",trend:"↑"},
-  {name:"Ancient Dragon",icon:"🐲",value:12,rarity:"Legendary",demand:"Normal",trend:"→"},
+  // LEGENDARY
+  {name:"Bat Dragon", value:1000, rarity:"Legendary", icon:"🐉"},
+  {name:"Shadow Dragon", value:850, rarity:"Legendary", icon:"🐲"},
+  {name:"Frost Dragon", value:700, rarity:"Legendary", icon:"🐉"},
+  {name:"Giraffe", value:580, rarity:"Legendary", icon:"🦒"},
+  {name:"Owl", value:400, rarity:"Legendary", icon:"🦉"},
+  {name:"Parrot", value:320, rarity:"Legendary", icon:"🦜"},
+  {name:"Crow", value:250, rarity:"Legendary", icon:"🐦"},
+  {name:"Evil Unicorn", value:220, rarity:"Legendary", icon:"🦄"},
+  {name:"Arctic Reindeer", value:150, rarity:"Legendary", icon:"🦌"},
+  {name:"Turtle", value:100, rarity:"Legendary", icon:"🐢"},
+  {name:"Kangaroo", value:85, rarity:"Legendary", icon:"🦘"},
+  {name:"Albino Monkey", value:80, rarity:"Legendary", icon:"🐒"},
+  {name:"Frost Fury", value:75, rarity:"Legendary", icon:"🐲"},
+  {name:"Golden Rat", value:55, rarity:"Legendary", icon:"🐀"},
+  {name:"Dancing Dragon", value:45, rarity:"Legendary", icon:"🐉"},
+  {name:"Shark", value:35, rarity:"Legendary", icon:"🦈"},
+  {name:"Octopus", value:30, rarity:"Legendary", icon:"🐙"},
+  {name:"Kitsune", value:25, rarity:"Legendary", icon:"🦊"},
+  {name:"Cerberus", value:20, rarity:"Legendary", icon:"🐕"},
+  {name:"Dragon", value:10, rarity:"Legendary", icon:"🐲"},
+  {name:"King Bee", value:35, rarity:"Legendary", icon:"🐝"},
+  {name:"Golden Penguin", value:30, rarity:"Legendary", icon:"🐧"},
+  {name:"Golden Griffin", value:28, rarity:"Legendary", icon:"🦅"},
+  {name:"Golden Unicorn", value:27, rarity:"Legendary", icon:"🦄"},
+  {name:"Golden Dragon", value:27, rarity:"Legendary", icon:"🐉"},
+  {name:"Diamond Dragon", value:25, rarity:"Legendary", icon:"🐲"},
+  {name:"Diamond Griffin", value:23, rarity:"Legendary", icon:"🦅"},
+  {name:"Diamond Unicorn", value:23, rarity:"Legendary", icon:"🦄"},
+  {name:"Ninja Monkey", value:22, rarity:"Legendary", icon:"🐒"},
+  {name:"Guardian Lion", value:21, rarity:"Legendary", icon:"🦁"},
+  {name:"Snow Owl", value:20, rarity:"Legendary", icon:"🦉"},
+  {name:"King Monkey", value:20, rarity:"Legendary", icon:"🐒"},
+  {name:"Queen Bee", value:19, rarity:"Legendary", icon:"🐝"},
+  {name:"Dodo", value:18, rarity:"Legendary", icon:"🦤"},
+  {name:"T-Rex", value:18, rarity:"Legendary", icon:"🦖"},
+  {name:"Skele-Rex", value:17, rarity:"Legendary", icon:"🦴"},
+  {name:"Goldhorn", value:16, rarity:"Legendary", icon:"🐐"},
+  {name:"Phoenix", value:16, rarity:"Legendary", icon:"🔥"},
+  {name:"Winged Horse", value:15, rarity:"Legendary", icon:"🐎"},
+  {name:"Axolotl", value:14, rarity:"Legendary", icon:"🦎"},
+  {name:"Lava Dragon", value:14, rarity:"Legendary", icon:"🐉"},
+  {name:"Ancient Dragon", value:12, rarity:"Legendary", icon:"🐲"},
 
-  /* ULTRA RARE */
-  {name:"Dalmatian",icon:"🐕",value:90,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Flamingo",icon:"🦩",value:85,rarity:"Ultra Rare",demand:"High",trend:"→"},
-  {name:"Lion",icon:"🦁",value:80,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Red Panda",icon:"🦊",value:7,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Bee",icon:"🐝",value:7,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Crocodile",icon:"🐊",value:55,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Hedgehog",icon:"🦔",value:75,rarity:"Ultra Rare",demand:"Very High",trend:"↑"},
-  {name:"Zombie Buffalo",icon:"🐃",value:50,rarity:"Ultra Rare",demand:"High",trend:"→"},
-  {name:"Platypus",icon:"🦆",value:45,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Brown Bear",icon:"🐻",value:40,rarity:"Ultra Rare",demand:"Good",trend:"↑"},
-  {name:"Polar Bear",icon:"🐻‍❄️",value:38,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Cow",icon:"🐮",value:70,rarity:"Ultra Rare",demand:"High",trend:"↑"},
-  {name:"Koala",icon:"🐨",value:15,rarity:"Ultra Rare",demand:"Good",trend:"→"},
-  {name:"Penguin",icon:"🐧",value:8,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Sloth",icon:"🦥",value:7,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Horse",icon:"🐴",value:6,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Toucan",icon:"🦜",value:6,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Starfish",icon:"⭐",value:5,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Panda",icon:"🐼",value:6,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Red Squirrel",icon:"🐿️",value:5,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Shiba Inu",icon:"🐕",value:5,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
-  {name:"Ginger Cat",icon:"🐈",value:5,rarity:"Ultra Rare",demand:"Normal",trend:"→"},
+  // ULTRA RARE
+  {name:"Dalmatian", value:90, rarity:"Ultra Rare", icon:"🐶"},
+  {name:"Flamingo", value:85, rarity:"Ultra Rare", icon:"🦩"},
+  {name:"Lion", value:80, rarity:"Ultra Rare", icon:"🦁"},
+  {name:"Crocodile", value:55, rarity:"Ultra Rare", icon:"🐊"},
+  {name:"Hedgehog", value:50, rarity:"Ultra Rare", icon:"🦔"},
+  {name:"Zombie Buffalo", value:45, rarity:"Ultra Rare", icon:"🐃"},
+  {name:"Platypus", value:40, rarity:"Ultra Rare", icon:"🦆"},
+  {name:"Brown Bear", value:35, rarity:"Ultra Rare", icon:"🐻"},
+  {name:"Polar Bear", value:30, rarity:"Ultra Rare", icon:"🐻‍❄️"},
+  {name:"Koala", value:20, rarity:"Ultra Rare", icon:"🐨"},
+  {name:"Penguin", value:15, rarity:"Ultra Rare", icon:"🐧"},
+  {name:"Sloth", value:13, rarity:"Ultra Rare", icon:"🦥"},
+  {name:"Horse", value:10, rarity:"Ultra Rare", icon:"🐴"},
+  {name:"Toucan", value:9, rarity:"Ultra Rare", icon:"🦜"},
+  {name:"Starfish", value:8, rarity:"Ultra Rare", icon:"⭐"},
+  {name:"Panda", value:8, rarity:"Ultra Rare", icon:"🐼"},
+  {name:"Red Squirrel", value:8, rarity:"Ultra Rare", icon:"🐿️"},
+  {name:"Shiba Inu", value:7, rarity:"Ultra Rare", icon:"🐕"},
+  {name:"Ginger Cat", value:7, rarity:"Ultra Rare", icon:"🐈"},
+  {name:"Red Panda", value:7, rarity:"Ultra Rare", icon:"🦊"},
+  {name:"Bee", value:7, rarity:"Ultra Rare", icon:"🐝"},
 
-  /* RARE */
-  {name:"Blue Dog",icon:"🐕",value:75,rarity:"Rare",demand:"High",trend:"→"},
-  {name:"Pink Cat",icon:"🐱",value:70,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Elephant",icon:"🐘",value:65,rarity:"Rare",demand:"High",trend:"→"},
-  {name:"Hyena",icon:"🐕",value:60,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Turkey",icon:"🦃",value:45,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Pig",icon:"🐷",value:40,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Beaver",icon:"🦫",value:18,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Rabbit",icon:"🐰",value:16,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Snow Puma",icon:"🐆",value:15,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Bunny",icon:"🐇",value:14,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Monkey",icon:"🐒",value:12,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Seahorse",icon:"🌊",value:8,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Narwhal",icon:"🐋",value:8,rarity:"Rare",demand:"Normal",trend:"↑"},
-  {name:"Snow Monkey",icon:"🐒",value:6,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Beaver",icon:"🦫",value:18,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Emperor Penguin",icon:"🐧",value:15,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Rabbit",icon:"🐰",value:16,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Dilophosaurus",icon:"🦖",value:11,rarity:"Rare",demand:"Normal",trend:"↑"},
-  {name:"Stegosaurus",icon:"🦕",value:8,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Woolly Rhino",icon:"🦏",value:12,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Musk Ox",icon:"🐂",value:8,rarity:"Rare",demand:"Normal",trend:"→"},
-  {name:"Llama",icon:"🦙",value:20,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Arctic Fox",icon:"🦊",value:18,rarity:"Rare",demand:"Good",trend:"↑"},
-  {name:"Swan",icon:"🦢",value:12,rarity:"Rare",demand:"Good",trend:"→"},
-  {name:"Black Panther",icon:"🐈‍⬛",value:35,rarity:"Rare",demand:"Good",trend:"↑"},
+  // RARE
+  {name:"Blue Dog", value:75, rarity:"Rare", icon:"🐶"},
+  {name:"Pink Cat", value:70, rarity:"Rare", icon:"🐱"},
+  {name:"Elephant", value:65, rarity:"Rare", icon:"🐘"},
+  {name:"Hyena", value:60, rarity:"Rare", icon:"🐕"},
+  {name:"Turkey", value:45, rarity:"Rare", icon:"🦃"},
+  {name:"Pig", value:40, rarity:"Rare", icon:"🐷"},
+  {name:"Llama", value:35, rarity:"Rare", icon:"🦙"},
+  {name:"Cow", value:32, rarity:"Rare", icon:"🐄"},
+  {name:"Swan", value:30, rarity:"Rare", icon:"🦢"},
+  {name:"Black Panther", value:28, rarity:"Rare", icon:"🐈‍⬛"},
+  {name:"Arctic Fox", value:25, rarity:"Rare", icon:"🦊"},
+  {name:"Woolly Rhino", value:22, rarity:"Rare", icon:"🦏"},
+  {name:"Emperor Penguin", value:20, rarity:"Rare", icon:"🐧"},
+  {name:"Musk Ox", value:19, rarity:"Rare", icon:"🐂"},
+  {name:"Beaver", value:18, rarity:"Rare", icon:"🦫"},
+  {name:"Rabbit", value:16, rarity:"Rare", icon:"🐇"},
+  {name:"Snow Puma", value:15, rarity:"Rare", icon:"🐆"},
+  {name:"Bunny", value:14, rarity:"Rare", icon:"🐰"},
+  {name:"Monkey", value:12, rarity:"Rare", icon:"🐒"},
+  {name:"Seahorse", value:8, rarity:"Rare", icon:"🐴"},
+  {name:"Narwhal", value:8, rarity:"Rare", icon:"🐋"},
+  {name:"Snow Monkey", value:6, rarity:"Rare", icon:"🐒"},
 
-  /* UNCOMMON */
-  {name:"Zebra",icon:"🦓",value:13,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Emu",icon:"🐦",value:10,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Puma",icon:"🐆",value:9,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Woolly Mammoth",icon:"🦣",value:9,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Fennec Fox",icon:"🦊",value:5,rarity:"Uncommon",demand:"Good",trend:"→"},
-  {name:"Meerkat",icon:"🦦",value:5,rarity:"Uncommon",demand:"Good",trend:"↑"},
-  {name:"Capybara",icon:"🦫",value:4,rarity:"Uncommon",demand:"Good",trend:"↑"},
-  {name:"Dingo",icon:"🐕",value:4,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Glyptodon",icon:"🦎",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Chocolate Labrador",icon:"🐕",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Pterodactyl",icon:"🦅",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Wolf",icon:"🐺",value:3,rarity:"Uncommon",demand:"Good",trend:"↑"},
-  {name:"Triceratops",icon:"🦖",value:4,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Stegosaurus",icon:"🦕",value:4,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Banded Palm Civet",icon:"🐾",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Mongoose",icon:"🦦",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Warthog",icon:"🐗",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
-  {name:"Poodle",icon:"🐩",value:3,rarity:"Uncommon",demand:"Normal",trend:"→"},
+  // UNCOMMON
+  {name:"Zebra", value:13, rarity:"Uncommon", icon:"🦓"},
+  {name:"Emu", value:10, rarity:"Uncommon", icon:"🐦"},
+  {name:"Puma", value:9, rarity:"Uncommon", icon:"🐆"},
+  {name:"Woolly Mammoth", value:9, rarity:"Uncommon", icon:"🐘"},
+  {name:"Fennec Fox", value:5, rarity:"Uncommon", icon:"🦊"},
+  {name:"Meerkat", value:5, rarity:"Uncommon", icon:"🦦"},
+  {name:"Capybara", value:4, rarity:"Uncommon", icon:"🦫"},
+  {name:"Dingo", value:4, rarity:"Uncommon", icon:"🐕"},
+  {name:"Glyptodon", value:3, rarity:"Uncommon", icon:"🦎"},
+  {name:"Chocolate Labrador", value:3, rarity:"Uncommon", icon:"🐕"},
+  {name:"Pterodactyl", value:3, rarity:"Uncommon", icon:"🦖"},
+  {name:"Wolf", value:3, rarity:"Uncommon", icon:"🐺"},
+  {name:"Triceratops", value:3, rarity:"Uncommon", icon:"🦖"},
+  {name:"Stegosaurus", value:3, rarity:"Uncommon", icon:"🦕"},
+  {name:"Banded Palm Civet", value:2, rarity:"Uncommon", icon:"🦝"},
+  {name:"Mongoose", value:2, rarity:"Uncommon", icon:"🦦"},
+  {name:"Warthog", value:2, rarity:"Uncommon", icon:"🐗"},
+  {name:"Poodle", value:2, rarity:"Uncommon", icon:"🐩"},
 
-  /* COMMON */
-  {name:"Dog",icon:"🐶",value:2,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Cat",icon:"🐱",value:2,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Buffalo",icon:"🐃",value:2,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Ant",icon:"🐜",value:2,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Mouse",icon:"🐭",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Otter",icon:"🦦",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Robin",icon:"🐦",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Chicken",icon:"🐔",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Ground Sloth",icon:"🦥",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Tasmanian Tiger",icon:"🐯",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Bandicoot",icon:"🐀",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Walrus",icon:"🦭",value:1,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Buffalo",icon:"🐃",value:2,rarity:"Common",demand:"Normal",trend:"→"},
-  {name:"Tasmanian Tiger",icon:"🐯",value:1,rarity:"Common",demand:"Normal",trend:"→"}
+  // COMMON
+  {name:"Dog", value:2, rarity:"Common", icon:"🐶"},
+  {name:"Cat", value:2, rarity:"Common", icon:"🐱"},
+  {name:"Buffalo", value:2, rarity:"Common", icon:"🐃"},
+  {name:"Ant", value:2, rarity:"Common", icon:"🐜"},
+  {name:"Mouse", value:1, rarity:"Common", icon:"🐭"},
+  {name:"Otter", value:1, rarity:"Common", icon:"🦦"},
+  {name:"Robin", value:1, rarity:"Common", icon:"🐦"},
+  {name:"Chicken", value:1, rarity:"Common", icon:"🐔"},
+  {name:"Ground Sloth", value:1, rarity:"Common", icon:"🦥"},
+  {name:"Tasmanian Tiger", value:1, rarity:"Common", icon:"🐯"},
+  {name:"Bandicoot", value:1, rarity:"Common", icon:"🐭"},
+  {name:"Walrus", value:1, rarity:"Common", icon:"🦭"}
 ];
 
 
 /* =========================================================
-   EXTRA ITEM DATA
+   EXTRA ITEMS
    ========================================================= */
 
 const extraItems = [
 
-  {name:"Cracked Egg",icon:"🥚",value:2,type:"Eggs"},
-  {name:"Pet Egg",icon:"🥚",value:4,type:"Eggs"},
-  {name:"Royal Egg",icon:"🥚",value:6,type:"Eggs"},
-  {name:"Japan Egg",icon:"🥚",value:5,type:"Eggs"},
-  {name:"Mythic Egg",icon:"🥚",value:5,type:"Eggs"},
-  {name:"Fossil Egg",icon:"🥚",value:5,type:"Eggs"},
+  {name:"Cracked Egg", value:3, category:"Eggs", icon:"🥚"},
+  {name:"Pet Egg", value:5, category:"Eggs", icon:"🥚"},
+  {name:"Royal Egg", value:8, category:"Eggs", icon:"🥚"},
+  {name:"Japan Egg", value:7, category:"Eggs", icon:"🥚"},
+  {name:"Mythic Egg", value:7, category:"Eggs", icon:"🥚"},
+  {name:"Fossil Egg", value:6, category:"Eggs", icon:"🥚"},
 
-  {name:"Witch's Caravan",icon:"🚙",value:8,type:"Vehicles"},
-  {name:"Rocket Racer",icon:"🚗",value:12,type:"Vehicles"},
-  {name:"Hoverboard",icon:"🛹",value:10,type:"Vehicles"},
-  {name:"Cloud Car",icon:"☁️",value:35,type:"Vehicles"},
-  {name:"Banana Car",icon:"🍌",value:15,type:"Vehicles"},
-  {name:"Axel",icon:"🏎️",value:8,type:"Vehicles"},
+  {name:"Witch's Caravan", value:15, category:"Vehicles", icon:"🧙"},
+  {name:"Rocket Racer", value:12, category:"Vehicles", icon:"🚀"},
+  {name:"Hoverboard", value:10, category:"Vehicles", icon:"🛹"},
+  {name:"Cloud Car", value:20, category:"Vehicles", icon:"☁️"},
+  {name:"Banana Car", value:8, category:"Vehicles", icon:"🍌"},
+  {name:"Axel", value:6, category:"Vehicles", icon:"🚗"},
 
-  {name:"Founder Crown",icon:"👑",value:12,type:"Pet Wear"},
-  {name:"Cowboy Hat",icon:"🤠",value:5,type:"Pet Wear"},
-  {name:"Bone Wings",icon:"🪽",value:8,type:"Pet Wear"},
-  {name:"Cute Circle Glasses",icon:"👓",value:4,type:"Pet Wear"},
+  {name:"Founder Crown", value:15, category:"Pet Wear", icon:"👑"},
+  {name:"Cowboy Hat", value:5, category:"Pet Wear", icon:"🤠"},
+  {name:"Bone Wings", value:8, category:"Pet Wear", icon:"🦴"},
+  {name:"Cute Circle Glasses", value:4, category:"Pet Wear", icon:"👓"},
 
-  {name:"Duck Balloon",icon:"🎈",value:5,type:"Toys"},
-  {name:"Magic Wand",icon:"🪄",value:7,type:"Toys"},
-  {name:"Teddy Bear",icon:"🧸",value:4,type:"Toys"},
-  {name:"Plunger Grappling Hook",icon:"🪠",value:3,type:"Toys"},
+  {name:"Duck Balloon", value:5, category:"Toys", icon:"🎈"},
+  {name:"Magic Wand", value:7, category:"Toys", icon:"🪄"},
+  {name:"Teddy Bear", value:3, category:"Toys", icon:"🧸"},
+  {name:"Plunger Grappling Hook", value:6, category:"Toys", icon:"🪠"},
 
-  {name:"Big Head Potion",icon:"🧪",value:5,type:"Food"},
-  {name:"Ride-A-Pet Potion",icon:"🧪",value:10,type:"Food"},
-  {name:"Fly-A-Pet Potion",icon:"🧪",value:15,type:"Food"},
+  {name:"Big Head Potion", value:3, category:"Food", icon:"🧪"},
+  {name:"Ride-A-Pet Potion", value:20, category:"Food", icon:"🧪"},
+  {name:"Fly-A-Pet Potion", value:25, category:"Food", icon:"🧪"},
 
-  {name:"Standard Gift",icon:"🎁",value:3,type:"Gifts"},
-  {name:"Big Gift",icon:"🎁",value:5,type:"Gifts"},
-  {name:"Massive Gift",icon:"🎁",value:8,type:"Gifts"}
+  {name:"Standard Gift", value:2, category:"Gifts", icon:"🎁"},
+  {name:"Big Gift", value:5, category:"Gifts", icon:"🎁"},
+  {name:"Massive Gift", value:10, category:"Gifts", icon:"🎁"}
 ];
 
 
@@ -190,10 +180,11 @@ let tradeState = {
   them: []
 };
 
-let currentSide = null;
+let currentSide = "you";
 let currentCategory = "Pets";
 let currentRarity = "All";
 let currentSearch = "";
+let selectedPet = null;
 
 let favorites = JSON.parse(
   localStorage.getItem("zayaggFavorites") || "[]"
@@ -204,22 +195,10 @@ let favorites = JSON.parse(
    HELPERS
    ========================================================= */
 
-function getAllItems() {
-  return [
-    ...pets.map(p => ({
-      ...p,
-      type: "Pets"
-    })),
-    ...extraItems
-  ];
-}
-
-function getItemKey(item) {
-  return `${item.type || "Pets"}:${item.name}`;
-}
-
-function formatValue(value) {
-  return Number(value).toLocaleString("tr-TR");
+function getTotal(side) {
+  return tradeState[side].reduce((sum, item) => {
+    return sum + item.value * item.quantity;
+  }, 0);
 }
 
 function saveFavorites() {
@@ -229,8 +208,19 @@ function saveFavorites() {
   );
 }
 
-function isFavorite(item) {
-  return favorites.includes(getItemKey(item));
+function toggleFavorite(name) {
+  if (favorites.includes(name)) {
+    favorites = favorites.filter(x => x !== name);
+  } else {
+    favorites.push(name);
+  }
+
+  saveFavorites();
+  renderValues();
+
+  if (document.querySelector(".pet-modal")) {
+    renderPetList();
+  }
 }
 
 
@@ -241,43 +231,50 @@ function isFavorite(item) {
 function renderValues() {
 
   const grid = document.getElementById("valueGrid");
+  const search = document.getElementById("search");
+
   if (!grid) return;
 
-  const searchInput = document.getElementById("search");
-  const search = searchInput
-    ? searchInput.value.toLowerCase().trim()
+  const query = search
+    ? search.value.toLowerCase().trim()
     : "";
 
-  const list = pets
-    .filter(p =>
-      p.name.toLowerCase().includes(search)
-    )
-    .slice(0, 24);
+  const filtered = pets
+    .filter(p => p.name.toLowerCase().includes(query))
+    .slice(0, 32);
 
-  if (!list.length) {
-    grid.innerHTML = `
-      <div class="no-results">
-        Pet bulunamadı.
+  grid.innerHTML = filtered.map(pet => {
+
+    const fav = favorites.includes(pet.name);
+
+    return `
+      <div class="value-card">
+
+        <button
+          class="favorite-button ${fav ? "active" : ""}"
+          onclick="toggleFavorite('${pet.name.replace(/'/g,"\\'")}')"
+        >
+          ${fav ? "★" : "☆"}
+        </button>
+
+        <div class="value-card-icon">
+          ${pet.icon}
+        </div>
+
+        <h3>${pet.name}</h3>
+
+        <p>
+          ${pet.value.toLocaleString()}
+        </p>
+
+        <small style="color:#77718f">
+          ${pet.rarity}
+        </small>
+
       </div>
     `;
-    return;
-  }
 
-  grid.innerHTML = list.map(p => `
-    <div class="value-card">
-      <div class="value-icon">${p.icon}</div>
-
-      <div class="value-info">
-        <strong>${p.name}</strong>
-        <span>${p.rarity}</span>
-      </div>
-
-      <div class="value-price">
-        ${formatValue(p.value)}
-        <small>${p.trend}</small>
-      </div>
-    </div>
-  `).join("");
+  }).join("");
 }
 
 
@@ -285,129 +282,144 @@ function renderValues() {
    CALCULATOR
    ========================================================= */
 
-function addItem(side) {
-  currentSide = side;
-  openPetSelector();
-}
+function renderTrade(side) {
 
-function getItemTotalValue(item) {
-  return item.finalValue * item.quantity;
-}
-
-function calculateTotal(side) {
-
-  return tradeState[side].reduce(
-    (total, item) =>
-      total + getItemTotalValue(item),
-    0
+  const container = document.getElementById(
+    side === "you" ? "youItems" : "themItems"
   );
-}
 
-function renderTrade() {
-
-  const youContainer = document.getElementById("youItems");
-  const themContainer = document.getElementById("themItems");
-
-  if (!youContainer || !themContainer) return;
-
-  renderSide("you", youContainer);
-  renderSide("them", themContainer);
-
-  const youTotal = calculateTotal("you");
-  const themTotal = calculateTotal("them");
-
-  const youTotalEl = document.getElementById("youTotal");
-  const themTotalEl = document.getElementById("themTotal");
-
-  if (youTotalEl)
-    youTotalEl.textContent = formatValue(youTotal);
-
-  if (themTotalEl)
-    themTotalEl.textContent = formatValue(themTotal);
-
-  updateResult(youTotal, themTotal);
-}
-
-function renderSide(side, container) {
+  if (!container) return;
 
   const items = tradeState[side];
 
   if (!items.length) {
+
     container.innerHTML = `
       <div class="empty-trade">
-        Henüz item eklenmedi.
+        Henüz pet eklenmedi
       </div>
     `;
-    return;
-  }
 
-  container.innerHTML = items.map((item, index) => {
+  } else {
 
-    const variantText =
-      item.variant === "neon"
-        ? "✨ Neon"
-        : item.variant === "mega"
-        ? "🌈 Mega Neon"
-        : "Normal";
+    container.innerHTML = items.map((item, index) => {
 
-    return `
-      <div class="trade-item">
+      return `
+        <div class="trade-item">
 
-        <button
-          class="pet-select-button"
-          onclick="changeVariant('${side}', ${index})"
-        >
           <div class="trade-item-icon">
             ${item.icon}
           </div>
 
           <div class="trade-item-info">
-            <strong>${item.name}</strong>
-            <span>${variantText}</span>
+            <strong>
+              ${item.name}
+              ${item.variant !== "Normal"
+                ? ` • ${item.variant}`
+                : ""}
+            </strong>
+
             <small>
-              ${formatValue(item.finalValue)} / adet
+              ${item.rarity || item.category || "Item"}
             </small>
+
+            <div style="margin-top:6px">
+              <button
+                onclick="changeQuantity('${side}',${index},-1)"
+                style="background:#211e32;color:white;border:0;border-radius:5px;padding:2px 7px"
+              >−</button>
+
+              <span style="margin:0 7px;color:#aaa">
+                ${item.quantity}
+              </span>
+
+              <button
+                onclick="changeQuantity('${side}',${index},1)"
+                style="background:#211e32;color:white;border:0;border-radius:5px;padding:2px 7px"
+              >+</button>
+            </div>
+
           </div>
-        </button>
 
-        <div class="quantity-controls">
-
-          <button
-            onclick="changeQuantity('${side}', ${index}, -1)"
-          >
-            −
-          </button>
-
-          <span>${item.quantity}</span>
+          <div class="trade-item-value">
+            ${(item.value * item.quantity).toLocaleString()}
+          </div>
 
           <button
-            onclick="changeQuantity('${side}', ${index}, 1)"
+            class="remove-item"
+            onclick="removeItem('${side}',${index})"
           >
-            +
+            ×
           </button>
 
         </div>
+      `;
 
-        <strong class="trade-item-total">
-          ${formatValue(getItemTotalValue(item))}
-        </strong>
+    }).join("");
+  }
 
-        <button
-          class="remove-item"
-          onclick="removeItem('${side}', ${index})"
-        >
-          ×
-        </button>
+  updateTotals();
+}
 
-      </div>
-    `;
-  }).join("");
+
+function updateTotals() {
+
+  const youTotal = document.getElementById("youTotal");
+  const themTotal = document.getElementById("themTotal");
+
+  const you = getTotal("you");
+  const them = getTotal("them");
+
+  if (youTotal) {
+    youTotal.textContent = you.toLocaleString();
+  }
+
+  if (themTotal) {
+    themTotal.textContent = them.toLocaleString();
+  }
+
+  updateResult(you, them);
 }
 
 
 /* =========================================================
-   QUANTITY
+   ADD / REMOVE
    ========================================================= */
+
+function addItem(side, item = null) {
+
+  if (!item) {
+
+    currentSide = side;
+    openPetModal();
+    return;
+  }
+
+  const existing = tradeState[side].find(x =>
+    x.name === item.name &&
+    x.variant === item.variant
+  );
+
+  if (existing) {
+    existing.quantity++;
+  } else {
+    tradeState[side].push({
+      ...item,
+      quantity: 1
+    });
+  }
+
+  renderTrade(side);
+}
+
+
+function removeItem(side, index) {
+
+  tradeState[side].splice(index, 1);
+
+  renderTrade(side);
+}
+
 
 function changeQuantity(side, index, amount) {
 
@@ -419,650 +431,23 @@ function changeQuantity(side, index, amount) {
     tradeState[side].splice(index, 1);
   }
 
-  renderTrade();
+  renderTrade(side);
 }
 
 
 /* =========================================================
-   REMOVE
+   W/F/L
    ========================================================= */
 
-function removeItem(side, index) {
-  tradeState[side].splice(index, 1);
-  renderTrade();
-}
+function updateResult(you, them) {
 
-
-/* =========================================================
-   VARIANT
-   ========================================================= */
-
-function changeVariant(side, index) {
-
-  const item = tradeState[side][index];
-
-  currentSide = side;
-
-  openVariantSelector(item.originalName || item.name);
-}
-
-function openVariantSelector(name) {
-
-  const pet = pets.find(
-    p => p.name === name
-  );
-
-  if (!pet) return;
-
-  const modal = document.getElementById("petModal");
-
-  if (!modal) return;
-
-  modal.innerHTML = `
-    <div class="pet-modal-box">
-
-      <div class="modal-header">
-        <div>
-          <small>VARIANT SEÇ</small>
-          <h3>${pet.icon} ${pet.name}</h3>
-        </div>
-
-        <button onclick="closePetSelector()">×</button>
-      </div>
-
-      <div class="variant-title">
-        ${pet.name} için varyant seç
-      </div>
-
-      <div class="variant-grid">
-
-        <button
-          class="variant-card"
-          onclick="selectVariant('${pet.name}', 'normal')"
-        >
-          <div class="variant-icon">
-            ${pet.icon}
-          </div>
-          <strong>Normal</strong>
-          <span>${formatValue(pet.value)}</span>
-        </button>
-
-        <button
-          class="variant-card neon"
-          onclick="selectVariant('${pet.name}', 'neon')"
-        >
-          <div class="variant-icon">✨</div>
-          <strong>Neon</strong>
-          <span>${formatValue(pet.value * 4)}</span>
-        </button>
-
-        <button
-          class="variant-card mega"
-          onclick="selectVariant('${pet.name}', 'mega')"
-        >
-          <div class="variant-icon">🌈</div>
-          <strong>Mega Neon</strong>
-          <span>${formatValue(pet.value * 16)}</span>
-        </button>
-
-      </div>
-
-      <button
-        class="variant-back"
-        onclick="openPetSelector()"
-      >
-        ← Pet listesine dön
-      </button>
-
-    </div>
-  `;
-
-  modal.classList.add("open");
-}
-
-
-/* =========================================================
-   PET SELECTOR
-   ========================================================= */
-
-function openPetSelector() {
-
-  let modal = document.getElementById("petModal");
-
-  if (!modal) {
-
-    modal = document.createElement("div");
-
-    modal.id = "petModal";
-    modal.className = "pet-modal";
-
-    document.body.appendChild(modal);
-  }
-
-  modal.innerHTML = `
-    <div class="pet-modal-box">
-
-      <div class="modal-header">
-
-        <div>
-          <small>ITEM SELECTOR</small>
-          <h3>Pet / Item Seç</h3>
-        </div>
-
-        <button onclick="closePetSelector()">×</button>
-
-      </div>
-
-      <input
-        id="petSearch"
-        class="pet-search"
-        placeholder="🔎 Pet veya item ara..."
-        autocomplete="off"
-      >
-
-      <div class="pet-filters">
-
-        <button
-          class="pet-filter active"
-          onclick="setCategory('Pets', this)"
-        >
-          🐾 Pets
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Favorites', this)"
-        >
-          ⭐ Favorites
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Eggs', this)"
-        >
-          🥚 Eggs
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Vehicles', this)"
-        >
-          🚗 Vehicles
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Pet Wear', this)"
-        >
-          👑 Pet Wear
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Toys', this)"
-        >
-          🧸 Toys
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Food', this)"
-        >
-          🍎 Food
-        </button>
-
-        <button
-          class="pet-filter"
-          onclick="setCategory('Gifts', this)"
-        >
-          🎁 Gifts
-        </button>
-
-      </div>
-
-      <div
-        id="rarityFilters"
-        class="pet-filters rarity-filters"
-      >
-
-        <button
-          class="pet-filter rarity active"
-          onclick="setRarity('All', this)"
-        >
-          All
-        </button>
-
-        <button
-          class="pet-filter rarity"
-          onclick="setRarity('Legendary', this)"
-        >
-          Legendary
-        </button>
-
-        <button
-          class="pet-filter rarity"
-          onclick="setRarity('Ultra Rare', this)"
-        >
-          Ultra Rare
-        </button>
-
-        <button
-          class="pet-filter rarity"
-          onclick="setRarity('Rare', this)"
-        >
-          Rare
-        </button>
-
-        <button
-          class="pet-filter rarity"
-          onclick="setRarity('Uncommon', this)"
-        >
-          Uncommon
-        </button>
-
-        <button
-          class="pet-filter rarity"
-          onclick="setRarity('Common', this)"
-        >
-          Common
-        </button>
-
-      </div>
-
-      <div id="petList" class="pet-list"></div>
-
-    </div>
-  `;
-
-  currentCategory = "Pets";
-  currentRarity = "All";
-  currentSearch = "";
-
-  modal.classList.add("open");
-
-  const search = document.getElementById("petSearch");
-
-  search.addEventListener("input", e => {
-    currentSearch = e.target.value.toLowerCase();
-    renderPetList();
-  });
-
-  renderPetList();
-}
-
-
-/* =========================================================
-   CATEGORY
-   ========================================================= */
-
-function setCategory(category, button) {
-
-  currentCategory = category;
-
-  document
-    .querySelectorAll(".pet-filter")
-    .forEach(btn => {
-      if (
-        btn.closest(".pet-filters") ===
-        button.closest(".pet-filters")
-      ) {
-        btn.classList.remove("active");
-      }
-    });
-
-  button.classList.add("active");
-
-  const rarityFilters =
-    document.getElementById("rarityFilters");
-
-  if (rarityFilters) {
-    rarityFilters.style.display =
-      category === "Pets"
-      ? "flex"
-      : "none";
-  }
-
-  currentRarity = "All";
-
-  renderPetList();
-}
-
-
-/* =========================================================
-   RARITY
-   ========================================================= */
-
-function setRarity(rarity, button) {
-
-  currentRarity = rarity;
-
-  document
-    .querySelectorAll(".rarity")
-    .forEach(btn =>
-      btn.classList.remove("active")
-    );
-
-  button.classList.add("active");
-
-  renderPetList();
-}
-
-
-/* =========================================================
-   PET LIST
-   ========================================================= */
-
-function renderPetList() {
-
-  const container =
-    document.getElementById("petList");
-
-  if (!container) return;
-
-  let list = getAllItems();
-
-  if (currentCategory === "Favorites") {
-
-    list = list.filter(item =>
-      isFavorite(item)
-    );
-
-  } else {
-
-    list = list.filter(item =>
-      item.type === currentCategory
-    );
-  }
-
-  if (
-    currentCategory === "Pets" &&
-    currentRarity !== "All"
-  ) {
-
-    list = list.filter(
-      item =>
-        item.rarity === currentRarity
-    );
-  }
-
-  if (currentSearch) {
-
-    list = list.filter(item =>
-      item.name
-        .toLowerCase()
-        .includes(currentSearch)
-    );
-  }
-
-  if (!list.length) {
-
-    container.innerHTML = `
-      <div class="no-results">
-        <div>🔎</div>
-        <strong>Sonuç bulunamadı</strong>
-        <span>Başka bir arama deneyin.</span>
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML = list.map(item => {
-
-    const favorite = isFavorite(item);
-
-    const rarityText =
-      item.rarity || item.type;
-
-    return `
-      <div class="pet-option">
-
-        <button
-          class="favorite-button ${favorite ? "active" : ""}"
-          onclick="toggleFavorite(event, '${getItemKey(item)}')"
-        >
-          ${favorite ? "★" : "☆"}
-        </button>
-
-        <button
-          class="pet-select-button"
-          onclick="selectItem('${item.type}', '${item.name}')"
-        >
-
-          <div class="pet-option-icon">
-            ${item.icon}
-          </div>
-
-          <div class="pet-option-info">
-
-            <strong>${item.name}</strong>
-
-            <span>
-              ${rarityText}
-              ${item.demand ? ` • ${item.demand}` : ""}
-            </span>
-
-          </div>
-
-          <strong class="pet-option-value">
-            ${formatValue(item.value)}
-          </strong>
-
-        </button>
-
-      </div>
-    `;
-
-  }).join("");
-}
-
-
-/* =========================================================
-   FAVORITES
-   ========================================================= */
-
-function toggleFavorite(event, key) {
-
-  event.stopPropagation();
-
-  if (favorites.includes(key)) {
-
-    favorites =
-      favorites.filter(
-        item => item !== key
-      );
-
-  } else {
-
-    favorites.push(key);
-  }
-
-  saveFavorites();
-  renderPetList();
-}
-
-
-/* =========================================================
-   SELECT ITEM
-   ========================================================= */
-
-function selectItem(type, name) {
-
-  const item =
-    getAllItems().find(
-      i =>
-        i.type === type &&
-        i.name === name
-    );
-
-  if (!item) return;
-
-  if (type !== "Pets") {
-
-    addTradeItem({
-      ...item,
-      originalName: item.name,
-      variant: "normal",
-      finalValue: item.value,
-      quantity: 1
-    });
-
-    closePetSelector();
-
-    return;
-  }
-
-  openVariantSelectorForNew(item);
-}
-
-
-/* =========================================================
-   SELECT NEW PET VARIANT
-   ========================================================= */
-
-function openVariantSelectorForNew(pet) {
-
-  const modal =
-    document.getElementById("petModal");
-
-  if (!modal) return;
-
-  modal.innerHTML = `
-    <div class="pet-modal-box">
-
-      <div class="modal-header">
-
-        <div>
-          <small>VARIANT SEÇ</small>
-          <h3>${pet.icon} ${pet.name}</h3>
-        </div>
-
-        <button onclick="closePetSelector()">×</button>
-
-      </div>
-
-      <div class="variant-grid">
-
-        <button
-          class="variant-card"
-          onclick="addVariant('${pet.name}', 'normal')"
-        >
-          <div class="variant-icon">
-            ${pet.icon}
-          </div>
-          <strong>Normal</strong>
-          <span>${formatValue(pet.value)}</span>
-        </button>
-
-        <button
-          class="variant-card neon"
-          onclick="addVariant('${pet.name}', 'neon')"
-        >
-          <div class="variant-icon">✨</div>
-          <strong>Neon</strong>
-          <span>${formatValue(pet.value * 4)}</span>
-        </button>
-
-        <button
-          class="variant-card mega"
-          onclick="addVariant('${pet.name}', 'mega')"
-        >
-          <div class="variant-icon">🌈</div>
-          <strong>Mega Neon</strong>
-          <span>${formatValue(pet.value * 16)}</span>
-        </button>
-
-      </div>
-
-      <button
-        class="variant-back"
-        onclick="openPetSelector()"
-      >
-        ← Pet listesine dön
-      </button>
-
-    </div>
-  `;
-}
-
-
-/* =========================================================
-   ADD VARIANT
-   ========================================================= */
-
-function addVariant(name, variant) {
-
-  const pet =
-    pets.find(p => p.name === name);
-
-  if (!pet) return;
-
-  let multiplier = 1;
-
-  if (variant === "neon")
-    multiplier = 4;
-
-  if (variant === "mega")
-    multiplier = 16;
-
-  addTradeItem({
-    ...pet,
-    type: "Pets",
-    originalName: pet.name,
-    variant,
-    finalValue: pet.value * multiplier,
-    quantity: 1
-  });
-
-  closePetSelector();
-}
-
-
-/* =========================================================
-   ADD TRADE ITEM
-   ========================================================= */
-
-function addTradeItem(item) {
-
-  const side = currentSide;
-
-  if (!side) return;
-
-  const existing =
-    tradeState[side].find(
-      x =>
-        x.originalName === item.originalName &&
-        x.variant === item.variant
-    );
-
-  if (existing) {
-
-    existing.quantity += 1;
-
-  } else {
-
-    tradeState[side].push(item);
-  }
-
-  renderTrade();
-}
-
-
-/* =========================================================
-   RESULT
-   ========================================================= */
-
-function updateResult(youTotal, themTotal) {
-
-  const card =
-    document.getElementById("resultCard");
+  const card = document.getElementById("resultCard");
 
   if (!card) return;
 
-  if (youTotal === 0 && themTotal === 0) {
+  if (you === 0 && them === 0) {
 
-    card.className =
-      "result-card neutral";
+    card.className = "result-card neutral";
 
     card.innerHTML = `
       <div>
@@ -1076,10 +461,9 @@ function updateResult(youTotal, themTotal) {
     return;
   }
 
-  if (youTotal === 0 || themTotal === 0) {
+  if (you === 0 || them === 0) {
 
-    card.className =
-      "result-card neutral";
+    card.className = "result-card neutral";
 
     card.innerHTML = `
       <div>
@@ -1093,36 +477,26 @@ function updateResult(youTotal, themTotal) {
     return;
   }
 
-  const difference =
-    themTotal - youTotal;
-
-  const percent =
-    (difference / youTotal) * 100;
+  const difference = them - you;
+  const percentage = (difference / you) * 100;
 
   let result;
-  let resultClass;
+  let className;
 
-  if (Math.abs(percent) <= 10) {
-
-    result = "FAIR";
-    resultClass = "fair";
-
-  } else if (difference > 0) {
-
+  if (percentage > 10) {
     result = "WIN";
-    resultClass = "win";
-
-  } else {
-
+    className = "win";
+  } else if (percentage < -10) {
     result = "LOSE";
-    resultClass = "lose";
+    className = "lose";
+  } else {
+    result = "FAIR";
+    className = "fair";
   }
 
-  const sign =
-    difference > 0 ? "+" : "";
+  const sign = difference > 0 ? "+" : "";
 
-  card.className =
-    `result-card ${resultClass}`;
+  card.className = `result-card ${className}`;
 
   card.innerHTML = `
     <div>
@@ -1131,43 +505,521 @@ function updateResult(youTotal, themTotal) {
 
       <h3>${result}</h3>
 
-      <span class="result-detail">
-        Sen: ${formatValue(youTotal)}
+      <div class="result-detail">
+        Sen: ${you.toLocaleString()}
         &nbsp; • &nbsp;
-        Karşı: ${formatValue(themTotal)}
-      </span>
+        Karşı taraf: ${them.toLocaleString()}
+      </div>
+
+      <div class="result-detail">
+        Fark: ${sign}${difference.toLocaleString()}
+        (${sign}${percentage.toFixed(1)}%)
+      </div>
 
     </div>
 
     <div class="result-number">
-
-      ${sign}${formatValue(difference)}
-
-      <small>
-        ${sign}${percent.toFixed(1)}%
-      </small>
-
+      ${result}
     </div>
   `;
 }
 
 
 /* =========================================================
-   CLOSE MODAL
+   PET MODAL
    ========================================================= */
 
-function closePetSelector() {
+function openPetModal() {
 
-  const modal =
-    document.getElementById("petModal");
+  closePetModal();
+
+  const modal = document.createElement("div");
+
+  modal.className = "pet-modal";
+
+  modal.innerHTML = `
+
+    <div class="pet-modal-box">
+
+      <div class="modal-header">
+
+        <h2>Pet / Item Seç</h2>
+
+        <button
+          class="modal-close"
+          onclick="closePetModal()"
+        >
+          ×
+        </button>
+
+      </div>
+
+      <input
+        id="petSearch"
+        class="pet-search"
+        placeholder="🔎 Pet veya item ara..."
+        oninput="currentSearch=this.value;renderPetList()"
+      >
+
+      <div class="pet-filters">
+
+        <button
+          class="pet-filter active"
+          data-category="Pets"
+          onclick="setCategory('Pets')"
+        >
+          🐾 Pets
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Eggs"
+          onclick="setCategory('Eggs')"
+        >
+          🥚 Eggs
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Vehicles"
+          onclick="setCategory('Vehicles')"
+        >
+          🚗 Vehicles
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Pet Wear"
+          onclick="setCategory('Pet Wear')"
+        >
+          👕 Pet Wear
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Toys"
+          onclick="setCategory('Toys')"
+        >
+          🧸 Toys
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Food"
+          onclick="setCategory('Food')"
+        >
+          🧪 Food
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Gifts"
+          onclick="setCategory('Gifts')"
+        >
+          🎁 Gifts
+        </button>
+
+        <button
+          class="pet-filter"
+          data-category="Favorites"
+          onclick="setCategory('Favorites')"
+        >
+          ⭐ Favorites
+        </button>
+
+      </div>
+
+      <div
+        id="rarityFilters"
+        class="rarity-filters"
+      ></div>
+
+      <div
+        id="petList"
+        class="pet-list"
+      ></div>
+
+    </div>
+  `;
+
+  modal.addEventListener("click", e => {
+
+    if (e.target === modal) {
+      closePetModal();
+    }
+
+  });
+
+  document.body.appendChild(modal);
+
+  currentCategory = "Pets";
+  currentRarity = "All";
+  currentSearch = "";
+
+  renderRarityFilters();
+  renderPetList();
+}
+
+
+function closePetModal() {
+
+  const modal = document.querySelector(".pet-modal");
 
   if (modal) {
-
-    modal.classList.remove("open");
-    modal.innerHTML = "";
+    modal.remove();
   }
 
-  currentSide = null;
+  selectedPet = null;
+}
+
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+function setCategory(category) {
+
+  currentCategory = category;
+  currentRarity = "All";
+
+  document.querySelectorAll(".pet-filter")
+    .forEach(btn => {
+
+      btn.classList.toggle(
+        "active",
+        btn.dataset.category === category
+      );
+
+    });
+
+  renderRarityFilters();
+  renderPetList();
+}
+
+
+/* =========================================================
+   RARITY FILTER
+   ========================================================= */
+
+function renderRarityFilters() {
+
+  const box = document.getElementById("rarityFilters");
+
+  if (!box) return;
+
+  if (currentCategory !== "Pets") {
+
+    box.innerHTML = "";
+    return;
+  }
+
+  const rarities = [
+    "All",
+    "Legendary",
+    "Ultra Rare",
+    "Rare",
+    "Uncommon",
+    "Common"
+  ];
+
+  box.innerHTML = rarities.map(r => `
+
+    <button
+      class="pet-filter ${currentRarity === r ? "active" : ""}"
+      onclick="setRarity('${r}')"
+    >
+      ${r}
+    </button>
+
+  `).join("");
+}
+
+
+function setRarity(rarity) {
+
+  currentRarity = rarity;
+
+  renderRarityFilters();
+  renderPetList();
+}
+
+
+/* =========================================================
+   PET LIST
+   ========================================================= */
+
+function renderPetList() {
+
+  const list = document.getElementById("petList");
+
+  if (!list) return;
+
+  const query = currentSearch.toLowerCase().trim();
+
+  let data = [];
+
+  if (currentCategory === "Pets") {
+
+    data = pets.filter(p => {
+
+      const matchesSearch =
+        p.name.toLowerCase().includes(query);
+
+      const matchesRarity =
+        currentRarity === "All" ||
+        p.rarity === currentRarity;
+
+      return matchesSearch && matchesRarity;
+    });
+
+  } else if (currentCategory === "Favorites") {
+
+    data = [
+      ...pets.map(p => ({
+        ...p,
+        category: "Pets"
+      })),
+      ...extraItems
+    ].filter(item =>
+      favorites.includes(item.name) &&
+      item.name.toLowerCase().includes(query)
+    );
+
+  } else {
+
+    data = extraItems.filter(item =>
+      item.category === currentCategory &&
+      item.name.toLowerCase().includes(query)
+    );
+
+  }
+
+  if (!data.length) {
+
+    list.innerHTML = `
+      <div class="no-results">
+        😕 Sonuç bulunamadı.
+      </div>
+    `;
+
+    return;
+  }
+
+  list.innerHTML = data.map(item => {
+
+    const favorite = favorites.includes(item.name);
+
+    return `
+
+      <button
+        class="pet-option"
+        onclick="selectItem('${item.name.replace(/'/g,"\\'")}')"
+      >
+
+        <div class="pet-option-icon">
+          ${item.icon}
+        </div>
+
+        <div class="pet-option-info">
+
+          <strong>
+            ${item.name}
+          </strong>
+
+          <small>
+            ${item.rarity || item.category}
+          </small>
+
+        </div>
+
+        <div class="pet-option-value">
+          ${item.value.toLocaleString()}
+        </div>
+
+        ${
+          currentCategory === "Pets"
+          ? `
+            <span
+              onclick="event.stopPropagation();toggleFavorite('${item.name.replace(/'/g,"\\'")}')"
+              style="
+                font-size:18px;
+                color:${favorite ? "#ffd166" : "#5e5876"};
+              "
+            >
+              ${favorite ? "★" : "☆"}
+            </span>
+          `
+          : ""
+        }
+
+      </button>
+
+    `;
+
+  }).join("");
+}
+
+
+/* =========================================================
+   ITEM SELECTION
+   ========================================================= */
+
+function selectItem(name) {
+
+  const item =
+    pets.find(p => p.name === name) ||
+    extraItems.find(p => p.name === name);
+
+  if (!item) return;
+
+  if (pets.includes(item)) {
+
+    selectedPet = item;
+
+    showVariantSelector(item);
+
+  } else {
+
+    addItem(currentSide, {
+      ...item,
+      variant: "Normal"
+    });
+
+    closePetModal();
+  }
+}
+
+
+/* =========================================================
+   NORMAL / NEON / MEGA
+   ========================================================= */
+
+function showVariantSelector(pet) {
+
+  const box = document.querySelector(".pet-modal-box");
+
+  if (!box) return;
+
+  const normal = pet.value;
+  const neon = pet.value * 4;
+  const mega = pet.value * 16;
+
+  box.innerHTML = `
+
+    <div class="modal-header">
+
+      <h2>${pet.icon} ${pet.name}</h2>
+
+      <button
+        class="modal-close"
+        onclick="closePetModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+    <div class="variant-title">
+      Hangi versiyonu eklemek istiyorsun?
+    </div>
+
+    <div class="variant-grid">
+
+      <button
+        class="variant-card"
+        onclick="chooseVariant('Normal')"
+      >
+
+        <div style="font-size:38px">
+          ${pet.icon}
+        </div>
+
+        <strong>Normal</strong>
+
+        <small>
+          ${normal.toLocaleString()} Value
+        </small>
+
+      </button>
+
+
+      <button
+        class="variant-card neon"
+        onclick="chooseVariant('Neon')"
+      >
+
+        <div style="font-size:38px">
+          ✨${pet.icon}
+        </div>
+
+        <strong>Neon</strong>
+
+        <small>
+          ${neon.toLocaleString()} Value
+        </small>
+
+      </button>
+
+
+      <button
+        class="variant-card mega"
+        onclick="chooseVariant('Mega')"
+      >
+
+        <div style="font-size:38px">
+          🌈${pet.icon}
+        </div>
+
+        <strong>Mega Neon</strong>
+
+        <small>
+          ${mega.toLocaleString()} Value
+        </small>
+
+      </button>
+
+    </div>
+
+    <button
+      class="variant-back"
+      onclick="openPetModal()"
+    >
+      ← Petlere dön
+    </button>
+
+  `;
+}
+
+
+function chooseVariant(variant) {
+
+  if (!selectedPet) return;
+
+  let multiplier = 1;
+
+  if (variant === "Neon") {
+    multiplier = 4;
+  }
+
+  if (variant === "Mega") {
+    multiplier = 16;
+  }
+
+  addItem(currentSide, {
+
+    name: selectedPet.name,
+
+    value: selectedPet.value * multiplier,
+
+    rarity: selectedPet.rarity,
+
+    icon: selectedPet.icon,
+
+    variant: variant
+
+  });
+
+  closePetModal();
 }
 
 
@@ -1180,7 +1032,8 @@ function clearTrade() {
   tradeState.you = [];
   tradeState.them = [];
 
-  renderTrade();
+  renderTrade("you");
+  renderTrade("them");
 }
 
 
@@ -1188,44 +1041,21 @@ function clearTrade() {
    EVENTS
    ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+document.addEventListener("DOMContentLoaded", () => {
 
-    renderTrade();
-    renderValues();
+  renderValues();
 
-    const clearBtn =
-      document.getElementById("clearBtn");
+  renderTrade("you");
+  renderTrade("them");
 
-    if (clearBtn) {
-      clearBtn.addEventListener(
-        "click",
-        clearTrade
-      );
-    }
+  const clearBtn =
+    document.getElementById("clearBtn");
 
+  if (clearBtn) {
+    clearBtn.addEventListener(
+      "click",
+      clearTrade
+    );
   }
-);
 
-
-/* =========================================================
-   CLOSE MODAL OUTSIDE
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  event => {
-
-    const modal =
-      document.getElementById("petModal");
-
-    if (
-      modal &&
-      event.target === modal
-    ) {
-      closePetSelector();
-    }
-
-  }
-);
+});
