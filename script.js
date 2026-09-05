@@ -2136,6 +2136,10 @@ function calculateTotal(
    PREMIUM TRADE CARD
 ========================================================= */
 
+/* =========================================================
+   ELVEBREDD STYLE TRADE SLOTS
+========================================================= */
+
 function renderTradeSide(
   elementId,
   trade,
@@ -2149,6 +2153,8 @@ function renderTradeSide(
     return;
   }
 
+
+  /* EMPTY */
 
   if (
     !trade.length
@@ -2182,61 +2188,69 @@ function renderTradeSide(
   }
 
 
+  /* PET SLOTS */
+
   element.innerHTML =
     trade.map(
       pet => {
 
-        const tags = [];
+        const badges = [];
 
+
+        /* NEON */
 
         if (
-          pet.form ===
-          "neon"
+          pet.form === "neon"
         ) {
 
-          tags.push(`
-            <span class="trade-tag neon-tag">
-              ✨ Neon
+          badges.push(`
+            <span class="trade-slot-badge neon">
+              N
             </span>
           `);
 
         }
 
 
+        /* MEGA */
+
         if (
-          pet.form ===
-          "mega"
+          pet.form === "mega"
         ) {
 
-          tags.push(`
-            <span class="trade-tag mega-tag">
-              🌈 Mega
+          badges.push(`
+            <span class="trade-slot-badge mega">
+              M
             </span>
           `);
 
         }
 
+
+        /* FLY */
 
         if (
           pet.fly
         ) {
 
-          tags.push(`
-            <span class="trade-tag fly-tag">
-              🪽 Fly
+          badges.push(`
+            <span class="trade-slot-badge fly">
+              F
             </span>
           `);
 
         }
 
 
+        /* RIDE */
+
         if (
           pet.ride
         ) {
 
-          tags.push(`
-            <span class="trade-tag ride-tag">
-              🐴 Ride
+          badges.push(`
+            <span class="trade-slot-badge ride">
+              R
             </span>
           `);
 
@@ -2246,103 +2260,58 @@ function renderTradeSide(
         return `
 
           <div
-            class="trade-item"
+            class="trade-slot"
             data-trade-id="${escapeHTML(
               pet.uniqueId
             )}"
           >
 
-            <div class="trade-item-image">
+            <div class="trade-slot-image">
 
               ${
-                pet.form ===
-                "neon"
-                  ? `<div class="neon-effect"></div>`
+                pet.form === "neon"
+                  ? `
+                    <div class="neon-effect"></div>
+                  `
                   : ""
               }
 
               ${
-                pet.form ===
-                "mega"
-                  ? `<div class="mega-effect"></div>`
+                pet.form === "mega"
+                  ? `
+                    <div class="mega-effect"></div>
+                  `
                   : ""
               }
 
               ${imageHTML(
                 pet,
-                "trade-pet-photo"
+                "trade-slot-photo"
               )}
 
-              <div class="pet-badges">
-
-                ${
-                  pet.form ===
-                  "neon"
-                    ? `<span class="mini-chip neon">N</span>`
-                    : ""
-                }
-
-                ${
-                  pet.form ===
-                  "mega"
-                    ? `<span class="mini-chip mega">M</span>`
-                    : ""
-                }
-
-                ${
-                  pet.fly
-                    ? `<span class="mini-chip fly">F</span>`
-                    : ""
-                }
-
-                ${
-                  pet.ride
-                    ? `<span class="mini-chip ride">R</span>`
-                    : ""
-                }
-
+              <div class="trade-slot-badges">
+                ${badges.join("")}
               </div>
 
             </div>
 
 
-            <div class="trade-item-content">
-
-              <div class="trade-item-top">
-
-                <div
-                  class="trade-item-name"
-                  title="${escapeHTML(
-                    pet.name
-                  )}"
-                >
-                  ${escapeHTML(
-                    pet.name
-                  )}
-                </div>
-
-                <div class="trade-item-value">
-                  ${formatValue(
-                    pet.value
-                  )}
-                </div>
-
-              </div>
+            <div
+              class="trade-slot-name"
+              title="${escapeHTML(
+                pet.name
+              )}"
+            >
+              ${escapeHTML(
+                pet.name
+              )}
+            </div>
 
 
-              <div class="trade-item-rarity">
-                ${escapeHTML(
-                  rarityName(
-                    pet.rarity
-                  )
-                )}
-              </div>
-
-
-              <div class="trade-item-tags">
-                ${tags.join("")}
-              </div>
-
+            <div class="trade-slot-value">
+              ${formatValue(
+                pet.value
+              )}
             </div>
 
 
