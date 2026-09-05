@@ -1,5 +1,20 @@
-,/* =========================================================
-   NORMAL / FLY / RIDE / NEON / MEGA VARIANTS
+/* =========================================================
+   PET VARIANTS + REAL PET IMAGES
+   ========================================================= */
+
+function getPetImage(pet) {
+  const fileName = pet.name
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  return `images/pets/${fileName}.png`;
+}
+
+
+/* =========================================================
+   VARIANT SELECTOR
    ========================================================= */
 
 function showVariantSelector(pet) {
@@ -9,75 +24,93 @@ function showVariantSelector(pet) {
   if (!box) return;
 
   const base = pet.value;
+  const image = getPetImage(pet);
 
   const variants = [
+
     {
       name: "Normal",
       value: base,
-      icon: pet.icon,
       className: ""
     },
+
     {
       name: "Fly",
       value: Math.round(base * 1.1),
-      icon: "🪽" + pet.icon,
       className: ""
     },
+
     {
       name: "Ride",
       value: Math.round(base * 1.1),
-      icon: "🛼" + pet.icon,
       className: ""
     },
+
     {
       name: "Fly Ride",
       value: Math.round(base * 1.2),
-      icon: "🪽🛼" + pet.icon,
       className: ""
     },
+
     {
       name: "Neon",
       value: base * 4,
-      icon: "✨" + pet.icon,
       className: "neon"
     },
+
     {
       name: "Neon Fly",
       value: Math.round(base * 4.1),
-      icon: "✨🪽" + pet.icon,
       className: "neon"
     },
+
     {
       name: "Neon Ride",
       value: Math.round(base * 4.1),
-      icon: "✨🛼" + pet.icon,
       className: "neon"
     },
+
     {
       name: "Neon Fly Ride",
       value: Math.round(base * 4.2),
-      icon: "✨🪽🛼" + pet.icon,
       className: "neon"
     },
+
     {
       name: "Mega Neon",
       value: base * 16,
-      icon: "🌈" + pet.icon,
       className: "mega"
     },
+
     {
       name: "Mega Fly Ride",
       value: Math.round(base * 16.2),
-      icon: "🌈🪽🛼" + pet.icon,
       className: "mega"
     }
+
   ];
+
 
   box.innerHTML = `
 
     <div class="modal-header">
 
-      <h2>${pet.icon} ${pet.name}</h2>
+      <h2>
+
+        <img
+          src="${image}"
+          style="
+            width:42px;
+            height:42px;
+            object-fit:contain;
+            vertical-align:middle;
+          "
+          onerror="this.style.display='none'"
+        >
+
+        ${pet.name}
+
+      </h2>
 
       <button
         class="modal-close"
@@ -88,9 +121,13 @@ function showVariantSelector(pet) {
 
     </div>
 
+
     <div class="variant-title">
+
       ${pet.name} için istediğin versiyonu seç
+
     </div>
+
 
     <div class="variant-grid">
 
@@ -101,20 +138,40 @@ function showVariantSelector(pet) {
           onclick="chooseVariant('${v.name}')"
         >
 
-          <div style="
-            font-size:30px;
-            min-height:45px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-          ">
-            ${v.icon}
+          <div class="variant-image">
+
+            <img
+              src="${image}"
+              alt="${pet.name}"
+              onerror="
+                this.style.display='none';
+                this.nextElementSibling.style.display='block';
+              "
+            >
+
+            <span
+              style="
+                display:none;
+                font-size:30px;
+              "
+            >
+              ${pet.icon || "🐾"}
+            </span>
+
           </div>
 
-          <strong>${v.name}</strong>
+
+          <strong>
+
+            ${v.name}
+
+          </strong>
+
 
           <small>
+
             ${v.value.toLocaleString()} Value
+
           </small>
 
         </button>
@@ -123,16 +180,23 @@ function showVariantSelector(pet) {
 
     </div>
 
+
     <button
       class="variant-back"
       onclick="openPetModal()"
     >
+
       ← Petlere dön
+
     </button>
 
   `;
 }
 
+
+/* =========================================================
+   CHOOSE VARIANT
+   ========================================================= */
 
 function chooseVariant(variant) {
 
@@ -142,6 +206,7 @@ function chooseVariant(variant) {
 
   let multiplier = 1;
 
+
   switch (variant) {
 
     case "Normal":
@@ -149,6 +214,9 @@ function chooseVariant(variant) {
       break;
 
     case "Fly":
+      multiplier = 1.1;
+      break;
+
     case "Ride":
       multiplier = 1.1;
       break;
@@ -162,6 +230,9 @@ function chooseVariant(variant) {
       break;
 
     case "Neon Fly":
+      multiplier = 4.1;
+      break;
+
     case "Neon Ride":
       multiplier = 4.1;
       break;
@@ -177,37 +248,123 @@ function chooseVariant(variant) {
     case "Mega Fly Ride":
       multiplier = 16.2;
       break;
+
   }
 
-  let icon = selectedPet.icon;
 
-  if (variant.includes("Mega")) {
-    icon = "🌈" + icon;
-  } else if (variant.includes("Neon")) {
-    icon = "✨" + icon;
-  }
-
-  if (variant.includes("Fly")) {
-    icon = "🪽" + icon;
-  }
-
-  if (variant.includes("Ride")) {
-    icon = "🛼" + icon;
-  }
-
-  addItem(currentSide, {
+  const newItem = {
 
     name: selectedPet.name,
 
-    value: Math.round(base * multiplier),
+    value: Math.round(
+      base * multiplier
+    ),
 
     rarity: selectedPet.rarity,
 
-    icon: icon,
+    icon: selectedPet.icon,
 
-    variant: variant
+    variant: variant,
 
-  });
+    image: getPetImage(selectedPet)
+
+  };
+
+
+  /*
+    Burada mevcut addItem fonksiyonunun
+    iki farklı yapısından dolayı doğrudan
+    eski fonksiyona güvenmek yerine,
+    tradeState'e ekliyoruz.
+  */
+
+  if (!tradeState[currentSide]) {
+    tradeState[currentSide] = [];
+  }
+
+
+  const existing =
+    tradeState[currentSide].find(item =>
+      item.name === newItem.name &&
+      item.variant === newItem.variant
+    );
+
+
+  if (existing) {
+
+    existing.quantity =
+      (existing.quantity || 1) + 1;
+
+  } else {
+
+    tradeState[currentSide].push({
+
+      ...newItem,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  if (typeof renderTrade === "function") {
+    renderTrade();
+  }
+
 
   closePetModal();
+
+}
+
+
+/* =========================================================
+   PET IMAGE HELPER
+   ========================================================= */
+
+function petImageHTML(pet, size = 50) {
+
+  const image = getPetImage(pet);
+
+  return `
+
+    <div
+      style="
+        width:${size}px;
+        height:${size}px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-shrink:0;
+      "
+    >
+
+      <img
+        src="${image}"
+        alt="${pet.name}"
+        style="
+          width:100%;
+          height:100%;
+          object-fit:contain;
+        "
+        onerror="
+          this.style.display='none';
+          this.nextElementSibling.style.display='flex';
+        "
+      >
+
+      <span
+        style="
+          display:none;
+          align-items:center;
+          justify-content:center;
+          font-size:${Math.round(size * 0.55)}px;
+        "
+      >
+        ${pet.icon || "🐾"}
+      </span>
+
+    </div>
+
+  `;
 }
