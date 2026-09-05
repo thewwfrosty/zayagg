@@ -3,10 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Zayagg — Adopt Me Trading</title>
 
@@ -24,47 +21,25 @@
 
 <body>
 
-
-  <!-- =========================================
-       NAVBAR
-  ========================================== -->
+  <!-- NAVBAR -->
 
   <header class="navbar">
 
-    <a
-      href="#"
-      class="logo"
-    >
+    <a href="#" class="logo">
       Zayagg
     </a>
 
-
     <nav id="mainNav">
 
-      <a
-        href="#"
-        class="active"
-        data-scroll="top"
-      >
+      <a href="#top" class="active">
         Ana Sayfa
       </a>
 
-      <a
-        href="#calculator"
-        data-scroll="calculator"
-      >
+      <a href="#calculator">
         W/F/L Calculator
       </a>
 
-      <a
-        href="#values"
-        data-scroll="values"
-      >
-        Değerler
-      </a>
-
     </nav>
-
 
     <div class="nav-actions">
 
@@ -76,7 +51,6 @@
       >
         👤 Profil
       </button>
-
 
       <button
         type="button"
@@ -93,13 +67,9 @@
   </header>
 
 
-
   <main>
 
-
-    <!-- =========================================
-         HERO
-    ========================================== -->
+    <!-- HERO -->
 
     <section
       id="top"
@@ -112,19 +82,16 @@
           🐾 Adopt Me Trading
         </div>
 
-
         <h1>
           Trade'inin değerini<br>
           <span>anında öğren.</span>
         </h1>
-
 
         <p>
           Petlerini seç, iki tarafı karşılaştır ve
           trade'inin Win, Fair veya Lose olduğunu
           saniyeler içinde gör.
         </p>
-
 
         <a
           class="hero-btn"
@@ -138,16 +105,12 @@
     </section>
 
 
-
-    <!-- =========================================
-         TRADE CALCULATOR
-    ========================================== -->
+    <!-- CALCULATOR -->
 
     <section
       id="calculator"
       class="section"
     >
-
 
       <div class="section-head">
 
@@ -163,7 +126,6 @@
 
         </div>
 
-
         <button
           type="button"
           id="clearBtn"
@@ -176,8 +138,7 @@
       </div>
 
 
-
-      <!-- TRADE STATUS -->
+      <!-- STATUS -->
 
       <div
         id="tradeStatusBar"
@@ -194,7 +155,6 @@
 
         </div>
 
-
         <div
           id="resultDiffNumber"
           class="trade-status-diff"
@@ -205,19 +165,14 @@
       </div>
 
 
-
-      <!-- TRADE GRID -->
+      <!-- TRADE -->
 
       <div class="trade-grid">
 
 
-        <!-- =====================================
-             SEN
-        ====================================== -->
+        <!-- YOU -->
 
-        <div
-          class="trade-box trade-box-you"
-        >
+        <div class="trade-box trade-box-you">
 
           <div class="box-head trade-box-head">
 
@@ -232,7 +187,6 @@
               </h3>
 
             </div>
-
 
             <div class="trade-total-wrap">
 
@@ -250,7 +204,6 @@
             </div>
 
           </div>
-
 
 
           <div
@@ -277,7 +230,6 @@
           </div>
 
 
-
           <button
             type="button"
             class="add trade-add add-pet-btn"
@@ -291,32 +243,20 @@
         </div>
 
 
-
-        <!-- =====================================
-             VS
-        ====================================== -->
+        <!-- VS -->
 
         <div class="vs trade-vs">
 
           <div class="vs-ring">
-
-            <span>
-              VS
-            </span>
-
+            <span>VS</span>
           </div>
 
         </div>
 
 
+        <!-- THEM -->
 
-        <!-- =====================================
-             KARŞI TARAF
-        ====================================== -->
-
-        <div
-          class="trade-box trade-box-them"
-        >
+        <div class="trade-box trade-box-them">
 
           <div class="box-head trade-box-head">
 
@@ -331,7 +271,6 @@
               </h3>
 
             </div>
-
 
             <div class="trade-total-wrap">
 
@@ -349,7 +288,6 @@
             </div>
 
           </div>
-
 
 
           <div
@@ -376,7 +314,6 @@
           </div>
 
 
-
           <button
             type="button"
             class="add trade-add add-pet-btn"
@@ -392,10 +329,7 @@
       </div>
 
 
-
-      <!-- =====================================
-           RESULT
-      ====================================== -->
+      <!-- RESULT -->
 
       <div
         id="resultCard"
@@ -408,11 +342,9 @@
             TRADE ANALİZİ
           </div>
 
-
           <h3 id="resultStatusText">
             Pet ekleyerek başla
           </h3>
-
 
           <p id="resultHint">
             İki tarafa da pet eklediğinde
@@ -421,13 +353,11 @@
 
         </div>
 
-
         <div class="result-score">
 
           <span class="result-score-label">
             FARK
           </span>
-
 
           <strong id="resultDiffDisplay">
             —
@@ -439,56 +369,10 @@
 
     </section>
 
-
-
-    <!-- =========================================
-         VALUES
-    ========================================== -->
-
-    <section
-      id="values"
-      class="section values"
-    >
-
-      <div class="section-head">
-
-        <div>
-
-          <div class="eyebrow">
-            POPULAR VALUES
-          </div>
-
-          <h2>
-            Popüler Pet Değerleri
-          </h2>
-
-        </div>
-
-
-        <input
-          id="search"
-          type="search"
-          placeholder="🔎 Pet ara... (Shadow, Turtle, Dragon...)"
-          autocomplete="off"
-        >
-
-      </div>
-
-
-      <div
-        id="valueGrid"
-        class="value-grid"
-      ></div>
-
-    </section>
-
   </main>
 
 
-
-  <!-- =========================================
-       PET PICKER MODAL
-  ========================================== -->
+  <!-- PET PICKER -->
 
   <div
     id="petPicker"
@@ -501,7 +385,6 @@
       role="dialog"
       aria-modal="true"
     >
-
 
       <div class="profile-header">
 
@@ -517,7 +400,6 @@
 
         </div>
 
-
         <button
           type="button"
           class="profile-close picker-close"
@@ -530,7 +412,6 @@
       </div>
 
 
-
       <!-- SEARCH -->
 
       <div class="modal-search">
@@ -539,12 +420,11 @@
           id="petSearch"
           class="pet-search"
           type="search"
-          placeholder="🔎 Eklenecek peti ara..."
+          placeholder="🔎 Pet ara..."
           autocomplete="off"
         >
 
       </div>
-
 
 
       <!-- PET LIST -->
@@ -555,8 +435,7 @@
       ></div>
 
 
-
-      <!-- PICKER SETTINGS -->
+      <!-- SETTINGS -->
 
       <div class="picker-settings">
 
@@ -572,7 +451,6 @@
             id="pickerPreview"
             class="picker-preview"
           ></div>
-
 
 
           <!-- OPTIONS -->
@@ -591,7 +469,6 @@
                 Normal
               </button>
 
-
               <button
                 type="button"
                 id="btnNeon"
@@ -600,7 +477,6 @@
               >
                 ✨ Neon
               </button>
-
 
               <button
                 type="button"
@@ -614,7 +490,6 @@
             </div>
 
 
-
             <div class="potion-toggles">
 
               <button
@@ -626,7 +501,6 @@
                 Normal
               </button>
 
-
               <button
                 type="button"
                 id="btnFly"
@@ -636,7 +510,6 @@
                 🪽 Fly
               </button>
 
-
               <button
                 type="button"
                 id="btnRide"
@@ -645,7 +518,6 @@
               >
                 🐴 Ride
               </button>
-
 
               <button
                 type="button"
@@ -661,8 +533,7 @@
           </div>
 
 
-
-          <!-- VALUE + ADD -->
+          <!-- ADD -->
 
           <div class="picker-add">
 
@@ -672,7 +543,6 @@
             >
               0
             </div>
-
 
             <button
               type="button"
@@ -694,10 +564,7 @@
   </div>
 
 
-
-  <!-- =========================================
-       PROFILE MODAL
-  ========================================== -->
+  <!-- PROFILE -->
 
   <div
     id="profileModal"
@@ -710,7 +577,6 @@
       role="dialog"
       aria-modal="true"
     >
-
 
       <div class="profile-header">
 
@@ -726,7 +592,6 @@
 
         </div>
 
-
         <button
           type="button"
           class="profile-close"
@@ -738,9 +603,6 @@
       </div>
 
 
-
-      <!-- PROFILE MAIN -->
-
       <div class="profile-main">
 
         <div
@@ -750,18 +612,15 @@
           🐉
         </div>
 
-
         <div class="profile-info">
 
           <h2 id="profileName">
             Zayagg Kullanıcısı
           </h2>
 
-
           <span id="profileUsername">
             @kullanici
           </span>
-
 
           <p id="profileBio">
             Henüz bir biyografi eklenmedi.
@@ -772,11 +631,7 @@
       </div>
 
 
-
-      <!-- PROFILE STATS -->
-
       <div class="profile-stats">
-
 
         <div class="profile-stat">
 
@@ -790,7 +645,6 @@
 
         </div>
 
-
         <div class="profile-stat win-stat">
 
           <strong id="profileWins">
@@ -803,7 +657,6 @@
 
         </div>
 
-
         <div class="profile-stat fair-stat">
 
           <strong id="profileFair">
@@ -815,7 +668,6 @@
           </span>
 
         </div>
-
 
         <div class="profile-stat lose-stat">
 
@@ -832,9 +684,6 @@
       </div>
 
 
-
-      <!-- EDIT BUTTON -->
-
       <button
         type="button"
         id="profileEditBtn"
@@ -845,20 +694,15 @@
       </button>
 
 
-
-      <!-- EDIT FORM -->
-
       <form
         id="profileEditForm"
         class="profile-form hidden"
         onsubmit="saveEditedProfile(event)"
       >
 
-
         <label for="editName">
           Ad
         </label>
-
 
         <input
           id="editName"
@@ -867,11 +711,9 @@
         >
 
 
-
         <label for="editUsername">
           Kullanıcı adı
         </label>
-
 
         <input
           id="editUsername"
@@ -880,11 +722,9 @@
         >
 
 
-
         <label for="editBio">
           Biyografi
         </label>
-
 
         <textarea
           id="editBio"
@@ -893,11 +733,9 @@
         ></textarea>
 
 
-
         <div class="avatar-pick-label">
           Avatar
         </div>
-
 
         <div
           id="avatarPick"
@@ -905,9 +743,7 @@
         ></div>
 
 
-
         <div class="form-actions">
-
 
           <button
             type="button"
@@ -916,7 +752,6 @@
           >
             Vazgeç
           </button>
-
 
           <button
             type="submit"
@@ -934,20 +769,10 @@
   </div>
 
 
-
-  <!-- =========================================
-       FOOTER
-  ========================================== -->
-
   <footer>
     Zayagg © 2026 — Adopt Me Trading Values
   </footer>
 
-
-
-  <!-- =========================================
-       SCRIPT
-  ========================================== -->
 
   <script src="script.js"></script>
 
