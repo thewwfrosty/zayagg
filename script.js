@@ -1,8 +1,8 @@
 /* =========================================================
-   ADOPT ME TRADE CALCULATOR & PET SYSTEM (OFFICIAL ASSETS)
+   ZAYAGG — ADOPT ME TRADE CALCULATOR & PET SYSTEM
    ========================================================= */
 
-// 1. OYUN İÇİ ORİJİNAL ROZET VE İKON URL'LERİ
+// 1. ROZET İKONLARI
 const BADGES = {
   fly: "https://static.wikia.nocookie.net/adoptme/images/1/1a/Fly_Potion.png",
   ride: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Ride_Potion.png",
@@ -12,195 +12,53 @@ const BADGES = {
 
 // 2. PET VERİ TABANI
 const PET_DATABASE = [
-  {
-    id: "shadow_dragon",
-    name: "Shadow Dragon",
-    rarity: "legendary",
-    value: 125,
-    image: "https://static.wikia.nocookie.net/adoptme/images/a/a6/Shadow_Dragon.png"
-  },
-  {
-    id: "bat_dragon",
-    name: "Bat Dragon",
-    rarity: "legendary",
-    value: 110,
-    image: "https://static.wikia.nocookie.net/adoptme/images/8/87/Bat_Dragon.png"
-  },
-  {
-    id: "frost_dragon",
-    name: "Frost Dragon",
-    rarity: "legendary",
-    value: 58,
-    image: "https://static.wikia.nocookie.net/adoptme/images/3/36/Frost_Dragon.png"
-  },
-  {
-    id: "giraffe",
-    name: "Giraffe",
-    rarity: "legendary",
-    value: 70,
-    image: "https://static.wikia.nocookie.net/adoptme/images/e/e0/Giraffe.png"
-  },
-  {
-    id: "crow",
-    name: "Crow",
-    rarity: "legendary",
-    value: 28,
-    image: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Crow.png"
-  },
-  {
-    id: "turtle",
-    name: "Turtle",
-    rarity: "ultra",
-    value: 12,
-    image: "https://static.wikia.nocookie.net/adoptme/images/0/0a/Turtle.png"
-  }
+  { id: "shadow_dragon", name: "Shadow Dragon", rarity: "legendary", value: 125, image: "https://static.wikia.nocookie.net/adoptme/images/a/a6/Shadow_Dragon.png" },
+  { id: "bat_dragon", name: "Bat Dragon", rarity: "legendary", value: 110, image: "https://static.wikia.nocookie.net/adoptme/images/8/87/Bat_Dragon.png" },
+  { id: "frost_dragon", name: "Frost Dragon", rarity: "legendary", value: 58, image: "https://static.wikia.nocookie.net/adoptme/images/3/36/Frost_Dragon.png" },
+  { id: "giraffe", name: "Giraffe", rarity: "legendary", value: 70, image: "https://static.wikia.nocookie.net/adoptme/images/e/e0/Giraffe.png" },
+  { id: "crow", name: "Crow", rarity: "legendary", value: 28, image: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Crow.png" },
+  { id: "turtle", name: "Turtle", rarity: "ultra", value: 12, image: "https://static.wikia.nocookie.net/adoptme/images/0/0a/Turtle.png" }
 ];
 
-// Uygulama Durum Değişkenleri
-let leftTrade = [];
-let rightTrade = [];
-let activeSide = null; // 'left' veya 'right'
-let selectedPet = null;
+const AVATAR_OPTIONS = ["🐉", "🐶", "🐱", "🦊", "🐼", "🦄", "🐧", "🐢"];
 
-// Seçenek Durumları
+// 3. DURUM DEĞİŞKENLERİ
+let youTrade = [];
+let themTrade = [];
+let activeSide = null;   // 'you' | 'them'
+let selectedPet = null;
 let isFly = false;
 let isRide = false;
-let petForm = "regular"; // 'regular', 'neon', 'mega'
+let petForm = "regular"; // 'regular' | 'neon' | 'mega'
+let editingAvatar = "🐉";
 
-// Sayfa Yüklendiğinde Başlat
+// =========================================================
+// BAŞLANGIÇ
+// =========================================================
 document.addEventListener("DOMContentLoaded", () => {
-  renderValueList();
+  renderValues();
   updateTradeUI();
-  setupEventListeners();
+  renderProfile();
 });
 
-// Event Listener Kurulumları
-function setupEventListeners() {
-  // Modal Kapatma Butonları
-  document.querySelectorAll(".pet-modal-close").forEach(btn => {
-    btn.addEventListener("click", closeModal);
-  });
-
-  // Arama Girişi
-  const searchInput = document.getElementById("petSearchInput");
-  if (searchInput) {
-    searchInput.addEventListener("input", (e) => {
-      renderPetModalList(e.target.value);
-    });
-  }
-
-  // Fly / Ride / Neon / Mega Butonları
-  document.getElementById("btnFly")?.addEventListener("click", () => {
-    isFly = !isFly;
-    document.getElementById("btnFly")?.classList.toggle("active", isFly);
-    updatePickerBar();
-  });
-
-  document.getElementById("btnRide")?.addEventListener("click", () => {
-    isRide = !isRide;
-    document.getElementById("btnRide")?.classList.toggle("active", isRide);
-    updatePickerBar();
-  });
-
-  document.getElementById("btnNeon")?.addEventListener("click", () => {
-    petForm = petForm === "neon" ? "regular" : "neon";
-    updateFormButtons();
-    updatePickerBar();
-  });
-
-  document.getElementById("btnMega")?.addEventListener("click", () => {
-    petForm = petForm === "mega" ? "regular" : "mega";
-    updateFormButtons();
-    updatePickerBar();
-  });
-
-  // Pet Ekleme Onay Butonu
-  document.getElementById("confirmAddPet")?.addEventListener("click", confirmAddPet);
+// =========================================================
+// MOBİL MENÜ
+// =========================================================
+function toggleMenu() {
+  document.body.classList.toggle("menu-open");
+}
+function closeMenu() {
+  document.body.classList.remove("menu-open");
 }
 
-function updateFormButtons() {
-  document.getElementById("btnNeon")?.classList.toggle("active", petForm === "neon");
-  document.getElementById("btnMega")?.classList.toggle("active", petForm === "mega");
-}
-
-// Modal Açma / Kapatma Fonksiyonları
-function openPetModal(side) {
-  activeSide = side;
-  resetPickerState();
-  
-  const modal = document.getElementById("petModal");
-  if (modal) {
-    modal.classList.remove("hidden");
-    document.body.classList.add("modal-open");
-    renderPetModalList();
-  }
-}
-
-function closeModal() {
-  const modal = document.getElementById("petModal");
-  if (modal) {
-    modal.classList.add("hidden");
-    document.body.classList.remove("modal-open");
-  }
-}
-
-function resetPickerState() {
-  selectedPet = null;
-  isFly = false;
-  isRide = false;
-  petForm = "regular";
-  
-  document.getElementById("btnFly")?.classList.remove("active");
-  document.getElementById("btnRide")?.classList.remove("active");
-  updateFormButtons();
-  
-  const pickerBar = document.getElementById("pickerBar");
-  if (pickerBar) pickerBar.classList.add("hidden");
-}
-
-// Modal İçinde Pet Listeleme
-function renderPetModalList(filterText = "") {
-  const grid = document.getElementById("petChoiceGrid");
-  if (!grid) return;
-
-  grid.innerHTML = "";
-  const filtered = PET_DATABASE.filter(p => 
-    p.name.toLowerCase().includes(filterText.toLowerCase())
-  );
-
-  filtered.forEach(pet => {
-    const card = document.createElement("div");
-    card.className = `pet-choice ${selectedPet?.id === pet.id ? 'selected' : ''}`;
-    card.onclick = () => selectPetInModal(pet);
-
-    card.innerHTML = `
-      <div class="pet-image-wrap">
-        <img src="${pet.image}" alt="${pet.name}" class="pet-photo" onerror="this.src='https://via.placeholder.com/80?text=Pet'">
-      </div>
-      <strong>${pet.name}</strong>
-      <span class="rarity-tag ${pet.rarity}">${pet.rarity.toUpperCase()}</span>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-// Modalda Pet Seçimi
-function selectPetInModal(pet) {
-  selectedPet = pet;
-  renderPetModalList(document.getElementById("petSearchInput")?.value || "");
-  
-  const pickerBar = document.getElementById("pickerBar");
-  if (pickerBar) pickerBar.classList.remove("hidden");
-  
-  updatePickerBar();
-}
-
-// Değer Hesaplama Mantığı
+// =========================================================
+// DEĞER HESAPLAMA
+// =========================================================
 function calculatePetValue(baseVal, form, fly, ride) {
   let multiplier = 1;
   if (form === "neon") multiplier = 4;
   if (form === "mega") multiplier = 16;
-  
+
   let extra = 0;
   if (fly) extra += 1.5;
   if (ride) extra += 1;
@@ -208,88 +66,168 @@ function calculatePetValue(baseVal, form, fly, ride) {
   return Number(((baseVal * multiplier) + extra).toFixed(1));
 }
 
-// Seçim Alanı / Önizleme Güncelleme
+// =========================================================
+// PET PICKER MODAL
+// =========================================================
+function openPetPicker(side) {
+  activeSide = side;
+  resetPickerState();
+  renderPickerList();
+  document.getElementById("petPickerModal")?.classList.add("show");
+  document.body.classList.add("profile-open");
+}
+
+function closePetPicker() {
+  document.getElementById("petPickerModal")?.classList.remove("show");
+  document.body.classList.remove("profile-open");
+}
+
+function resetPickerState() {
+  selectedPet = null;
+  isFly = false;
+  isRide = false;
+  petForm = "regular";
+
+  document.getElementById("btnFly")?.classList.remove("active");
+  document.getElementById("btnRide")?.classList.remove("active");
+  document.getElementById("btnNeon")?.classList.remove("active");
+  document.getElementById("btnMega")?.classList.remove("active");
+  document.getElementById("pickerBar")?.classList.add("hidden");
+
+  const search = document.getElementById("pickerSearch");
+  if (search) search.value = "";
+}
+
+function filterPickerPets() {
+  const val = document.getElementById("pickerSearch")?.value || "";
+  renderPickerList(val);
+}
+
+function renderPickerList(filterText = "") {
+  const grid = document.getElementById("pickerPetList");
+  if (!grid) return;
+
+  const filtered = PET_DATABASE.filter(p =>
+    p.name.toLowerCase().includes(filterText.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-items">Sonuç bulunamadı</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(pet => `
+    <div class="pet-choice ${selectedPet?.id === pet.id ? "selected" : ""}" onclick="selectPickerPet('${pet.id}')">
+      <img src="${pet.image}" alt="${pet.name}" class="pet-photo" onerror="this.src='https://via.placeholder.com/80?text=Pet'">
+      <strong>${pet.name}</strong>
+      <span class="rarity-tag ${pet.rarity}">${pet.rarity.toUpperCase()}</span>
+    </div>
+  `).join("");
+}
+
+function selectPickerPet(id) {
+  selectedPet = PET_DATABASE.find(p => p.id === id) || null;
+  renderPickerList(document.getElementById("pickerSearch")?.value || "");
+  document.getElementById("pickerBar")?.classList.remove("hidden");
+  updatePickerBar();
+}
+
+function toggleForm(type) {
+  petForm = petForm === type ? "regular" : type;
+  document.getElementById("btnNeon")?.classList.toggle("active", petForm === "neon");
+  document.getElementById("btnMega")?.classList.toggle("active", petForm === "mega");
+  updatePickerBar();
+}
+
+function togglePotion(type) {
+  if (type === "fly") isFly = !isFly;
+  if (type === "ride") isRide = !isRide;
+  document.getElementById("btnFly")?.classList.toggle("active", isFly);
+  document.getElementById("btnRide")?.classList.toggle("active", isRide);
+  updatePickerBar();
+}
+
 function updatePickerBar() {
   if (!selectedPet) return;
 
-  const calculatedVal = calculatePetValue(selectedPet.value, petForm, isFly, isRide);
-  const previewWrap = document.getElementById("pickerPreview");
+  const val = calculatePetValue(selectedPet.value, petForm, isFly, isRide);
+  const preview = document.getElementById("pickerPreview");
 
-  if (previewWrap) {
+  if (preview) {
     let glow = "";
-    if (petForm === "neon") glow = '<div class="neon-glow"></div>';
-    if (petForm === "mega") glow = '<div class="mega-glow"></div>';
+    if (petForm === "neon") glow = '<div class="neon-effect"></div>';
+    if (petForm === "mega") glow = '<div class="mega-effect"></div>';
 
-    previewWrap.innerHTML = `
+    preview.innerHTML = `
       <div class="pet-image-wrap">
         ${glow}
-        <img src="${selectedPet.image}" class="pet-photo" alt="${selectedPet.name}">
+        <img src="${selectedPet.image}" class="pet-photo" alt="${selectedPet.name}" onerror="this.src='https://via.placeholder.com/80?text=Pet'">
         <div class="pet-badges">
-          ${isFly ? `<img src="${BADGES.fly}" class="badge-img" title="Fly">` : ''}
-          ${isRide ? `<img src="${BADGES.ride}" class="badge-img" title="Ride">` : ''}
-          ${petForm === "neon" ? `<img src="${BADGES.neon}" class="badge-img" title="Neon">` : ''}
-          ${petForm === "mega" ? `<img src="${BADGES.mega}" class="badge-img" title="Mega Neon">` : ''}
+          ${isFly ? `<img src="${BADGES.fly}" class="badge-img" title="Fly" onerror="this.style.display='none'">` : ""}
+          ${isRide ? `<img src="${BADGES.ride}" class="badge-img" title="Ride" onerror="this.style.display='none'">` : ""}
+          ${petForm === "neon" ? `<img src="${BADGES.neon}" class="badge-img" title="Neon" onerror="this.style.display='none'">` : ""}
+          ${petForm === "mega" ? `<img src="${BADGES.mega}" class="badge-img" title="Mega Neon" onerror="this.style.display='none'">` : ""}
         </div>
       </div>
       <div>
         <strong>${selectedPet.name}</strong>
         <div class="vchip-row">
-          ${petForm !== 'regular' ? `<span class="vchip ${petForm}">${petForm.toUpperCase()}</span>` : ''}
-          ${isFly ? '<span class="vchip fly">Fly</span>' : ''}
-          ${isRide ? '<span class="vchip ride">Ride</span>' : ''}
+          ${petForm !== "regular" ? `<span class="vchip ${petForm}">${petForm.toUpperCase()}</span>` : ""}
+          ${isFly ? '<span class="vchip fly">Fly</span>' : ""}
+          ${isRide ? '<span class="vchip ride">Ride</span>' : ""}
         </div>
       </div>
     `;
   }
 
-  const valDisplay = document.getElementById("pickerValue");
-  if (valDisplay) valDisplay.textContent = calculatedVal;
+  const valEl = document.getElementById("pickerValue");
+  if (valEl) valEl.textContent = val;
 }
 
-// Ekleme Onayı
 function confirmAddPet() {
   if (!selectedPet || !activeSide) return;
 
   const finalValue = calculatePetValue(selectedPet.value, petForm, isFly, isRide);
-  const itemData = {
+  const item = {
     id: Date.now(),
-    petId: selectedPet.id,
     name: selectedPet.name,
     image: selectedPet.image,
     value: finalValue,
-    isFly: isFly,
-    isRide: isRide,
+    isFly,
+    isRide,
     form: petForm
   };
 
-  if (activeSide === "left") {
-    leftTrade.push(itemData);
-  } else {
-    rightTrade.push(itemData);
-  }
+  if (activeSide === "you") youTrade.push(item);
+  else themTrade.push(item);
 
   updateTradeUI();
-  closeModal();
+  closePetPicker();
 }
 
-// Takas Ekranı Güncelleme
+// =========================================================
+// TAKAS EKRANI
+// =========================================================
 function updateTradeUI() {
-  renderTradeList("leftItems", leftTrade, "left");
-  renderTradeList("rightItems", rightTrade, "right");
-  
-  const leftTotal = leftTrade.reduce((acc, i) => acc + i.value, 0);
-  const rightTotal = rightTrade.reduce((acc, i) => acc + i.value, 0);
+  renderTradeList("youItems", youTrade, "you");
+  renderTradeList("themItems", themTrade, "them");
 
-  const leftValEl = document.getElementById("leftTotalVal");
-  const rightValEl = document.getElementById("rightTotalVal");
-  
-  if (leftValEl) leftValEl.textContent = leftTotal.toFixed(1);
-  if (rightValEl) rightValEl.textContent = rightTotal.toFixed(1);
+  const youTotal = youTrade.reduce((acc, i) => acc + i.value, 0);
+  const themTotal = themTrade.reduce((acc, i) => acc + i.value, 0);
 
-  calculateWFL(leftTotal, rightTotal);
+  const youTotalEl = document.getElementById("youTotal");
+  const themTotalEl = document.getElementById("themTotal");
+  if (youTotalEl) youTotalEl.textContent = youTotal.toFixed(1);
+  if (themTotalEl) themTotalEl.textContent = themTotal.toFixed(1);
+
+  const heroYou = document.getElementById("heroYouValue");
+  const heroThem = document.getElementById("heroThemValue");
+  if (heroYou) heroYou.textContent = youTotal.toFixed(1);
+  if (heroThem) heroThem.textContent = themTotal.toFixed(1);
+
+  calculateWFL(youTotal, themTotal);
 }
 
-// Takas Listesi İtemlerini Render Etme
 function renderTradeList(elementId, list, side) {
   const container = document.getElementById(elementId);
   if (!container) return;
@@ -301,76 +239,97 @@ function renderTradeList(elementId, list, side) {
 
   container.innerHTML = list.map(item => {
     let glow = "";
-    if (item.form === "neon") glow = '<div class="neon-glow"></div>';
-    if (item.form === "mega") glow = '<div class="mega-glow"></div>';
+    if (item.form === "neon") glow = '<div class="neon-effect"></div>';
+    if (item.form === "mega") glow = '<div class="mega-effect"></div>';
 
     return `
       <div class="trade-item">
         <div class="pet-image-wrap">
           ${glow}
-          <img src="${item.image}" class="pet-photo" alt="${item.name}">
+          <img src="${item.image}" class="pet-photo" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80?text=Pet'">
           <div class="pet-badges">
-            ${item.isFly ? `<img src="${BADGES.fly}" class="badge-img" title="Fly">` : ''}
-            ${item.isRide ? `<img src="${BADGES.ride}" class="badge-img" title="Ride">` : ''}
-            ${item.form === "neon" ? `<img src="${BADGES.neon}" class="badge-img" title="Neon">` : ''}
-            ${item.form === "mega" ? `<img src="${BADGES.mega}" class="badge-img" title="Mega Neon">` : ''}
+            ${item.isFly ? `<img src="${BADGES.fly}" class="badge-img" onerror="this.style.display='none'">` : ""}
+            ${item.isRide ? `<img src="${BADGES.ride}" class="badge-img" onerror="this.style.display='none'">` : ""}
+            ${item.form === "neon" ? `<img src="${BADGES.neon}" class="badge-img" onerror="this.style.display='none'">` : ""}
+            ${item.form === "mega" ? `<img src="${BADGES.mega}" class="badge-img" onerror="this.style.display='none'">` : ""}
           </div>
         </div>
         <div class="trade-item-info">
           <strong>${item.name}</strong>
           <small>Değer: ${item.value}</small>
         </div>
-        <button class="remove-item" onclick="removePet('${side}', ${item.id})">&times;</button>
+        <button class="remove-item" onclick="removeItem('${side}', ${item.id})">&times;</button>
       </div>
     `;
   }).join("");
 }
 
-// Pet Silme
-function removePet(side, id) {
-  if (side === "left") {
-    leftTrade = leftTrade.filter(i => i.id !== id);
-  } else {
-    rightTrade = rightTrade.filter(i => i.id !== id);
-  }
+function removeItem(side, id) {
+  if (side === "you") youTrade = youTrade.filter(i => i.id !== id);
+  else themTrade = themTrade.filter(i => i.id !== id);
   updateTradeUI();
 }
 
-// WFL Hesaplayıcı
-function calculateWFL(left, right) {
-  const resCard = document.getElementById("resultCard");
-  const resText = document.getElementById("resultStatus");
-  if (!resCard || !resText) return;
+function clearTrade() {
+  youTrade = [];
+  themTrade = [];
+  updateTradeUI();
+}
 
-  if (left === 0 && right === 0) {
-    resCard.className = "result-card";
-    resText.textContent = "Pet Ekleyin";
+// =========================================================
+// WFL HESAPLAYICI
+// =========================================================
+function calculateWFL(youTotal, themTotal) {
+  const card = document.getElementById("resultCard");
+  const statusText = document.getElementById("resultStatusText");
+  const diffEl = document.getElementById("resultDiffNumber");
+  const heroRes = document.getElementById("heroResult");
+  if (!card || !statusText || !diffEl) return;
+
+  card.classList.remove("win", "lose", "fair");
+
+  if (youTotal === 0 && themTotal === 0) {
+    statusText.textContent = "Pet ekleyerek başla";
+    diffEl.textContent = "—";
+    if (heroRes) { heroRes.textContent = "—"; heroRes.className = "result"; }
     return;
   }
 
-  const diff = right - left;
-  resCard.classList.remove("win", "lose", "fair");
+  const diff = themTotal - youTotal;
+  let label, cls;
 
-  if (diff > 2) {
-    resCard.classList.add("win");
-    resText.textContent = "KAZANÇ (WIN)";
-  } else if (diff < -2) {
-    resCard.classList.add("lose");
-    resText.textContent = "KAYIP (LOSE)";
-  } else {
-    resCard.classList.add("fair");
-    resText.textContent = "EŞİT (FAIR)";
+  if (diff > 2) { label = "KAZANÇ (WIN)"; cls = "win"; }
+  else if (diff < -2) { label = "KAYIP (LOSE)"; cls = "lose"; }
+  else { label = "EŞİT (FAIR)"; cls = "fair"; }
+
+  card.classList.add(cls);
+  statusText.textContent = label;
+  diffEl.textContent = (diff > 0 ? "+" : "") + diff.toFixed(1);
+
+  if (heroRes) {
+    heroRes.textContent = cls.toUpperCase();
+    heroRes.className = "result " + cls;
   }
 }
 
-// Değer Listesi Tablosu
-function renderValueList() {
+// =========================================================
+// DEĞER LİSTESİ (POPULAR VALUES)
+// =========================================================
+function renderValues() {
   const grid = document.getElementById("valueGrid");
   if (!grid) return;
 
-  grid.innerHTML = PET_DATABASE.map(pet => `
+  const filterText = document.getElementById("search")?.value.toLowerCase() || "";
+  const filtered = PET_DATABASE.filter(p => p.name.toLowerCase().includes(filterText));
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-items">Sonuç bulunamadı</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(pet => `
     <div class="value-card">
-      <img src="${pet.image}" class="pet-photo" alt="${pet.name}">
+      <img src="${pet.image}" class="pet-photo" alt="${pet.name}" onerror="this.src='https://via.placeholder.com/80?text=Pet'">
       <div>
         <h3>${pet.name}</h3>
         <span>${pet.rarity.toUpperCase()}</span>
@@ -378,4 +337,102 @@ function renderValueList() {
       </div>
     </div>
   `).join("");
+}
+
+// =========================================================
+// PROFİL SİSTEMİ (localStorage ile kalıcı)
+// =========================================================
+function loadProfile() {
+  const saved = JSON.parse(localStorage.getItem("zayagg_profile") || "null");
+  return saved || {
+    name: "Zayagg Kullanıcısı",
+    username: "@kullanici",
+    bio: "Henüz bir biyografi eklenmedi.",
+    avatar: "🐉"
+  };
+}
+
+function saveProfile(profile) {
+  localStorage.setItem("zayagg_profile", JSON.stringify(profile));
+}
+
+function loadStats() {
+  return JSON.parse(localStorage.getItem("zayagg_stats") || "null") || {
+    trades: 0, win: 0, fair: 0, lose: 0
+  };
+}
+
+function renderProfile() {
+  const profile = loadProfile();
+  const stats = loadStats();
+
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+
+  setText("profileAvatar", profile.avatar);
+  setText("profileName", profile.name);
+  setText("profileUsername", profile.username);
+  setText("profileBio", profile.bio);
+  setText("tradeCount", stats.trades);
+  setText("winCount", stats.win);
+  setText("fairCount", stats.fair);
+  setText("loseCount", stats.lose);
+}
+
+function openProfile() {
+  renderProfile();
+  closeEditProfile();
+  document.getElementById("profileModal")?.classList.add("show");
+  document.body.classList.add("profile-open");
+}
+
+function closeProfile() {
+  document.getElementById("profileModal")?.classList.remove("show");
+  document.body.classList.remove("profile-open");
+}
+
+function openEditProfile() {
+  const profile = loadProfile();
+  document.getElementById("editName").value = profile.name;
+  document.getElementById("editUsername").value = profile.username.replace(/^@/, "");
+  document.getElementById("editBio").value = profile.bio;
+  editingAvatar = profile.avatar;
+
+  renderAvatarPicker();
+  document.getElementById("profileEditForm")?.classList.remove("hidden");
+  document.getElementById("profileEditBtn")?.classList.add("hidden");
+}
+
+function closeEditProfile() {
+  document.getElementById("profileEditForm")?.classList.add("hidden");
+  document.getElementById("profileEditBtn")?.classList.remove("hidden");
+}
+
+function renderAvatarPicker() {
+  const wrap = document.getElementById("avatarPick");
+  if (!wrap) return;
+
+  wrap.innerHTML = AVATAR_OPTIONS.map(a => `
+    <button type="button" class="avatar-opt ${a === editingAvatar ? "active" : ""}" onclick="pickAvatar('${a}')">${a}</button>
+  `).join("");
+}
+
+function pickAvatar(a) {
+  editingAvatar = a;
+  renderAvatarPicker();
+}
+
+function saveEditedProfile(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("editName").value.trim() || "Zayagg Kullanıcısı";
+  let username = document.getElementById("editUsername").value.trim() || "kullanici";
+  if (!username.startsWith("@")) username = "@" + username;
+  const bio = document.getElementById("editBio").value.trim() || "Henüz bir biyografi eklenmedi.";
+
+  saveProfile({ name, username, bio, avatar: editingAvatar });
+  renderProfile();
+  closeEditProfile();
 }
