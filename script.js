@@ -2,23 +2,60 @@
 // ZAYAGG PET DATA
 // ===============================
 const pets = [
-  { name: "Shadow Dragon", value: 100, emoji: "🌑", rarity: "legendary" },
-  { name: "Bat Dragon", value: 95, emoji: "🦇", rarity: "legendary" },
-  { name: "Giraffe", value: 90, emoji: "🦒", rarity: "legendary" },
-  { name: "Frost Dragon", value: 85, emoji: "❄️", rarity: "legendary" },
-  { name: "Owl", value: 70, emoji: "🦉", rarity: "legendary" },
-  { name: "Parrot", value: 65, emoji: "🦜", rarity: "legendary" },
-  { name: "Evil Unicorn", value: 55, emoji: "🦄", rarity: "legendary" },
-  { name: "Crow", value: 22, emoji: "🐦‍⬛", rarity: "legendary" },
-  { name: "Arctic Reindeer", value: 14, emoji: "🦌", rarity: "legendary" },
-  { name: "Turtle", value: 8, emoji: "🐢", rarity: "legendary" },
-  { name: "Kangaroo", value: 7, emoji: "🦘", rarity: "legendary" },
-  { name: "Frost Fury", value: 6, emoji: "🐲", rarity: "legendary" },
-  { name: "Albino Monkey", value: 5, emoji: "🐵", rarity: "legendary" },
-  { name: "Lion", value: 3, emoji: "🦁", rarity: "ultra" },
-  { name: "Unicorn", value: 2, emoji: "✨", rarity: "legendary" },
-  { name: "Dragon", value: 1.5, emoji: "🐉", rarity: "legendary" }
+  { name: "Shadow Dragon", value: 100, image: "pets/shadow-dragon.jpg", rarity: "legendary" },
+  { name: "Bat Dragon", value: 95, image: "pets/bat-dragon.jpg", rarity: "legendary" },
+  { name: "Giraffe", value: 90, image: "pets/giraffe.jpg", rarity: "legendary" },
+  { name: "Frost Dragon", value: 85, image: "pets/frost-dragon.jpg", rarity: "legendary" },
+  { name: "Owl", value: 70, image: "pets/owl.jpg", rarity: "legendary" },
+  { name: "Parrot", value: 65, image: "pets/parrot.jpg", rarity: "legendary" },
+  { name: "Evil Unicorn", value: 55, image: "pets/evil-unicorn.jpg", rarity: "legendary" },
+  { name: "Crow", value: 22, image: "pets/crow.jpg", rarity: "legendary" },
+  { name: "Arctic Reindeer", value: 14, image: "pets/arctic-reindeer.svg", rarity: "legendary" },
+  { name: "Turtle", value: 8, image: "pets/turtle.svg", rarity: "legendary" },
+  { name: "Kangaroo", value: 7, image: "pets/kangaroo.svg", rarity: "legendary" },
+  { name: "Frost Fury", value: 6, image: "pets/frost-fury.svg", rarity: "legendary" },
+  { name: "Albino Monkey", value: 5, image: "pets/albino-monkey.svg", rarity: "legendary" },
+  { name: "Lion", value: 3, image: "pets/lion.svg", rarity: "ultra" },
+  { name: "Unicorn", value: 2, image: "pets/unicorn.svg", rarity: "legendary" },
+  { name: "Dragon", value: 1.5, image: "pets/dragon.svg", rarity: "legendary" },
+  { name: "Hedgehog", value: 18, image: svgPet("#f59e0b", "#92400e", "spike"), rarity: "ultra" },
+  { name: "Phoenix", value: 12, image: svgPet("#fb7185", "#f97316", "bird"), rarity: "legendary" },
+  { name: "Owl Twin", value: 4, image: svgPet("#92400e", "#fef3c7", "bird"), rarity: "legendary" },
+  { name: "Shark", value: 4.5, image: svgPet("#64748b", "#38bdf8", "sea"), rarity: "legendary" },
+  { name: "Octopus", value: 4.2, image: svgPet("#a78bfa", "#7c3aed", "sea"), rarity: "legendary" },
+  { name: "Axolotl", value: 3.8, image: svgPet("#fda4af", "#fb7185", "sea"), rarity: "ultra" },
+  { name: "Flamingo", value: 3.5, image: svgPet("#fb7185", "#fecdd3", "bird"), rarity: "ultra" },
+  { name: "Dalmatian", value: 9, image: svgPet("#f8fafc", "#0f172a", "mammal"), rarity: "ultra" },
+  { name: "Cow", value: 6.5, image: svgPet("#f8fafc", "#1e293b", "mammal"), rarity: "rare" },
+  { name: "Elephant", value: 2.8, image: svgPet("#94a3b8", "#64748b", "mammal"), rarity: "ultra" },
+  { name: "Crocodile", value: 2.4, image: svgPet("#16a34a", "#14532d", "sea"), rarity: "ultra" },
+  { name: "Griffin", value: 1.8, image: svgPet("#fbbf24", "#7c2d12", "bird"), rarity: "legendary" },
+  { name: "King Bee", value: 2.2, image: svgPet("#facc15", "#1e293b", "spike"), rarity: "legendary" },
+  { name: "Queen Bee", value: 2.6, image: svgPet("#fde047", "#7c3aed", "spike"), rarity: "legendary" },
+  { name: "Cerberus", value: 2.1, image: svgPet("#7f1d1d", "#f97316", "mammal"), rarity: "legendary" },
+  { name: "Skele-Rex", value: 5.5, image: svgPet("#e2e8f0", "#22d3ee", "spike"), rarity: "legendary" },
+  { name: "Dodo", value: 3.2, image: svgPet("#fdba74", "#9a3412", "bird"), rarity: "legendary" },
+  { name: "T-Rex", value: 3.1, image: svgPet("#4ade80", "#14532d", "spike"), rarity: "legendary" },
+  { name: "Snow Owl", value: 2.9, image: svgPet("#e2e8f0", "#38bdf8", "bird"), rarity: "legendary" },
+  { name: "Arctic Fox", value: 1.2, image: svgPet("#e2e8f0", "#93c5fd", "mammal"), rarity: "ultra" },
+  { name: "Kitsune", value: 8, image: svgPet("#fb923c", "#fff7ed", "mammal"), rarity: "legendary" },
+  { name: "Peacock", value: 2.7, image: svgPet("#22c55e", "#2563eb", "bird"), rarity: "legendary" },
+  { name: "Pink Cat", value: 1.1, image: svgPet("#f9a8d4", "#db2777", "mammal"), rarity: "uncommon" },
+  { name: "Blue Dog", value: 1.3, image: svgPet("#60a5fa", "#1d4ed8", "mammal"), rarity: "uncommon" },
+  { name: "Cat", value: 0.2, image: svgPet("#fde68a", "#f59e0b", "mammal"), rarity: "common" },
+  { name: "Dog", value: 0.2, image: svgPet("#fdba74", "#9a3412", "mammal"), rarity: "common" }
 ];
+
+function svgPet(main, accent, kind) {
+  const body = {
+    mammal: `<ellipse cx="100" cy="128" rx="40" ry="32" fill="${main}"/><circle cx="108" cy="88" r="26" fill="${main}"/><circle cx="100" cy="86" r="5" fill="#0f172a"/><circle cx="116" cy="86" r="5" fill="#0f172a"/><ellipse cx="118" cy="96" rx="8" ry="5" fill="${accent}"/>`,
+    bird: `<ellipse cx="100" cy="120" rx="28" ry="36" fill="${main}"/><circle cx="108" cy="78" r="22" fill="${main}"/><polygon points="128,78 152,84 128,92" fill="${accent}"/><circle cx="104" cy="76" r="5" fill="#0f172a"/>`,
+    sea: `<ellipse cx="108" cy="110" rx="48" ry="26" fill="${main}"/><polygon points="160,110 186,92 186,128" fill="${accent}"/><circle cx="80" cy="104" r="6" fill="#0f172a"/>`,
+    spike: `<ellipse cx="100" cy="124" rx="38" ry="34" fill="${main}"/><polygon points="70,96 80,60 92,96" fill="${accent}"/><polygon points="92,90 100,52 110,90" fill="${accent}"/><polygon points="108,96 120,60 130,96" fill="${accent}"/><circle cx="90" cy="120" r="5" fill="#0f172a"/><circle cx="112" cy="120" r="5" fill="#0f172a"/>`
+  };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" rx="28" fill="#0b0d14"/>${body[kind] || body.mammal}</svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
 
 const rarityLabels = {
   all: "Tümü",
@@ -128,7 +165,7 @@ function petImageHTML(pet, variant) {
   return `
     <div class="pet-image-wrap">
       ${effects}
-      <div class="pet-emoji" title="${pet.name}">${pet.emoji || "🐾"}</div>
+      <img class="pet-photo" src="${pet.image}" alt="${pet.name}" title="${pet.name}">
       <div class="pet-badges">${badges}</div>
     </div>
   `;
@@ -222,7 +259,7 @@ function renderPetChoices() {
     const selected = picker.petIndex === index ? "selected" : "";
     return `
       <button class="pet-choice ${selected}" onclick="selectPet(${index})">
-        <div class="pet-emoji">${pet.emoji || "🐾"}</div>
+        <img class="pet-photo" src="${pet.image}" alt="${pet.name}">
         <strong>${pet.name}</strong>
         <span>${pet.value} Value</span>
         <small class="rarity-tag ${pet.rarity}">${rarityLabels[pet.rarity] || pet.rarity}</small>
@@ -515,7 +552,7 @@ function renderValues() {
   grid.innerHTML = filteredPets.map(pet => {
     return `
       <div class="value-card">
-        <div class="pet-emoji">${pet.emoji || "🐾"}</div>
+        <img class="pet-photo" src="${pet.image}" alt="${pet.name}">
         <div>
           <h3>${pet.name}</h3>
           <span>Value</span>
@@ -593,6 +630,7 @@ function closeProfile() {
   if (!modal) return;
   modal.classList.remove("show");
   document.body.classList.remove("profile-open");
+  closeEditProfile();
 }
 // ===============================
 // LOAD PROFILE TO SCREEN
@@ -634,61 +672,61 @@ function loadProfileToScreen() {
     }
   }
 }
-// ===============================
-// EDIT PROFILE
-// ===============================
-function editProfile() {
+const AVATARS = ["🐉","🐲","🦊","🐺","🦁","🐯","🐸","🦄","🐼","🐨","🐵","👑"];
+let selectedAvatar = "🐉";
+
+function openEditProfile() {
   const profile = getProfile();
-  const name = prompt(
-    "Profil adın:",
-    profile.name
-  );
-  if (name === null) return;
-  const username = prompt(
-    "Kullanıcı adın:",
-    profile.username
-  );
-  if (username === null) return;
-  const bio = prompt(
-    "Biyografin:",
-    profile.bio
-  );
-  if (bio === null) return;
-  const avatars = [
-    "🐉",
-    "🐲",
-    "🦊",
-    "🐺",
-    "🦁",
-    "🐯",
-    "🐸",
-    "🦄",
-    "🐼",
-    "🐨",
-    "🐵",
-    "👑"
-  ];
-  const avatarText = avatars.join(" ");
-  const avatar = prompt(
-    `Avatar seç:\n\n${avatarText}\n\nBir emoji yaz:`,
-    profile.avatar
-  );
-  if (avatar === null) return;
-  profile.name =
-    name.trim() || "Zayagg Kullanıcısı";
-  profile.username =
-    username.trim()
-      .replace(/\s+/g, "")
-      .replace(/[^a-zA-Z0-9_]/g, "")
-      .slice(0, 20) || "kullanici";
-  profile.bio =
-    bio.trim().slice(0, 120) ||
-    "Henüz bir biyografi eklenmedi.";
-  profile.avatar =
-    avatar.trim().slice(0, 2) || "🐉";
+  selectedAvatar = profile.avatar || "🐉";
+  const name = document.getElementById("editName");
+  const username = document.getElementById("editUsername");
+  const bio = document.getElementById("editBio");
+  if (name) name.value = profile.name || "";
+  if (username) username.value = profile.username || "";
+  if (bio) bio.value = profile.bio || "";
+  renderAvatarPick();
+  document.getElementById("profileEditBtn")?.classList.add("hidden");
+  document.getElementById("profileEditForm")?.classList.remove("hidden");
+}
+function closeEditProfile() {
+  document.getElementById("profileEditBtn")?.classList.remove("hidden");
+  document.getElementById("profileEditForm")?.classList.add("hidden");
+}
+function renderAvatarPick() {
+  const box = document.getElementById("avatarPick");
+  if (!box) return;
+  box.innerHTML = AVATARS.map((icon) => `
+    <button type="button" class="avatar-opt ${icon === selectedAvatar ? "active" : ""}" onclick="chooseAvatar('${icon}')">${icon}</button>
+  `).join("");
+}
+function chooseAvatar(icon) {
+  selectedAvatar = icon;
+  renderAvatarPick();
+}
+function saveEditedProfile(event) {
+  event.preventDefault();
+  const profile = getProfile();
+  const name = document.getElementById("editName")?.value || "";
+  const username = document.getElementById("editUsername")?.value || "";
+  const bio = document.getElementById("editBio")?.value || "";
+  profile.name = name.trim() || "Zayagg Kullanıcısı";
+  profile.username = username.trim().replace(/\s+/g, "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20) || "kullanici";
+  profile.bio = bio.trim().slice(0, 120) || "Henüz bir biyografi eklenmedi.";
+  profile.avatar = selectedAvatar || "🐉";
   saveProfile(profile);
   loadProfileToScreen();
   updateNavbarProfile();
+  closeEditProfile();
+}
+function editProfile() {
+  openEditProfile();
+}
+
+function toggleMenu() {
+  document.body.classList.toggle("menu-open");
+}
+function closeMenu() {
+  document.body.classList.remove("menu-open");
 }
 // ===============================
 // NAVBAR PROFILE
