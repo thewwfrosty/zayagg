@@ -4,23 +4,14 @@
 
 
 /* =========================================================
-   BADGES
+   BADGE ICONS
    ========================================================= */
 
 const BADGES = {
-
-  fly:
-    "https://static.wikia.nocookie.net/adoptme/images/1/1a/Fly_Potion.png",
-
-  ride:
-    "https://static.wikia.nocookie.net/adoptme/images/a/a3/Ride_Potion.png",
-
-  neon:
-    "https://static.wikia.nocookie.net/adoptme/images/7/77/Neon_Icon.png",
-
-  mega:
-    "https://static.wikia.nocookie.net/adoptme/images/3/30/Mega_Neon_Icon.png"
-
+  fly: "https://static.wikia.nocookie.net/adoptme/images/1/1a/Fly_Potion.png",
+  ride: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Ride_Potion.png",
+  neon: "https://static.wikia.nocookie.net/adoptme/images/7/77/Neon_Icon.png",
+  mega: "https://static.wikia.nocookie.net/adoptme/images/3/30/Mega_Neon_Icon.png"
 };
 
 
@@ -35,8 +26,7 @@ const PET_DATABASE = [
     name: "Shadow Dragon",
     rarity: "legendary",
     value: 125,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/a/a6/Shadow_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/a/a6/Shadow_Dragon.png"
   },
 
   {
@@ -44,8 +34,7 @@ const PET_DATABASE = [
     name: "Bat Dragon",
     rarity: "legendary",
     value: 110,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/8/87/Bat_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/8/87/Bat_Dragon.png"
   },
 
   {
@@ -53,8 +42,7 @@ const PET_DATABASE = [
     name: "Frost Dragon",
     rarity: "legendary",
     value: 58,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/3/36/Frost_Dragon.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/3/36/Frost_Dragon.png"
   },
 
   {
@@ -62,8 +50,7 @@ const PET_DATABASE = [
     name: "Giraffe",
     rarity: "legendary",
     value: 70,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/e/e0/Giraffe.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/e/e0/Giraffe.png"
   },
 
   {
@@ -71,8 +58,7 @@ const PET_DATABASE = [
     name: "Crow",
     rarity: "legendary",
     value: 28,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/a/a3/Crow.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/a/a3/Crow.png"
   },
 
   {
@@ -80,12 +66,15 @@ const PET_DATABASE = [
     name: "Turtle",
     rarity: "ultra",
     value: 12,
-    image:
-      "https://static.wikia.nocookie.net/adoptme/images/0/0a/Turtle.png"
+    image: "https://static.wikia.nocookie.net/adoptme/images/0/0a/Turtle.png"
   }
 
 ];
 
+
+/* =========================================================
+   AVATARS
+   ========================================================= */
 
 const AVATAR_OPTIONS = [
   "🐉",
@@ -104,7 +93,6 @@ const AVATAR_OPTIONS = [
    ========================================================= */
 
 let youTrade = [];
-
 let themTrade = [];
 
 let activeSide = null;
@@ -112,7 +100,6 @@ let activeSide = null;
 let selectedPet = null;
 
 let isFly = false;
-
 let isRide = false;
 
 let petForm = "regular";
@@ -121,21 +108,45 @@ let editingAvatar = "🐉";
 
 
 /* =========================================================
-   START
+   SAFE STORAGE
    ========================================================= */
 
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
+function getStorageJSON(key, fallback) {
 
-    renderValues();
+  try {
 
-    updateTradeUI();
+    const data = localStorage.getItem(key);
 
-    renderProfile();
+    if (!data) {
+      return fallback;
+    }
 
+    return JSON.parse(data);
+
+  } catch (error) {
+
+    console.warn("Zayagg storage error:", error);
+
+    return fallback;
   }
-);
+}
+
+
+/* =========================================================
+   PAGE START
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  renderValues();
+
+  updateTradeUI();
+
+  renderProfile();
+
+  setupModalEvents();
+
+});
 
 
 /* =========================================================
@@ -144,59 +155,54 @@ document.addEventListener(
 
 function toggleMenu() {
 
-  document.body.classList.toggle(
-    "menu-open"
-  );
+  document.body.classList.toggle("menu-open");
 
 }
 
 
 function closeMenu() {
 
-  document.body.classList.remove(
-    "menu-open"
-  );
+  document.body.classList.remove("menu-open");
 
 }
 
 
 /* =========================================================
-   MODAL BACKGROUND
+   MODAL EVENTS
    ========================================================= */
 
-function handleModalBackgroundClick(
-  event,
-  modalId
-) {
+function setupModalEvents() {
 
-  if (
-    event.target.id === modalId
-  ) {
+  const profileModal = document.getElementById("profileModal");
+  const petModal = document.getElementById("petPickerModal");
 
-    if (
-      modalId === "profileModal"
-    ) {
+  if (profileModal) {
 
-      closeProfile();
+    profileModal.addEventListener("click", (event) => {
 
-    } else {
+      if (event.target === profileModal) {
+        closeProfile();
+      }
 
-      closePetPicker();
-
-    }
+    });
 
   }
 
-}
+
+  if (petModal) {
+
+    petModal.addEventListener("click", (event) => {
+
+      if (event.target === petModal) {
+        closePetPicker();
+      }
+
+    });
+
+  }
 
 
-/* =========================================================
-   ESC KEY
-   ========================================================= */
-
-document.addEventListener(
-  "keydown",
-  event => {
+  document.addEventListener("keydown", (event) => {
 
     if (event.key !== "Escape") {
       return;
@@ -206,20 +212,18 @@ document.addEventListener(
 
     closePetPicker();
 
-  }
-);
+    closeMenu();
+
+  });
+
+}
 
 
 /* =========================================================
    VALUE CALCULATION
    ========================================================= */
 
-function calculatePetValue(
-  baseVal,
-  form,
-  fly,
-  ride
-) {
+function calculatePetValue(baseVal, form, fly, ride) {
 
   let multiplier = 1;
 
@@ -231,6 +235,7 @@ function calculatePetValue(
     multiplier = 16;
   }
 
+
   let extra = 0;
 
   if (fly) {
@@ -241,11 +246,9 @@ function calculatePetValue(
     extra += 1;
   }
 
+
   return Number(
-    (
-      baseVal * multiplier +
-      extra
-    ).toFixed(1)
+    ((baseVal * multiplier) + extra).toFixed(1)
   );
 
 }
@@ -263,36 +266,40 @@ function openPetPicker(side) {
 
   renderPickerList();
 
-  const modal =
-    document.getElementById(
-      "petPickerModal"
-    );
+  const modal = document.getElementById("petPickerModal");
 
   if (modal) {
+
     modal.classList.add("show");
+
+    modal.setAttribute("aria-hidden", "false");
+
   }
 
-  document.body.classList.add(
-    "profile-open"
-  );
+  document.body.classList.add("profile-open");
+
+  setTimeout(() => {
+
+    document.getElementById("pickerSearch")?.focus();
+
+  }, 100);
 
 }
 
 
 function closePetPicker() {
 
-  const modal =
-    document.getElementById(
-      "petPickerModal"
-    );
+  const modal = document.getElementById("petPickerModal");
 
   if (modal) {
+
     modal.classList.remove("show");
+
+    modal.setAttribute("aria-hidden", "true");
+
   }
 
-  document.body.classList.remove(
-    "profile-open"
-  );
+  document.body.classList.remove("profile-open");
 
   activeSide = null;
 
@@ -310,32 +317,18 @@ function resetPickerState() {
   petForm = "regular";
 
 
-  document
-    .getElementById("btnFly")
-    ?.classList.remove("active");
+  document.getElementById("btnFly")?.classList.remove("active");
 
-  document
-    .getElementById("btnRide")
-    ?.classList.remove("active");
+  document.getElementById("btnRide")?.classList.remove("active");
 
-  document
-    .getElementById("btnNeon")
-    ?.classList.remove("active");
+  document.getElementById("btnNeon")?.classList.remove("active");
 
-  document
-    .getElementById("btnMega")
-    ?.classList.remove("active");
+  document.getElementById("btnMega")?.classList.remove("active");
+
+  document.getElementById("pickerBar")?.classList.add("hidden");
 
 
-  document
-    .getElementById("pickerBar")
-    ?.classList.add("hidden");
-
-
-  const search =
-    document.getElementById(
-      "pickerSearch"
-    );
+  const search = document.getElementById("pickerSearch");
 
   if (search) {
     search.value = "";
@@ -344,121 +337,119 @@ function resetPickerState() {
 }
 
 
+/* =========================================================
+   PET SEARCH
+   ========================================================= */
+
 function filterPickerPets() {
 
-  const input =
-    document.getElementById(
-      "pickerSearch"
-    );
+  const input = document.getElementById("pickerSearch");
 
-  const value =
-    input?.value || "";
+  const value = input?.value || "";
 
   renderPickerList(value);
 
 }
 
 
-function renderPickerList(
-  filterText = ""
-) {
+function renderPickerList(filterText = "") {
 
-  const grid =
-    document.getElementById(
-      "pickerPetList"
-    );
+  const grid = document.getElementById("pickerPetList");
 
   if (!grid) {
     return;
   }
 
 
-  const search =
-    filterText
+  const searchText = filterText
+    .trim()
+    .toLowerCase();
+
+
+  const filtered = PET_DATABASE.filter((pet) => {
+
+    return pet.name
       .toLowerCase()
-      .trim();
+      .includes(searchText);
+
+  });
 
 
-  const filtered =
-    PET_DATABASE.filter(
-      pet =>
-        pet.name
-          .toLowerCase()
-          .includes(search)
-    );
-
-
-  if (
-    filtered.length === 0
-  ) {
+  if (filtered.length === 0) {
 
     grid.innerHTML = `
-      <div class="empty-items">
-        Sonuç bulunamadı
+      <div class="empty-picker">
+        <span>🔎</span>
+        <strong>Pet bulunamadı</strong>
+        <small>Başka bir isim dene.</small>
       </div>
     `;
 
     return;
-
   }
 
 
-  grid.innerHTML =
-    filtered
-      .map(
-        pet => `
+  grid.innerHTML = filtered.map((pet) => {
 
-          <div
-            class="pet-choice ${
-              selectedPet?.id === pet.id
-                ? "selected"
-                : ""
-            }"
-            onclick="
-              selectPickerPet('${pet.id}')
-            "
+    const selected =
+      selectedPet?.id === pet.id
+        ? "selected"
+        : "";
+
+
+    return `
+      <button
+        type="button"
+        class="pet-choice ${selected}"
+        onclick="selectPickerPet('${pet.id}')"
+      >
+
+        <div class="choice-image">
+
+          <img
+            src="${pet.image}"
+            alt="${pet.name}"
+            class="pet-photo"
+            loading="lazy"
+            onerror="handleImageError(this)"
           >
 
-            <img
-              src="${pet.image}"
-              alt="${pet.name}"
-              class="pet-photo"
-              onerror="
-                this.src='https://via.placeholder.com/80?text=Pet'
-              "
-            >
+        </div>
 
-            <strong>
-              ${pet.name}
-            </strong>
+        <strong>
+          ${pet.name}
+        </strong>
 
-            <span
-              class="rarity-tag ${pet.rarity}"
-            >
-              ${pet.rarity.toUpperCase()}
-            </span>
+        <span class="rarity-tag ${pet.rarity}">
+          ${pet.rarity.toUpperCase()}
+        </span>
 
-          </div>
+        <small>
+          ${pet.value} Value
+        </small>
 
-        `
-      )
-      .join("");
+      </button>
+    `;
+
+  }).join("");
 
 }
 
+
+/* =========================================================
+   SELECT PET
+   ========================================================= */
 
 function selectPickerPet(id) {
 
   selectedPet =
     PET_DATABASE.find(
-      pet => pet.id === id
+      (pet) => pet.id === id
     ) || null;
 
 
   renderPickerList(
-    document
-      .getElementById("pickerSearch")
-      ?.value || ""
+    document.getElementById("pickerSearch")?.value || ""
   );
 
 
@@ -478,10 +469,15 @@ function selectPickerPet(id) {
 
 function toggleForm(type) {
 
-  petForm =
-    petForm === type
-      ? "regular"
-      : type;
+  if (petForm === type) {
+
+    petForm = "regular";
+
+  } else {
+
+    petForm = type;
+
+  }
 
 
   document
@@ -517,6 +513,7 @@ function togglePotion(type) {
 
   }
 
+
   if (type === "ride") {
 
     isRide = !isRide;
@@ -546,7 +543,7 @@ function togglePotion(type) {
 
 
 /* =========================================================
-   PICKER BAR
+   PICKER PREVIEW
    ========================================================= */
 
 function updatePickerBar() {
@@ -556,36 +553,37 @@ function updatePickerBar() {
   }
 
 
-  const value =
-    calculatePetValue(
-      selectedPet.value,
-      petForm,
-      isFly,
-      isRide
-    );
+  const value = calculatePetValue(
+    selectedPet.value,
+    petForm,
+    isFly,
+    isRide
+  );
 
 
   const preview =
-    document.getElementById(
-      "pickerPreview"
-    );
+    document.getElementById("pickerPreview");
 
 
   if (preview) {
 
-    let glow = "";
+    let effect = "";
+
 
     if (petForm === "neon") {
 
-      glow =
-        '<div class="neon-effect"></div>';
+      effect = `
+        <div class="neon-effect"></div>
+      `;
 
     }
 
+
     if (petForm === "mega") {
 
-      glow =
-        '<div class="mega-effect"></div>';
+      effect = `
+        <div class="mega-effect"></div>
+      `;
 
     }
 
@@ -594,15 +592,13 @@ function updatePickerBar() {
 
       <div class="pet-image-wrap">
 
-        ${glow}
+        ${effect}
 
         <img
           src="${selectedPet.image}"
           class="pet-photo"
           alt="${selectedPet.name}"
-          onerror="
-            this.src='https://via.placeholder.com/80?text=Pet'
-          "
+          onerror="handleImageError(this)"
         >
 
         <div class="pet-badges">
@@ -614,10 +610,12 @@ function updatePickerBar() {
                   src="${BADGES.fly}"
                   class="badge-img"
                   title="Fly"
+                  onerror="this.style.display='none'"
                 >
               `
               : ""
           }
+
 
           ${
             isRide
@@ -626,10 +624,12 @@ function updatePickerBar() {
                   src="${BADGES.ride}"
                   class="badge-img"
                   title="Ride"
+                  onerror="this.style.display='none'"
                 >
               `
               : ""
           }
+
 
           ${
             petForm === "neon"
@@ -638,10 +638,12 @@ function updatePickerBar() {
                   src="${BADGES.neon}"
                   class="badge-img"
                   title="Neon"
+                  onerror="this.style.display='none'"
                 >
               `
               : ""
           }
+
 
           ${
             petForm === "mega"
@@ -650,6 +652,7 @@ function updatePickerBar() {
                   src="${BADGES.mega}"
                   class="badge-img"
                   title="Mega Neon"
+                  onerror="this.style.display='none'"
                 >
               `
               : ""
@@ -660,25 +663,28 @@ function updatePickerBar() {
       </div>
 
 
-      <div>
+      <div class="preview-info">
 
         <strong>
           ${selectedPet.name}
         </strong>
+
+        <span>
+          ${selectedPet.rarity.toUpperCase()}
+        </span>
 
         <div class="vchip-row">
 
           ${
             petForm !== "regular"
               ? `
-                <span
-                  class="vchip ${petForm}"
-                >
+                <span class="vchip ${petForm}">
                   ${petForm.toUpperCase()}
                 </span>
               `
               : ""
           }
+
 
           ${
             isFly
@@ -689,6 +695,7 @@ function updatePickerBar() {
               `
               : ""
           }
+
 
           ${
             isRide
@@ -710,14 +717,13 @@ function updatePickerBar() {
 
 
   const valueElement =
-    document.getElementById(
-      "pickerValue"
-    );
+    document.getElementById("pickerValue");
+
 
   if (valueElement) {
 
     valueElement.textContent =
-      value;
+      value.toFixed(1);
 
   }
 
@@ -730,10 +736,7 @@ function updatePickerBar() {
 
 function confirmAddPet() {
 
-  if (
-    !selectedPet ||
-    !activeSide
-  ) {
+  if (!selectedPet || !activeSide) {
     return;
   }
 
@@ -751,32 +754,24 @@ function confirmAddPet() {
 
     id:
       Date.now() +
-      Math.random(),
+      Math.floor(Math.random() * 10000),
 
-    name:
-      selectedPet.name,
+    name: selectedPet.name,
 
-    image:
-      selectedPet.image,
+    image: selectedPet.image,
 
-    value:
-      finalValue,
+    value: finalValue,
 
-    isFly:
-      isFly,
+    isFly: isFly,
 
-    isRide:
-      isRide,
+    isRide: isRide,
 
-    form:
-      petForm
+    form: petForm
 
   };
 
 
-  if (
-    activeSide === "you"
-  ) {
+  if (activeSide === "you") {
 
     youTrade.push(item);
 
@@ -817,7 +812,7 @@ function updateTradeUI() {
   const youTotal =
     youTrade.reduce(
       (total, item) =>
-        total + item.value,
+        total + Number(item.value),
       0
     );
 
@@ -825,20 +820,17 @@ function updateTradeUI() {
   const themTotal =
     themTrade.reduce(
       (total, item) =>
-        total + item.value,
+        total + Number(item.value),
       0
     );
 
 
   const youTotalEl =
-    document.getElementById(
-      "youTotal"
-    );
+    document.getElementById("youTotal");
+
 
   const themTotalEl =
-    document.getElementById(
-      "themTotal"
-    );
+    document.getElementById("themTotal");
 
 
   if (youTotalEl) {
@@ -858,14 +850,11 @@ function updateTradeUI() {
 
 
   const heroYou =
-    document.getElementById(
-      "heroYouValue"
-    );
+    document.getElementById("heroYouValue");
+
 
   const heroThem =
-    document.getElementById(
-      "heroThemValue"
-    );
+    document.getElementById("heroThemValue");
 
 
   if (heroYou) {
@@ -903,9 +892,8 @@ function renderTradeList(
 ) {
 
   const container =
-    document.getElementById(
-      elementId
-    );
+    document.getElementById(elementId);
+
 
   if (!container) {
     return;
@@ -926,161 +914,192 @@ function renderTradeList(
 
 
   container.innerHTML =
-    list
-      .map(
-        item => {
+    list.map((item) => {
 
-          let glow = "";
-
-          if (
-            item.form === "neon"
-          ) {
-
-            glow =
-              '<div class="neon-effect"></div>';
-
-          }
-
-          if (
-            item.form === "mega"
-          ) {
-
-            glow =
-              '<div class="mega-effect"></div>';
-
-          }
+      let effect = "";
 
 
-          return `
+      if (item.form === "neon") {
 
-            <div class="trade-item">
+        effect = `
+          <div class="neon-effect"></div>
+        `;
 
-              <div class="pet-image-wrap">
-
-                ${glow}
-
-                <img
-                  src="${item.image}"
-                  class="pet-photo"
-                  alt="${item.name}"
-                  onerror="
-                    this.src='https://via.placeholder.com/80?text=Pet'
-                  "
-                >
-
-                <div class="pet-badges">
-
-                  ${
-                    item.isFly
-                      ? `
-                        <img
-                          src="${BADGES.fly}"
-                          class="badge-img"
-                        >
-                      `
-                      : ""
-                  }
-
-                  ${
-                    item.isRide
-                      ? `
-                        <img
-                          src="${BADGES.ride}"
-                          class="badge-img"
-                        >
-                      `
-                      : ""
-                  }
-
-                  ${
-                    item.form === "neon"
-                      ? `
-                        <img
-                          src="${BADGES.neon}"
-                          class="badge-img"
-                        >
-                      `
-                      : ""
-                  }
-
-                  ${
-                    item.form === "mega"
-                      ? `
-                        <img
-                          src="${BADGES.mega}"
-                          class="badge-img"
-                        >
-                      `
-                      : ""
-                  }
-
-                </div>
-
-              </div>
+      }
 
 
-              <div class="trade-item-info">
+      if (item.form === "mega") {
 
-                <strong>
-                  ${item.name}
-                </strong>
+        effect = `
+          <div class="mega-effect"></div>
+        `;
 
-                <small>
-                  Değer: ${item.value}
-                </small>
-
-              </div>
+      }
 
 
-              <button
-                class="remove-item"
-                type="button"
-                onclick="
-                  removeItem(
-                    '${side}',
-                    ${item.id}
-                  )
-                "
-              >
-                &times;
-              </button>
+      return `
+
+        <div class="trade-item">
+
+          <div class="pet-image-wrap">
+
+            ${effect}
+
+            <img
+              src="${item.image}"
+              class="pet-photo"
+              alt="${item.name}"
+              loading="lazy"
+              onerror="handleImageError(this)"
+            >
+
+            <div class="pet-badges">
+
+              ${
+                item.isFly
+                  ? `
+                    <img
+                      src="${BADGES.fly}"
+                      class="badge-img"
+                      title="Fly"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.isRide
+                  ? `
+                    <img
+                      src="${BADGES.ride}"
+                      class="badge-img"
+                      title="Ride"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.form === "neon"
+                  ? `
+                    <img
+                      src="${BADGES.neon}"
+                      class="badge-img"
+                      title="Neon"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.form === "mega"
+                  ? `
+                    <img
+                      src="${BADGES.mega}"
+                      class="badge-img"
+                      title="Mega Neon"
+                      onerror="this.style.display='none'"
+                    >
+                  `
+                  : ""
+              }
 
             </div>
 
-          `;
+          </div>
 
-        }
-      )
-      .join("");
+
+          <div class="trade-item-info">
+
+            <strong>
+              ${item.name}
+            </strong>
+
+            <small>
+              Değer: ${Number(item.value).toFixed(1)}
+            </small>
+
+            <div class="item-chips">
+
+              ${
+                item.form !== "regular"
+                  ? `
+                    <span class="mini-chip ${item.form}">
+                      ${item.form === "mega" ? "MEGA" : "NEON"}
+                    </span>
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.isFly
+                  ? `
+                    <span class="mini-chip fly">
+                      FLY
+                    </span>
+                  `
+                  : ""
+              }
+
+
+              ${
+                item.isRide
+                  ? `
+                    <span class="mini-chip ride">
+                      RIDE
+                    </span>
+                  `
+                  : ""
+              }
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="remove-item"
+            onclick="removeItem('${side}', ${item.id})"
+            aria-label="Pet kaldır"
+          >
+            &times;
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("");
 
 }
 
 
 /* =========================================================
-   REMOVE
+   REMOVE ITEM
    ========================================================= */
 
-function removeItem(
-  side,
-  id
-) {
+function removeItem(side, id) {
 
-  if (
-    side === "you"
-  ) {
+  if (side === "you") {
 
     youTrade =
       youTrade.filter(
-        item =>
-          item.id !== id
+        (item) => item.id !== id
       );
 
   } else {
 
     themTrade =
       themTrade.filter(
-        item =>
-          item.id !== id
+        (item) => item.id !== id
       );
 
   }
@@ -1092,7 +1111,7 @@ function removeItem(
 
 
 /* =========================================================
-   CLEAR
+   CLEAR TRADE
    ========================================================= */
 
 function clearTrade() {
@@ -1107,7 +1126,7 @@ function clearTrade() {
 
 
 /* =========================================================
-   WFL
+   WFL CALCULATOR
    ========================================================= */
 
 function calculateWFL(
@@ -1116,24 +1135,19 @@ function calculateWFL(
 ) {
 
   const card =
-    document.getElementById(
-      "resultCard"
-    );
+    document.getElementById("resultCard");
+
 
   const statusText =
-    document.getElementById(
-      "resultStatusText"
-    );
+    document.getElementById("resultStatusText");
+
 
   const diffEl =
-    document.getElementById(
-      "resultDiffNumber"
-    );
+    document.getElementById("resultDiffNumber");
+
 
   const heroRes =
-    document.getElementById(
-      "heroResult"
-    );
+    document.getElementById("heroResult");
 
 
   if (
@@ -1160,17 +1174,14 @@ function calculateWFL(
     statusText.textContent =
       "Pet ekleyerek başla";
 
-    diffEl.textContent =
-      "—";
+    diffEl.textContent = "—";
 
 
     if (heroRes) {
 
-      heroRes.textContent =
-        "—";
+      heroRes.textContent = "—";
 
-      heroRes.className =
-        "result";
+      heroRes.className = "result";
 
     }
 
@@ -1185,44 +1196,40 @@ function calculateWFL(
 
   let label;
 
-  let cls;
+  let className;
 
 
   if (diff > 2) {
 
-    label =
-      "KAZANÇ (WIN)";
+    label = "KAZANÇ (WIN)";
 
-    cls =
-      "win";
+    className = "win";
 
   }
 
   else if (diff < -2) {
 
-    label =
-      "KAYIP (LOSE)";
+    label = "KAYIP (LOSE)";
 
-    cls =
-      "lose";
+    className = "lose";
 
   }
 
   else {
 
-    label =
-      "EŞİT (FAIR)";
+    label = "EŞİT (FAIR)";
 
-    cls =
-      "fair";
+    className = "fair";
 
   }
 
 
-  card.classList.add(cls);
+  card.classList.add(className);
+
 
   statusText.textContent =
     label;
+
 
   diffEl.textContent =
     (diff > 0 ? "+" : "") +
@@ -1232,10 +1239,10 @@ function calculateWFL(
   if (heroRes) {
 
     heroRes.textContent =
-      cls.toUpperCase();
+      className.toUpperCase();
 
     heroRes.className =
-      "result " + cls;
+      "result " + className;
 
   }
 
@@ -1249,9 +1256,8 @@ function calculateWFL(
 function renderValues() {
 
   const grid =
-    document.getElementById(
-      "valueGrid"
-    );
+    document.getElementById("valueGrid");
+
 
   if (!grid) {
     return;
@@ -1259,33 +1265,29 @@ function renderValues() {
 
 
   const search =
-    document.getElementById(
-      "search"
-    );
+    document.getElementById("search");
 
 
-  const filterText =
+  const searchText =
     search?.value
-      .toLowerCase()
-      .trim() || "";
+      ?.trim()
+      .toLowerCase() || "";
 
 
   const filtered =
     PET_DATABASE.filter(
-      pet =>
+      (pet) =>
         pet.name
           .toLowerCase()
-          .includes(filterText)
+          .includes(searchText)
     );
 
 
-  if (
-    filtered.length === 0
-  ) {
+  if (filtered.length === 0) {
 
     grid.innerHTML = `
-      <div class="empty-items">
-        Sonuç bulunamadı
+      <div class="empty-items value-empty">
+        🔎 Sonuç bulunamadı
       </div>
     `;
 
@@ -1295,42 +1297,42 @@ function renderValues() {
 
 
   grid.innerHTML =
-    filtered
-      .map(
-        pet => `
+    filtered.map((pet) => `
 
-          <div class="value-card">
+      <article class="value-card">
 
-            <img
-              src="${pet.image}"
-              class="pet-photo"
-              alt="${pet.name}"
-              onerror="
-                this.src='https://via.placeholder.com/80?text=Pet'
-              "
-            >
+        <div class="value-image">
 
-            <div>
+          <img
+            src="${pet.image}"
+            class="pet-photo"
+            alt="${pet.name}"
+            loading="lazy"
+            onerror="handleImageError(this)"
+          >
 
-              <h3>
-                ${pet.name}
-              </h3>
+        </div>
 
-              <span>
-                ${pet.rarity.toUpperCase()}
-              </span>
 
-              <strong>
-                Değer: ${pet.value}
-              </strong>
+        <div class="value-info">
 
-            </div>
+          <h3>
+            ${pet.name}
+          </h3>
 
-          </div>
+          <span class="rarity-small ${pet.rarity}">
+            ${pet.rarity.toUpperCase()}
+          </span>
 
-        `
-      )
-      .join("");
+          <strong>
+            ${pet.value}
+          </strong>
+
+        </div>
+
+      </article>
+
+    `).join("");
 
 }
 
@@ -1341,72 +1343,49 @@ function renderValues() {
 
 function loadProfile() {
 
-  const saved =
-    JSON.parse(
-      localStorage.getItem(
-        "zayagg_profile"
-      ) || "null"
-    );
-
-
-  return (
-    saved || {
-
-      name:
-        "Zayagg Kullanıcısı",
-
-      username:
-        "@kullanici",
-
-      bio:
-        "Henüz bir biyografi eklenmedi.",
-
-      avatar:
-        "🐉"
-
+  return getStorageJSON(
+    "zayagg_profile",
+    {
+      name: "Zayagg Kullanıcısı",
+      username: "@kullanici",
+      bio: "Henüz bir biyografi eklenmedi.",
+      avatar: "🐉"
     }
   );
 
 }
 
 
-/* =========================================================
-   SAVE PROFILE
-   ========================================================= */
+function saveProfile(profile) {
 
-function saveProfile(
-  profile
-) {
+  try {
 
-  localStorage.setItem(
-    "zayagg_profile",
-    JSON.stringify(profile)
-  );
+    localStorage.setItem(
+      "zayagg_profile",
+      JSON.stringify(profile)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "Profil kaydedilemedi:",
+      error
+    );
+
+  }
 
 }
 
 
-/* =========================================================
-   STATS
-   ========================================================= */
-
 function loadStats() {
 
-  return (
-    JSON.parse(
-      localStorage.getItem(
-        "zayagg_stats"
-      ) || "null"
-    ) || {
-
+  return getStorageJSON(
+    "zayagg_stats",
+    {
       trades: 0,
-
       win: 0,
-
       fair: 0,
-
       lose: 0
-
     }
   );
 
@@ -1422,15 +1401,13 @@ function renderProfile() {
   const profile =
     loadProfile();
 
+
   const stats =
     loadStats();
 
 
   const setText =
-    (
-      id,
-      value
-    ) => {
+    (id, value) => {
 
       const element =
         document.getElementById(id);
@@ -1450,35 +1427,42 @@ function renderProfile() {
     profile.avatar
   );
 
+
   setText(
     "profileName",
     profile.name
   );
+
 
   setText(
     "profileUsername",
     profile.username
   );
 
+
   setText(
     "profileBio",
     profile.bio
   );
+
 
   setText(
     "tradeCount",
     stats.trades
   );
 
+
   setText(
     "winCount",
     stats.win
   );
 
+
   setText(
     "fairCount",
     stats.fair
   );
+
 
   setText(
     "loseCount",
@@ -1500,15 +1484,16 @@ function openProfile() {
 
 
   const modal =
-    document.getElementById(
-      "profileModal"
-    );
+    document.getElementById("profileModal");
 
 
   if (modal) {
 
-    modal.classList.add(
-      "show"
+    modal.classList.add("show");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
     );
 
   }
@@ -1528,15 +1513,16 @@ function openProfile() {
 function closeProfile() {
 
   const modal =
-    document.getElementById(
-      "profileModal"
-    );
+    document.getElementById("profileModal");
 
 
   if (modal) {
 
-    modal.classList.remove(
-      "show"
+    modal.classList.remove("show");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
     );
 
   }
@@ -1560,19 +1546,15 @@ function openEditProfile() {
 
 
   const nameInput =
-    document.getElementById(
-      "editName"
-    );
+    document.getElementById("editName");
+
 
   const usernameInput =
-    document.getElementById(
-      "editUsername"
-    );
+    document.getElementById("editUsername");
+
 
   const bioInput =
-    document.getElementById(
-      "editBio"
-    );
+    document.getElementById("editBio");
 
 
   if (nameInput) {
@@ -1586,8 +1568,10 @@ function openEditProfile() {
   if (usernameInput) {
 
     usernameInput.value =
-      profile.username
-        .replace(/^@/, "");
+      profile.username.replace(
+        /^@/,
+        ""
+      );
 
   }
 
@@ -1608,21 +1592,13 @@ function openEditProfile() {
 
 
   document
-    .getElementById(
-      "profileEditForm"
-    )
-    ?.classList.remove(
-      "hidden"
-    );
+    .getElementById("profileEditForm")
+    ?.classList.remove("hidden");
 
 
   document
-    .getElementById(
-      "profileEditBtn"
-    )
-    ?.classList.add(
-      "hidden"
-    );
+    .getElementById("profileEditBtn")
+    ?.classList.add("hidden");
 
 }
 
@@ -1634,21 +1610,13 @@ function openEditProfile() {
 function closeEditProfile() {
 
   document
-    .getElementById(
-      "profileEditForm"
-    )
-    ?.classList.add(
-      "hidden"
-    );
+    .getElementById("profileEditForm")
+    ?.classList.add("hidden");
 
 
   document
-    .getElementById(
-      "profileEditBtn"
-    )
-    ?.classList.remove(
-      "hidden"
-    );
+    .getElementById("profileEditBtn")
+    ?.classList.remove("hidden");
 
 }
 
@@ -1659,41 +1627,33 @@ function closeEditProfile() {
 
 function renderAvatarPicker() {
 
-  const wrap =
-    document.getElementById(
-      "avatarPick"
-    );
+  const wrapper =
+    document.getElementById("avatarPick");
 
-  if (!wrap) {
+
+  if (!wrapper) {
     return;
   }
 
 
-  wrap.innerHTML =
-    AVATAR_OPTIONS
-      .map(
-        avatar => `
+  wrapper.innerHTML =
+    AVATAR_OPTIONS.map(
+      (avatar) => `
 
-          <button
-            type="button"
-            class="
-              avatar-opt
-              ${
-                avatar === editingAvatar
-                  ? "active"
-                  : ""
-              }
-            "
-            onclick="
-              pickAvatar('${avatar}')
-            "
-          >
-            ${avatar}
-          </button>
+        <button
+          type="button"
+          class="avatar-opt ${
+            avatar === editingAvatar
+              ? "active"
+              : ""
+          }"
+          onclick="pickAvatar('${avatar}')"
+        >
+          ${avatar}
+        </button>
 
-        `
-      )
-      .join("");
+      `
+    ).join("");
 
 }
 
@@ -1702,9 +1662,7 @@ function renderAvatarPicker() {
    PICK AVATAR
    ========================================================= */
 
-function pickAvatar(
-  avatar
-) {
+function pickAvatar(avatar) {
 
   editingAvatar =
     avatar;
@@ -1715,45 +1673,31 @@ function pickAvatar(
 
 
 /* =========================================================
-   SAVE EDITED PROFILE
+   SAVE PROFILE
    ========================================================= */
 
-function saveEditedProfile(
-  event
-) {
+function saveEditedProfile(event) {
 
   event.preventDefault();
 
 
-  const nameInput =
-    document.getElementById(
-      "editName"
-    );
-
-  const usernameInput =
-    document.getElementById(
-      "editUsername"
-    );
-
-  const bioInput =
-    document.getElementById(
-      "editBio"
-    );
-
-
   const name =
-    nameInput?.value.trim() ||
+    document
+      .getElementById("editName")
+      ?.value
+      .trim() ||
     "Zayagg Kullanıcısı";
 
 
   let username =
-    usernameInput?.value.trim() ||
+    document
+      .getElementById("editUsername")
+      ?.value
+      .trim() ||
     "kullanici";
 
 
-  if (
-    !username.startsWith("@")
-  ) {
+  if (!username.startsWith("@")) {
 
     username =
       "@" + username;
@@ -1762,23 +1706,22 @@ function saveEditedProfile(
 
 
   const bio =
-    bioInput?.value.trim() ||
+    document
+      .getElementById("editBio")
+      ?.value
+      .trim() ||
     "Henüz bir biyografi eklenmedi.";
 
 
   saveProfile({
 
-    name:
-      name,
+    name,
 
-    username:
-      username,
+    username,
 
-    bio:
-      bio,
+    bio,
 
-    avatar:
-      editingAvatar
+    avatar: editingAvatar
 
   });
 
@@ -1786,5 +1729,25 @@ function saveEditedProfile(
   renderProfile();
 
   closeEditProfile();
+
+}
+
+
+/* =========================================================
+   IMAGE ERROR
+   ========================================================= */
+
+function handleImageError(image) {
+
+  if (!image) {
+    return;
+  }
+
+
+  image.onerror = null;
+
+
+  image.src =
+    "https://via.placeholder.com/100x100/15182a/ffffff?text=Pet";
 
 }
