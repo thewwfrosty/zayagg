@@ -51,7 +51,7 @@ input {
   font-size: 25px;
   font-weight: 900;
   letter-spacing: -1px;
-  color: #ffffff;
+  color: #fff;
 }
 
 .logo::after {
@@ -80,7 +80,7 @@ input {
 
 .navbar nav a:hover,
 .navbar nav a.active {
-  color: #ffffff;
+  color: #fff;
 }
 
 .login {
@@ -442,7 +442,7 @@ input {
 ========================= */
 
 #search {
-  width: 210px;
+  width: 230px;
   padding: 11px 14px;
   background: #111620;
   border: 1px solid #2a3140;
@@ -513,6 +513,15 @@ input {
   font-weight: 900;
 }
 
+.value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  margin-top: 12px;
+  color: #727b8e;
+  font-size: 11px;
+}
+
 
 /* =========================
    PET SEÇME PENCERESİ
@@ -521,134 +530,200 @@ input {
 .pet-modal {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(8px);
+  z-index: 99999;
+  background: rgba(3, 5, 10, .84);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99999;
   padding: 20px;
 }
 
 .pet-modal-box {
-  width: 520px;
-  max-width: 100%;
-  max-height: 80vh;
+  width: min(900px, 100%);
+  max-height: 90vh;
   overflow: hidden;
-  background: #10141f;
-  border: 1px solid #303747;
-  border-radius: 20px;
+  background: #111620;
+  border: 1px solid #30394b;
+  border-radius: 22px;
   padding: 24px;
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 30px 100px rgba(0,0,0,.7);
 }
 
 .modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 18px;
 }
 
 .modal-header small {
   color: #9b8fff;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
 }
 
 .modal-header h2 {
-  margin: 5px 0 0;
-  font-size: 22px;
+  margin-top: 5px;
+  font-size: 23px;
 }
 
 .modal-header button {
-  background: #191e2b;
+  width: 40px;
+  height: 40px;
   border: 0;
-  color: #aaa;
-  width: 38px;
-  height: 38px;
   border-radius: 10px;
+  background: #1d2431;
+  color: #9da6b7;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .modal-header button:hover {
   color: white;
-  background: #252b3a;
+  background: #292f3e;
 }
+
+
+/* SEARCH */
 
 .pet-search {
   width: 100%;
-  padding: 14px;
-  background: #171c29;
-  border: 1px solid #303747;
+  padding: 14px 16px;
+  margin-bottom: 14px;
   border-radius: 12px;
+  border: 1px solid #30394b;
+  background: #0b0f17;
   color: white;
   outline: none;
-  margin-bottom: 15px;
+  font-size: 15px;
 }
 
 .pet-search:focus {
   border-color: #8b7cff;
 }
 
+
+/* FILTERS */
+
+.pet-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.pet-filters button {
+  border: 1px solid #30394b;
+  background: #171d29;
+  color: #9ca6b7;
+  padding: 8px 13px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: .15s;
+}
+
+.pet-filters button:hover {
+  color: white;
+  border-color: #6259a4;
+}
+
+.pet-filters button.active {
+  background: #8b7cff;
+  border-color: #8b7cff;
+  color: white;
+}
+
+
+/* PET LIST */
+
 .pet-list {
-  max-height: 48vh;
+  max-height: 55vh;
   overflow-y: auto;
+  padding-right: 5px;
+}
+
+.pet-list::-webkit-scrollbar {
+  width: 7px;
+}
+
+.pet-list::-webkit-scrollbar-track {
+  background: #0c1018;
+  border-radius: 10px;
+}
+
+.pet-list::-webkit-scrollbar-thumb {
+  background: #30394a;
+  border-radius: 10px;
 }
 
 .pet-option {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 14px;
   padding: 12px;
   margin-bottom: 8px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: #171c29;
+  border: 1px solid #252e3d;
+  border-radius: 13px;
+  background: #151b26;
   color: white;
-  text-align: left;
   cursor: pointer;
+  text-align: left;
   transition: .15s;
 }
 
 .pet-option:hover {
+  background: #1d2635;
   border-color: #8b7cff;
   transform: translateY(-1px);
 }
 
 .pet-option-icon {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  background: #202637;
-  border-radius: 10px;
-  font-size: 23px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #0c111a;
+  font-size: 28px;
 }
 
 .pet-option-info {
   flex: 1;
+  min-width: 0;
 }
 
 .pet-option-info strong {
   display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
 }
 
 .pet-option-info span {
   display: block;
-  color: #858c9d;
-  font-size: 12px;
-  margin-top: 4px;
+  color: #7f899c;
+  font-size: 11px;
 }
 
 .pet-option-value {
-  color: #9b8fff;
+  min-width: 60px;
+  text-align: right;
+  color: #a49aff;
+  font-size: 15px;
   font-weight: 900;
+}
+
+.no-results {
+  padding: 50px 20px;
+  text-align: center;
+  color: #7d8798;
+  font-size: 14px;
 }
 
 
@@ -701,6 +776,10 @@ footer {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .pet-modal-box {
+    width: 100%;
+  }
+
 }
 
 @media (max-width: 500px) {
@@ -723,11 +802,26 @@ footer {
   }
 
   .pet-modal {
-    padding: 12px;
+    padding: 10px;
   }
 
   .pet-modal-box {
-    padding: 18px;
+    padding: 16px;
+    max-height: 94vh;
+  }
+
+  .pet-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 5px;
+  }
+
+  .pet-filters button {
+    white-space: nowrap;
+  }
+
+  .pet-list {
+    max-height: 58vh;
   }
 
   .result-card {
