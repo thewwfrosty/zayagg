@@ -1,11 +1,13 @@
 /* =========================================================
-   ZAYAGG — EXPANDED PET DATABASE
+   ZAYAGG — SCRIPT.JS
+   ========================================================= */
+
+
+/* =========================================================
+   PET DATABASE
    ========================================================= */
 
 const PET_DATABASE = [
-  /* BURADA 300+ PETLİK GENİŞ DATABASE BULUNUYOR.
-     Hazırladığım dosyanın tamamı mevcut script.js içinde. */
-
   {id:"shadow_dragon",name:"Shadow Dragon",rarity:"legendary",value:125,image:"https://cdn.playadopt.me/items/shadow_dragon.png"},
   {id:"bat_dragon",name:"Bat Dragon",rarity:"legendary",value:110,image:"https://cdn.playadopt.me/items/bat_dragon.png"},
   {id:"giraffe",name:"Giraffe",rarity:"legendary",value:70,image:"https://cdn.playadopt.me/items/giraffe.png"},
@@ -57,9 +59,59 @@ const PET_DATABASE = [
   {id:"snow_owl",name:"Snow Owl",rarity:"legendary",value:2,image:"https://cdn.playadopt.me/items/snow_owl.png"},
   {id:"goldhorn",name:"Goldhorn",rarity:"legendary",value:1.8,image:"https://cdn.playadopt.me/items/goldhorn.png"},
   {id:"griffin",name:"Griffin",rarity:"legendary",value:1.2,image:"https://cdn.playadopt.me/items/griffin.png"},
-
-  /* ... genişletilmiş database devam ediyor ... */
+  {id:"albino_bat",name:"Albino Bat",rarity:"ultra",value:3,image:"https://cdn.playadopt.me/items/albino_bat.png"},
+  {id:"business_monkey",name:"Business Monkey",rarity:"ultra",value:2,image:"https://cdn.playadopt.me/items/business_monkey.png"},
+  {id:"ghost_bunny",name:"Ghost Bunny",rarity:"ultra",value:2,image:"https://cdn.playadopt.me/items/ghost_bunny.png"},
+  {id:"ginger_cat",name:"Ginger Cat",rarity:"ultra",value:1.2,image:"https://cdn.playadopt.me/items/ginger_cat.png"},
+  {id:"panda",name:"Panda",rarity:"ultra",value:1.2,image:"https://cdn.playadopt.me/items/panda.png"},
+  {id:"red_panda",name:"Red Panda",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/red_panda.png"},
+  {id:"bee",name:"Bee",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/bee.png"},
+  {id:"penguin",name:"Penguin",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/penguin.png"},
+  {id:"toucan",name:"Toucan",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/toucan.png"},
+  {id:"starfish",name:"Starfish",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/starfish.png"},
+  {id:"koala",name:"Koala",rarity:"ultra",value:1.5,image:"https://cdn.playadopt.me/items/koala.png"},
+  {id:"frog",name:"Frog",rarity:"ultra",value:1,image:"https://cdn.playadopt.me/items/frog.png"},
+  {id:"sloth",name:"Sloth",rarity:"ultra",value:.8,image:"https://cdn.playadopt.me/items/sloth.png"},
+  {id:"polar_bear",name:"Polar Bear",rarity:"rare",value:3.5,image:"https://cdn.playadopt.me/items/polar_bear.png"},
+  {id:"reindeer",name:"Reindeer",rarity:"rare",value:3,image:"https://cdn.playadopt.me/items/reindeer.png"},
+  {id:"rabbit",name:"Rabbit",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/rabbit.png"},
+  {id:"monkey",name:"Monkey",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/monkey.png"},
+  {id:"bunny",name:"Bunny",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/bunny.png"},
+  {id:"emu",name:"Emu",rarity:"rare",value:.8,image:"https://cdn.playadopt.me/items/emu.png"},
+  {id:"beaver",name:"Beaver",rarity:"rare",value:.6,image:"https://cdn.playadopt.me/items/beaver.png"},
+  {id:"musk_ox",name:"Musk Ox",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/musk_ox.png"},
+  {id:"woolly_mammoth",name:"Woolly Mammoth",rarity:"rare",value:.8,image:"https://cdn.playadopt.me/items/woolly_mammoth.png"},
+  {id:"dilophosaurus",name:"Dilophosaurus",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/dilophosaurus.png"},
+  {id:"stegosaurus",name:"Stegosaurus",rarity:"rare",value:.7,image:"https://cdn.playadopt.me/items/stegosaurus.png"},
+  {id:"triceratops",name:"Triceratops",rarity:"rare",value:.6,image:"https://cdn.playadopt.me/items/triceratops.png"},
+  {id:"shrew",name:"Shrew",rarity:"uncommon",value:3,image:"https://cdn.playadopt.me/items/shrew.png"},
+  {id:"megalodon",name:"Megalodon",rarity:"uncommon",value:1,image:"https://cdn.playadopt.me/items/megalodon.png"},
+  {id:"bat",name:"Bat",rarity:"uncommon",value:.5,image:"https://cdn.playadopt.me/items/bat.png"},
+  {id:"snow_cat",name:"Snow Cat",rarity:"uncommon",value:.3,image:"https://cdn.playadopt.me/items/snow_cat.png"},
+  {id:"fennec_fox",name:"Fennec Fox",rarity:"uncommon",value:.3,image:"https://cdn.playadopt.me/items/fennec_fox.png"},
+  {id:"red_fox",name:"Red Fox",rarity:"uncommon",value:.4,image:"https://cdn.playadopt.me/items/red_fox.png"},
+  {id:"shiba_inu",name:"Shiba Inu",rarity:"uncommon",value:.3,image:"https://cdn.playadopt.me/items/shiba_inu.png"},
+  {id:"dingo",name:"Dingo",rarity:"uncommon",value:.3,image:"https://cdn.playadopt.me/items/dingo.png"},
+  {id:"snow_puma",name:"Snow Puma",rarity:"uncommon",value:.3,image:"https://cdn.playadopt.me/items/snow_puma.png"},
+  {id:"puma",name:"Puma",rarity:"uncommon",value:.2,image:"https://cdn.playadopt.me/items/puma.png"},
+  {id:"cat",name:"Cat",rarity:"common",value:.1,image:"https://cdn.playadopt.me/items/cat.png"},
+  {id:"dog",name:"Dog",rarity:"common",value:.1,image:"https://cdn.playadopt.me/items/dog.png"},
+  {id:"mouse",name:"Mouse",rarity:"common",value:.1,image:"https://cdn.playadopt.me/items/mouse.png"},
+  {id:"chick",name:"Chick",rarity:"common",value:.15,image:"https://cdn.playadopt.me/items/chick.png"},
+  {id:"robin",name:"Robin",rarity:"common",value:.2,image:"https://cdn.playadopt.me/items/robin.png"},
+  {id:"chicken",name:"Chicken",rarity:"common",value:.3,image:"https://cdn.playadopt.me/items/chicken.png"},
+  {id:"bandicoot",name:"Bandicoot",rarity:"common",value:.2,image:"https://cdn.playadopt.me/items/bandicoot.png"},
+  {id:"ground_sloth",name:"Ground Sloth",rarity:"common",value:.2,image:"https://cdn.playadopt.me/items/ground_sloth.png"},
+  {id:"wolpertinger",name:"Wolpertinger",rarity:"common",value:.2,image:"https://cdn.playadopt.me/items/wolpertinger.png"},
+  {id:"otter",name:"Otter",rarity:"common",value:.2,image:"https://cdn.playadopt.me/items/otter.png"},
+  {id:"buffalo",name:"Buffalo",rarity:"common",value:.15,image:"https://cdn.playadopt.me/items/buffalo.png"},
+  {id:"cracked_egg",name:"Cracked Egg",rarity:"common",value:.1,image:"https://cdn.playadopt.me/items/cracked_egg.png"}
 ];
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
 
 const pets = PET_DATABASE;
 
@@ -68,6 +120,7 @@ let themTrade = [];
 
 let pickerSide = null;
 let selectedPet = null;
+
 let selectedForm = "normal";
 
 let selectedPotion = {
@@ -77,28 +130,39 @@ let selectedPotion = {
 
 let recordedTradeKey = "";
 
-
-/* HELPERS */
-
 const $ = id => document.getElementById(id);
 
-function formatValue(v) {
-  const n = Number(v || 0);
-  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function formatValue(value) {
+  const n = Number(value || 0);
+
+  return Number.isInteger(n)
+    ? String(n)
+    : n.toFixed(1);
 }
 
-function rarityName(r) {
-  return {
+
+function rarityName(rarity) {
+
+  const names = {
     legendary: "Legendary",
     ultra: "Ultra-Rare",
     rare: "Rare",
     uncommon: "Uncommon",
     common: "Common"
-  }[r] || r || "";
+  };
+
+  return names[rarity] || rarity || "";
 }
 
-function escapeHTML(s) {
-  return String(s ?? "")
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -106,27 +170,48 @@ function escapeHTML(s) {
     .replace(/'/g, "&#039;");
 }
 
+
 function handleImageError(img) {
-  if (!img || img.dataset.failed) return;
+
+  if (
+    !img ||
+    img.dataset.failed === "1"
+  ) {
+    return;
+  }
 
   img.dataset.failed = "1";
 
   img.src =
     "data:image/svg+xml;charset=UTF-8," +
-    encodeURIComponent(
-      '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">' +
-      '<rect width="160" height="160" rx="20" fill="#15182a"/>' +
-      '<text x="80" y="85" text-anchor="middle" fill="#8b93a7" font-size="13" font-family="Arial">NO IMAGE</text>' +
-      '</svg>'
-    );
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+        <rect width="160" height="160" rx="20" fill="#15182a"/>
+        <text
+          x="80"
+          y="85"
+          text-anchor="middle"
+          fill="#8b93a7"
+          font-size="13"
+          font-family="Arial"
+        >
+          NO IMAGE
+        </text>
+      </svg>
+    `);
 }
 
-function imageHTML(pet, cls = "pet-photo") {
+
+function imageHTML(
+  pet,
+  className = "pet-photo"
+) {
+
   return `
     <img
       src="${escapeHTML(pet.image || "")}"
       alt="${escapeHTML(pet.name)}"
-      class="${cls}"
+      class="${className}"
       loading="lazy"
       onerror="handleImageError(this)"
     >
@@ -134,58 +219,111 @@ function imageHTML(pet, cls = "pet-photo") {
 }
 
 
-/* VALUES */
+/* =========================================================
+   VALUES
+   ========================================================= */
 
 function renderValues() {
+
   const grid = $("valueGrid");
+
   if (!grid) return;
 
-  const q = ($("search")?.value || "")
-    .trim()
-    .toLowerCase();
+  const query =
+    ($("search")?.value || "")
+      .trim()
+      .toLowerCase();
 
-  const list = pets.filter(p =>
-    p.name.toLowerCase().includes(q) ||
-    String(p.rarity).toLowerCase().includes(q)
-  );
+  const list = pets.filter(pet => {
+
+    const name =
+      String(pet.name || "")
+        .toLowerCase();
+
+    const rarity =
+      String(pet.rarity || "")
+        .toLowerCase();
+
+    return (
+      name.includes(query) ||
+      rarity.includes(query)
+    );
+  });
 
   grid.innerHTML = "";
 
-  list.forEach(p => {
+  if (!list.length) {
 
-    const card = document.createElement("div");
+    grid.innerHTML = `
+      <div class="empty-picker">
+        <span>🔎</span>
+        <strong>Pet bulunamadı</strong>
+        <small>Başka bir isim dene.</small>
+      </div>
+    `;
 
-    card.className = "value-card";
+    return;
+  }
+
+  list.forEach(pet => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "value-card";
 
     card.innerHTML = `
       <div class="value-image">
-        ${imageHTML(p)}
+        ${imageHTML(pet)}
       </div>
 
       <div class="value-info">
-        <h3>${escapeHTML(p.name)}</h3>
 
-        <span class="rarity-small ${p.rarity}">
-          ${escapeHTML(rarityName(p.rarity))}
+        <h3>
+          ${escapeHTML(pet.name)}
+        </h3>
+
+        <span
+          class="rarity-small ${escapeHTML(
+            String(pet.rarity || "")
+          )}"
+        >
+          ${escapeHTML(
+            rarityName(pet.rarity)
+          )}
         </span>
 
         <strong>
-          Value: ${formatValue(p.value)}
+          Value: ${formatValue(pet.value)}
         </strong>
+
       </div>
     `;
 
     grid.appendChild(card);
+
   });
 }
 
 
-/* PET PICKER */
+/* =========================================================
+   PET PICKER
+   ========================================================= */
 
 function openPetPicker(side) {
 
+  if (
+    side !== "you" &&
+    side !== "them"
+  ) {
+    return;
+  }
+
   pickerSide = side;
+
   selectedPet = null;
+
   selectedForm = "normal";
 
   selectedPotion = {
@@ -193,30 +331,62 @@ function openPetPicker(side) {
     ride: false
   };
 
-  $("pickerSearch").value = "";
+  const search =
+    $("pickerSearch");
 
-  $("pickerBar")?.classList.add("hidden");
+  if (search) {
+    search.value = "";
+  }
+
+  $("pickerBar")?.classList.add(
+    "hidden"
+  );
+
+  resetPickerButtons();
 
   renderPickerPets(pets);
 
-  $("petPickerModal")?.classList.add("show");
+  const modal =
+    $("petPickerModal");
 
-  $("petPickerModal")?.setAttribute(
-    "aria-hidden",
-    "false"
+  if (modal) {
+
+    modal.classList.add("show");
+
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  }
+
+  document.body.classList.add(
+    "profile-open"
   );
 
-  document.body.classList.add("profile-open");
+  setTimeout(() => {
+    search?.focus();
+  }, 50);
 }
+
 
 function closePetPicker() {
 
-  $("petPickerModal")?.classList.remove("show");
+  const modal =
+    $("petPickerModal");
 
-  $("petPickerModal")?.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+  if (modal) {
+
+    modal.classList.remove(
+      "show"
+    );
+
+    modal.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+  }
 
   document.body.classList.remove(
     "profile-open"
@@ -229,73 +399,115 @@ function closePetPicker() {
 
 function renderPickerPets(list) {
 
-  const box = $("pickerPetList");
+  const box =
+    $("pickerPetList");
 
   if (!box) return;
 
   box.innerHTML = "";
 
-  list.forEach(p => {
+  if (!list.length) {
+
+    box.innerHTML = `
+      <div class="empty-picker">
+        <span>🔎</span>
+        <strong>Pet bulunamadı</strong>
+        <small>Arama kelimesini değiştir.</small>
+      </div>
+    `;
+
+    return;
+  }
+
+  list.forEach(pet => {
 
     const button =
       document.createElement("button");
 
     button.type = "button";
+
     button.className =
       "pet-choice" +
       (
-        selectedPet?.id === p.id
+        selectedPet?.id === pet.id
           ? " selected"
           : ""
       );
 
     button.innerHTML = `
       <div class="choice-image">
-        ${imageHTML(p)}
+        ${imageHTML(pet)}
       </div>
 
       <strong>
-        ${escapeHTML(p.name)}
+        ${escapeHTML(pet.name)}
       </strong>
 
-      <span class="rarity-tag ${p.rarity}">
+      <span
+        class="rarity-tag ${escapeHTML(
+          String(pet.rarity || "")
+        )}"
+      >
         ${escapeHTML(
-          rarityName(p.rarity)
+          rarityName(pet.rarity)
         )}
       </span>
 
       <small>
-        ${formatValue(p.value)}
+        ${formatValue(pet.value)}
       </small>
     `;
 
-    button.onclick = () =>
-      selectPickerPet(p);
+    button.addEventListener(
+      "click",
+      () => selectPickerPet(pet)
+    );
 
     box.appendChild(button);
+
   });
 }
 
 
 function filterPickerPets() {
 
-  const q =
+  const query =
     ($("pickerSearch")?.value || "")
       .trim()
       .toLowerCase();
 
-  renderPickerPets(
-    pets.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      String(p.rarity).toLowerCase().includes(q)
-    )
-  );
+  const list =
+    pets.filter(pet => {
+
+      const name =
+        String(pet.name || "")
+          .toLowerCase();
+
+      const rarity =
+        String(pet.rarity || "")
+          .toLowerCase();
+
+      return (
+        name.includes(query) ||
+        rarity.includes(query)
+      );
+
+    });
+
+  renderPickerPets(list);
 }
 
 
-function selectPickerPet(p) {
+function selectPickerPet(pet) {
 
-  selectedPet = p;
+  selectedPet = pet;
+
+  selectedForm = "normal";
+
+  selectedPotion = {
+    fly: false,
+    ride: false
+  };
 
   $("pickerBar")?.classList.remove(
     "hidden"
@@ -309,13 +521,21 @@ function selectPickerPet(p) {
 }
 
 
-/* PICKER */
+/* =========================================================
+   PICKER PREVIEW
+   ========================================================= */
 
 function renderPickerPreview() {
 
-  const box = $("pickerPreview");
+  const box =
+    $("pickerPreview");
 
-  if (!box || !selectedPet) return;
+  if (
+    !box ||
+    !selectedPet
+  ) {
+    return;
+  }
 
   box.innerHTML = `
     <div class="pet-image-wrap">
@@ -361,21 +581,76 @@ function renderPickerPreview() {
         }
 
       </div>
+
     </div>
 
     <div class="preview-info">
+
       <strong>
         ${escapeHTML(selectedPet.name)}
       </strong>
 
       <span>
         ${escapeHTML(
-          rarityName(selectedPet.rarity)
+          rarityName(
+            selectedPet.rarity
+          )
         )}
       </span>
+
+      <div class="vchip-row">
+
+        ${
+          selectedForm === "neon"
+            ? '<span class="vchip neon">NEON</span>'
+            : ""
+        }
+
+        ${
+          selectedForm === "mega"
+            ? '<span class="vchip mega">MEGA</span>'
+            : ""
+        }
+
+        ${
+          selectedPotion.fly
+            ? '<span class="vchip fly">FLY</span>'
+            : ""
+        }
+
+        ${
+          selectedPotion.ride
+            ? '<span class="vchip ride">RIDE</span>'
+            : ""
+        }
+
+      </div>
+
     </div>
   `;
 }
+
+
+/* =========================================================
+   PICKER BUTTONS
+   ========================================================= */
+
+function resetPickerButtons() {
+
+  [
+    "btnNeon",
+    "btnMega",
+    "btnFly",
+    "btnRide"
+  ].forEach(id => {
+
+    $(id)?.classList.remove(
+      "active"
+    );
+
+  });
+}
+
 
 function updatePickerButtons() {
 
@@ -400,9 +675,17 @@ function updatePickerButtons() {
   );
 }
 
+
 function toggleForm(form) {
 
   if (!selectedPet) return;
+
+  if (
+    form !== "neon" &&
+    form !== "mega"
+  ) {
+    return;
+  }
 
   selectedForm =
     selectedForm === form
@@ -414,9 +697,17 @@ function toggleForm(form) {
   updatePickerValue();
 }
 
+
 function togglePotion(type) {
 
   if (!selectedPet) return;
+
+  if (
+    type !== "fly" &&
+    type !== "ride"
+  ) {
+    return;
+  }
 
   selectedPotion[type] =
     !selectedPotion[type];
@@ -426,38 +717,52 @@ function togglePotion(type) {
   updatePickerValue();
 }
 
-function getModifiedValue(p) {
+
+/* =========================================================
+   VALUE MODIFIER
+   ========================================================= */
+
+function getModifiedValue(pet) {
 
   let value =
-    Number(p?.value || 0);
+    Number(pet?.value || 0);
 
-  if (selectedForm === "neon") {
+  if (
+    selectedForm === "neon"
+  ) {
     value *= 4;
   }
 
-  if (selectedForm === "mega") {
+  if (
+    selectedForm === "mega"
+  ) {
     value *= 16;
   }
 
-  if (selectedPotion.fly) {
+  if (
+    selectedPotion.fly
+  ) {
     value += 0.25;
   }
 
-  if (selectedPotion.ride) {
+  if (
+    selectedPotion.ride
+  ) {
     value += 0.25;
   }
 
   return value;
 }
 
+
 function updatePickerValue() {
 
-  const el =
+  const element =
     $("pickerValue");
 
-  if (!el) return;
+  if (!element) return;
 
-  el.textContent =
+  element.textContent =
     selectedPet
       ? formatValue(
           getModifiedValue(
@@ -468,7 +773,9 @@ function updatePickerValue() {
 }
 
 
-/* ADD PET */
+/* =========================================================
+   ADD PET
+   ========================================================= */
 
 function confirmAddPet() {
 
@@ -479,11 +786,14 @@ function confirmAddPet() {
     return;
   }
 
-  const pet = {
+  const item = {
+
     ...selectedPet,
 
     baseValue:
-      Number(selectedPet.value),
+      Number(
+        selectedPet.value
+      ),
 
     value:
       getModifiedValue(
@@ -505,127 +815,180 @@ function confirmAddPet() {
         .slice(2)}`
   };
 
-  if (pickerSide === "you") {
-    youTrade.push(pet);
+  if (
+    pickerSide === "you"
+  ) {
+
+    youTrade.push(item);
+
   } else {
-    themTrade.push(pet);
+
+    themTrade.push(item);
+
   }
 
   closePetPicker();
+
   updateTradeUI();
 }
 
 
-/* TRADE */
+/* =========================================================
+   TRADE
+   ========================================================= */
 
 function calculateTotal(trade) {
+
   return trade.reduce(
-    (sum, pet) =>
-      sum + Number(pet.value || 0),
+    (total, pet) =>
+      total +
+      Number(
+        pet.value || 0
+      ),
     0
   );
 }
 
+
 function renderTradeSide(
-  id,
+  elementId,
   trade,
   side
 ) {
 
-  const el = $(id);
+  const element =
+    $(elementId);
 
-  if (!el) return;
+  if (!element) return;
 
-  el.innerHTML =
-    trade.length
-      ? trade.map(p => `
+  if (!trade.length) {
 
-          <div class="trade-item">
+    element.innerHTML = `
+      <div class="empty-items">
+        Henüz pet eklenmedi
+      </div>
+    `;
 
-            <div class="pet-image-wrap">
+    return;
+  }
 
-              ${
-                p.form === "neon"
-                  ? '<div class="neon-effect"></div>'
-                  : ""
-              }
+  element.innerHTML =
+    trade.map(pet => `
 
-              ${
-                p.form === "mega"
-                  ? '<div class="mega-effect"></div>'
-                  : ""
-              }
+      <div class="trade-item">
 
-              ${imageHTML(p)}
+        <div class="pet-image-wrap">
 
-              <div class="pet-badges">
+          ${
+            pet.form === "neon"
+              ? '<div class="neon-effect"></div>'
+              : ""
+          }
 
-                ${
-                  p.form === "neon"
-                    ? '<span class="mini-chip neon">N</span>'
-                    : ""
-                }
+          ${
+            pet.form === "mega"
+              ? '<div class="mega-effect"></div>'
+              : ""
+          }
 
-                ${
-                  p.form === "mega"
-                    ? '<span class="mini-chip mega">M</span>'
-                    : ""
-                }
+          ${imageHTML(pet)}
 
-                ${
-                  p.fly
-                    ? '<span class="mini-chip fly">F</span>'
-                    : ""
-                }
+          <div class="pet-badges">
 
-                ${
-                  p.ride
-                    ? '<span class="mini-chip ride">R</span>'
-                    : ""
-                }
+            ${
+              pet.form === "neon"
+                ? '<span class="mini-chip neon">N</span>'
+                : ""
+            }
 
-              </div>
+            ${
+              pet.form === "mega"
+                ? '<span class="mini-chip mega">M</span>'
+                : ""
+            }
 
-            </div>
+            ${
+              pet.fly
+                ? '<span class="mini-chip fly">F</span>'
+                : ""
+            }
 
-            <div class="trade-item-info">
-
-              <strong>
-                ${escapeHTML(p.name)}
-              </strong>
-
-              <small>
-                ${escapeHTML(
-                  rarityName(p.rarity)
-                )}
-              </small>
-
-            </div>
-
-            <strong>
-              ${formatValue(p.value)}
-            </strong>
-
-            <button
-              type="button"
-              class="remove-item"
-              onclick="removeTradePet(
-                '${side}',
-                '${p.uniqueId}'
-              )"
-            >
-              ×
-            </button>
+            ${
+              pet.ride
+                ? '<span class="mini-chip ride">R</span>'
+                : ""
+            }
 
           </div>
 
-        `).join("")
-      : `
-          <div class="empty-items">
-            Henüz pet eklenmedi
+        </div>
+
+
+        <div class="trade-item-info">
+
+          <strong>
+            ${escapeHTML(pet.name)}
+          </strong>
+
+          <small>
+            ${escapeHTML(
+              rarityName(
+                pet.rarity
+              )
+            )}
+          </small>
+
+          <div class="item-chips">
+
+            ${
+              pet.form === "neon"
+                ? '<span class="mini-chip neon">Neon</span>'
+                : ""
+            }
+
+            ${
+              pet.form === "mega"
+                ? '<span class="mini-chip mega">Mega</span>'
+                : ""
+            }
+
+            ${
+              pet.fly
+                ? '<span class="mini-chip fly">Fly</span>'
+                : ""
+            }
+
+            ${
+              pet.ride
+                ? '<span class="mini-chip ride">Ride</span>'
+                : ""
+            }
+
           </div>
-        `;
+
+        </div>
+
+
+        <strong>
+          ${formatValue(pet.value)}
+        </strong>
+
+
+        <button
+          type="button"
+          class="remove-item"
+          data-side="${side}"
+          data-id="${pet.uniqueId}"
+          aria-label="Pet sil"
+        >
+          ×
+        </button>
+
+      </div>
+
+    `).join("");
 }
+
 
 function removeTradePet(
   side,
@@ -636,14 +999,18 @@ function removeTradePet(
 
     youTrade =
       youTrade.filter(
-        p => p.uniqueId !== id
+        pet =>
+          pet.uniqueId !== id
       );
 
-  } else {
+  } else if (
+    side === "them"
+  ) {
 
     themTrade =
       themTrade.filter(
-        p => p.uniqueId !== id
+        pet =>
+          pet.uniqueId !== id
       );
 
   }
@@ -652,6 +1019,7 @@ function removeTradePet(
 
   updateTradeUI();
 }
+
 
 function clearTrade() {
 
@@ -664,13 +1032,85 @@ function clearTrade() {
 }
 
 
-/* RESULT */
+/* =========================================================
+   RESULT
+   ========================================================= */
 
-function updateResult(y, t) {
+function updateTradeUI() {
 
-  const card = $("resultCard");
-  const status = $("resultStatusText");
-  const diff = $("resultDiffNumber");
+  const youTotal =
+    calculateTotal(
+      youTrade
+    );
+
+  const themTotal =
+    calculateTotal(
+      themTrade
+    );
+
+  renderTradeSide(
+    "youItems",
+    youTrade,
+    "you"
+  );
+
+  renderTradeSide(
+    "themItems",
+    themTrade,
+    "them"
+  );
+
+  if ($("youTotal")) {
+
+    $("youTotal").textContent =
+      formatValue(
+        youTotal
+      );
+
+  }
+
+  if ($("themTotal")) {
+
+    $("themTotal").textContent =
+      formatValue(
+        themTotal
+      );
+
+  }
+
+  updateResult(
+    youTotal,
+    themTotal
+  );
+}
+
+
+/*
+=========================================================
+  5 SEVİYELİ W/F/L
+
+  %0 - %3       FAIR
+  %3 - %10      SMALL WIN / SMALL LOSE
+  %10+          WIN / LOSE
+
+  Karşı taraf daha fazla veriyorsa → WIN
+  Sen daha fazla veriyorsan         → LOSE
+=========================================================
+*/
+
+function updateResult(
+  youTotal,
+  themTotal
+) {
+
+  const card =
+    $("resultCard");
+
+  const status =
+    $("resultStatusText");
+
+  const differenceElement =
+    $("resultDiffNumber");
 
   card?.classList.remove(
     "win",
@@ -680,163 +1120,130 @@ function updateResult(y, t) {
     "lose"
   );
 
-  if (y === 0 && t === 0) {
+  if (
+    youTotal === 0 &&
+    themTotal === 0
+  ) {
+
     if (status) {
-      status.textContent = "Pet ekleyerek başla";
+      status.textContent =
+        "Pet ekleyerek başla";
     }
 
-    if (diff) {
-      diff.textContent = "—";
+    if (differenceElement) {
+      differenceElement.textContent =
+        "—";
     }
 
     return;
   }
 
-  /*
-    KARŞILAŞTIRMA:
+  const difference =
+    themTotal - youTotal;
 
-    Karşı taraf daha fazla veriyorsa → WIN
-    Biraz daha fazla veriyorsa       → SMALL WIN
-    Yakınsa                           → FAIR
-    Sen biraz daha fazla veriyorsan  → SMALL LOSE
-    Sen çok daha fazla veriyorsan    → LOSE
-  */
-
-  const difference = t - y;
-
-  const base = Math.max(y, t);
+  const base =
+    Math.max(
+      youTotal,
+      themTotal
+    );
 
   const percentage =
     base > 0
-      ? Math.abs(difference) / base * 100
+      ? (
+          Math.abs(
+            difference
+          ) / base
+        ) * 100
       : 0;
 
   let result;
 
-  if (percentage <= 3) {
+  /*
+    Eşit / çok yakın
+  */
+
+  if (
+    percentage <= 3
+  ) {
 
     result = "fair";
 
-  } else if (difference > 0) {
+  }
+
+  /*
+    Karşı taraf daha fazla
+  */
+
+  else if (
+    difference > 0
+  ) {
 
     result =
       percentage >= 10
         ? "win"
         : "small-win";
 
-  } else {
+  }
+
+  /*
+    Sen daha fazla
+  */
+
+  else {
 
     result =
       percentage >= 10
         ? "lose"
         : "small-lose";
+
   }
 
-  card?.classList.add(result);
 
-  const names = {
+  if (card) {
+    card.classList.add(
+      result
+    );
+  }
+
+
+  const resultNames = {
+
     win: "WIN",
-    "small-win": "SMALL WIN",
+
+    "small-win":
+      "SMALL WIN",
+
     fair: "FAIR",
-    "small-lose": "SMALL LOSE",
+
+    "small-lose":
+      "SMALL LOSE",
+
     lose: "LOSE"
+
   };
 
+
   if (status) {
-    status.textContent = names[result];
-  }
-
-  if (diff) {
-    diff.textContent =
-      difference > 0
-        ? `+${formatValue(difference)}`
-        : formatValue(difference);
-  }
-
-  recordTradeResult(result);
-}
-
-
-/*
-  W/F/L:
-
-  Karşı taraf daha fazla veriyor = WIN
-  Eşit = FAIR
-  Sen daha fazla veriyorsun = LOSE
-*/
-
-function updateResult(y, t) {
-
-  const card =
-    $("resultCard");
-
-  const status =
-    $("resultStatusText");
-
-  const diff =
-    $("resultDiffNumber");
-
-  card?.classList.remove(
-    "win",
-    "lose",
-    "fair"
-  );
-
-  if (
-    y === 0 &&
-    t === 0
-  ) {
 
     status.textContent =
-      "Pet ekleyerek başla";
-
-    diff.textContent = "—";
-
-    return;
-  }
-
-  const difference =
-    t - y;
-
-  let result;
-
-  if (
-    Math.abs(difference) <= 0.05
-  ) {
-
-    result = "fair";
-
-  } else if (
-    difference > 0
-  ) {
-
-    result = "win";
-
-  } else {
-
-    result = "lose";
+      resultNames[result];
 
   }
 
-  card?.classList.add(
-    result
-  );
 
-  status.textContent =
-    result === "win"
-      ? "WIN"
-      : result === "lose"
-      ? "LOSE"
-      : "FAIR";
+  if (differenceElement) {
 
-  diff.textContent =
-    difference > 0
-      ? `+${formatValue(
-          difference
-        )}`
-      : formatValue(
-          difference
-        );
+    differenceElement.textContent =
+      difference > 0
+        ? `+${formatValue(
+            difference
+          )}`
+        : formatValue(
+            difference
+          );
+
+  }
+
 
   recordTradeResult(
     result
@@ -844,24 +1251,42 @@ function updateResult(y, t) {
 }
 
 
-/* PROFILE */
+/* =========================================================
+   PROFILE
+   ========================================================= */
 
 const DEFAULT_PROFILE = {
-  name: "Zayagg Kullanıcısı",
-  username: "@kullanici",
-  bio: "Henüz bir biyografi eklenmedi.",
-  avatar: "🐉",
+
+  name:
+    "Zayagg Kullanıcısı",
+
+  username:
+    "@kullanici",
+
+  bio:
+    "Henüz bir biyografi eklenmedi.",
+
+  avatar:
+    "🐉",
 
   stats: {
+
     trades: 0,
+
     wins: 0,
+
     fairs: 0,
+
     loses: 0
+
   }
+
 };
+
 
 let profileData =
   loadProfile();
+
 
 function loadProfile() {
 
@@ -882,17 +1307,23 @@ function loadProfile() {
 
     }
 
-    const p =
+    const saved =
       JSON.parse(raw);
 
     return {
+
       ...DEFAULT_PROFILE,
-      ...p,
+
+      ...saved,
 
       stats: {
+
         ...DEFAULT_PROFILE.stats,
-        ...(p.stats || {})
+
+        ...(saved.stats || {})
+
       }
+
     };
 
   } catch {
@@ -904,104 +1335,177 @@ function loadProfile() {
     );
 
   }
+
 }
+
 
 function saveProfile() {
 
-  localStorage.setItem(
-    "zayagg_profile",
-    JSON.stringify(
-      profileData
-    )
-  );
+  try {
+
+    localStorage.setItem(
+      "zayagg_profile",
+      JSON.stringify(
+        profileData
+      )
+    );
+
+  } catch {
+
+    /* localStorage kullanılamıyorsa site çalışmaya devam eder */
+
+  }
 
 }
+
 
 function renderProfile() {
 
-  $("profileName").textContent =
-    profileData.name;
+  if ($("profileName")) {
 
-  $("profileUsername").textContent =
-    profileData.username;
+    $("profileName").textContent =
+      profileData.name;
 
-  $("profileBio").textContent =
-    profileData.bio;
+  }
 
-  $("profileAvatar").textContent =
-    profileData.avatar;
+  if ($("profileUsername")) {
 
-  $("tradeCount").textContent =
-    profileData.stats.trades;
+    $("profileUsername").textContent =
+      profileData.username;
 
-  $("winCount").textContent =
-    profileData.stats.wins;
+  }
 
-  $("fairCount").textContent =
-    profileData.stats.fairs;
+  if ($("profileBio")) {
 
-  $("loseCount").textContent =
-    profileData.stats.loses;
+    $("profileBio").textContent =
+      profileData.bio;
+
+  }
+
+  if ($("profileAvatar")) {
+
+    $("profileAvatar").textContent =
+      profileData.avatar;
+
+  }
+
+  if ($("tradeCount")) {
+
+    $("tradeCount").textContent =
+      profileData.stats.trades;
+
+  }
+
+  if ($("winCount")) {
+
+    $("winCount").textContent =
+      profileData.stats.wins;
+
+  }
+
+  if ($("fairCount")) {
+
+    $("fairCount").textContent =
+      profileData.stats.fairs;
+
+  }
+
+  if ($("loseCount")) {
+
+    $("loseCount").textContent =
+      profileData.stats.loses;
+
+  }
 
 }
+
 
 function openProfile() {
 
   renderProfile();
 
-  $("profileModal")
-    ?.classList.add(
-      "show"
-    );
+  const modal =
+    $("profileModal");
 
-  $("profileModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+  if (!modal) return;
+
+  modal.classList.add(
+    "show"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
   document.body.classList.add(
     "profile-open"
   );
+
 }
+
 
 function closeProfile() {
 
-  $("profileModal")
-    ?.classList.remove(
-      "show"
-    );
+  const modal =
+    $("profileModal");
 
-  $("profileModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+  if (!modal) return;
+
+  modal.classList.remove(
+    "show"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
   document.body.classList.remove(
     "profile-open"
   );
 
   closeEditProfile();
+
 }
+
 
 function openEditProfile() {
 
-  $("editName").value =
-    profileData.name;
+  const form =
+    $("profileEditForm");
 
-  $("editUsername").value =
-    profileData.username;
+  if (!form) return;
 
-  $("editBio").value =
-    profileData.bio;
+  const name =
+    $("editName");
+
+  const username =
+    $("editUsername");
+
+  const bio =
+    $("editBio");
+
+  if (name) {
+    name.value =
+      profileData.name;
+  }
+
+  if (username) {
+    username.value =
+      profileData.username;
+  }
+
+  if (bio) {
+    bio.value =
+      profileData.bio;
+  }
 
   renderAvatars();
 
-  $("profileEditForm")
-    ?.classList.remove(
-      "hidden"
-    );
+  form.classList.remove(
+    "hidden"
+  );
 
   $("profileEditBtn")
     ?.classList.add(
@@ -1009,6 +1513,7 @@ function openEditProfile() {
     );
 
 }
+
 
 function closeEditProfile() {
 
@@ -1024,6 +1529,7 @@ function closeEditProfile() {
 
 }
 
+
 function renderAvatars() {
 
   const box =
@@ -1033,7 +1539,8 @@ function renderAvatars() {
 
   box.innerHTML = "";
 
-  [
+  const avatars = [
+
     "🐉",
     "🐲",
     "🦊",
@@ -1046,69 +1553,92 @@ function renderAvatars() {
     "🐸",
     "🦋",
     "🌙"
-  ].forEach(a => {
 
-    const button =
-      document.createElement(
-        "button"
-      );
+  ];
 
-    button.type = "button";
+  avatars.forEach(
+    avatar => {
 
-    button.className =
-      "avatar-opt" +
-      (
-        a === profileData.avatar
-          ? " active"
-          : ""
-      );
-
-    button.textContent = a;
-
-    button.onclick = () => {
-
-      profileData.avatar = a;
-
-      box
-        .querySelectorAll(
-          ".avatar-opt"
-        )
-        .forEach(el =>
-          el.classList.remove(
-            "active"
-          )
+      const button =
+        document.createElement(
+          "button"
         );
 
-      button.classList.add(
-        "active"
+      button.type =
+        "button";
+
+      button.className =
+        "avatar-opt" +
+        (
+          avatar ===
+          profileData.avatar
+            ? " active"
+            : ""
+        );
+
+      button.textContent =
+        avatar;
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          profileData.avatar =
+            avatar;
+
+          box
+            .querySelectorAll(
+              ".avatar-opt"
+            )
+            .forEach(
+              element =>
+                element.classList.remove(
+                  "active"
+                )
+            );
+
+          button.classList.add(
+            "active"
+          );
+
+        }
       );
 
-    };
+      box.appendChild(
+        button
+      );
 
-    box.appendChild(button);
-  });
+    }
+  );
+
 }
 
-function saveEditedProfile(e) {
 
-  e.preventDefault();
+function saveEditedProfile(
+  event
+) {
+
+  event.preventDefault();
 
   const name =
     $("editName")
-      .value
+      ?.value
       .trim();
 
   const username =
     $("editUsername")
-      .value
+      ?.value
       .trim();
 
   const bio =
     $("editBio")
-      .value
+      ?.value
       .trim();
 
-  if (!name || !username) {
+  if (
+    !name ||
+    !username
+  ) {
     return;
   }
 
@@ -1118,7 +1648,7 @@ function saveEditedProfile(e) {
   profileData.username =
     username.startsWith("@")
       ? username
-      : "@" + username;
+      : `@${username}`;
 
   profileData.bio =
     bio ||
@@ -1129,12 +1659,17 @@ function saveEditedProfile(e) {
   renderProfile();
 
   closeEditProfile();
+
 }
 
 
-/* RECORD TRADE */
+/* =========================================================
+   PROFILE TRADE STATS
+   ========================================================= */
 
-function recordTradeResult(status) {
+function recordTradeResult(
+  status
+) {
 
   if (
     !youTrade.length ||
@@ -1143,44 +1678,72 @@ function recordTradeResult(status) {
     return;
   }
 
-  const key =
+  const youKey =
     youTrade
-      .map(p => p.uniqueId)
-      .join(",") +
-    "|" +
+      .map(
+        pet =>
+          pet.uniqueId
+      )
+      .join(",");
+
+  const themKey =
     themTrade
-      .map(p => p.uniqueId)
-      .join(",") +
-    "|" +
-    status;
+      .map(
+        pet =>
+          pet.uniqueId
+      )
+      .join(",");
+
+  const key =
+    `${youKey}|${themKey}|${status}`;
 
   if (
-    key === recordedTradeKey
+    key ===
+    recordedTradeKey
   ) {
     return;
   }
 
-  recordedTradeKey = key;
+  recordedTradeKey =
+    key;
 
   profileData.stats.trades++;
 
-  if (status === "win") {
+  if (
+    status === "win" ||
+    status === "small-win"
+  ) {
+
     profileData.stats.wins++;
+
   }
 
-  if (status === "fair") {
+  else if (
+    status === "fair"
+  ) {
+
     profileData.stats.fairs++;
+
   }
 
-  if (status === "lose") {
+  else if (
+    status === "lose" ||
+    status === "small-lose"
+  ) {
+
     profileData.stats.loses++;
+
   }
 
   saveProfile();
+
+  renderProfile();
 }
 
 
-/* MENU */
+/* =========================================================
+   MENU
+   ========================================================= */
 
 function toggleMenu() {
 
@@ -1189,6 +1752,7 @@ function toggleMenu() {
   );
 
 }
+
 
 function closeMenu() {
 
@@ -1199,28 +1763,62 @@ function closeMenu() {
 }
 
 
-/* EVENTS */
+/* =========================================================
+   EVENT DELEGATION
+   ========================================================= */
 
 document.addEventListener(
   "click",
   event => {
 
+    const removeButton =
+      event.target.closest(
+        ".remove-item"
+      );
+
+    if (removeButton) {
+
+      const side =
+        removeButton.dataset.side;
+
+      const id =
+        removeButton.dataset.id;
+
+      removeTradePet(
+        side,
+        id
+      );
+
+      return;
+    }
+
+
     if (
       event.target ===
       $("profileModal")
     ) {
+
       closeProfile();
+
     }
+
 
     if (
       event.target ===
       $("petPickerModal")
     ) {
+
       closePetPicker();
+
     }
 
   }
 );
+
+
+/* =========================================================
+   KEYBOARD
+   ========================================================= */
 
 document.addEventListener(
   "keydown",
@@ -1240,27 +1838,45 @@ document.addEventListener(
 );
 
 
-/* INIT */
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
 
     renderValues();
+
     updateTradeUI();
+
     renderProfile();
 
-    $("search")
-      ?.addEventListener(
+
+    const mainSearch =
+      $("search");
+
+    if (mainSearch) {
+
+      mainSearch.addEventListener(
         "input",
         renderValues
       );
 
-    $("pickerSearch")
-      ?.addEventListener(
+    }
+
+
+    const pickerSearch =
+      $("pickerSearch");
+
+    if (pickerSearch) {
+
+      pickerSearch.addEventListener(
         "input",
         filterPickerPets
       );
+
+    }
 
   }
 );
