@@ -1,6 +1,6 @@
 /* =========================================================
    ZAYAGG — SCRIPT.JS
-   TEMİZ / TEK PARÇA SÜRÜM
+   TEMİZ + PREMIUM TRADE GRID SÜRÜMÜ
 ========================================================= */
 
 
@@ -932,8 +932,12 @@ function imageHTML(
 
   return `
     <img
-      src="${escapeHTML(pet?.image || "")}"
-      alt="${escapeHTML(pet?.name || "Pet")}"
+      src="${escapeHTML(
+        pet?.image || ""
+      )}"
+      alt="${escapeHTML(
+        pet?.name || "Pet"
+      )}"
       class="${className}"
       loading="lazy"
       onerror="handleImageError(this)"
@@ -958,9 +962,14 @@ function getTradeStats() {
       );
 
     return {
-      wins: Number(data.wins) || 0,
-      fair: Number(data.fair) || 0,
-      loses: Number(data.loses) || 0
+      wins:
+        Number(data.wins) || 0,
+
+      fair:
+        Number(data.fair) || 0,
+
+      loses:
+        Number(data.loses) || 0
     };
 
   } catch {
@@ -981,9 +990,14 @@ function saveTradeStats(stats) {
   localStorage.setItem(
     "zayaggTradeStats",
     JSON.stringify({
-      wins: Number(stats.wins) || 0,
-      fair: Number(stats.fair) || 0,
-      loses: Number(stats.loses) || 0
+      wins:
+        Number(stats.wins) || 0,
+
+      fair:
+        Number(stats.fair) || 0,
+
+      loses:
+        Number(stats.loses) || 0
     })
   );
 
@@ -1045,10 +1059,17 @@ function getProfileData() {
   } catch {
 
     return {
-      name: "Zayagg Kullanıcısı",
-      username: "@kullanici",
-      bio: "Henüz bir biyografi eklenmedi.",
-      avatar: "🐉"
+      name:
+        "Zayagg Kullanıcısı",
+
+      username:
+        "@kullanici",
+
+      bio:
+        "Henüz bir biyografi eklenmedi.",
+
+      avatar:
+        "🐉"
     };
 
   }
@@ -1067,129 +1088,6 @@ function saveProfileData(data) {
 
 
 /* =========================================================
-   VALUES
-========================================================= */
-
-function renderValues() {
-
-  const grid =
-    $("valueGrid");
-
-  if (!grid) {
-    return;
-  }
-
-  const query =
-    String(
-      $("search")?.value || ""
-    )
-      .trim()
-      .toLowerCase();
-
-
-  const list =
-    PET_DATABASE.filter(pet => {
-
-      const name =
-        String(
-          pet.name || ""
-        ).toLowerCase();
-
-      const rarity =
-        String(
-          pet.rarity || ""
-        ).toLowerCase();
-
-      return (
-        name.includes(query) ||
-        rarity.includes(query)
-      );
-
-    });
-
-
-  grid.innerHTML = "";
-
-
-  if (!list.length) {
-
-    grid.innerHTML = `
-
-      <div class="empty-picker">
-
-        <span>🔎</span>
-
-        <strong>
-          Pet bulunamadı
-        </strong>
-
-        <small>
-          Başka bir isim dene.
-        </small>
-
-      </div>
-
-    `;
-
-    return;
-  }
-
-
-  list.forEach(pet => {
-
-    const card =
-      document.createElement(
-        "div"
-      );
-
-    card.className =
-      "value-card";
-
-
-    card.innerHTML = `
-
-      <div class="value-image">
-        ${imageHTML(pet)}
-      </div>
-
-      <div class="value-info">
-
-        <h3>
-          ${escapeHTML(pet.name)}
-        </h3>
-
-        <span
-          class="rarity-small ${escapeHTML(
-            String(
-              pet.rarity || ""
-            )
-          )}"
-        >
-          ${escapeHTML(
-            rarityName(
-              pet.rarity
-            )
-          )}
-        </span>
-
-        <strong>
-          Value:
-          ${formatValue(pet.value)}
-        </strong>
-
-      </div>
-
-    `;
-
-
-    grid.appendChild(card);
-
-  });
-
-}
-
-
-/* =========================================================
    PET PICKER
 ========================================================= */
 
@@ -1202,11 +1100,15 @@ function openPetPicker(side) {
     return;
   }
 
-  pickerSide = side;
 
-  selectedPet = null;
+  pickerSide =
+    side;
 
-  selectedForm = "normal";
+  selectedPet =
+    null;
+
+  selectedForm =
+    "normal";
 
   selectedPotion = {
     fly: false,
@@ -1246,6 +1148,7 @@ function openPetPicker(side) {
 
   resetPickerButtons();
 
+
   renderPickerPets(
     PET_DATABASE
   );
@@ -1267,6 +1170,11 @@ function openPetPicker(side) {
     );
 
   }
+
+
+  document.body.classList.add(
+    "modal-open"
+  );
 
 
   document.body.classList.add(
@@ -1306,18 +1214,40 @@ function closePetPicker() {
 
   }
 
+
   document.body.classList.remove(
     "profile-open"
   );
 
-  pickerSide = null;
-  selectedPet = null;
+
+  if (
+    !document
+      .getElementById(
+        "profileModal"
+      )
+      ?.classList.contains(
+        "active"
+      )
+  ) {
+
+    document.body.classList.remove(
+      "modal-open"
+    );
+
+  }
+
+
+  pickerSide =
+    null;
+
+  selectedPet =
+    null;
 
 }
 
 
 /* =========================================================
-   PICKER RENDER
+   PICKER LIST
 ========================================================= */
 
 function renderPickerPets(
@@ -1331,7 +1261,9 @@ function renderPickerPets(
     return;
   }
 
-  box.innerHTML = "";
+
+  box.innerHTML =
+    "";
 
 
   if (
@@ -1343,7 +1275,9 @@ function renderPickerPets(
 
       <div class="empty-picker">
 
-        <span>🔎</span>
+        <span>
+          🔎
+        </span>
 
         <strong>
           Pet bulunamadı
@@ -1361,113 +1295,144 @@ function renderPickerPets(
   }
 
 
-  list.forEach(pet => {
+  list.forEach(
+    pet => {
 
-    const button =
-      document.createElement(
-        "button"
+      const button =
+        document.createElement(
+          "button"
+        );
+
+
+      button.type =
+        "button";
+
+
+      button.className =
+        "pet-choice";
+
+
+      if (
+        selectedPet &&
+        selectedPet.id ===
+          pet.id
+      ) {
+
+        button.classList.add(
+          "selected"
+        );
+
+      }
+
+
+      button.innerHTML = `
+
+        <div class="choice-image">
+
+          ${imageHTML(
+            pet
+          )}
+
+        </div>
+
+
+        <strong>
+          ${escapeHTML(
+            pet.name
+          )}
+        </strong>
+
+
+        <span
+          class="rarity-tag ${escapeHTML(
+            String(
+              pet.rarity || ""
+            )
+          )}"
+        >
+          ${escapeHTML(
+            rarityName(
+              pet.rarity
+            )
+          )}
+        </span>
+
+
+        <small>
+          ${formatValue(
+            pet.value
+          )}
+        </small>
+
+      `;
+
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          selectPickerPet(
+            pet
+          );
+
+        }
       );
 
-    button.type = "button";
 
-    button.className =
-      "pet-choice";
-
-    if (
-      selectedPet &&
-      selectedPet.id === pet.id
-    ) {
-
-      button.classList.add(
-        "selected"
+      box.appendChild(
+        button
       );
 
     }
-
-
-    button.innerHTML = `
-
-      <div class="choice-image">
-
-        ${imageHTML(pet)}
-
-      </div>
-
-      <strong>
-        ${escapeHTML(pet.name)}
-      </strong>
-
-      <span
-        class="rarity-tag ${escapeHTML(
-          String(
-            pet.rarity || ""
-          )
-        )}"
-      >
-        ${escapeHTML(
-          rarityName(
-            pet.rarity
-          )
-        )}
-      </span>
-
-      <small>
-        ${formatValue(pet.value)}
-      </small>
-
-    `;
-
-
-    button.addEventListener(
-      "click",
-      () => {
-        selectPickerPet(pet);
-      }
-    );
-
-
-    box.appendChild(
-      button
-    );
-
-  });
+  );
 
 }
 
 
 /* =========================================================
-   PICKER SEARCH
+   PET SEARCH
 ========================================================= */
 
 function filterPickerPets() {
 
   const query =
     String(
-      $("petSearch")?.value || ""
+      $("petSearch")?.value ||
+      ""
     )
       .trim()
       .toLowerCase();
 
 
   const filtered =
-    PET_DATABASE.filter(pet => {
+    PET_DATABASE.filter(
+      pet => {
 
-      const name =
-        String(
-          pet.name || ""
-        ).toLowerCase();
+        const name =
+          String(
+            pet.name || ""
+          )
+            .toLowerCase();
 
-      const rarity =
-        String(
-          pet.rarity || ""
-        ).toLowerCase();
 
-      return (
-        name.includes(query) ||
-        rarity.includes(query)
-      );
+        const rarity =
+          String(
+            pet.rarity || ""
+          )
+            .toLowerCase();
 
-    });
+
+        return (
+          name.includes(
+            query
+          ) ||
+          rarity.includes(
+            query
+          )
+        );
+
+      }
+    );
 
 
   renderPickerPets(
@@ -1489,9 +1454,12 @@ function selectPickerPet(
     return;
   }
 
-  selectedPet = pet;
 
-  selectedForm = "normal";
+  selectedPet =
+    pet;
+
+  selectedForm =
+    "normal";
 
   selectedPotion = {
     fly: false,
@@ -1499,9 +1467,10 @@ function selectPickerPet(
   };
 
 
-  $("pickerBar")?.classList.remove(
-    "hidden"
-  );
+  $("pickerBar")
+    ?.classList.remove(
+      "hidden"
+    );
 
 
   renderPickerPreview();
@@ -1536,7 +1505,8 @@ function renderPickerPreview() {
 
 
   if (
-    selectedForm === "neon"
+    selectedForm ===
+    "neon"
   ) {
 
     chips.push(
@@ -1547,7 +1517,8 @@ function renderPickerPreview() {
 
 
   if (
-    selectedForm === "mega"
+    selectedForm ===
+    "mega"
   ) {
 
     chips.push(
@@ -1584,14 +1555,16 @@ function renderPickerPreview() {
     <div class="pet-image-wrap">
 
       ${
-        selectedForm === "neon"
-          ? '<div class="neon-effect"></div>'
+        selectedForm ===
+        "neon"
+          ? `<div class="neon-effect"></div>`
           : ""
       }
 
       ${
-        selectedForm === "mega"
-          ? '<div class="mega-effect"></div>'
+        selectedForm ===
+        "mega"
+          ? `<div class="mega-effect"></div>`
           : ""
       }
 
@@ -1602,26 +1575,28 @@ function renderPickerPreview() {
       <div class="pet-badges">
 
         ${
-          selectedForm === "neon"
-            ? '<span class="mini-chip neon">N</span>'
+          selectedForm ===
+          "neon"
+            ? `<span class="mini-chip neon">N</span>`
             : ""
         }
 
         ${
-          selectedForm === "mega"
-            ? '<span class="mini-chip mega">M</span>'
+          selectedForm ===
+          "mega"
+            ? `<span class="mini-chip mega">M</span>`
             : ""
         }
 
         ${
           selectedPotion.fly
-            ? '<span class="mini-chip fly">F</span>'
+            ? `<span class="mini-chip fly">F</span>`
             : ""
         }
 
         ${
           selectedPotion.ride
-            ? '<span class="mini-chip ride">R</span>'
+            ? `<span class="mini-chip ride">R</span>`
             : ""
         }
 
@@ -1646,6 +1621,7 @@ function renderPickerPreview() {
         )}
       </span>
 
+
       <div class="vchip-row">
         ${chips.join("")}
       </div>
@@ -1658,38 +1634,51 @@ function renderPickerPreview() {
 
 
 /* =========================================================
-   PICKER BUTTON STATE
+   PICKER BUTTONS
 ========================================================= */
 
 function resetPickerButtons() {
 
-  $("normalFormBtn")?.classList.add(
-    "active"
-  );
+  $("normalFormBtn")
+    ?.classList.add(
+      "active"
+    );
 
-  $("btnNeon")?.classList.remove(
-    "active"
-  );
 
-  $("btnMega")?.classList.remove(
-    "active"
-  );
+  $("btnNeon")
+    ?.classList.remove(
+      "active"
+    );
 
-  $("noPotionBtn")?.classList.add(
-    "active"
-  );
 
-  $("btnFly")?.classList.remove(
-    "active"
-  );
+  $("btnMega")
+    ?.classList.remove(
+      "active"
+    );
 
-  $("btnRide")?.classList.remove(
-    "active"
-  );
 
-  $("flyRideBtn")?.classList.remove(
-    "active"
-  );
+  $("noPotionBtn")
+    ?.classList.add(
+      "active"
+    );
+
+
+  $("btnFly")
+    ?.classList.remove(
+      "active"
+    );
+
+
+  $("btnRide")
+    ?.classList.remove(
+      "active"
+    );
+
+
+  $("flyRideBtn")
+    ?.classList.remove(
+      "active"
+    );
 
 }
 
@@ -1697,53 +1686,75 @@ function resetPickerButtons() {
 function updatePickerButtons() {
 
   const normal =
-    selectedForm === "normal";
+    selectedForm ===
+    "normal";
 
-  $("normalFormBtn")?.classList.toggle(
-    "active",
-    normal
-  );
 
-  $("btnNeon")?.classList.toggle(
-    "active",
-    selectedForm === "neon"
-  );
+  $("normalFormBtn")
+    ?.classList.toggle(
+      "active",
+      normal
+    );
 
-  $("btnMega")?.classList.toggle(
-    "active",
-    selectedForm === "mega"
-  );
+
+  $("btnNeon")
+    ?.classList.toggle(
+      "active",
+      selectedForm ===
+        "neon"
+    );
+
+
+  $("btnMega")
+    ?.classList.toggle(
+      "active",
+      selectedForm ===
+        "mega"
+    );
 
 
   const fly =
     selectedPotion.fly;
 
+
   const ride =
     selectedPotion.ride;
+
 
   const none =
     !fly &&
     !ride;
 
-  $("noPotionBtn")?.classList.toggle(
-    "active",
-    none
-  );
 
-  $("btnFly")?.classList.toggle(
-    "active",
-    fly && !ride
-  );
+  $("noPotionBtn")
+    ?.classList.toggle(
+      "active",
+      none
+    );
 
-  $("btnRide")?.classList.toggle(
-    "active",
-    ride && !fly
-  );
 
-  $("flyRideBtn")?.classList.toggle(
-    "active",
-    fly && ride
-  );
+  $("btnFly")
+    ?.classList.toggle(
+      "active",
+      fly &&
+      !ride
+    );
+
+
+  $("btnRide")
+    ?.classList.toggle(
+      "active",
+      ride &&
+      !fly
+    );
+
+
+  $("flyRideBtn")
+    ?.classList.toggle(
+      "active",
+      fly &&
+      ride
+    );
 
 }
 
@@ -1752,11 +1763,14 @@ function updatePickerButtons() {
    FORM
 ========================================================= */
 
-function toggleForm(form) {
+function toggleForm(
+  form
+) {
 
   if (!selectedPet) {
     return;
   }
+
 
   if (
     ![
@@ -1770,7 +1784,8 @@ function toggleForm(form) {
 
 
   selectedForm =
-    selectedForm === form
+    selectedForm ===
+      form
       ? "normal"
       : form;
 
@@ -1788,14 +1803,18 @@ function toggleForm(form) {
    POTION
 ========================================================= */
 
-function togglePotion(type) {
+function togglePotion(
+  type
+) {
 
   if (!selectedPet) {
     return;
   }
 
 
-  if (type === "none") {
+  if (
+    type === "none"
+  ) {
 
     selectedPotion = {
       fly: false,
@@ -1805,7 +1824,9 @@ function togglePotion(type) {
   }
 
 
-  else if (type === "fly") {
+  else if (
+    type === "fly"
+  ) {
 
     selectedPotion = {
       fly:
@@ -1820,7 +1841,9 @@ function togglePotion(type) {
   }
 
 
-  else if (type === "ride") {
+  else if (
+    type === "ride"
+  ) {
 
     selectedPotion = {
       fly: false,
@@ -1835,15 +1858,21 @@ function togglePotion(type) {
   }
 
 
-  else if (type === "flyride") {
+  else if (
+    type === "flyride"
+  ) {
 
     const active =
       selectedPotion.fly &&
       selectedPotion.ride;
 
+
     selectedPotion = {
-      fly: !active,
-      ride: !active
+      fly:
+        !active,
+
+      ride:
+        !active
     };
 
   }
@@ -1877,13 +1906,20 @@ function getModifiedValue(
     );
 
 
-  if (!Number.isFinite(value)) {
+  if (
+    !Number.isFinite(
+      value
+    )
+  ) {
+
     value = 0;
+
   }
 
 
   if (
-    selectedForm === "neon"
+    selectedForm ===
+    "neon"
   ) {
 
     value *= 4;
@@ -1892,7 +1928,8 @@ function getModifiedValue(
 
 
   if (
-    selectedForm === "mega"
+    selectedForm ===
+    "mega"
   ) {
 
     value *= 16;
@@ -2017,7 +2054,8 @@ function confirmAddPet() {
 
 
   if (
-    pickerSide === "you"
+    pickerSide ===
+    "you"
   ) {
 
     youTrade.push(
@@ -2025,6 +2063,7 @@ function confirmAddPet() {
     );
 
   }
+
 
   else {
 
@@ -2035,7 +2074,9 @@ function confirmAddPet() {
   }
 
 
-  recordedTradeKey = "";
+  recordedTradeKey =
+    "";
+
 
   closePetPicker();
 
@@ -2053,9 +2094,13 @@ function calculateTotal(
 ) {
 
   if (
-    !Array.isArray(trade)
+    !Array.isArray(
+      trade
+    )
   ) {
+
     return 0;
+
   }
 
 
@@ -2070,9 +2115,12 @@ function calculateTotal(
           pet?.value || 0
         );
 
+
       return total +
         (
-          Number.isFinite(value)
+          Number.isFinite(
+            value
+          )
             ? value
             : 0
         );
@@ -2085,7 +2133,7 @@ function calculateTotal(
 
 
 /* =========================================================
-   TRADE CARD
+   PREMIUM TRADE CARD
 ========================================================= */
 
 function renderTradeSide(
@@ -2142,23 +2190,29 @@ function renderTradeSide(
 
 
         if (
-          pet.form === "neon"
+          pet.form ===
+          "neon"
         ) {
 
-          tags.push(
-            '<span class="trade-tag neon-tag">✨ Neon</span>'
-          );
+          tags.push(`
+            <span class="trade-tag neon-tag">
+              ✨ Neon
+            </span>
+          `);
 
         }
 
 
         if (
-          pet.form === "mega"
+          pet.form ===
+          "mega"
         ) {
 
-          tags.push(
-            '<span class="trade-tag mega-tag">🌈 Mega Neon</span>'
-          );
+          tags.push(`
+            <span class="trade-tag mega-tag">
+              🌈 Mega
+            </span>
+          `);
 
         }
 
@@ -2167,9 +2221,11 @@ function renderTradeSide(
           pet.fly
         ) {
 
-          tags.push(
-            '<span class="trade-tag fly-tag">🪽 Fly</span>'
-          );
+          tags.push(`
+            <span class="trade-tag fly-tag">
+              🪽 Fly
+            </span>
+          `);
 
         }
 
@@ -2178,9 +2234,11 @@ function renderTradeSide(
           pet.ride
         ) {
 
-          tags.push(
-            '<span class="trade-tag ride-tag">🐴 Ride</span>'
-          );
+          tags.push(`
+            <span class="trade-tag ride-tag">
+              🐴 Ride
+            </span>
+          `);
 
         }
 
@@ -2197,14 +2255,16 @@ function renderTradeSide(
             <div class="trade-item-image">
 
               ${
-                pet.form === "neon"
-                  ? '<div class="neon-effect"></div>'
+                pet.form ===
+                "neon"
+                  ? `<div class="neon-effect"></div>`
                   : ""
               }
 
               ${
-                pet.form === "mega"
-                  ? '<div class="mega-effect"></div>'
+                pet.form ===
+                "mega"
+                  ? `<div class="mega-effect"></div>`
                   : ""
               }
 
@@ -2216,26 +2276,28 @@ function renderTradeSide(
               <div class="pet-badges">
 
                 ${
-                  pet.form === "neon"
-                    ? '<span class="mini-chip neon">N</span>'
+                  pet.form ===
+                  "neon"
+                    ? `<span class="mini-chip neon">N</span>`
                     : ""
                 }
 
                 ${
-                  pet.form === "mega"
-                    ? '<span class="mini-chip mega">M</span>'
+                  pet.form ===
+                  "mega"
+                    ? `<span class="mini-chip mega">M</span>`
                     : ""
                 }
 
                 ${
                   pet.fly
-                    ? '<span class="mini-chip fly">F</span>'
+                    ? `<span class="mini-chip fly">F</span>`
                     : ""
                 }
 
                 ${
                   pet.ride
-                    ? '<span class="mini-chip ride">R</span>'
+                    ? `<span class="mini-chip ride">R</span>`
                     : ""
                 }
 
@@ -2248,40 +2310,37 @@ function renderTradeSide(
 
               <div class="trade-item-top">
 
-                <div class="trade-item-name">
-
+                <div
+                  class="trade-item-name"
+                  title="${escapeHTML(
+                    pet.name
+                  )}"
+                >
                   ${escapeHTML(
                     pet.name
                   )}
-
                 </div>
 
                 <div class="trade-item-value">
-
                   ${formatValue(
                     pet.value
                   )}
-
                 </div>
 
               </div>
 
 
               <div class="trade-item-rarity">
-
                 ${escapeHTML(
                   rarityName(
                     pet.rarity
                   )
                 )}
-
               </div>
 
 
               <div class="trade-item-tags">
-
                 ${tags.join("")}
-
               </div>
 
             </div>
@@ -2310,7 +2369,7 @@ function renderTradeSide(
 
 
 /* =========================================================
-   REMOVE PET
+   REMOVE TRADE PET
 ========================================================= */
 
 function removeTradePet(
@@ -2346,7 +2405,9 @@ function removeTradePet(
   }
 
 
-  recordedTradeKey = "";
+  recordedTradeKey =
+    "";
+
 
   updateTradeUI();
 
@@ -2363,7 +2424,9 @@ function clearTrade() {
 
   themTrade = [];
 
-  recordedTradeKey = "";
+  recordedTradeKey =
+    "";
+
 
   updateTradeUI();
 
@@ -2395,6 +2458,7 @@ function updateTradeUI() {
       youTrade
     );
 
+
   const themTotal =
     calculateTotal(
       themTrade
@@ -2403,6 +2467,7 @@ function updateTradeUI() {
 
   const youTotalEl =
     $("youTotal");
+
 
   const themTotalEl =
     $("themTotal");
@@ -2434,7 +2499,7 @@ function updateTradeUI() {
 
 
 /* =========================================================
-   RESULT / WFL
+   RESULT / 5 LEVEL WFL
 ========================================================= */
 
 function updateResult() {
@@ -2466,6 +2531,7 @@ function updateResult() {
       youTrade
     );
 
+
   const themTotal =
     calculateTotal(
       themTrade
@@ -2494,12 +2560,18 @@ function updateResult() {
 
 
     if (diffNumber) {
-      diffNumber.textContent = "—";
+
+      diffNumber.textContent =
+        "—";
+
     }
 
 
     if (diffDisplay) {
-      diffDisplay.textContent = "—";
+
+      diffDisplay.textContent =
+        "—";
+
     }
 
 
@@ -2564,6 +2636,7 @@ function updateResult() {
 
   }
 
+
   else if (
     roundedPercent < 0
   ) {
@@ -2606,12 +2679,11 @@ function updateResult() {
     "fair";
 
 
-  /*
-     %0 - %3 = FAIR
-  */
+  /* FAIR */
 
   if (
-    Math.abs(percent) <= 3
+    Math.abs(percent) <=
+    3
   ) {
 
     status =
@@ -2632,9 +2704,7 @@ function updateResult() {
   }
 
 
-  /*
-     + = SENİN İÇİN WIN
-  */
+  /* WIN */
 
   else if (
     percent > 0
@@ -2683,14 +2753,13 @@ function updateResult() {
   }
 
 
-  /*
-     - = SENİN İÇİN LOSE
-  */
+  /* LOSE */
 
   else {
 
     if (
-      Math.abs(percent) >= 10
+      Math.abs(percent) >=
+      10
     ) {
 
       status =
@@ -2798,7 +2867,9 @@ function recordTradeResult(
     !themTrade.length ||
     youTotal <= 0
   ) {
+
     return;
+
   }
 
 
@@ -2831,9 +2902,12 @@ function recordTradeResult(
 
 
   if (
-    recordedTradeKey === key
+    recordedTradeKey ===
+    key
   ) {
+
     return;
+
   }
 
 
@@ -2854,6 +2928,7 @@ function recordTradeResult(
 
   }
 
+
   else if (
     status === "FAIR"
   ) {
@@ -2861,6 +2936,7 @@ function recordTradeResult(
     stats.fair++;
 
   }
+
 
   else if (
     status === "BIG LOSE" ||
@@ -2875,6 +2951,7 @@ function recordTradeResult(
   saveTradeStats(
     stats
   );
+
 
   updateProfileStats();
 
@@ -3000,6 +3077,7 @@ function renderProfile() {
   selectedAvatar =
     profile.avatar;
 
+
   renderAvatarPicker();
 
   updateProfileStats();
@@ -3089,7 +3167,7 @@ function openEditProfile() {
   const form =
     $("profileEditForm");
 
-  const editButton =
+  const button =
     $("profileEditBtn");
 
 
@@ -3100,7 +3178,7 @@ function openEditProfile() {
     "hidden"
   );
 
-  editButton?.classList.add(
+  button?.classList.add(
     "hidden"
   );
 
@@ -3112,7 +3190,7 @@ function closeEditProfile() {
   const form =
     $("profileEditForm");
 
-  const editButton =
+  const button =
     $("profileEditBtn");
 
 
@@ -3120,7 +3198,7 @@ function closeEditProfile() {
     "hidden"
   );
 
-  editButton?.classList.remove(
+  button?.classList.remove(
     "hidden"
   );
 
@@ -3128,7 +3206,7 @@ function closeEditProfile() {
 
 
 /* =========================================================
-   AVATARS
+   AVATAR
 ========================================================= */
 
 function renderAvatarPicker() {
@@ -3164,7 +3242,8 @@ function renderAvatarPicker() {
         <button
           type="button"
           class="avatar-opt ${
-            selectedAvatar === avatar
+            selectedAvatar ===
+            avatar
               ? "active"
               : ""
           }"
@@ -3192,16 +3271,21 @@ function renderAvatarPicker() {
               button.dataset.avatar ||
               "🐉";
 
+
             box
               .querySelectorAll(
                 ".avatar-opt"
               )
               .forEach(
-                item =>
+                item => {
+
                   item.classList.remove(
                     "active"
-                  )
+                  );
+
+                }
               );
+
 
             button.classList.add(
               "active"
@@ -3215,6 +3299,10 @@ function renderAvatarPicker() {
 
 }
 
+
+/* =========================================================
+   SAVE PROFILE
+========================================================= */
 
 function saveEditedProfile(
   event
@@ -3257,7 +3345,8 @@ function saveEditedProfile(
     username,
     bio,
     avatar:
-      selectedAvatar || "🐉"
+      selectedAvatar ||
+      "🐉"
   });
 
 
@@ -3274,10 +3363,7 @@ function saveEditedProfile(
 
 function toggleMenu() {
 
-  const body =
-    document.body;
-
-  body.classList.toggle(
+  document.body.classList.toggle(
     "menu-open"
   );
 
@@ -3285,11 +3371,12 @@ function toggleMenu() {
   const button =
     $("menuButton");
 
+
   if (button) {
 
     button.setAttribute(
       "aria-expanded",
-      body.classList.contains(
+      document.body.classList.contains(
         "menu-open"
       )
     );
@@ -3350,8 +3437,10 @@ function initNavigation() {
 
             event.preventDefault();
 
+
             const target =
               link.dataset.scroll;
+
 
             if (
               target === "top"
@@ -3361,6 +3450,7 @@ function initNavigation() {
                 top: 0,
                 behavior: "smooth"
               });
+
 
               closeMenu();
 
@@ -3372,63 +3462,6 @@ function initNavigation() {
             scrollToSection(
               target
             );
-
-          }
-        );
-
-      }
-    );
-
-
-  document
-    .querySelectorAll(
-      "#mainNav a[href^='#']"
-    )
-    .forEach(
-      link => {
-
-        if (
-          link.dataset.scroll
-        ) {
-          return;
-        }
-
-
-        link.addEventListener(
-          "click",
-          event => {
-
-            const href =
-              link.getAttribute(
-                "href"
-              );
-
-            if (
-              !href ||
-              href === "#"
-            ) {
-              return;
-            }
-
-
-            const target =
-              document.querySelector(
-                href
-              );
-
-            if (!target) {
-              return;
-            }
-
-
-            event.preventDefault();
-
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start"
-            });
-
-            closeMenu();
 
           }
         );
@@ -3449,10 +3482,12 @@ function initNavigation() {
 
       event.preventDefault();
 
+
       window.scrollTo({
         top: 0,
         behavior: "smooth"
       });
+
 
       closeMenu();
 
@@ -3483,7 +3518,8 @@ function initNavbar() {
 
       navbar.classList.toggle(
         "scrolled",
-        window.scrollY > 30
+        window.scrollY >
+          30
       );
 
     };
@@ -3495,14 +3531,16 @@ function initNavbar() {
   window.addEventListener(
     "scroll",
     update,
-    { passive: true }
+    {
+      passive: true
+    }
   );
 
 }
 
 
 /* =========================================================
-   EVENT HELPERS
+   SEARCH
 ========================================================= */
 
 function initSearch() {
@@ -3523,6 +3561,10 @@ function initSearch() {
 }
 
 
+/* =========================================================
+   PICKER SEARCH EVENT
+========================================================= */
+
 function initPickerSearch() {
 
   const search =
@@ -3541,6 +3583,10 @@ function initPickerSearch() {
 }
 
 
+/* =========================================================
+   REMOVE EVENT
+========================================================= */
+
 function initRemoveTradeEvents() {
 
   document.addEventListener(
@@ -3552,12 +3598,14 @@ function initRemoveTradeEvents() {
           ".remove-item"
         );
 
+
       if (!button) {
         return;
       }
 
 
       event.preventDefault();
+
       event.stopPropagation();
 
 
@@ -3572,15 +3620,37 @@ function initRemoveTradeEvents() {
 }
 
 
+/* =========================================================
+   CLEAR EVENT
+========================================================= */
+
 function initClearTrade() {
 
-  $("clearBtn")?.addEventListener(
+  const button =
+    $("clearBtn");
+
+  if (!button) {
+    return;
+  }
+
+
+  button.addEventListener(
     "click",
-    clearTrade
+    event => {
+
+      event.preventDefault();
+
+      clearTrade();
+
+    }
   );
 
 }
 
+
+/* =========================================================
+   MODAL EVENTS
+========================================================= */
 
 function initModalEvents() {
 
@@ -3596,7 +3666,8 @@ function initModalEvents() {
     event => {
 
       if (
-        event.target === picker
+        event.target ===
+        picker
       ) {
 
         closePetPicker();
@@ -3612,7 +3683,8 @@ function initModalEvents() {
     event => {
 
       if (
-        event.target === profile
+        event.target ===
+        profile
       ) {
 
         closeProfile();
@@ -3625,6 +3697,10 @@ function initModalEvents() {
 }
 
 
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
 function initKeyboard() {
 
   document.addEventListener(
@@ -3632,7 +3708,8 @@ function initKeyboard() {
     event => {
 
       if (
-        event.key === "Escape"
+        event.key ===
+        "Escape"
       ) {
 
         closePetPicker();
@@ -3650,6 +3727,10 @@ function initKeyboard() {
 
 }
 
+
+/* =========================================================
+   VISIBILITY
+========================================================= */
 
 function initVisibility() {
 
@@ -3750,7 +3831,7 @@ function initZayagg() {
 
   validateDatabase();
 
-  renderValues();
+  updateProfileStats();
 
   renderProfile();
 
@@ -3774,6 +3855,7 @@ function initZayagg() {
 
   initVisibility();
 
+
   console.log(
     "Zayagg başarıyla başlatıldı."
   );
@@ -3786,7 +3868,8 @@ function initZayagg() {
 ========================================================= */
 
 if (
-  document.readyState === "loading"
+  document.readyState ===
+  "loading"
 ) {
 
   document.addEventListener(
@@ -3797,7 +3880,9 @@ if (
     }
   );
 
-} else {
+}
+
+else {
 
   initZayagg();
 
