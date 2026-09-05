@@ -1,971 +1,470 @@
 /* =========================================================
-   ZAYAGG — PET DATABASE
+   ZAYAGG — SCRIPT.JS
    ========================================================= */
 
-const PET_DATABASE = [
-
-  /* =========================
-     LEGENDARY — HIGH VALUE
-     ========================= */
-
-  {
-    id: "shadow_dragon",
-    name: "Shadow Dragon",
-    rarity: "legendary",
-    value: 125,
-    image: "https://cdn.playadopt.me/items/shadow_dragon.png"
-  },
-
-  {
-    id: "bat_dragon",
-    name: "Bat Dragon",
-    rarity: "legendary",
-    value: 110,
-    image: "https://cdn.playadopt.me/items/bat_dragon.png"
-  },
-
-  {
-    id: "giraffe",
-    name: "Giraffe",
-    rarity: "legendary",
-    value: 70,
-    image: "https://cdn.playadopt.me/items/giraffe.png"
-  },
-
-  {
-    id: "frost_dragon",
-    name: "Frost Dragon",
-    rarity: "legendary",
-    value: 58,
-    image: "https://cdn.playadopt.me/items/frost_dragon.png"
-  },
-
-  {
-    id: "owl",
-    name: "Owl",
-    rarity: "legendary",
-    value: 42,
-    image: "https://cdn.playadopt.me/items/owl.png"
-  },
-
-  {
-    id: "parrot",
-    name: "Parrot",
-    rarity: "legendary",
-    value: 38,
-    image: "https://cdn.playadopt.me/items/parrot.png"
-  },
-
-  {
-    id: "evil_unicorn",
-    name: "Evil Unicorn",
-    rarity: "legendary",
-    value: 32,
-    image: "https://cdn.playadopt.me/items/evil_unicorn.png"
-  },
-
-  {
-    id: "crow",
-    name: "Crow",
-    rarity: "legendary",
-    value: 28,
-    image: "https://cdn.playadopt.me/items/crow.png"
-  },
-
-  {
-    id: "frost_fury",
-    name: "Frost Fury",
-    rarity: "legendary",
-    value: 16,
-    image: "https://cdn.playadopt.me/items/frost_fury.png"
-  },
-
-  {
-    id: "arctic_reindeer",
-    name: "Arctic Reindeer",
-    rarity: "legendary",
-    value: 15,
-    image: "https://cdn.playadopt.me/items/arctic_reindeer.png"
-  },
-
-  {
-    id: "diamond_butterfly",
-    name: "Diamond Butterfly",
-    rarity: "legendary",
-    value: 15,
-    image: "https://cdn.playadopt.me/items/diamond_butterfly.png"
-  },
-
-  {
-    id: "turtle",
-    name: "Turtle",
-    rarity: "legendary",
-    value: 12,
-    image: "https://cdn.playadopt.me/items/turtle.png"
-  },
-
-  {
-    id: "kangaroo",
-    name: "Kangaroo",
-    rarity: "legendary",
-    value: 11,
-    image: "https://cdn.playadopt.me/items/kangaroo.png"
-  },
-
-  {
-    id: "albino_monkey",
-    name: "Albino Monkey",
-    rarity: "legendary",
-    value: 10,
-    image: "https://cdn.playadopt.me/items/albino_monkey.png"
-  },
-
-  {
-    id: "lion",
-    name: "Lion",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/lion.png"
-  },
-
-  {
-    id: "hedgehog",
-    name: "Hedgehog",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/hedgehog.png"
-  },
-
-  {
-    id: "flamingo",
-    name: "Flamingo",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/flamingo.png"
-  },
-
-  {
-    id: "dalmatian",
-    name: "Dalmatian",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/dalmatian.png"
-  },
-
-  {
-    id: "crocodile",
-    name: "Crocodile",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/crocodile.png"
-  },
-
-  {
-    id: "elephant",
-    name: "Elephant",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/elephant.png"
-  },
-
-  {
-    id: "cow",
-    name: "Cow",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/cow.png"
-  },
-
-  {
-    id: "brown_bear",
-    name: "Brown Bear",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/brown_bear.png"
-  },
-
-  {
-    id: "pink_cat",
-    name: "Pink Cat",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/pink_cat.png"
-  },
-
-  {
-    id: "blue_dog",
-    name: "Blue Dog",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/blue_dog.png"
-  },
-
-  {
-    id: "meerkat",
-    name: "Meerkat",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/meerkat.png"
-  },
-
-  {
-    id: "rhino",
-    name: "Rhino",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/rhino.png"
-  },
-
-  {
-    id: "hyena",
-    name: "Hyena",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/hyena.png"
-  },
-
-  {
-    id: "black_panther",
-    name: "Black Panther",
-    rarity: "uncommon",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/black_panther.png"
-  },
-
-  {
-    id: "platypus",
-    name: "Platypus",
-    rarity: "ultra",
-    value: 4.5,
-    image: "https://cdn.playadopt.me/items/platypus.png"
-  },
-
-  {
-    id: "goat",
-    name: "Goat",
-    rarity: "ultra",
-    value: 4.5,
-    image: "https://cdn.playadopt.me/items/goat.png"
-  },
-
-  {
-    id: "swan",
-    name: "Swan",
-    rarity: "rare",
-    value: 4,
-    image: "https://cdn.playadopt.me/items/swan.png"
-  },
-
-  /* =========================
-     OTHER LEGENDARIES
-     ========================= */
-
-  {
-    id: "ancient_dragon",
-    name: "Ancient Dragon",
-    rarity: "legendary",
-    value: 4,
-    image: "https://cdn.playadopt.me/items/ancient_dragon.png"
-  },
-
-  {
-    id: "unicorn",
-    name: "Unicorn",
-    rarity: "legendary",
-    value: 3.5,
-    image: "https://cdn.playadopt.me/items/unicorn.png"
-  },
-
-  {
-    id: "dragon",
-    name: "Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/dragon.png"
-  },
-
-  {
-    id: "golden_dragon",
-    name: "Golden Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/golden_dragon.png"
-  },
-
-  {
-    id: "golden_unicorn",
-    name: "Golden Unicorn",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/golden_unicorn.png"
-  },
-
-  {
-    id: "golden_penguin",
-    name: "Golden Penguin",
-    rarity: "legendary",
-    value: 2.8,
-    image: "https://cdn.playadopt.me/items/golden_penguin.png"
-  },
-
-  {
-    id: "king_bee",
-    name: "King Bee",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/king_bee.png"
-  },
-
-  {
-    id: "queen_bee",
-    name: "Queen Bee",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/queen_bee.png"
-  },
-
-  {
-    id: "kitsune",
-    name: "Kitsune",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/kitsune.png"
-  },
-
-  {
-    id: "octopus",
-    name: "Octopus",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/octopus.png"
-  },
-
-  {
-    id: "shark",
-    name: "Shark",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/shark.png"
-  },
-
-  {
-    id: "dodo",
-    name: "Dodo",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/dodo.png"
-  },
-
-  {
-    id: "trex",
-    name: "T-Rex",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/t_rex.png"
-  },
-
-  {
-    id: "skele_rex",
-    name: "Skele-Rex",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/skele_rex.png"
-  },
-
-  {
-    id: "lavender_dragon",
-    name: "Lavender Dragon",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/lavender_dragon.png"
-  },
-
-  {
-    id: "lava_dragon",
-    name: "Lava Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/lava_dragon.png"
-  },
-
-  {
-    id: "phoenix",
-    name: "Phoenix",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/phoenix.png"
-  },
-
-  {
-    id: "golden_rat",
-    name: "Golden Rat",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/golden_rat.png"
-  },
-
-  {
-    id: "metal_ox",
-    name: "Metal Ox",
-    rarity: "legendary",
-    value: 1.5,
-    image: "https://cdn.playadopt.me/items/metal_ox.png"
-  },
-
-  {
-    id: "king_penguin",
-    name: "King Penguin",
-    rarity: "legendary",
-    value: 1.8,
-    image: "https://cdn.playadopt.me/items/king_penguin.png"
-  },
-
-  {
-    id: "snow_owl",
-    name: "Snow Owl",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/snow_owl.png"
-  },
-
-  {
-    id: "goldhorn",
-    name: "Goldhorn",
-    rarity: "legendary",
-    value: 1.8,
-    image: "https://cdn.playadopt.me/items/goldhorn.png"
-  },
-
-  {
-    id: "griffin",
-    name: "Griffin",
-    rarity: "legendary",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/griffin.png"
-  },
-
-  /* =========================
-     ULTRA RARE
-     ========================= */
-
-  {
-    id: "turtle",
-    name: "Turtle",
-    rarity: "ultra",
-    value: 12,
-    image: "https://cdn.playadopt.me/items/turtle.png"
-  },
-
-  {
-    id: "cow",
-    name: "Cow",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/cow.png"
-  },
-
-  {
-    id: "lion",
-    name: "Lion",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/lion.png"
-  },
-
-  {
-    id: "flamingo",
-    name: "Flamingo",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/flamingo.png"
-  },
-
-  {
-    id: "hedgehog",
-    name: "Hedgehog",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/hedgehog.png"
-  },
-
-  {
-    id: "dalmatian",
-    name: "Dalmatian",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/dalmatian.png"
-  },
-
-  {
-    id: "crocodile",
-    name: "Crocodile",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/crocodile.png"
-  },
-
-  {
-    id: "elephant",
-    name: "Elephant",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/elephant.png"
-  },
-
-  {
-    id: "albino_bat",
-    name: "Albino Bat",
-    rarity: "ultra",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/albino_bat.png"
-  },
-
-  {
-    id: "business_monkey",
-    name: "Business Monkey",
-    rarity: "ultra",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/business_monkey.png"
-  },
-
-  {
-    id: "ghost_bunny",
-    name: "Ghost Bunny",
-    rarity: "ultra",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/ghost_bunny.png"
-  },
-
-  {
-    id: "ginger_cat",
-    name: "Ginger Cat",
-    rarity: "ultra",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/ginger_cat.png"
-  },
-
-  {
-    id: "panda",
-    name: "Panda",
-    rarity: "ultra",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/panda.png"
-  },
-
-  {
-    id: "red_panda",
-    name: "Red Panda",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/red_panda.png"
-  },
-
-  {
-    id: "bee",
-    name: "Bee",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/bee.png"
-  },
-
-  {
-    id: "penguin",
-    name: "Penguin",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/penguin.png"
-  },
-
-  {
-    id: "toucan",
-    name: "Toucan",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/toucan.png"
-  },
-
-  {
-    id: "starfish",
-    name: "Starfish",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/starfish.png"
-  },
-
-  {
-    id: "koala",
-    name: "Koala",
-    rarity: "ultra",
-    value: 1.5,
-    image: "https://cdn.playadopt.me/items/koala.png"
-  },
-
-  {
-    id: "frog",
-    name: "Frog",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/frog.png"
-  },
-
-  {
-    id: "sloth",
-    name: "Sloth",
-    rarity: "ultra",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/sloth.png"
-  },
-
-  /* =========================
-     RARE
-     ========================= */
-
-  {
-    id: "brown_bear",
-    name: "Brown Bear",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/brown_bear.png"
-  },
-
-  {
-    id: "pink_cat",
-    name: "Pink Cat",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/pink_cat.png"
-  },
-
-  {
-    id: "blue_dog",
-    name: "Blue Dog",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/blue_dog.png"
-  },
-
-  {
-    id: "meerkat",
-    name: "Meerkat",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/meerkat.png"
-  },
-
-  {
-    id: "rhino",
-    name: "Rhino",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/rhino.png"
-  },
-
-  {
-    id: "hyena",
-    name: "Hyena",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/hyena.png"
-  },
-
-  {
-    id: "black_panther",
-    name: "Black Panther",
-    rarity: "uncommon",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/black_panther.png"
-  },
-
-  {
-    id: "swan",
-    name: "Swan",
-    rarity: "rare",
-    value: 4,
-    image: "https://cdn.playadopt.me/items/swan.png"
-  },
-
-  {
-    id: "polar_bear",
-    name: "Polar Bear",
-    rarity: "rare",
-    value: 3.5,
-    image: "https://cdn.playadopt.me/items/polar_bear.png"
-  },
-
-  {
-    id: "reindeer",
-    name: "Reindeer",
-    rarity: "rare",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/reindeer.png"
-  },
-
-  {
-    id: "rabbit",
-    name: "Rabbit",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/rabbit.png"
-  },
-
-  {
-    id: "monkey",
-    name: "Monkey",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/monkey.png"
-  },
-
-  {
-    id: "bunny",
-    name: "Bunny",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/bunny.png"
-  },
-
-  {
-    id: "emu",
-    name: "Emu",
-    rarity: "rare",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/emu.png"
-  },
-
-  {
-    id: "beaver",
-    name: "Beaver",
-    rarity: "rare",
-    value: 0.6,
-    image: "https://cdn.playadopt.me/items/beaver.png"
-  },
-
-  {
-    id: "musk_ox",
-    name: "Musk Ox",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/musk_ox.png"
-  },
-
-  {
-    id: "woolly_mammoth",
-    name: "Woolly Mammoth",
-    rarity: "rare",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/woolly_mammoth.png"
-  },
-
-  {
-    id: "dilophosaurus",
-    name: "Dilophosaurus",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/dilophosaurus.png"
-  },
-
-  {
-    id: "stegosaurus",
-    name: "Stegosaurus",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/stegosaurus.png"
-  },
-
-  {
-    id: "triceratops",
-    name: "Triceratops",
-    rarity: "rare",
-    value: 0.6,
-    image: "https://cdn.playadopt.me/items/triceratops.png"
-  },
-
-  /* =========================
-     UNCOMMON
-     ========================= */
-
-  {
-    id: "black_panther",
-    name: "Black Panther",
-    rarity: "uncommon",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/black_panther.png"
-  },
-
-  {
-    id: "shrew",
-    name: "Shrew",
-    rarity: "uncommon",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/shrew.png"
-  },
-
-  {
-    id: "megalodon",
-    name: "Megalodon",
-    rarity: "uncommon",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/megalodon.png"
-  },
-
-  {
-    id: "bat",
-    name: "Bat",
-    rarity: "uncommon",
-    value: 0.5,
-    image: "https://cdn.playadopt.me/items/bat.png"
-  },
-
-  {
-    id: "snow_cat",
-    name: "Snow Cat",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/snow_cat.png"
-  },
-
-  {
-    id: "fennec_fox",
-    name: "Fennec Fox",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/fennec_fox.png"
-  },
-
-  {
-    id: "red_fox",
-    name: "Red Fox",
-    rarity: "uncommon",
-    value: 0.4,
-    image: "https://cdn.playadopt.me/items/red_fox.png"
-  },
-
-  {
-    id: "shiba_inu",
-    name: "Shiba Inu",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/shiba_inu.png"
-  },
-
-  {
-    id: "dingo",
-    name: "Dingo",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/dingo.png"
-  },
-
-  {
-    id: "snow_puma",
-    name: "Snow Puma",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/snow_puma.png"
-  },
-
-  {
-    id: "puma",
-    name: "Puma",
-    rarity: "uncommon",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/puma.png"
-  },
-
-  {
-    id: "meow",
-    name: "Cat",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/cat.png"
-  },
-
-  {
-    id: "dog",
-    name: "Dog",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/dog.png"
-  },
-
-  {
-    id: "mouse",
-    name: "Mouse",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/mouse.png"
-  },
-
-  {
-    id: "chick",
-    name: "Chick",
-    rarity: "common",
-    value: 0.15,
-    image: "https://cdn.playadopt.me/items/chick.png"
-  },
-
-  {
-    id: "robin",
-    name: "Robin",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/robin.png"
-  },
-
-  {
-    id: "chicken",
-    name: "Chicken",
-    rarity: "common",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/chicken.png"
-  },
-
-  {
-    id: "bandicoot",
-    name: "Bandicoot",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/bandicoot.png"
-  },
-
-  {
-    id: "ground_sloth",
-    name: "Ground Sloth",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/ground_sloth.png"
-  },
-
-  {
-    id: "wolpertinger",
-    name: "Wolpertinger",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/wolpertinger.png"
-  },
-
-  {
-    id: "otter",
-    name: "Otter",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/otter.png"
-  },
-
-  {
-    id: "buffalo",
-    name: "Buffalo",
-    rarity: "common",
-    value: 0.15,
-    image: "https://cdn.playadopt.me/items/buffalo.png"
-  },
-
-  {
-    id: "cracked_egg",
-    name: "Cracked Egg",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/cracked_egg.png"
+let youTrade = [];
+let themTrade = [];
+
+const $ = (id) => document.getElementById(id);
+
+/* =========================================================
+   ELEMENTLER
+   ========================================================= */
+
+const searchInput = $("petSearch");
+const petGrid = $("petGrid");
+
+const youTradeEl = $("youTrade");
+const themTradeEl = $("themTrade");
+
+const youTotalEl = $("youTotal");
+const themTotalEl = $("themTotal");
+
+const heroYou = $("heroYouValue");
+const heroThem = $("heroThemValue");
+const heroResult = $("heroResult");
+
+const resultStatusText = $("resultStatusText");
+const resultDiffNumber = $("resultDiffNumber");
+
+/* =========================================================
+   PET DATABASE KONTROLÜ
+   ========================================================= */
+
+const pets = Array.isArray(PET_DATABASE)
+  ? PET_DATABASE.filter(
+      (pet, index, arr) =>
+        pet &&
+        pet.id &&
+        pet.name &&
+        arr.findIndex((p) => p.id === pet.id) === index
+    )
+  : [];
+
+/* =========================================================
+   GÖRSEL HATA YÖNETİMİ
+   ========================================================= */
+
+function handleImageError(img) {
+  if (!img || img.dataset.failed) return;
+
+  img.dataset.failed = "true";
+
+  img.src =
+    "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+        <rect width="160" height="160" rx="20" fill="#151922"/>
+        <text x="80" y="78"
+          text-anchor="middle"
+          fill="#8b93a7"
+          font-size="14"
+          font-family="Arial">
+          NO IMAGE
+        </text>
+      </svg>
+    `);
+}
+
+/* =========================================================
+   PET LİSTESİNİ OLUŞTUR
+   ========================================================= */
+
+function renderPets(list = pets) {
+  if (!petGrid) return;
+
+  petGrid.innerHTML = "";
+
+  if (!list.length) {
+    petGrid.innerHTML = `
+      <div class="empty-state">
+        <strong>Pet bulunamadı</strong>
+        <span>Arama kelimesini değiştirmeyi dene.</span>
+      </div>
+    `;
+    return;
   }
 
-];
+  list.forEach((pet) => {
+    const card = document.createElement("div");
+
+    card.className = "pet-card";
+    card.dataset.petId = pet.id;
+
+    card.innerHTML = `
+      <div class="pet-image-wrap">
+        <img
+          class="pet-image"
+          src="${pet.image || ""}"
+          alt="${escapeHTML(pet.name)}"
+          loading="lazy"
+        >
+      </div>
+
+      <div class="pet-info">
+        <div class="pet-name">${escapeHTML(pet.name)}</div>
+        <div class="pet-rarity">${formatRarity(pet.rarity)}</div>
+        <div class="pet-value">${Number(pet.value).toFixed(1)}</div>
+      </div>
+    `;
+
+    const img = card.querySelector("img");
+
+    if (img) {
+      img.addEventListener("error", () => handleImageError(img));
+    }
+
+    card.addEventListener("click", () => openTradePicker(pet));
+
+    petGrid.appendChild(card);
+  });
+}
+
+/* =========================================================
+   HTML GÜVENLİ METİN
+   ========================================================= */
+
+function escapeHTML(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+/* =========================================================
+   RARITY
+   ========================================================= */
+
+function formatRarity(rarity) {
+  if (!rarity) return "";
+
+  const names = {
+    legendary: "Legendary",
+    ultra: "Ultra-Rare",
+    rare: "Rare",
+    uncommon: "Uncommon",
+    common: "Common"
+  };
+
+  return names[String(rarity).toLowerCase()] || rarity;
+}
+
+/* =========================================================
+   ARAMA
+   ========================================================= */
+
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.trim().toLowerCase();
+
+    const filtered = pets.filter((pet) => {
+      return (
+        pet.name.toLowerCase().includes(query) ||
+        pet.rarity.toLowerCase().includes(query)
+      );
+    });
+
+    renderPets(filtered);
+  });
+}
+
+/* =========================================================
+   TRADE PET SEÇİMİ
+   ========================================================= */
+
+function openTradePicker(pet) {
+  const existingModal = $("tradePickerModal");
+
+  if (existingModal) {
+    existingModal.remove();
+  }
+
+  const modal = document.createElement("div");
+
+  modal.id = "tradePickerModal";
+  modal.className = "trade-picker-modal";
+
+  modal.innerHTML = `
+    <div class="trade-picker-box">
+
+      <button class="trade-picker-close" type="button">
+        ×
+      </button>
+
+      <img
+        src="${pet.image}"
+        alt="${escapeHTML(pet.name)}"
+        class="trade-picker-image"
+      >
+
+      <h3>${escapeHTML(pet.name)}</h3>
+
+      <div class="trade-picker-value">
+        Value: ${Number(pet.value).toFixed(1)}
+      </div>
+
+      <div class="trade-picker-buttons">
+        <button class="add-you-btn" type="button">
+          + Sen
+        </button>
+
+        <button class="add-them-btn" type="button">
+          + Karşı Taraf
+        </button>
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.querySelector(".trade-picker-close").onclick = () => {
+    modal.remove();
+  };
+
+  modal.querySelector(".add-you-btn").onclick = () => {
+    addPet("you", pet);
+    modal.remove();
+  };
+
+  modal.querySelector(".add-them-btn").onclick = () => {
+    addPet("them", pet);
+    modal.remove();
+  };
+
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.remove();
+    }
+  });
+}
+
+/* =========================================================
+   PET EKLE
+   ========================================================= */
+
+function addPet(side, pet) {
+  const item = {
+    ...pet,
+    uniqueId:
+      Date.now().toString() +
+      Math.random().toString(36).substring(2, 8)
+  };
+
+  if (side === "you") {
+    youTrade.push(item);
+  } else {
+    themTrade.push(item);
+  }
+
+  updateTradeUI();
+}
+
+/* =========================================================
+   PET SİL
+   ========================================================= */
+
+function removePet(side, uniqueId) {
+  if (side === "you") {
+    youTrade = youTrade.filter((pet) => pet.uniqueId !== uniqueId);
+  } else {
+    themTrade = themTrade.filter((pet) => pet.uniqueId !== uniqueId);
+  }
+
+  updateTradeUI();
+}
+
+/* =========================================================
+   TRADE KUTULARINI OLUŞTUR
+   ========================================================= */
+
+function renderTradeSide(element, trade, side) {
+  if (!element) return;
+
+  element.innerHTML = "";
+
+  if (!trade.length) {
+    element.innerHTML = `
+      <div class="trade-empty">
+        <span>＋</span>
+        <small>Pet ekle</small>
+      </div>
+    `;
+    return;
+  }
+
+  trade.forEach((pet) => {
+    const item = document.createElement("div");
+
+    item.className = "trade-pet";
+
+    item.innerHTML = `
+      <button
+        class="trade-pet-remove"
+        type="button"
+        aria-label="Pet sil"
+      >
+        ×
+      </button>
+
+      <img
+        src="${pet.image || ""}"
+        alt="${escapeHTML(pet.name)}"
+      >
+
+      <div class="trade-pet-name">
+        ${escapeHTML(pet.name)}
+      </div>
+
+      <div class="trade-pet-value">
+        ${Number(pet.value).toFixed(1)}
+      </div>
+    `;
+
+    const img = item.querySelector("img");
+
+    if (img) {
+      img.addEventListener("error", () => handleImageError(img));
+    }
+
+    item.querySelector(".trade-pet-remove").onclick = (event) => {
+      event.stopPropagation();
+      removePet(side, pet.uniqueId);
+    };
+
+    element.appendChild(item);
+  });
+}
+
+/* =========================================================
+   TRADE UI GÜNCELLE
+   ========================================================= */
+
+function updateTradeUI() {
+  const youTotal = calculateTotal(youTrade);
+  const themTotal = calculateTotal(themTrade);
+
+  renderTradeSide(youTradeEl, youTrade, "you");
+  renderTradeSide(themTradeEl, themTrade, "them");
+
+  if (youTotalEl) {
+    youTotalEl.textContent = youTotal.toFixed(1);
+  }
+
+  if (themTotalEl) {
+    themTotalEl.textContent = themTotal.toFixed(1);
+  }
+
+  if (heroYou) {
+    heroYou.textContent = youTotal.toFixed(1);
+  }
+
+  if (heroThem) {
+    heroThem.textContent = themTotal.toFixed(1);
+  }
+
+  updateResult(youTotal, themTotal);
+}
+
+/* =========================================================
+   VALUE HESAPLA
+   ========================================================= */
+
+function calculateTotal(trade) {
+  return trade.reduce((total, pet) => {
+    return total + Number(pet.value || 0);
+  }, 0);
+}
+
+/* =========================================================
+   TRADE SONUCU
+   ========================================================= */
+
+function updateResult(youTotal, themTotal) {
+  const difference = youTotal - themTotal;
+
+  let status = "Pet ekleyerek başla";
+  let hero = "—";
+
+  if (youTotal === 0 && themTotal === 0) {
+    status = "Pet ekleyerek başla";
+    hero = "—";
+  } else if (difference > 0.05) {
+    status = "WIN";
+    hero = "WIN";
+  } else if (difference < -0.05) {
+    status = "LOSE";
+    hero = "LOSE";
+  } else {
+    status = "FAIR";
+    hero = "FAIR";
+  }
+
+  if (resultStatusText) {
+    resultStatusText.textContent = status;
+  }
+
+  if (resultDiffNumber) {
+    if (youTotal === 0 && themTotal === 0) {
+      resultDiffNumber.textContent = "—";
+    } else {
+      resultDiffNumber.textContent =
+        difference > 0
+          ? `+${difference.toFixed(1)}`
+          : difference.toFixed(1);
+    }
+  }
+
+  if (heroResult) {
+    heroResult.textContent = hero;
+  }
+}
+
+/* =========================================================
+   TEMİZLE
+   ========================================================= */
+
+function clearTrade(side) {
+  if (side === "you") {
+    youTrade = [];
+  } else {
+    themTrade = [];
+  }
+
+  updateTradeUI();
+}
+
+/* =========================================================
+   BUTONLAR
+   ========================================================= */
+
+document.addEventListener("click", (event) => {
+  const target = event.target;
+
+  if (target.closest("#clearYou")) {
+    clearTrade("you");
+  }
+
+  if (target.closest("#clearThem")) {
+    clearTrade("them");
+  }
+
+  if (target.closest("[data-clear='you']")) {
+    clearTrade("you");
+  }
+
+  if (target.closest("[data-clear='them']")) {
+    clearTrade("them");
+  }
+});
+
+/* =========================================================
+   BAŞLANGIÇ
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderPets();
+  updateTradeUI();
+});
