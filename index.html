@@ -46,14 +46,14 @@
       </div>
       <div class="hero-card">
         <div class="mini-title">Sonuç</div>
-        <div id="heroResult" class="result win">WIN</div>
+        <div id="heroResult" class="result">—</div>
         <div class="compare">
           <b>Sen</b>
-          <strong id="heroYouValue">25.4</strong>
+          <strong id="heroYouValue">0</strong>
         </div>
         <div class="compare">
           <b>Karşı Taraf</b>
-          <strong id="heroThemValue">21.7</strong>
+          <strong id="heroThemValue">0</strong>
         </div>
       </div>
     </section>
@@ -74,7 +74,9 @@
             <h3>Senin teklifin</h3>
             <span id="youTotal">0</span>
           </div>
-          <div id="youItems" class="items"></div>
+          <div id="youItems" class="items">
+            <div class="empty-items">Henüz pet eklenmedi</div>
+          </div>
           <button class="add" onclick="openPetPicker('you')">＋ Pet / Item Ekle</button>
         </div>
 
@@ -87,13 +89,15 @@
             <h3>Karşı taraf</h3>
             <span id="themTotal">0</span>
           </div>
-          <div id="themItems" class="items"></div>
+          <div id="themItems" class="items">
+            <div class="empty-items">Henüz pet eklenmedi</div>
+          </div>
           <button class="add" onclick="openPetPicker('them')">＋ Pet / Item Ekle</button>
         </div>
       </div>
 
       <!-- RESULT -->
-      <div id="resultCard" class="result-card neutral">
+      <div id="resultCard" class="result-card">
         <div>
           <small>TRADE SONUCU</small>
           <h3 id="resultStatusText">Pet ekleyerek başla</h3>
@@ -115,9 +119,9 @@
     </section>
   </main>
 
-  <!-- ================= PET PICKER MODAL (EKLENDİ) ================= -->
+  <!-- ================= PET PICKER MODAL ================= -->
   <div id="petPickerModal" class="profile-modal">
-    <div class="profile-window">
+    <div class="profile-window pet-modal-window">
       <div class="profile-header">
         <div>
           <div class="profile-eyebrow">SEÇİM YAP</div>
@@ -125,11 +129,34 @@
         </div>
         <button class="profile-close" onclick="closePetPicker()">×</button>
       </div>
-      <div style="padding: 15px 0 5px 0;">
-        <input id="pickerSearch" placeholder="🔎 Eklenecek peti ara..." oninput="filterPickerPets()" style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background:#111; color:#fff;">
+
+      <div style="padding: 15px 24px 0 24px;">
+        <input id="pickerSearch" class="pet-search" placeholder="🔎 Eklenecek peti ara..." oninput="filterPickerPets()">
       </div>
-      <div id="pickerPetList" class="value-grid" style="max-height: 350px; overflow-y: auto; padding-right: 5px;">
+
+      <div id="pickerPetList" class="pet-choice-grid" style="padding: 0 24px; max-height: 320px; overflow-y: auto;">
         <!-- JS ile doldurulacak -->
+      </div>
+
+      <div style="padding: 0 24px 20px 24px;">
+        <!-- FLY / RIDE / NEON / MEGA SEÇİM ÇUBUĞU -->
+        <div id="pickerBar" class="picker-bar hidden">
+          <div id="pickerPreview" class="picker-preview"></div>
+          <div>
+            <div class="form-toggles">
+              <button type="button" id="btnNeon" class="form-btn neon" onclick="toggleForm('neon')">✨ Neon</button>
+              <button type="button" id="btnMega" class="form-btn mega" onclick="toggleForm('mega')">🌈 Mega Neon</button>
+            </div>
+            <div class="potion-toggles">
+              <button type="button" id="btnFly" class="potion-btn fly" onclick="togglePotion('fly')">🪽 Fly</button>
+              <button type="button" id="btnRide" class="potion-btn ride" onclick="togglePotion('ride')">🐴 Ride</button>
+            </div>
+          </div>
+          <div class="picker-add">
+            <div id="pickerValue" class="picker-value">0</div>
+            <button type="button" class="add-confirm" onclick="confirmAddPet()">Ekle</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
