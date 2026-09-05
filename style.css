@@ -4269,3 +4269,503 @@ body.modal-open {
   }
 
 }
+/* =========================================================
+   ZAYAGG — PREMIUM WFL RESULT / STAGE 3
+========================================================= */
+
+.trade-result-card {
+  position: relative;
+  overflow: hidden;
+
+  min-height: 122px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 24px 28px;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(18,21,38,.98),
+      rgba(9,11,21,.98)
+    );
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.22);
+
+  transition:
+    border-color .3s ease,
+    background .3s ease,
+    box-shadow .3s ease,
+    transform .25s ease;
+}
+
+/* Üstten hafif ışık */
+
+.trade-result-card::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 0;
+
+  height: 2px;
+
+  opacity: .7;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(139,92,246,.8),
+      transparent
+    );
+}
+
+/* Arka plan glow */
+
+.trade-result-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 260px;
+  height: 260px;
+
+  right: -100px;
+  top: -120px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(139,92,246,.08);
+
+  filter: blur(35px);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   RESULT TEXT
+========================================================= */
+
+.trade-result-card .result-main {
+  position: relative;
+  z-index: 2;
+
+  max-width: 650px;
+}
+
+.trade-result-card .result-kicker {
+  margin-bottom: 7px;
+
+  color: var(--purple-light);
+
+  font-size: 9px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.trade-result-card h3 {
+  margin: 0;
+
+  font-size: 23px;
+  font-weight: 950;
+
+  letter-spacing: -.5px;
+
+  color: white;
+
+  transition:
+    color .25s ease,
+    transform .25s ease;
+}
+
+.trade-result-card p {
+  margin-top: 6px;
+
+  max-width: 560px;
+
+  color: #858ca0;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   RESULT SCORE
+========================================================= */
+
+.trade-result-card .result-score {
+  position: relative;
+  z-index: 2;
+
+  min-width: 140px;
+
+  padding-left: 25px;
+
+  border-left:
+    1px solid rgba(255,255,255,.08);
+
+  text-align: right;
+}
+
+.trade-result-card .result-score-label {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #71788c;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+}
+
+.trade-result-card .result-score strong {
+  display: block;
+
+  font-size: 37px;
+  line-height: 1;
+
+  font-weight: 950;
+
+  letter-spacing: -1.5px;
+
+  color: white;
+
+  transition:
+    color .25s ease,
+    text-shadow .25s ease,
+    transform .25s ease;
+}
+
+
+/* =========================================================
+   READY / EMPTY
+========================================================= */
+
+.trade-result-card:not(.big-win):not(.small-win):not(.fair):not(.small-lose):not(.big-lose) {
+  border-color:
+    rgba(255,255,255,.08);
+}
+
+.trade-result-card:not(.big-win):not(.small-win):not(.fair):not(.small-lose):not(.big-lose) .result-score strong {
+  color: #777e91;
+}
+
+
+/* =========================================================
+   BIG WIN
+========================================================= */
+
+.trade-result-card.big-win {
+  border-color:
+    rgba(53,211,153,.38);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(53,211,153,.11),
+      rgba(17,20,35,.98) 55%
+    );
+
+  box-shadow:
+    0 20px 65px rgba(53,211,153,.09);
+}
+
+.trade-result-card.big-win::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(53,211,153,.95),
+      transparent
+    );
+}
+
+.trade-result-card.big-win::after {
+  background:
+    rgba(53,211,153,.11);
+}
+
+.trade-result-card.big-win .result-kicker,
+.trade-result-card.big-win .result-score strong {
+  color: var(--green);
+}
+
+.trade-result-card.big-win .result-score strong {
+  text-shadow:
+    0 0 28px rgba(53,211,153,.28);
+}
+
+
+/* =========================================================
+   SMALL WIN
+========================================================= */
+
+.trade-result-card.small-win {
+  border-color:
+    rgba(163,230,53,.32);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(163,230,53,.075),
+      rgba(17,20,35,.98) 55%
+    );
+
+  box-shadow:
+    0 18px 55px rgba(163,230,53,.055);
+}
+
+.trade-result-card.small-win::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(163,230,53,.85),
+      transparent
+    );
+}
+
+.trade-result-card.small-win .result-kicker,
+.trade-result-card.small-win .result-score strong {
+  color: var(--lime);
+}
+
+
+/* =========================================================
+   FAIR
+========================================================= */
+
+.trade-result-card.fair {
+  border-color:
+    rgba(245,196,81,.34);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(245,196,81,.075),
+      rgba(17,20,35,.98) 55%
+    );
+
+  box-shadow:
+    0 18px 55px rgba(245,196,81,.055);
+}
+
+.trade-result-card.fair::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(245,196,81,.9),
+      transparent
+    );
+}
+
+.trade-result-card.fair .result-kicker,
+.trade-result-card.fair .result-score strong {
+  color: var(--yellow);
+}
+
+.trade-result-card.fair .result-score strong {
+  text-shadow:
+    0 0 24px rgba(245,196,81,.2);
+}
+
+
+/* =========================================================
+   SMALL LOSE
+========================================================= */
+
+.trade-result-card.small-lose {
+  border-color:
+    rgba(251,146,60,.33);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(251,146,60,.07),
+      rgba(17,20,35,.98) 55%
+    );
+
+  box-shadow:
+    0 18px 55px rgba(251,146,60,.05);
+}
+
+.trade-result-card.small-lose::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(251,146,60,.9),
+      transparent
+    );
+}
+
+.trade-result-card.small-lose .result-kicker,
+.trade-result-card.small-lose .result-score strong {
+  color: var(--orange);
+}
+
+
+/* =========================================================
+   BIG LOSE
+========================================================= */
+
+.trade-result-card.big-lose {
+  border-color:
+    rgba(255,102,125,.38);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,102,125,.10),
+      rgba(17,20,35,.98) 55%
+    );
+
+  box-shadow:
+    0 20px 65px rgba(255,102,125,.08);
+}
+
+.trade-result-card.big-lose::before {
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,102,125,.95),
+      transparent
+    );
+}
+
+.trade-result-card.big-lose::after {
+  background:
+    rgba(255,102,125,.10);
+}
+
+.trade-result-card.big-lose .result-kicker,
+.trade-result-card.big-lose .result-score strong {
+  color: var(--red);
+}
+
+.trade-result-card.big-lose .result-score strong {
+  text-shadow:
+    0 0 28px rgba(255,102,125,.24);
+}
+
+
+/* =========================================================
+   RESULT ANIMATION
+========================================================= */
+
+.trade-result-card.big-win h3,
+.trade-result-card.small-win h3,
+.trade-result-card.fair h3,
+.trade-result-card.small-lose h3,
+.trade-result-card.big-lose h3 {
+  animation:
+    resultAppear .28s ease;
+}
+
+@keyframes resultAppear {
+
+  from {
+    opacity: .4;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .trade-result-card {
+    min-height: 0;
+
+    padding: 19px;
+
+    border-radius: 17px;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 16px;
+  }
+
+  .trade-result-card .result-main {
+    max-width: none;
+  }
+
+  .trade-result-card h3 {
+    font-size: 19px;
+  }
+
+  .trade-result-card p {
+    font-size: 10px;
+  }
+
+  .trade-result-card .result-score {
+    width: 100%;
+
+    min-width: 0;
+
+    padding:
+      13px
+      0
+      0;
+
+    border-left: 0;
+
+    border-top:
+      1px solid rgba(255,255,255,.07);
+
+    text-align: left;
+  }
+
+  .trade-result-card .result-score strong {
+    font-size: 30px;
+  }
+
+}
+
+
+/* =========================================================
+   EXTRA SMALL
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .trade-result-card h3 {
+    font-size: 18px;
+  }
+
+  .trade-result-card .result-score strong {
+    font-size: 28px;
+  }
+
+}
