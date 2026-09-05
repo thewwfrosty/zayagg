@@ -4,396 +4,261 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zayagg — Adopt Me Trading</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
   <!-- ================= NAVBAR ================= -->
-
   <header class="navbar">
-
     <div class="logo">Zayagg</div>
-
     <nav>
       <a class="active" href="#">Ana Sayfa</a>
       <a href="#calculator">W/F/L Calculator</a>
       <a href="#values">Değerler</a>
       <a href="#">Trade İlanları</a>
     </nav>
-
     <button
       id="profileBtn"
       class="login"
       onclick="openProfile()">
       👤 Profil
     </button>
-
   </header>
-
-
   <!-- ================= MAIN ================= -->
-
   <main>
-
     <!-- HERO -->
-
     <section class="hero">
-
       <div>
-
         <div class="badge">
           🐾 Adopt Me Trading
         </div>
-
         <h1>
           Trade'inin değerini<br>
           <span>anında öğren.</span>
         </h1>
-
         <p>
           Petlerini seç, iki tarafı karşılaştır ve
           trade'inin Win, Fair veya Lose olduğunu
           saniyeler içinde gör.
         </p>
-
         <a
           class="hero-btn"
           href="#calculator">
           Calculator'ı Aç →
         </a>
-
       </div>
-
-
       <div class="hero-card">
-
         <div class="mini-title">
           Sonuç
         </div>
-
         <div class="result win">
           WIN
         </div>
-
         <div class="compare">
           <b>Sen</b>
           <strong>25.4</strong>
         </div>
-
         <div class="compare">
           <b>Karşı Taraf</b>
           <strong>21.7</strong>
         </div>
-
       </div>
-
     </section>
-
-
     <!-- ================= CALCULATOR ================= -->
-
     <section
       id="calculator"
       class="section">
-
       <div class="section-head">
-
         <div>
           <div class="eyebrow">
             TRADE CALCULATOR
           </div>
-
           <h2>
             W/F/L Calculator
           </h2>
         </div>
-
         <button
           id="clearBtn"
           class="ghost">
           Temizle
         </button>
-
       </div>
-
-
       <div class="trade-grid">
-
         <!-- SEN -->
-
         <div class="trade-box">
-
           <div class="box-head">
-
             <h3>
               Senin teklifin
             </h3>
-
             <span id="youTotal">
               0
             </span>
-
           </div>
-
           <div
             id="youItems"
             class="items">
           </div>
-
           <button
             class="add"
             onclick="addItem('you')">
             ＋ Pet / Item Ekle
           </button>
-
         </div>
-
-
         <!-- VS -->
-
         <div class="vs">
           VS
         </div>
-
-
         <!-- KARŞI TARAF -->
-
         <div class="trade-box">
-
           <div class="box-head">
-
             <h3>
               Karşı taraf
             </h3>
-
             <span id="themTotal">
               0
             </span>
-
           </div>
-
           <div
             id="themItems"
             class="items">
           </div>
-
           <button
             class="add"
             onclick="addItem('them')">
             ＋ Pet / Item Ekle
           </button>
-
         </div>
-
       </div>
-
-
       <!-- RESULT -->
-
       <div
         id="resultCard"
         class="result-card neutral">
-
         <div>
-
           <small>
             TRADE SONUCU
           </small>
-
           <h3>
             Pet ekleyerek başla
           </h3>
-
         </div>
-
         <div class="result-number">
           —
         </div>
-
       </div>
-
     </section>
-
-
     <!-- ================= VALUES ================= -->
-
     <section
       id="values"
       class="section values">
-
       <div class="section-head">
-
         <div>
-
           <div class="eyebrow">
             POPULAR VALUES
           </div>
-
           <h2>
             Popüler Pet Değerleri
           </h2>
-
         </div>
-
         <input
           id="search"
           placeholder="🔎 Pet ara..."
           oninput="renderValues()">
-
       </div>
-
-
       <div
         id="valueGrid"
         class="value-grid">
       </div>
-
     </section>
-
   </main>
-
-
   <!-- ================= PROFILE MODAL ================= -->
-
   <div
     id="profileModal"
     class="profile-modal">
-
     <div class="profile-window">
-
       <!-- HEADER -->
-
       <div class="profile-header">
-
         <div>
           <div class="profile-eyebrow">
             ZAYAGG PROFILE
           </div>
-
           <h2>
             Profil
           </h2>
         </div>
-
         <button
           class="profile-close"
           onclick="closeProfile()">
           ×
         </button>
-
       </div>
-
-
       <!-- PROFILE MAIN -->
-
       <div class="profile-main">
-
         <div
           id="profileAvatar"
           class="profile-avatar">
           🐉
         </div>
-
-
         <div class="profile-info">
-
           <h2 id="profileName">
             Zayagg Kullanıcısı
           </h2>
-
           <span id="profileUsername">
             @kullanici
           </span>
-
           <p id="profileBio">
             Henüz bir biyografi eklenmedi.
           </p>
-
         </div>
-
       </div>
-
-
       <!-- STATS -->
-
       <div class="profile-stats">
-
         <div class="profile-stat">
-
           <strong id="tradeCount">
             0
           </strong>
-
           <span>
             Trade
           </span>
-
         </div>
-
-
         <div class="profile-stat win-stat">
-
           <strong id="winCount">
             0
           </strong>
-
           <span>
             WIN
           </span>
-
         </div>
-
-
         <div class="profile-stat fair-stat">
-
           <strong id="fairCount">
             0
           </strong>
-
           <span>
             FAIR
           </span>
-
         </div>
-
-
         <div class="profile-stat lose-stat">
-
           <strong id="loseCount">
             0
           </strong>
-
           <span>
             LOSE
           </span>
-
         </div>
-
       </div>
-
-
       <!-- EDIT -->
-
       <button
         class="profile-edit"
         onclick="editProfile()">
         ✏️ Profili Düzenle
       </button>
-
     </div>
-
   </div>
-
-
   <!-- ================= FOOTER ================= -->
-
   <footer>
     Zayagg © 2026 — Adopt Me Trading Values
   </footer>
-
-
   <script src="script.js"></script>
-
 </body>
 </html>
