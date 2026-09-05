@@ -523,3 +523,173 @@ renderTrade("you");
 renderTrade("them");
 
 updateResult();
+/* PET SEÇME PENCERESİ */
+
+.pet-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.pet-modal-box {
+  width: 520px;
+  max-width: 100%;
+  max-height: 80vh;
+  overflow: hidden;
+  background: #10141f;
+  border: 1px solid #303747;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.7);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.modal-header small {
+  color: #9b8fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.modal-header h2 {
+  margin: 5px 0 0;
+}
+
+.modal-header button {
+  background: #191e2b;
+  border: 0;
+  color: #aaa;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.modal-header button:hover {
+  color: white;
+}
+
+.pet-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  background: #171c29;
+  border: 1px solid #303747;
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  margin-bottom: 15px;
+}
+
+.pet-search:focus {
+  border-color: #8b7cff;
+}
+
+.pet-list {
+  max-height: 48vh;
+  overflow-y: auto;
+}
+
+.pet-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: #171c29;
+  color: white;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pet-option:hover {
+  border-color: #8b7cff;
+  transform: translateY(-1px);
+}
+
+.pet-option-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: #202637;
+  border-radius: 10px;
+  font-size: 23px;
+}
+
+.pet-option-info {
+  flex: 1;
+}
+
+.pet-option-info strong {
+  display: block;
+}
+
+.pet-option-info span {
+  display: block;
+  color: #858c9d;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.pet-option-value {
+  color: #9b8fff;
+  font-weight: 900;
+}
+
+.empty-trade,
+.no-results {
+  color: #71798a;
+  text-align: center;
+  padding: 50px 10px;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-icon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  background: #202637;
+  border-radius: 9px;
+  font-size: 20px;
+}
+
+.item-left small {
+  display: block;
+  color: #777f91;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.remove-item {
+  background: none;
+  border: 0;
+  color: #777f91;
+  cursor: pointer;
+}
+
+.remove-item:hover {
+  color: #ff6b7a;
+}
