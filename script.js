@@ -75,6 +75,10 @@ const pets = [
 ];
 
 
+// ===============================
+// STATE
+// ===============================
+
 const state = {
   you: [],
   them: []
@@ -84,15 +88,56 @@ let currentSide = null;
 let currentFilter = "All";
 
 
+// ===============================
+// FAVORITES
+// ===============================
+
+let favorites = JSON.parse(
+  localStorage.getItem("zayaggFavorites") || "[]"
+);
+
+function isFavorite(index) {
+  return favorites.includes(index);
+}
+
+function toggleFavorite(index) {
+
+  if (isFavorite(index)) {
+    favorites = favorites.filter(i => i !== index);
+  } else {
+    favorites.push(index);
+  }
+
+  localStorage.setItem(
+    "zayaggFavorites",
+    JSON.stringify(favorites)
+  );
+
+  renderPetSelector();
+}
+
+
+// ===============================
+// ADD ITEM
+// ===============================
+
 function addItem(side) {
+
   currentSide = side;
   currentFilter = "All";
+
   openPetSelector();
 }
 
 
+// ===============================
+// PET SELECTOR
+// ===============================
+
 function openPetSelector() {
+
   const old = document.getElementById("petModal");
+
   if (old) old.remove();
 
   const modal = document.createElement("div");
@@ -104,12 +149,19 @@ function openPetSelector() {
     <div class="pet-modal-box">
 
       <div class="modal-header">
+
         <div>
           <small>ZAYAGG VALUES</small>
           <h2>Pet / Item Ekle</h2>
         </div>
 
-        <button onclick="closePetSelector()">✕</button>
+        <button
+          onclick="closePetSelector()"
+          type="button"
+        >
+          ✕
+        </button>
+
       </div>
 
       <input
@@ -121,19 +173,30 @@ function openPetSelector() {
       >
 
       <div class="pet-filters">
-        ${["All","Legendary","Ultra Rare","Rare","Uncommon","Common"].map(
-          filter => `
-            <button
-              class="${currentFilter === filter ? "active" : ""}"
-              onclick="setFilter('${filter}')"
-            >
-              ${filter}
-            </button>
-          `
-        ).join("")}
+
+        ${[
+          "All",
+          "Favorites",
+          "Legendary",
+          "Ultra Rare",
+          "Rare",
+          "Uncommon",
+          "Common"
+        ].map(filter => `
+
+          <button
+            class="${currentFilter === filter ? "active" : ""}"
+            onclick="setFilter('${filter}')"
+            type="button"
+          >
+            ${filter === "Favorites" ? "⭐ Favoriler" : filter}
+          </button>
+
+        `).join("")}
+
       </div>
 
-      <div id="petList" class="pet-list"></div>
+      <div class="pet-list" id="petList"></div>
 
     </div>
   `;
@@ -143,13 +206,23 @@ function openPetSelector() {
   renderPetSelector();
 
   setTimeout(() => {
+
     const search = document.getElementById("petSearch");
-    if (search) search.focus();
+
+    if (search) {
+      search.focus();
+    }
+
   }, 50);
 }
 
 
+// ===============================
+// CLOSE
+// ===============================
+
 function closePetSelector() {
+
   const modal = document.getElementById("petModal");
 
   if (modal) {
@@ -158,18 +231,30 @@ function closePetSelector() {
 }
 
 
+// ===============================
+// FILTER
+// ===============================
+
 function setFilter(filter) {
+
   currentFilter = filter;
+
   renderPetSelector();
 }
 
 
+// ===============================
+// RENDER PETS
+// ===============================
+
 function renderPetSelector() {
+
   const container = document.getElementById("petList");
 
   if (!container) return;
 
-  const searchInput = document.getElementById("petSearch");
+  const searchInput =
+    document.getElementById("petSearch");
 
   const search = searchInput
     ? searchInput.value.toLowerCase().trim()
@@ -179,59 +264,123 @@ function renderPetSelector() {
     pet.name.toLowerCase().includes(search)
   );
 
-  if (currentFilter !== "All") {
+
+  // RARITY / FAVORITES FILTER
+
+  if (currentFilter === "Favorites") {
+
+    results = results.filter(pet =>
+      isFavorite(pets.indexOf(pet))
+    );
+
+  } else if (currentFilter !== "All") {
+
     results = results.filter(
       pet => pet.rarity === currentFilter
     );
+
   }
 
+
+  // NO RESULTS
+
   if (results.length === 0) {
+
     container.innerHTML = `
+
       <div class="no-results">
-        😕 Pet bulunamadı
+
+        ${
+          currentFilter === "Favorites"
+            ? "⭐ Henüz favori petin yok"
+            : "😕 Pet bulunamadı"
+        }
+
       </div>
+
     `;
 
     return;
   }
 
+
+  // PET CARDS
+
   container.innerHTML = results.map(pet => {
 
     const index = pets.indexOf(pet);
 
+    const favorite = isFavorite(index);
+
     return `
-      <button
-        class="pet-option"
-        onclick="selectPet(${index})"
-        type="button"
-      >
 
-        <div class="pet-option-icon">
-          ${pet.icon}
-        </div>
+      <div class="pet-option">
 
-        <div class="pet-option-info">
-          <strong>${pet.name}</strong>
-          <span>${pet.rarity} • ${pet.demand}</span>
-        </div>
+        <button
+          class="pet-select-button"
+          onclick="selectPet(${index})"
+          type="button"
+        >
 
-        <div class="pet-option-value">
-          ${pet.value}
-        </div>
+          <div class="pet-option-icon">
+            ${pet.icon}
+          </div>
 
-      </button>
+          <div class="pet-option-info">
+
+            <strong>
+              ${pet.name}
+            </strong>
+
+            <span>
+              ${pet.rarity} • ${pet.demand}
+            </span>
+
+          </div>
+
+          <div class="pet-option-value">
+            ${pet.value}
+          </div>
+
+        </button>
+
+
+        <button
+          class="favorite-button ${favorite ? "active" : ""}"
+          onclick="toggleFavorite(${index})"
+          type="button"
+          title="${
+            favorite
+              ? "Favorilerden çıkar"
+              : "Favorilere ekle"
+          }"
+        >
+          ${favorite ? "★" : "☆"}
+        </button>
+
+      </div>
+
     `;
 
   }).join("");
 }
 
 
+// ===============================
+// SEARCH
+// ===============================
+
 function searchPets() {
   renderPetSelector();
 }
 
 
+// ===============================
+// SELECT PET
+// ===============================
+
 function selectPet(index) {
+
   const pet = pets[index];
 
   if (!pet || !currentSide) return;
@@ -241,27 +390,43 @@ function selectPet(index) {
   });
 
   renderTrade(currentSide);
+
   updateResult();
 
   closePetSelector();
 }
 
 
+// ===============================
+// REMOVE ITEM
+// ===============================
+
 function removeItem(side, index) {
+
   if (!state[side]) return;
 
   state[side].splice(index, 1);
 
   renderTrade(side);
+
   updateResult();
 }
 
 
+// ===============================
+// RENDER TRADE
+// ===============================
+
 function renderTrade(side) {
-  const box = document.getElementById(side + "Items");
-  const totalElement = document.getElementById(side + "Total");
+
+  const box =
+    document.getElementById(side + "Items");
+
+  const totalElement =
+    document.getElementById(side + "Total");
 
   if (!box || !totalElement) return;
+
 
   if (state[side].length === 0) {
 
@@ -273,7 +438,9 @@ function renderTrade(side) {
 
   } else {
 
-    box.innerHTML = state[side].map((pet, index) => `
+    box.innerHTML = state[side].map(
+      (pet, index) => `
+
       <div class="item">
 
         <div class="item-left">
@@ -283,11 +450,15 @@ function renderTrade(side) {
           </div>
 
           <div>
-            <strong>${pet.name}</strong>
+
+            <strong>
+              ${pet.name}
+            </strong>
 
             <small>
               ${pet.rarity} • Value: ${pet.value}
             </small>
+
           </div>
 
         </div>
@@ -301,17 +472,25 @@ function renderTrade(side) {
         </button>
 
       </div>
-    `).join("");
+
+    `
+    ).join("");
   }
+
 
   const total = state[side].reduce(
     (sum, pet) => sum + pet.value,
     0
   );
 
-  totalElement.textContent = Math.round(total);
+  totalElement.textContent =
+    Math.round(total);
 }
 
+
+// ===============================
+// W / F / L
+// ===============================
 
 function updateResult() {
 
@@ -325,39 +504,54 @@ function updateResult() {
     0
   );
 
-  const card = document.getElementById("resultCard");
+  const card =
+    document.getElementById("resultCard");
 
   if (!card) return;
 
-  const title = card.querySelector("h3");
-  const number = card.querySelector(".result-number");
+  const title =
+    card.querySelector("h3");
+
+  const number =
+    card.querySelector(".result-number");
 
   if (!title || !number) return;
 
 
+  // EMPTY
+
   if (youTotal === 0 && themTotal === 0) {
 
-    card.className = "result-card neutral";
+    card.className =
+      "result-card neutral";
 
-    title.textContent = "Pet ekleyerek başla";
+    title.textContent =
+      "Pet ekleyerek başla";
+
     number.textContent = "—";
 
     return;
   }
 
+
+  // ONLY ONE SIDE
 
   if (youTotal === 0 || themTotal === 0) {
 
-    card.className = "result-card neutral";
+    card.className =
+      "result-card neutral";
 
-    title.textContent = "İki tarafa da pet ekle";
+    title.textContent =
+      "İki tarafa da pet ekle";
+
     number.textContent = "—";
 
     return;
   }
 
 
-  const difference = themTotal - youTotal;
+  const difference =
+    themTotal - youTotal;
 
   const percentage =
     Math.abs(difference / youTotal) * 100;
@@ -385,7 +579,8 @@ function updateResult() {
   }
 
 
-  card.className = "result-card " + className;
+  card.className =
+    "result-card " + className;
 
   title.textContent = result;
 
@@ -395,10 +590,17 @@ function updateResult() {
 }
 
 
+// ===============================
+// VALUE LIST
+// ===============================
+
 function renderValues() {
 
-  const input = document.getElementById("search");
-  const grid = document.getElementById("valueGrid");
+  const input =
+    document.getElementById("search");
+
+  const grid =
+    document.getElementById("valueGrid");
 
   if (!input || !grid) return;
 
@@ -424,32 +626,53 @@ function renderValues() {
 
 
   grid.innerHTML = results.map(pet => `
+
     <div class="value-card">
 
       <div class="pet-icon">
         ${pet.icon}
       </div>
 
-      <h3>${pet.name}</h3>
+      <h3>
+        ${pet.name}
+      </h3>
 
       <div class="value-meta">
-        <span>${pet.rarity}</span>
-        <span class="trend">${pet.trend}</span>
+
+        <span>
+          ${pet.rarity}
+        </span>
+
+        <span class="trend">
+          ${pet.trend}
+        </span>
+
       </div>
 
       <div class="value-row">
-        <span class="value">${pet.value}</span>
-        <span>/ 1000 Value</span>
+
+        <span class="value">
+          ${pet.value}
+        </span>
+
+        <span>
+          / 1000 Value
+        </span>
+
       </div>
 
     </div>
+
   `).join("");
 }
 
 
+// ===============================
+// CLEAR
+// ===============================
+
 const clearBtn =
   document.getElementById("clearBtn");
-
 
 if (clearBtn) {
 
@@ -465,6 +688,10 @@ if (clearBtn) {
   };
 }
 
+
+// ===============================
+// START
+// ===============================
 
 renderValues();
 
