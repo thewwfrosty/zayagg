@@ -13,18 +13,23 @@
   <!-- ================= NAVBAR ================= -->
   <header class="navbar">
     <div class="logo">Zayagg</div>
-    <nav>
-      <a class="active" href="#">Ana Sayfa</a>
-      <a href="#calculator">W/F/L Calculator</a>
-      <a href="#values">Değerler</a>
-      <a href="#">Trade İlanları</a>
+    <nav id="mainNav">
+      <a class="active" href="#" onclick="closeMenu()">Ana Sayfa</a>
+      <a href="#calculator" onclick="closeMenu()">W/F/L Calculator</a>
+      <a href="#values" onclick="closeMenu()">Değerler</a>
+      <a href="#listings" onclick="closeMenu()">Trade İlanları</a>
     </nav>
-    <button
-      id="profileBtn"
-      class="login"
-      onclick="openProfile()">
-      👤 Profil
-    </button>
+    <div class="nav-actions">
+      <button
+        id="profileBtn"
+        class="login"
+        onclick="openProfile()">
+        👤 Profil
+      </button>
+      <button class="menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="Menü">
+        ☰
+      </button>
+    </div>
   </header>
   <!-- ================= MAIN ================= -->
   <main>
@@ -249,10 +254,31 @@
       </div>
       <!-- EDIT -->
       <button
+        id="profileEditBtn"
         class="profile-edit"
-        onclick="editProfile()">
-        ✏️ Profili Düzenle
+        onclick="openEditProfile()">
+        Profili Düzenle
       </button>
+      <form id="profileEditForm" class="profile-form hidden" onsubmit="saveEditedProfile(event)">
+        <label>
+          Ad
+          <input id="editName" maxlength="24" required>
+        </label>
+        <label>
+          Kullanıcı adı
+          <input id="editUsername" maxlength="20" required>
+        </label>
+        <label>
+          Biyografi
+          <textarea id="editBio" maxlength="120" rows="3"></textarea>
+        </label>
+        <div class="avatar-pick-label">Avatar</div>
+        <div id="avatarPick" class="avatar-pick"></div>
+        <div class="form-actions">
+          <button type="button" class="ghost" onclick="closeEditProfile()">Vazgeç</button>
+          <button type="submit" class="profile-edit">Kaydet</button>
+        </div>
+      </form>
     </div>
   </div>
   <!-- ================= FOOTER ================= -->
