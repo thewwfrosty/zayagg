@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Zayagg — Adopt Me Trading</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   >
 
@@ -22,58 +22,29 @@
 
   <header class="navbar">
 
-    <div class="logo">
-      Zayagg
-    </div>
+    <a href="#" class="logo">Zayagg</a>
 
     <nav id="mainNav">
-
-      <a
-        class="active"
-        href="#"
-        onclick="closeMenu()"
-      >
-        Ana Sayfa
-      </a>
-
-      <a
-        href="#calculator"
-        onclick="closeMenu()"
-      >
-        W/F/L Calculator
-      </a>
-
-      <a
-        href="#values"
-        onclick="closeMenu()"
-      >
-        Değerler
-      </a>
-
-      <a
-        href="#listings"
-        onclick="closeMenu()"
-      >
-        Trade İlanları
-      </a>
-
+      <a href="#" class="active" onclick="closeMenu()">Ana Sayfa</a>
+      <a href="#calculator" onclick="closeMenu()">W/F/L Calculator</a>
+      <a href="#values" onclick="closeMenu()">Değerler</a>
     </nav>
 
     <div class="nav-actions">
 
       <button
+        type="button"
         id="profileBtn"
         class="login"
-        type="button"
         onclick="openProfile()"
       >
         👤 Profil
       </button>
 
       <button
+        type="button"
         class="menu-btn"
         id="menuBtn"
-        type="button"
         onclick="toggleMenu()"
         aria-label="Menü"
       >
@@ -89,11 +60,11 @@
 
   <main>
 
-    <!-- HERO -->
+    <!-- ================= HERO ================= -->
 
     <section class="hero">
 
-      <div>
+      <div class="hero-content">
 
         <div class="badge">
           🐾 Adopt Me Trading
@@ -109,10 +80,7 @@
           Win, Fair veya Lose olduğunu saniyeler içinde gör.
         </p>
 
-        <a
-          class="hero-btn"
-          href="#calculator"
-        >
+        <a class="hero-btn" href="#calculator">
           Calculator'ı Aç →
         </a>
 
@@ -122,24 +90,21 @@
       <div class="hero-card">
 
         <div class="mini-title">
-          Sonuç
+          Trade Sonucu
         </div>
 
-        <div
-          id="heroResult"
-          class="result"
-        >
+        <div id="heroResult" class="result">
           —
         </div>
 
         <div class="compare">
           <b>Sen</b>
-          <strong id="heroYouValue">0</strong>
+          <strong id="heroYouValue">0.0</strong>
         </div>
 
         <div class="compare">
           <b>Karşı Taraf</b>
-          <strong id="heroThemValue">0</strong>
+          <strong id="heroThemValue">0.0</strong>
         </div>
 
       </div>
@@ -149,15 +114,11 @@
 
     <!-- ================= CALCULATOR ================= -->
 
-    <section
-      id="calculator"
-      class="section"
-    >
+    <section id="calculator" class="section">
 
       <div class="section-head">
 
         <div>
-
           <div class="eyebrow">
             TRADE CALCULATOR
           </div>
@@ -165,13 +126,12 @@
           <h2>
             W/F/L Calculator
           </h2>
-
         </div>
 
         <button
+          type="button"
           id="clearBtn"
           class="ghost"
-          type="button"
           onclick="clearTrade()"
         >
           Temizle
@@ -193,23 +153,24 @@
             </h3>
 
             <span id="youTotal">
-              0
+              0.0
             </span>
 
           </div>
 
-          <div
-            id="youItems"
-            class="items"
-          >
+
+          <div id="youItems" class="items">
+
             <div class="empty-items">
               Henüz pet eklenmedi
             </div>
+
           </div>
 
+
           <button
-            class="add"
             type="button"
+            class="add"
             onclick="openPetPicker('you')"
           >
             ＋ Pet / Item Ekle
@@ -236,23 +197,24 @@
             </h3>
 
             <span id="themTotal">
-              0
+              0.0
             </span>
 
           </div>
 
-          <div
-            id="themItems"
-            class="items"
-          >
+
+          <div id="themItems" class="items">
+
             <div class="empty-items">
               Henüz pet eklenmedi
             </div>
+
           </div>
 
+
           <button
-            class="add"
             type="button"
+            class="add"
             onclick="openPetPicker('them')"
           >
             ＋ Pet / Item Ekle
@@ -265,13 +227,9 @@
 
       <!-- RESULT -->
 
-      <div
-        id="resultCard"
-        class="result-card"
-      >
+      <div id="resultCard" class="result-card">
 
         <div>
-
           <small>
             TRADE SONUCU
           </small>
@@ -279,13 +237,9 @@
           <h3 id="resultStatusText">
             Pet ekleyerek başla
           </h3>
-
         </div>
 
-        <div
-          id="resultDiffNumber"
-          class="result-number"
-        >
+        <div id="resultDiffNumber" class="result-number">
           —
         </div>
 
@@ -296,15 +250,11 @@
 
     <!-- ================= VALUES ================= -->
 
-    <section
-      id="values"
-      class="section values"
-    >
+    <section id="values" class="section values">
 
       <div class="section-head">
 
         <div>
-
           <div class="eyebrow">
             POPULAR VALUES
           </div>
@@ -312,41 +262,42 @@
           <h2>
             Popüler Pet Değerleri
           </h2>
-
         </div>
+
 
         <input
           id="search"
-          type="text"
+          type="search"
           placeholder="🔎 Pet ara..."
+          autocomplete="off"
           oninput="renderValues()"
         >
 
       </div>
 
-      <div
-        id="valueGrid"
-        class="value-grid"
-      ></div>
+
+      <div id="valueGrid" class="value-grid"></div>
 
     </section>
 
   </main>
 
 
-  <!-- =========================================================
+  <!-- =====================================================
        PET PICKER MODAL
-       ========================================================= -->
+       ===================================================== -->
 
   <div
     id="petPickerModal"
     class="profile-modal"
-    onclick="handleModalBackgroundClick(event, 'petPickerModal')"
+    aria-hidden="true"
   >
 
     <div
       class="profile-window pet-modal-window"
-      onclick="event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="petPickerTitle"
     >
 
       <div class="profile-header">
@@ -357,16 +308,17 @@
             SEÇİM YAP
           </div>
 
-          <h2>
+          <h2 id="petPickerTitle">
             Pet veya Eşya Ekle
           </h2>
 
         </div>
 
         <button
-          class="profile-close"
           type="button"
+          class="profile-close"
           onclick="closePetPicker()"
+          aria-label="Kapat"
         >
           ×
         </button>
@@ -374,13 +326,14 @@
       </div>
 
 
-      <div class="picker-search-wrap">
+      <div class="modal-search">
 
         <input
           id="pickerSearch"
           class="pet-search"
-          type="text"
+          type="search"
           placeholder="🔎 Eklenecek peti ara..."
+          autocomplete="off"
           oninput="filterPickerPets()"
         >
 
@@ -393,7 +346,9 @@
       ></div>
 
 
-      <div class="picker-bottom">
+      <!-- PET AYARLARI -->
+
+      <div class="picker-settings">
 
         <div
           id="pickerBar"
@@ -484,19 +439,21 @@
   </div>
 
 
-  <!-- =========================================================
+  <!-- =====================================================
        PROFILE MODAL
-       ========================================================= -->
+       ===================================================== -->
 
   <div
     id="profileModal"
     class="profile-modal"
-    onclick="handleModalBackgroundClick(event, 'profileModal')"
+    aria-hidden="true"
   >
 
     <div
       class="profile-window"
-      onclick="event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="profileTitle"
     >
 
       <div class="profile-header">
@@ -507,16 +464,18 @@
             ZAYAGG PROFILE
           </div>
 
-          <h2>
+          <h2 id="profileTitle">
             Profil
           </h2>
 
         </div>
 
+
         <button
-          class="profile-close"
           type="button"
+          class="profile-close"
           onclick="closeProfile()"
+          aria-label="Kapat"
         >
           ×
         </button>
@@ -534,6 +493,7 @@
         >
           🐉
         </div>
+
 
         <div class="profile-info">
 
@@ -612,10 +572,12 @@
       </div>
 
 
+      <!-- EDIT BUTTON -->
+
       <button
+        type="button"
         id="profileEditBtn"
         class="profile-edit"
-        type="button"
         onclick="openEditProfile()"
       >
         Profili Düzenle
