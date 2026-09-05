@@ -1,8 +1,112 @@
 /* =========================================================
-   PET VARIANTS + REAL PET IMAGES
+   ZAYAGG — COMPLETE SCRIPT
+   ========================================================= */
+
+
+/* =========================================================
+   PET DATABASE
+   ========================================================= */
+
+const pets = [
+
+  // LEGENDARY
+  { name: "Shadow Dragon", value: 950, rarity: "Legendary", icon: "🐉" },
+  { name: "Bat Dragon", value: 900, rarity: "Legendary", icon: "🦇" },
+  { name: "Giraffe", value: 850, rarity: "Legendary", icon: "🦒" },
+  { name: "Frost Dragon", value: 800, rarity: "Legendary", icon: "🐉" },
+  { name: "Owl", value: 760, rarity: "Legendary", icon: "🦉" },
+  { name: "Parrot", value: 720, rarity: "Legendary", icon: "🦜" },
+  { name: "Evil Unicorn", value: 680, rarity: "Legendary", icon: "🦄" },
+  { name: "Crow", value: 650, rarity: "Legendary", icon: "🐦" },
+  { name: "Arctic Reindeer", value: 580, rarity: "Legendary", icon: "🦌" },
+  { name: "Albino Monkey", value: 500, rarity: "Legendary", icon: "🐒" },
+  { name: "Turtle", value: 450, rarity: "Legendary", icon: "🐢" },
+  { name: "Kangaroo", value: 400, rarity: "Legendary", icon: "🦘" },
+  { name: "Diamond Butterfly", value: 350, rarity: "Legendary", icon: "🦋" },
+
+  // ULTRA-RARE
+  { name: "Dalmatian", value: 320, rarity: "Ultra-Rare", icon: "🐶" },
+  { name: "Flamingo", value: 300, rarity: "Ultra-Rare", icon: "🦩" },
+  { name: "Lion", value: 280, rarity: "Ultra-Rare", icon: "🦁" },
+  { name: "Cow", value: 260, rarity: "Ultra-Rare", icon: "🐄" },
+  { name: "Hedgehog", value: 250, rarity: "Ultra-Rare", icon: "🦔" },
+  { name: "Elephant", value: 230, rarity: "Ultra-Rare", icon: "🐘" },
+  { name: "Hyena", value: 210, rarity: "Ultra-Rare", icon: "🐕" },
+  { name: "Pig", value: 190, rarity: "Ultra-Rare", icon: "🐷" },
+
+  // RARE
+  { name: "Platypus", value: 170, rarity: "Rare", icon: "🦆" },
+  { name: "Polar Bear", value: 150, rarity: "Rare", icon: "🐻‍❄️" },
+  { name: "Swan", value: 140, rarity: "Rare", icon: "🦢" },
+  { name: "Reindeer", value: 130, rarity: "Rare", icon: "🦌" },
+  { name: "Rabbit", value: 80, rarity: "Rare", icon: "🐰" },
+
+  // UNCOMMON
+  { name: "Silly Duck", value: 70, rarity: "Uncommon", icon: "🦆" },
+  { name: "Capybara", value: 65, rarity: "Uncommon", icon: "🐹" },
+  { name: "Meerkat", value: 60, rarity: "Uncommon", icon: "🦦" },
+  { name: "Snow Cat", value: 35, rarity: "Uncommon", icon: "🐱" },
+
+  // COMMON
+  { name: "Dog", value: 20, rarity: "Common", icon: "🐶" },
+  { name: "Cat", value: 20, rarity: "Common", icon: "🐱" },
+  { name: "Mouse", value: 15, rarity: "Common", icon: "🐭" },
+  { name: "Otter", value: 15, rarity: "Common", icon: "🦦" }
+
+];
+
+
+/* =========================================================
+   EXTRA ITEMS
+   ========================================================= */
+
+const extraItems = [
+  { name: "Starter Egg", value: 10, rarity: "Common", icon: "🥚" },
+  { name: "Pet Egg", value: 25, rarity: "Rare", icon: "🥚" },
+  { name: "Royal Egg", value: 40, rarity: "Rare", icon: "🥚" },
+  { name: "Basic Car", value: 20, rarity: "Common", icon: "🚗" },
+  { name: "Hoverboard", value: 50, rarity: "Rare", icon: "🛹" },
+  { name: "Rocket Racer", value: 80, rarity: "Ultra-Rare", icon: "🚀" },
+  { name: "Magic Wand", value: 100, rarity: "Rare", icon: "🪄" },
+  { name: "Teddy Bear", value: 30, rarity: "Uncommon", icon: "🧸" }
+];
+
+
+/* =========================================================
+   TRADE STATE
+   ========================================================= */
+
+let tradeState = {
+  you: [],
+  them: []
+};
+
+let currentSide = "you";
+
+let currentCategory = "Pets";
+
+let currentRarity = "All";
+
+let currentSearch = "";
+
+let selectedPet = null;
+
+
+/* =========================================================
+   FAVORITES
+   ========================================================= */
+
+let favorites = JSON.parse(
+  localStorage.getItem("zayaggFavorites") || "[]"
+);
+
+
+/* =========================================================
+   PET IMAGE
    ========================================================= */
 
 function getPetImage(pet) {
+
   const fileName = pet.name
     .toLowerCase()
     .replace(/['’]/g, "")
@@ -14,17 +118,827 @@ function getPetImage(pet) {
 
 
 /* =========================================================
-   VARIANT SELECTOR
+   IMAGE HTML
    ========================================================= */
 
-function showVariantSelector(pet) {
+function petImageHTML(pet, size = 50) {
+
+  const image = getPetImage(pet);
+
+  return `
+    <div
+      style="
+        width:${size}px;
+        height:${size}px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-shrink:0;
+      "
+    >
+
+      <img
+        src="${image}"
+        alt="${pet.name}"
+        style="
+          width:100%;
+          height:100%;
+          object-fit:contain;
+        "
+        onerror="
+          this.style.display='none';
+          this.nextElementSibling.style.display='flex';
+        "
+      >
+
+      <span
+        style="
+          display:none;
+          align-items:center;
+          justify-content:center;
+          font-size:${Math.round(size * 0.55)}px;
+        "
+      >
+        ${pet.icon || "🐾"}
+      </span>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   RENDER VALUE LIST
+   ========================================================= */
+
+function renderValues() {
+
+  const grid = document.getElementById("valueGrid");
+
+  if (!grid) return;
+
+  const search =
+    document.getElementById("search")?.value
+      ?.toLowerCase()
+      .trim() || "";
+
+  const filtered = pets.filter(pet =>
+    pet.name.toLowerCase().includes(search)
+  );
+
+  grid.innerHTML = filtered.map(pet => `
+
+    <div class="value-card">
+
+      ${petImageHTML(pet, 65)}
+
+      <div>
+        <h3>${pet.name}</h3>
+
+        <small>${pet.rarity}</small>
+
+        <strong>
+          ${pet.value.toLocaleString()}
+        </strong>
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* =========================================================
+   OPEN PET MODAL
+   ========================================================= */
+
+function openPetModal(side = currentSide) {
+
+  currentSide = side;
+
+  const modal = document.getElementById("petModal");
+
+  if (modal) {
+    modal.classList.add("show");
+  }
+
+  renderPetModal();
+
+}
+
+
+/* =========================================================
+   RENDER PET MODAL
+   ========================================================= */
+
+function renderPetModal() {
 
   const box = document.querySelector(".pet-modal-box");
 
   if (!box) return;
 
-  const base = pet.value;
-  const image = getPetImage(pet);
+  let list = currentCategory === "Pets"
+    ? [...pets]
+    : [...extraItems];
+
+
+  if (currentRarity !== "All") {
+
+    list = list.filter(
+      item => item.rarity === currentRarity
+    );
+
+  }
+
+
+  if (currentSearch) {
+
+    list = list.filter(item =>
+      item.name
+        .toLowerCase()
+        .includes(currentSearch.toLowerCase())
+    );
+
+  }
+
+
+  box.innerHTML = `
+
+    <div class="modal-header">
+
+      <h2>Pet / Item Seç</h2>
+
+      <button
+        class="modal-close"
+        onclick="closePetModal()"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="pet-filters">
+
+      <button
+        class="${currentCategory === "Pets" ? "active" : ""}"
+        onclick="setCategory('Pets')"
+      >
+        🐾 Pets
+      </button>
+
+      <button
+        class="${currentCategory === "Items" ? "active" : ""}"
+        onclick="setCategory('Items')"
+      >
+        🎒 Items
+      </button>
+
+    </div>
+
+
+    <input
+      class="pet-search"
+      placeholder="🔎 Pet ara..."
+      value="${currentSearch}"
+      oninput="updatePetSearch(this.value)"
+    >
+
+
+    <div class="rarity-filters">
+
+      ${[
+        "All",
+        "Common",
+        "Uncommon",
+        "Rare",
+        "Ultra-Rare",
+        "Legendary"
+      ].map(rarity => `
+
+        <button
+          class="${currentRarity === rarity ? "active" : ""}"
+          onclick="setRarity('${rarity}')"
+        >
+          ${rarity}
+        </button>
+
+      `).join("")}
+
+    </div>
+
+
+    <div class="pet-list">
+
+      ${list.map(item => {
+
+        const favorite =
+          favorites.includes(item.name);
+
+        return `
+
+          <div class="pet-option">
+
+            ${petImageHTML(item, 55)}
+
+            <div
+              class="pet-option-info"
+              onclick="selectPet('${item.name.replace(/'/g, "\\'")}')"
+            >
+
+              <strong>${item.name}</strong>
+
+              <small>
+                ${item.rarity} · ${item.value.toLocaleString()}
+              </small>
+
+            </div>
+
+
+            <button
+              class="favorite-button"
+              onclick="
+                event.stopPropagation();
+                toggleFavorite('${item.name.replace(/'/g, "\\'")}')
+              "
+            >
+              ${favorite ? "★" : "☆"}
+            </button>
+
+          </div>
+
+        `;
+
+      }).join("")}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   CATEGORY
+   ========================================================= */
+
+function setCategory(category) {
+
+  currentCategory = category;
+
+  currentSearch = "";
+
+  renderPetModal();
+
+}
+
+
+/* =========================================================
+   RARITY
+   ========================================================= */
+
+function setRarity(rarity) {
+
+  currentRarity = rarity;
+
+  renderPetModal();
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function updatePetSearch(value) {
+
+  currentSearch = value;
+
+  renderPetModal();
+
+}
+
+
+/* =========================================================
+   SELECT PET
+   ========================================================= */
+
+function selectPet(name) {
+
+  const list =
+    currentCategory === "Pets"
+      ? pets
+      : extraItems;
+
+  selectedPet =
+    list.find(item => item.name === name);
+
+  if (!selectedPet) return;
+
+
+  if (currentCategory === "Pets") {
+
+    showVariantSelector(selectedPet);
+
+  } else {
+
+    addSelectedItem();
+
+  }
+
+}
+
+
+/* =========================================================
+   ADD NORMAL ITEM
+   ========================================================= */
+
+function addSelectedItem() {
+
+  if (!selectedPet) return;
+
+  const item = {
+
+    ...selectedPet,
+
+    variant: "Normal",
+
+    quantity: 1
+
+  };
+
+
+  addToTrade(item);
+
+  closePetModal();
+
+}
+
+
+/* =========================================================
+   ADD TO TRADE
+   ========================================================= */
+
+function addToTrade(item) {
+
+  if (!tradeState[currentSide]) {
+    tradeState[currentSide] = [];
+  }
+
+
+  const existing =
+    tradeState[currentSide].find(existingItem =>
+      existingItem.name === item.name &&
+      existingItem.variant === item.variant
+    );
+
+
+  if (existing) {
+
+    existing.quantity =
+      (existing.quantity || 1) + 1;
+
+  } else {
+
+    tradeState[currentSide].push(item);
+
+  }
+
+
+  renderTrade();
+
+}
+
+
+/* =========================================================
+   ADD ITEM BUTTON
+   ========================================================= */
+
+function addItem(side) {
+
+  currentSide = side;
+
+  openPetModal(side);
+
+}
+
+
+/* =========================================================
+   REMOVE ITEM
+   ========================================================= */
+
+function removeItem(side, index) {
+
+  tradeState[side].splice(index, 1);
+
+  renderTrade();
+
+}
+
+
+/* =========================================================
+   CHANGE QUANTITY
+   ========================================================= */
+
+function changeQuantity(side, index, amount) {
+
+  const item = tradeState[side][index];
+
+  if (!item) return;
+
+
+  item.quantity =
+    (item.quantity || 1) + amount;
+
+
+  if (item.quantity <= 0) {
+
+    tradeState[side].splice(index, 1);
+
+  }
+
+
+  renderTrade();
+
+}
+
+
+/* =========================================================
+   TRADE TOTAL
+   ========================================================= */
+
+function getTradeTotal(side) {
+
+  return tradeState[side].reduce(
+    (total, item) =>
+      total +
+      (item.value * (item.quantity || 1)),
+    0
+  );
+
+}
+
+
+/* =========================================================
+   RENDER TRADE
+   ========================================================= */
+
+function renderTrade() {
+
+  const youBox =
+    document.getElementById("youItems");
+
+  const themBox =
+    document.getElementById("themItems");
+
+
+  if (youBox) {
+
+    youBox.innerHTML =
+      renderTradeItems("you");
+
+  }
+
+
+  if (themBox) {
+
+    themBox.innerHTML =
+      renderTradeItems("them");
+
+  }
+
+
+  const youTotal =
+    getTradeTotal("you");
+
+  const themTotal =
+    getTradeTotal("them");
+
+
+  const youTotalElement =
+    document.getElementById("youTotal");
+
+  const themTotalElement =
+    document.getElementById("themTotal");
+
+
+  if (youTotalElement) {
+
+    youTotalElement.textContent =
+      youTotal.toLocaleString();
+
+  }
+
+
+  if (themTotalElement) {
+
+    themTotalElement.textContent =
+      themTotal.toLocaleString();
+
+  }
+
+
+  updateResult();
+
+}
+
+
+/* =========================================================
+   RENDER TRADE ITEMS
+   ========================================================= */
+
+function renderTradeItems(side) {
+
+  const items =
+    tradeState[side];
+
+  if (!items.length) {
+
+    return `
+      <div class="empty">
+        Henüz pet eklenmedi.
+      </div>
+    `;
+
+  }
+
+
+  return items.map((item, index) => `
+
+    <div class="trade-item">
+
+      ${petImageHTML(item, 55)}
+
+      <div class="trade-item-info">
+
+        <strong>
+          ${item.name}
+        </strong>
+
+        <small>
+          ${item.variant || "Normal"}
+        </small>
+
+        <span>
+          ${item.value.toLocaleString()} × ${item.quantity || 1}
+        </span>
+
+      </div>
+
+
+      <div class="quantity-controls">
+
+        <button
+          onclick="changeQuantity('${side}', ${index}, -1)"
+        >
+          −
+        </button>
+
+        <span>
+          ${item.quantity || 1}
+        </span>
+
+        <button
+          onclick="changeQuantity('${side}', ${index}, 1)"
+        >
+          +
+        </button>
+
+      </div>
+
+
+      <button
+        class="remove"
+        onclick="removeItem('${side}', ${index})"
+      >
+        ×
+      </button>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* =========================================================
+   W / F / L RESULT
+   ========================================================= */
+
+function updateResult() {
+
+  const card =
+    document.getElementById("resultCard");
+
+  if (!card) return;
+
+
+  const you =
+    getTradeTotal("you");
+
+  const them =
+    getTradeTotal("them");
+
+
+  if (you === 0 && them === 0) {
+
+    card.className =
+      "result-card neutral";
+
+    card.innerHTML = `
+
+      <div>
+
+        <small>TRADE SONUCU</small>
+
+        <h3>
+          Pet ekleyerek başla
+        </h3>
+
+      </div>
+
+      <div class="result-number">
+        —
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  if (you === 0 || them === 0) {
+
+    card.className =
+      "result-card neutral";
+
+    card.innerHTML = `
+
+      <div>
+
+        <small>TRADE SONUCU</small>
+
+        <h3>
+          İki tarafa da pet ekle
+        </h3>
+
+      </div>
+
+      <div class="result-number">
+        —
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+
+  const difference =
+    them - you;
+
+
+  const percentage =
+    (Math.abs(difference) / you) * 100;
+
+
+  let result;
+  let title;
+
+
+  if (percentage <= 10) {
+
+    result = "FAIR";
+
+    title = "Adil Trade";
+
+  }
+
+  else if (difference > 0) {
+
+    result = "WIN";
+
+    title = `WIN +${difference.toLocaleString()}`;
+
+  }
+
+  else {
+
+    result = "LOSE";
+
+    title = `LOSE ${difference.toLocaleString()}`;
+
+  }
+
+
+  card.className =
+    `result-card ${result.toLowerCase()}`;
+
+
+  card.innerHTML = `
+
+    <div>
+
+      <small>TRADE SONUCU</small>
+
+      <h3>
+        ${title}
+      </h3>
+
+    </div>
+
+    <div class="result-number">
+
+      ${result}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   CLEAR TRADE
+   ========================================================= */
+
+function clearTrade() {
+
+  tradeState = {
+    you: [],
+    them: []
+  };
+
+  renderTrade();
+
+}
+
+
+const clearButton =
+  document.getElementById("clearBtn");
+
+if (clearButton) {
+
+  clearButton.addEventListener(
+    "click",
+    clearTrade
+  );
+
+}
+
+
+/* =========================================================
+   FAVORITES
+   ========================================================= */
+
+function toggleFavorite(name) {
+
+  if (favorites.includes(name)) {
+
+    favorites =
+      favorites.filter(
+        item => item !== name
+      );
+
+  } else {
+
+    favorites.push(name);
+
+  }
+
+
+  localStorage.setItem(
+    "zayaggFavorites",
+    JSON.stringify(favorites)
+  );
+
+
+  renderPetModal();
+
+}
+
+
+/* =========================================================
+   VARIANT SELECTOR
+   ========================================================= */
+
+function showVariantSelector(pet) {
+
+  const box =
+    document.querySelector(".pet-modal-box");
+
+  if (!box) return;
+
+
+  const base =
+    pet.value;
+
+  const image =
+    getPetImage(pet);
+
 
   const variants = [
 
@@ -112,6 +1026,7 @@ function showVariantSelector(pet) {
 
       </h2>
 
+
       <button
         class="modal-close"
         onclick="closePetModal()"
@@ -162,16 +1077,12 @@ function showVariantSelector(pet) {
 
 
           <strong>
-
             ${v.name}
-
           </strong>
 
 
           <small>
-
             ${v.value.toLocaleString()} Value
-
           </small>
 
         </button>
@@ -185,12 +1096,11 @@ function showVariantSelector(pet) {
       class="variant-back"
       onclick="openPetModal()"
     >
-
       ← Petlere dön
-
     </button>
 
   `;
+
 }
 
 
@@ -202,7 +1112,10 @@ function chooseVariant(variant) {
 
   if (!selectedPet) return;
 
-  const base = selectedPet.value;
+
+  const base =
+    selectedPet.value;
+
 
   let multiplier = 1;
 
@@ -266,52 +1179,14 @@ function chooseVariant(variant) {
 
     variant: variant,
 
-    image: getPetImage(selectedPet)
+    image: getPetImage(selectedPet),
+
+    quantity: 1
 
   };
 
 
-  /*
-    Burada mevcut addItem fonksiyonunun
-    iki farklı yapısından dolayı doğrudan
-    eski fonksiyona güvenmek yerine,
-    tradeState'e ekliyoruz.
-  */
-
-  if (!tradeState[currentSide]) {
-    tradeState[currentSide] = [];
-  }
-
-
-  const existing =
-    tradeState[currentSide].find(item =>
-      item.name === newItem.name &&
-      item.variant === newItem.variant
-    );
-
-
-  if (existing) {
-
-    existing.quantity =
-      (existing.quantity || 1) + 1;
-
-  } else {
-
-    tradeState[currentSide].push({
-
-      ...newItem,
-
-      quantity: 1
-
-    });
-
-  }
-
-
-  if (typeof renderTrade === "function") {
-    renderTrade();
-  }
-
+  addToTrade(newItem);
 
   closePetModal();
 
@@ -319,52 +1194,34 @@ function chooseVariant(variant) {
 
 
 /* =========================================================
-   PET IMAGE HELPER
+   CLOSE MODAL
    ========================================================= */
 
-function petImageHTML(pet, size = 50) {
+function closePetModal() {
 
-  const image = getPetImage(pet);
+  const modal =
+    document.getElementById("petModal");
 
-  return `
+  if (modal) {
 
-    <div
-      style="
-        width:${size}px;
-        height:${size}px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-shrink:0;
-      "
-    >
+    modal.classList.remove("show");
 
-      <img
-        src="${image}"
-        alt="${pet.name}"
-        style="
-          width:100%;
-          height:100%;
-          object-fit:contain;
-        "
-        onerror="
-          this.style.display='none';
-          this.nextElementSibling.style.display='flex';
-        "
-      >
+  }
 
-      <span
-        style="
-          display:none;
-          align-items:center;
-          justify-content:center;
-          font-size:${Math.round(size * 0.55)}px;
-        "
-      >
-        ${pet.icon || "🐾"}
-      </span>
-
-    </div>
-
-  `;
 }
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    renderValues();
+
+    renderTrade();
+
+  }
+);
