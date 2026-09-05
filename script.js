@@ -62,10 +62,12 @@ const variants = [
   { name: "Fly", multiplier: 1.1, type: "fly" },
   { name: "Ride", multiplier: 1.1, type: "ride" },
   { name: "Fly Ride", multiplier: 1.2, type: "flyride" },
+
   { name: "Neon", multiplier: 4, type: "neon" },
   { name: "Neon Fly", multiplier: 4.1, type: "neonfly" },
   { name: "Neon Ride", multiplier: 4.1, type: "neonride" },
   { name: "Neon Fly Ride", multiplier: 4.2, type: "neonflyride" },
+
   { name: "Mega Neon", multiplier: 16, type: "mega" },
   { name: "Mega Fly Ride", multiplier: 16.2, type: "megaflyride" }
 ];
@@ -78,16 +80,23 @@ const state = {
 let currentSide = "you";
 let currentPet = null;
 
+
+/* =========================================================
+   YARDIMCI FONKSİYONLAR
+========================================================= */
+
 function getPetImage(pet) {
   return pet.image || "";
 }
 
 function formatValue(value) {
-  return Number(value).toFixed(1).replace(".0", "");
+  return Number(value || 0)
+    .toFixed(1)
+    .replace(".0", "");
 }
 
 function getVariantValue(pet, variant) {
-  return pet.value * variant.multiplier;
+  return Number(pet.value) * Number(variant.multiplier);
 }
 
 function escapeHTML(value) {
@@ -98,6 +107,14 @@ function escapeHTML(value) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 }
+
+function getTotal(side) {
+  return state[side].reduce(
+    (sum, item) => sum + Number(item.value || 0),
+    0
+  );
+}
+
 
 /* =========================================================
    PET GÖRSELİ
@@ -181,7 +198,9 @@ function petImageHTML(pet, size = 64, variant = "Normal") {
           height:100%;
           font-size:${Math.round(size * 0.55)}px;
         "
-      >${pet.icon || "🐾"}</span>
+      >
+        ${pet.icon || "🐾"}
+      </span>
 
       ${
         isFly
@@ -199,8 +218,9 @@ function petImageHTML(pet, size = 64, variant = "Normal") {
   `;
 }
 
+
 /* =========================================================
-   POPÜLER PET DEĞERLERİ
+   POPÜLER DEĞERLER
 ========================================================= */
 
 function renderValues() {
@@ -209,10 +229,14 @@ function renderValues() {
 
   if (!grid) return;
 
-  const q = (search?.value || "").toLowerCase().trim();
+  const q = (search?.value || "")
+    .toLowerCase()
+    .trim();
 
   grid.innerHTML = pets
-    .filter(p => p.name.toLowerCase().includes(q))
+    .filter(p =>
+      p.name.toLowerCase().includes(q)
+    )
     .map(p => `
       <div
         class="value-card"
@@ -227,12 +251,20 @@ function renderValues() {
         <h3>${escapeHTML(p.name)}</h3>
 
         <div class="value-meta">
-          <span>Demand: ${escapeHTML(p.demand)}</span>
-          <span class="trend">${escapeHTML(p.trend)}</span>
+          <span>
+            Demand: ${escapeHTML(p.demand)}
+          </span>
+
+          <span class="trend">
+            ${escapeHTML(p.trend)}
+          </span>
         </div>
 
         <div style="margin-top:12px">
-          <span class="value">${formatValue(p.value)}</span> Value
+          <span class="value">
+            ${formatValue(p.value)}
+          </span>
+          Value
         </div>
 
       </div>
@@ -240,21 +272,27 @@ function renderValues() {
     .join("");
 }
 
+
 /* =========================================================
-   MODAL OLUŞTUR
+   MODAL
 ========================================================= */
 
 function ensurePetModal() {
-  let modal = document.getElementById("petModal");
+  let modal =
+    document.getElementById("petModal");
 
   if (modal) return modal;
 
   modal = document.createElement("div");
+
   modal.id = "petModal";
   modal.className = "pet-modal";
 
   modal.innerHTML = `
-    <div class="pet-modal-box" onclick="event.stopPropagation()"></div>
+    <div
+      class="pet-modal-box"
+      onclick="event.stopPropagation()"
+    ></div>
   `;
 
   modal.addEventListener("click", e => {
@@ -268,18 +306,21 @@ function ensurePetModal() {
   return modal;
 }
 
-/* =========================================================
-   PET MODAL
-========================================================= */
 
-function openPetModal(side = currentSide, petName = null) {
+function openPetModal(
+  side = currentSide,
+  petName = null
+) {
   currentSide = side || currentSide;
 
   const modal = ensurePetModal();
 
   if (petName) {
+
     const pet = pets.find(
-      p => p.name.toLowerCase() === String(petName).toLowerCase()
+      p =>
+        p.name.toLowerCase() ===
+        String(petName).toLowerCase()
     );
 
     if (pet) {
@@ -294,32 +335,49 @@ function openPetModal(side = currentSide, petName = null) {
   window.petModalSearch = "";
 
   renderPetModal();
+
   modal.classList.add("show");
 }
 
+
 function renderPetModal() {
   const modal = ensurePetModal();
-  const box = modal.querySelector(".pet-modal-box");
 
-  const q = window.petModalSearch || "";
+  const box =
+    modal.querySelector(
+      ".pet-modal-box"
+    );
 
-  const filtered = pets.filter(p =>
-    p.name.toLowerCase().includes(q.toLowerCase())
-  );
+  const q =
+    window.petModalSearch || "";
+
+  const filtered =
+    pets.filter(p =>
+      p.name
+        .toLowerCase()
+        .includes(q.toLowerCase())
+    );
 
   box.innerHTML = `
+
     <div class="modal-header">
 
       <div>
+
         <div style="
           font-size:12px;
           color:#8e97ad;
           margin-bottom:4px;
         ">
-          ${currentSide === "you" ? "Senin teklifin" : "Karşı taraf"}
+          ${
+            currentSide === "you"
+              ? "Senin teklifin"
+              : "Karşı taraf"
+          }
         </div>
 
         <h2>Pet / Item Seç</h2>
+
       </div>
 
       <button
@@ -331,7 +389,10 @@ function renderPetModal() {
 
     </div>
 
-    <div style="padding:18px 22px 0;">
+
+    <div style="
+      padding:18px 22px 0;
+    ">
 
       <input
         class="pet-search"
@@ -343,32 +404,49 @@ function renderPetModal() {
 
     </div>
 
+
     <div
       class="pet-list"
-      style="padding:18px 22px 22px;"
+      style="
+        padding:18px 22px 22px;
+      "
     >
 
       ${
         filtered.length
-          ? filtered.map(p => `
-              <button
-                class="pet-option"
-                onclick="selectPet('${escapeHTML(p.name)}')"
-              >
 
-                ${petImageHTML(p, 58, "Normal")}
+          ? filtered
+              .map(p => `
+                <button
+                  class="pet-option"
+                  onclick="selectPet('${escapeHTML(p.name)}')"
+                >
 
-                <span>
-                  <b>${escapeHTML(p.name)}</b>
-                  <small>
-                    ${escapeHTML(p.demand)}
-                    •
-                    ${formatValue(p.value)} Value
-                  </small>
-                </span>
+                  ${petImageHTML(
+                    p,
+                    58,
+                    "Normal"
+                  )}
 
-              </button>
-            `).join("")
+                  <span>
+
+                    <b>
+                      ${escapeHTML(p.name)}
+                    </b>
+
+                    <small>
+                      ${escapeHTML(p.demand)}
+                      •
+                      ${formatValue(p.value)}
+                      Value
+                    </small>
+
+                  </span>
+
+                </button>
+              `)
+              .join("")
+
           : `
             <div style="
               padding:30px;
@@ -383,10 +461,14 @@ function renderPetModal() {
     </div>
   `;
 
-  const input = document.getElementById("petModalSearch");
+  const input =
+    document.getElementById(
+      "petModalSearch"
+    );
 
   if (input) {
     input.focus();
+
     input.setSelectionRange(
       input.value.length,
       input.value.length
@@ -394,14 +476,20 @@ function renderPetModal() {
   }
 }
 
+
 function updatePetModalSearch(value) {
   window.petModalSearch = value;
+
   renderPetModal();
 }
 
+
 function selectPet(petName) {
+
   const pet = pets.find(
-    p => p.name.toLowerCase() === String(petName).toLowerCase()
+    p =>
+      p.name.toLowerCase() ===
+      String(petName).toLowerCase()
   );
 
   if (!pet) return;
@@ -411,13 +499,19 @@ function selectPet(petName) {
   showVariantSelector(pet);
 }
 
+
 /* =========================================================
    VARIANT SEÇİMİ
 ========================================================= */
 
 function showVariantSelector(pet) {
+
   const modal = ensurePetModal();
-  const box = modal.querySelector(".pet-modal-box");
+
+  const box =
+    modal.querySelector(
+      ".pet-modal-box"
+    );
 
   box.innerHTML = `
 
@@ -429,9 +523,15 @@ function showVariantSelector(pet) {
         gap:12px;
       ">
 
-        ${petImageHTML(pet, 48, "Normal")}
+        ${petImageHTML(
+          pet,
+          48,
+          "Normal"
+        )}
 
-        <h2>${escapeHTML(pet.name)}</h2>
+        <h2>
+          ${escapeHTML(pet.name)}
+        </h2>
 
       </div>
 
@@ -454,7 +554,7 @@ function showVariantSelector(pet) {
         color:#9da5b8;
         font-size:13px;
       ">
-        ${escapeHTML(pet.name)} için istediğin versiyonu seç
+        Versiyonunu seç
       </p>
 
     </div>
@@ -462,51 +562,55 @@ function showVariantSelector(pet) {
 
     <div class="variant-grid">
 
-      ${variants.map(v => {
+      ${
+        variants
+          .map(v => {
 
-        const isNeon =
-          v.type.includes("neon");
+            const isNeon =
+              v.type.includes("neon");
 
-        const isMega =
-          v.type.includes("mega");
+            const isMega =
+              v.type.includes("mega");
 
-        return `
+            return `
 
-          <button
-            class="
-              variant-card
-              ${isNeon ? "neon" : ""}
-              ${isMega ? "mega" : ""}
-            "
-            onclick="chooseVariant('${escapeHTML(v.name)}')"
-            type="button"
-          >
+              <button
+                class="
+                  variant-card
+                  ${isNeon ? "neon" : ""}
+                  ${isMega ? "mega" : ""}
+                "
+                onclick="chooseVariant('${escapeHTML(v.name)}')"
+                type="button"
+              >
 
-            <div class="variant-card-image">
+                <div class="variant-card-image">
 
-              ${petImageHTML(
-                pet,
-                76,
-                v.name
-              )}
+                  ${petImageHTML(
+                    pet,
+                    76,
+                    v.name
+                  )}
 
-            </div>
+                </div>
 
-            <strong>
-              ${escapeHTML(v.name)}
-            </strong>
+                <strong>
+                  ${escapeHTML(v.name)}
+                </strong>
 
-            <small>
-              ${formatValue(
-                getVariantValue(pet, v)
-              )} Value
-            </small>
+                <small>
+                  ${formatValue(
+                    getVariantValue(pet, v)
+                  )}
+                  Value
+                </small>
 
-          </button>
+              </button>
 
-        `;
-
-      }).join("")}
+            `;
+          })
+          .join("")
+      }
 
     </div>
 
@@ -528,12 +632,15 @@ function showVariantSelector(pet) {
   modal.classList.add("show");
 }
 
+
 function chooseVariant(variantName) {
+
   if (!currentPet) return;
 
-  const variant = variants.find(
-    v => v.name === variantName
-  );
+  const variant =
+    variants.find(
+      v => v.name === variantName
+    );
 
   if (!variant) return;
 
@@ -546,27 +653,40 @@ function chooseVariant(variantName) {
   closePetModal();
 }
 
-function addTradePet(side, pet, variant) {
+
+function addTradePet(
+  side,
+  pet,
+  variant
+) {
+
   const item = {
+
     ...pet,
+
     variant: variant.name,
-    value: getVariantValue(
-      pet,
-      variant
-    )
+
+    value:
+      getVariantValue(
+        pet,
+        variant
+      )
   };
 
   state[side].push(item);
 
   renderTrade(side);
+
   updateResult();
 }
+
 
 /* =========================================================
    TRADE
 ========================================================= */
 
 function addItem(side) {
+
   currentSide = side;
 
   window.petModalSearch = "";
@@ -574,14 +694,22 @@ function addItem(side) {
   openPetModal(side);
 }
 
+
 function removeItem(side, index) {
-  state[side].splice(index, 1);
+
+  state[side].splice(
+    index,
+    1
+  );
 
   renderTrade(side);
+
   updateResult();
 }
 
+
 function renderTrade(side) {
+
   const box =
     document.getElementById(
       side + "Items"
@@ -594,87 +722,86 @@ function renderTrade(side) {
 
   if (!box || !total) return;
 
-  box.innerHTML = state[side]
-    .map((p, i) => `
+  box.innerHTML =
+    state[side]
+      .map((p, i) => `
 
-      <div
-        class="item trade-item"
-        style="
-          display:flex;
-          align-items:center;
-          gap:10px;
-        "
-      >
-
-        ${petImageHTML(
-          p,
-          42,
-          p.variant || "Normal"
-        )}
-
-        <span style="flex:1;">
-
-          ${escapeHTML(p.name)}
-
-          ${
-            p.variant &&
-            p.variant !== "Normal"
-              ? `
-                <small style="
-                  display:block;
-                  color:#8e97ad;
-                ">
-                  ${escapeHTML(p.variant)}
-                </small>
-              `
-              : ""
-          }
-
-          <small>
-            (${formatValue(p.value)})
-          </small>
-
-        </span>
-
-        <button
-          onclick="removeItem('${side}',${i})"
+        <div
+          class="item trade-item"
+          style="
+            display:flex;
+            align-items:center;
+            gap:10px;
+          "
         >
-          ✕
-        </button>
 
-      </div>
+          ${petImageHTML(
+            p,
+            42,
+            p.variant || "Normal"
+          )}
 
-    `)
-    .join("");
+          <span style="
+            flex:1;
+          ">
+
+            ${escapeHTML(p.name)}
+
+            ${
+              p.variant &&
+              p.variant !== "Normal"
+
+                ? `
+                  <small style="
+                    display:block;
+                    color:#8e97ad;
+                  ">
+                    ${escapeHTML(
+                      p.variant
+                    )}
+                  </small>
+                `
+
+                : ""
+            }
+
+            <small>
+              (${formatValue(p.value)})
+            </small>
+
+          </span>
+
+          <button
+            onclick="
+              removeItem('${side}',${i})
+            "
+          >
+            ✕
+          </button>
+
+        </div>
+
+      `)
+      .join("");
 
   total.textContent =
-    state[side]
-      .reduce(
-        (sum, p) =>
-          sum + Number(p.value || 0),
-        0
-      )
-      .toFixed(1);
+    formatValue(
+      getTotal(side)
+    );
 }
 
+
 /* =========================================================
-   W / F / L
+   🔥 GELİŞMİŞ W / F / L SİSTEMİ
 ========================================================= */
 
 function updateResult() {
-  const a =
-    state.you.reduce(
-      (sum, p) =>
-        sum + Number(p.value || 0),
-      0
-    );
 
-  const b =
-    state.them.reduce(
-      (sum, p) =>
-        sum + Number(p.value || 0),
-      0
-    );
+  const you =
+    getTotal("you");
+
+  const them =
+    getTotal("them");
 
   const card =
     document.getElementById(
@@ -683,79 +810,446 @@ function updateResult() {
 
   if (!card) return;
 
-  if (!a && !b) {
 
-    card.className =
-      "result-card neutral";
+  /* -------------------------------------------------------
+     BOŞ
+  ------------------------------------------------------- */
 
-    card.querySelector("h3")
-      .textContent =
-      "Pet ekleyerek başla";
+  if (you === 0 && them === 0) {
 
-    card.querySelector(
-      ".result-number"
-    ).textContent = "—";
-
-    return;
-  }
-
-  if (!a || !b) {
-
-    card.className =
-      "result-card neutral";
-
-    card.querySelector("h3")
-      .textContent =
-      "İki tarafa da pet ekle";
-
-    card.querySelector(
-      ".result-number"
-    ).textContent = "—";
+    renderAdvancedResult({
+      status: "neutral",
+      title: "Pet ekleyerek başla",
+      subtitle: "İki tarafı da doldur",
+      difference: 0,
+      percent: 0,
+      you,
+      them
+    });
 
     return;
   }
 
-  const ratio = b / a;
 
-  const difference = b - a;
+  /* -------------------------------------------------------
+     SADECE BİR TARAF
+  ------------------------------------------------------- */
 
-  let label;
-  let cls;
+  if (you === 0 || them === 0) {
 
-  if (ratio >= 1.10) {
+    renderAdvancedResult({
+      status: "neutral",
+      title: "İki tarafa da pet ekle",
+      subtitle: "Trade'i değerlendirmek için iki taraf gerekli",
+      difference: 0,
+      percent: 0,
+      you,
+      them
+    });
 
-    label = "WIN";
-    cls = "win";
+    return;
+  }
 
-  } else if (ratio <= 0.90) {
 
-    label = "LOSE";
-    cls = "lose";
+  /* -------------------------------------------------------
+     HESAPLAMA
+  ------------------------------------------------------- */
+
+  const difference =
+    them - you;
+
+  const percent =
+    ((them - you) / you) * 100;
+
+
+  /*
+    Karşı taraf %10'dan fazla veriyorsa WIN.
+    %10'dan fazla düşükse LOSE.
+    Aradaki alan FAIR.
+  */
+
+  let status;
+  let title;
+  let subtitle;
+
+  if (percent >= 10) {
+
+    status = "win";
+
+    title = "WIN";
+
+    subtitle =
+      "Bu trade senin için avantajlı.";
+
+  } else if (percent <= -10) {
+
+    status = "lose";
+
+    title = "LOSE";
+
+    subtitle =
+      "Bu trade senin için dezavantajlı.";
 
   } else {
 
-    label = "FAIR";
-    cls = "fair";
+    status = "fair";
+
+    title = "FAIR";
+
+    subtitle =
+      "Değerler birbirine oldukça yakın.";
 
   }
 
-  card.className =
-    "result-card " + cls;
 
-  card.querySelector("h3")
-    .textContent = label;
-
-  const sign =
-    difference > 0
-      ? "+"
-      : "";
-
-  card.querySelector(
-    ".result-number"
-  ).textContent =
-    sign +
-    formatValue(difference);
+  renderAdvancedResult({
+    status,
+    title,
+    subtitle,
+    difference,
+    percent,
+    you,
+    them
+  });
 }
+
+
+/* =========================================================
+   SONUÇ KARTINI OLUŞTUR
+========================================================= */
+
+function renderAdvancedResult(data) {
+
+  const card =
+    document.getElementById(
+      "resultCard"
+    );
+
+  if (!card) return;
+
+
+  const {
+    status,
+    title,
+    subtitle,
+    difference,
+    percent,
+    you,
+    them
+  } = data;
+
+
+  const safePercent =
+    Math.min(
+      Math.max(
+        Math.abs(percent),
+        0
+      ),
+      100
+    );
+
+
+  let barYou = 50;
+  let barThem = 50;
+
+
+  if (you > 0 && them > 0) {
+
+    const total =
+      you + them;
+
+    barYou =
+      (you / total) * 100;
+
+    barThem =
+      (them / total) * 100;
+
+  }
+
+
+  let differenceText = "—";
+
+  if (difference > 0) {
+
+    differenceText =
+      "+" + formatValue(difference);
+
+  } else if (difference < 0) {
+
+    differenceText =
+      formatValue(difference);
+
+  } else {
+
+    differenceText = "0";
+
+  }
+
+
+  let percentText = "—";
+
+  if (you > 0 && them > 0) {
+
+    if (percent > 0) {
+
+      percentText =
+        "+" +
+        percent.toFixed(1) +
+        "%";
+
+    } else {
+
+      percentText =
+        percent.toFixed(1) +
+        "%";
+
+    }
+
+  }
+
+
+  const statusLetter =
+    status === "win"
+      ? "W"
+      : status === "lose"
+      ? "L"
+      : status === "fair"
+      ? "F"
+      : "—";
+
+
+  card.className =
+    "result-card " +
+    status +
+    " advanced-result";
+
+
+  card.innerHTML = `
+
+    <div class="advanced-result-inner">
+
+
+      <!-- SOL -->
+
+      <div class="result-side result-side-you">
+
+        <span class="result-label">
+          SENİN TEKLİFİN
+        </span>
+
+        <strong class="result-total">
+          ${formatValue(you)}
+        </strong>
+
+      </div>
+
+
+      <!-- ORTA -->
+
+      <div class="result-main">
+
+        <div class="
+          result-status-circle
+          ${status}
+        ">
+
+          ${statusLetter}
+
+        </div>
+
+        <div class="
+          result-status-title
+          ${status}
+        ">
+
+          ${title}
+
+        </div>
+
+        <div class="result-subtitle">
+
+          ${subtitle}
+
+        </div>
+
+      </div>
+
+
+      <!-- SAĞ -->
+
+      <div class="result-side result-side-them">
+
+        <span class="result-label">
+          KARŞI TARAF
+        </span>
+
+        <strong class="result-total">
+          ${formatValue(them)}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- DETAYLAR -->
+
+    <div class="result-details">
+
+
+      <div class="result-detail-box">
+
+        <span>
+          NET FARK
+        </span>
+
+        <strong
+          class="${difference >= 0 ? "positive" : "negative"}"
+        >
+
+          ${differenceText}
+
+        </strong>
+
+      </div>
+
+
+      <div class="result-detail-box">
+
+        <span>
+          DEĞER FARKI
+        </span>
+
+        <strong
+          class="${percent >= 0 ? "positive" : "negative"}"
+        >
+
+          ${percentText}
+
+        </strong>
+
+      </div>
+
+
+      <div class="result-detail-box">
+
+        <span>
+          ORAN
+        </span>
+
+        <strong>
+
+          ${
+            you > 0
+              ? (them / you).toFixed(2) + "×"
+              : "—"
+          }
+
+        </strong>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- KARŞILAŞTIRMA BAR -->
+
+    <div class="result-comparison">
+
+      <div class="comparison-labels">
+
+        <span>
+          Sen
+          <b>${formatValue(you)}</b>
+        </span>
+
+        <span>
+          Karşı taraf
+          <b>${formatValue(them)}</b>
+        </span>
+
+      </div>
+
+
+      <div class="comparison-bar">
+
+        <div
+          class="comparison-you"
+          style="width:${barYou}%"
+        ></div>
+
+        <div
+          class="comparison-them"
+          style="width:${barThem}%"
+        ></div>
+
+      </div>
+
+
+      <div class="comparison-percent">
+
+        <span>
+          ${barYou.toFixed(0)}%
+        </span>
+
+        <span>
+          ${barThem.toFixed(0)}%
+        </span>
+
+      </div>
+
+    </div>
+
+
+    ${
+      status !== "neutral"
+
+        ? `
+          <div class="result-message">
+
+            ${
+              status === "win"
+
+                ? `🟢 Karşı tarafın verdiği toplam değer
+                   seninkinden
+                   <b>%${safePercent.toFixed(1)}</b>
+                   daha yüksek.`
+
+                : status === "lose"
+
+                ? `🔴 Karşı tarafın verdiği toplam değer
+                   seninkinden
+                   <b>%${safePercent.toFixed(1)}</b>
+                   daha düşük.`
+
+                : `🟡 İki taraf arasındaki fark
+                   <b>%${safePercent.toFixed(1)}</b>
+                   civarında.`
+            }
+
+          </div>
+        `
+
+        : ""
+    }
+
+  `;
+
+
+  /* Animasyon */
+
+  card.classList.remove(
+    "result-pop"
+  );
+
+  void card.offsetWidth;
+
+  card.classList.add(
+    "result-pop"
+  );
+}
+
 
 /* =========================================================
    TEMİZLE
@@ -772,6 +1266,11 @@ function clearTrade() {
   updateResult();
 }
 
+
+/* =========================================================
+   MODAL KAPAT
+========================================================= */
+
 function closePetModal() {
 
   const modal =
@@ -780,36 +1279,528 @@ function closePetModal() {
     );
 
   if (modal) {
-    modal.classList.remove("show");
+
+    modal.classList.remove(
+      "show"
+    );
+
   }
 
   currentPet = null;
 }
 
+
 /* =========================================================
-   VARIANT GÖRSELLERİ / EFEKTLER
+   WFL CSS
 ========================================================= */
 
-function addVariantStyles() {
+function addWFLStyles() {
 
   if (
     document.getElementById(
-      "zayaggVariantStyles"
+      "zayaggWFLStyles"
     )
   ) {
     return;
   }
 
+
   const style =
-    document.createElement("style");
+    document.createElement(
+      "style"
+    );
 
   style.id =
-    "zayaggVariantStyles";
+    "zayaggWFLStyles";
+
 
   style.textContent = `
 
+    /* =====================================================
+       GELİŞMİŞ SONUÇ KARTI
+    ===================================================== */
+
+    .advanced-result {
+
+      overflow:hidden;
+
+      position:relative;
+
+    }
+
+
+    .advanced-result-inner {
+
+      display:grid;
+
+      grid-template-columns:
+        1fr
+        auto
+        1fr;
+
+      align-items:center;
+
+      gap:25px;
+
+      padding:26px;
+
+    }
+
+
+    .result-side {
+
+      display:flex;
+
+      flex-direction:column;
+
+      gap:7px;
+
+    }
+
+
+    .result-side-them {
+
+      text-align:right;
+
+      align-items:flex-end;
+
+    }
+
+
+    .result-label {
+
+      font-size:10px;
+
+      font-weight:800;
+
+      letter-spacing:1.4px;
+
+      color:#8e97ad;
+
+    }
+
+
+    .result-total {
+
+      font-size:30px;
+
+      line-height:1;
+
+      color:#fff;
+
+    }
+
+
+    .result-main {
+
+      min-width:150px;
+
+      text-align:center;
+
+      display:flex;
+
+      flex-direction:column;
+
+      align-items:center;
+
+    }
+
+
+    .result-status-circle {
+
+      width:68px;
+
+      height:68px;
+
+      border-radius:50%;
+
+      display:flex;
+
+      align-items:center;
+
+      justify-content:center;
+
+      font-size:30px;
+
+      font-weight:1000;
+
+      margin-bottom:9px;
+
+      border:2px solid
+        rgba(255,255,255,.12);
+
+      box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.3);
+
+    }
+
+
+    .result-status-circle.win {
+
+      background:
+        rgba(34,197,94,.15);
+
+      color:#4ade80;
+
+      border-color:
+        rgba(74,222,128,.45);
+
+      box-shadow:
+        0 0 25px
+        rgba(34,197,94,.18);
+
+    }
+
+
+    .result-status-circle.lose {
+
+      background:
+        rgba(239,68,68,.15);
+
+      color:#f87171;
+
+      border-color:
+        rgba(248,113,113,.45);
+
+      box-shadow:
+        0 0 25px
+        rgba(239,68,68,.18);
+
+    }
+
+
+    .result-status-circle.fair {
+
+      background:
+        rgba(250,204,21,.14);
+
+      color:#facc15;
+
+      border-color:
+        rgba(250,204,21,.4);
+
+      box-shadow:
+        0 0 25px
+        rgba(250,204,21,.15);
+
+    }
+
+
+    .result-status-circle.neutral {
+
+      background:
+        rgba(148,163,184,.12);
+
+      color:#94a3b8;
+
+    }
+
+
+    .result-status-title {
+
+      font-size:20px;
+
+      font-weight:1000;
+
+      letter-spacing:1px;
+
+    }
+
+
+    .result-status-title.win {
+
+      color:#4ade80;
+
+    }
+
+
+    .result-status-title.lose {
+
+      color:#f87171;
+
+    }
+
+
+    .result-status-title.fair {
+
+      color:#facc15;
+
+    }
+
+
+    .result-subtitle {
+
+      margin-top:4px;
+
+      color:#8e97ad;
+
+      font-size:11px;
+
+      max-width:180px;
+
+    }
+
+
+    /* =====================================================
+       DETAYLAR
+    ===================================================== */
+
+    .result-details {
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:10px;
+
+      padding:
+        0 22px 20px;
+
+    }
+
+
+    .result-detail-box {
+
+      padding:13px 15px;
+
+      border-radius:12px;
+
+      background:
+        rgba(255,255,255,.035);
+
+      border:
+        1px solid
+        rgba(255,255,255,.06);
+
+      display:flex;
+
+      flex-direction:column;
+
+      gap:5px;
+
+    }
+
+
+    .result-detail-box span {
+
+      font-size:9px;
+
+      font-weight:800;
+
+      color:#7f899f;
+
+      letter-spacing:1px;
+
+    }
+
+
+    .result-detail-box strong {
+
+      font-size:17px;
+
+      color:#fff;
+
+    }
+
+
+    .result-detail-box strong.positive {
+
+      color:#4ade80;
+
+    }
+
+
+    .result-detail-box strong.negative {
+
+      color:#f87171;
+
+    }
+
+
+    /* =====================================================
+       BAR
+    ===================================================== */
+
+    .result-comparison {
+
+      padding:
+        0 22px 18px;
+
+    }
+
+
+    .comparison-labels {
+
+      display:flex;
+
+      justify-content:space-between;
+
+      color:#8993a8;
+
+      font-size:10px;
+
+      margin-bottom:7px;
+
+    }
+
+
+    .comparison-labels b {
+
+      color:#fff;
+
+      margin-left:4px;
+
+    }
+
+
+    .comparison-bar {
+
+      width:100%;
+
+      height:9px;
+
+      display:flex;
+
+      overflow:hidden;
+
+      border-radius:20px;
+
+      background:
+        rgba(255,255,255,.06);
+
+    }
+
+
+    .comparison-you {
+
+      background:
+        linear-gradient(
+          90deg,
+          #7657ff,
+          #9b7bff
+        );
+
+      transition:
+        width .5s ease;
+
+    }
+
+
+    .comparison-them {
+
+      background:
+        linear-gradient(
+          90deg,
+          #21d4fd,
+          #22c55e
+        );
+
+      transition:
+        width .5s ease;
+
+    }
+
+
+    .comparison-percent {
+
+      display:flex;
+
+      justify-content:space-between;
+
+      margin-top:5px;
+
+      font-size:9px;
+
+      color:#6f7890;
+
+    }
+
+
+    /* =====================================================
+       MESAJ
+    ===================================================== */
+
+    .result-message {
+
+      margin:
+        0 22px 20px;
+
+      padding:11px 13px;
+
+      border-radius:10px;
+
+      background:
+        rgba(255,255,255,.035);
+
+      border:
+        1px solid
+        rgba(255,255,255,.05);
+
+      color:#9ca6ba;
+
+      font-size:11px;
+
+      line-height:1.5;
+
+    }
+
+
+    .result-message b {
+
+      color:#fff;
+
+    }
+
+
+    /* =====================================================
+       ANİMASYON
+    ===================================================== */
+
+    .result-pop {
+
+      animation:
+        zayaggResultPop
+        .35s
+        ease;
+
+    }
+
+
+    @keyframes zayaggResultPop {
+
+      0% {
+
+        opacity:.65;
+
+        transform:
+          translateY(4px)
+          scale(.985);
+
+      }
+
+      100% {
+
+        opacity:1;
+
+        transform:
+          translateY(0)
+          scale(1);
+
+      }
+
+    }
+
+
+    /* =====================================================
+       PET / VARIANT
+    ===================================================== */
+
     .zayagg-pet-visual {
+
       overflow:visible;
+
     }
 
 
@@ -827,8 +1818,6 @@ function addVariantStyles() {
 
     }
 
-
-    /* FLY / RIDE */
 
     .zayagg-variant-badge {
 
@@ -896,7 +1885,9 @@ function addVariantStyles() {
     }
 
 
-    /* NEON */
+    /* =====================================================
+       NEON
+    ===================================================== */
 
     .zayagg-neon {
 
@@ -960,7 +1951,9 @@ function addVariantStyles() {
     }
 
 
-    /* MEGA */
+    /* =====================================================
+       MEGA
+    ===================================================== */
 
     .zayagg-mega {
 
@@ -1139,10 +2132,88 @@ function addVariantStyles() {
 
     }
 
+
+    /* =====================================================
+       MOBİL
+    ===================================================== */
+
+    @media (max-width:700px) {
+
+      .advanced-result-inner {
+
+        grid-template-columns:
+          1fr;
+
+        text-align:center;
+
+        gap:15px;
+
+      }
+
+
+      .result-side,
+      .result-side-them {
+
+        align-items:center;
+
+        text-align:center;
+
+      }
+
+
+      .result-side-them {
+
+        order:3;
+
+      }
+
+
+      .result-main {
+
+        order:2;
+
+      }
+
+
+      .result-side-you {
+
+        order:1;
+
+      }
+
+
+      .result-details {
+
+        grid-template-columns:
+          1fr;
+
+      }
+
+
+      .result-total {
+
+        font-size:25px;
+
+      }
+
+
+      .result-status-circle {
+
+        width:60px;
+
+        height:60px;
+
+        font-size:27px;
+
+      }
+
+    }
+
   `;
 
   document.head.appendChild(style);
 }
+
 
 /* =========================================================
    BAŞLAT
@@ -1152,7 +2223,7 @@ document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    addVariantStyles();
+    addWFLStyles();
 
     const clearBtn =
       document.getElementById(
@@ -1160,9 +2231,12 @@ document.addEventListener(
       );
 
     if (clearBtn) {
+
       clearBtn.onclick =
         clearTrade;
+
     }
+
 
     const search =
       document.getElementById(
@@ -1170,11 +2244,14 @@ document.addEventListener(
       );
 
     if (search) {
+
       search.addEventListener(
         "input",
         renderValues
       );
+
     }
+
 
     renderValues();
 
