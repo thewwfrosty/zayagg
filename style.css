@@ -528,27 +528,25 @@ body {
 .pet-choice.selected {
   box-shadow: 0 0 0 1px rgba(139, 92, 246, .45);
 }
-.pet-emoji {
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 34px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 2;
-}
-.pet-emoji.big {
-  width: 90px;
-  height: 90px;
-  font-size: 64px;
-  margin: 0 auto;
-}
-.pet-choice .pet-emoji {
+.pet-photo {
   width: 72px;
   height: 72px;
-  font-size: 42px;
+  object-fit: cover;
+  object-position: center 18%;
+  border-radius: 14px;
+  background: #0b0d14;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+.pet-choice .pet-photo {
+  width: 92px;
+  height: 92px;
+  border-radius: 16px;
+}
+.value-card .pet-photo {
+  width: 64px;
+  height: 64px;
 }
 .pet-choice strong {
   font-size: 13px;
@@ -1145,12 +1143,111 @@ footer {
     width: 100%;
   }
 }
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu-btn {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: white;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+}
+.hidden {
+  display: none !important;
+}
+.profile-form {
+  padding: 0 24px 24px;
+  display: grid;
+  gap: 10px;
+}
+.profile-form label {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.profile-form input,
+.profile-form textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #0b0d18;
+  color: white;
+  border-radius: 10px;
+  padding: 11px 12px;
+  font: inherit;
+  outline: none;
+}
+.profile-form input:focus,
+.profile-form textarea:focus {
+  border-color: rgba(139,92,246,.55);
+}
+.avatar-pick-label {
+  text-align: left;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+.avatar-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.avatar-opt {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 20px;
+  cursor: pointer;
+}
+.avatar-opt.active {
+  border-color: var(--purple);
+  background: rgba(139,92,246,.16);
+}
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 6px;
+}
+.form-actions .profile-edit {
+  width: 100%;
+  margin: 0;
+}
+
 @media (max-width: 900px) {
   .navbar {
     padding: 0 20px;
   }
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
   .navbar nav {
     display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    flex-direction: column;
+    background: rgba(8,9,18,.96);
+    border-bottom: 1px solid var(--border);
+    z-index: 120;
+  }
+  body.menu-open .navbar nav {
+    display: flex;
   }
   .hero {
     grid-template-columns: 1fr;
