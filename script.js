@@ -2,7 +2,6 @@
    ZAYAGG — COMPLETE SCRIPT
    ========================================================= */
 
-
 /* =========================================================
    PET DATABASE
    ========================================================= */
@@ -109,18 +108,19 @@ try {
 
 } catch (error) {
 
-  console.warn("Favoriler sıfırlandı.");
   favorites = [];
 
 }
 
 
 /* =========================================================
-   PET IMAGE
+   PET IMAGES
    ========================================================= */
 
 function getPetImage(pet) {
+
   const images = {
+
     "Shadow Dragon": "https://cdn.playadopt.me/items/shadow_dragon.png",
     "Bat Dragon": "https://cdn.playadopt.me/items/bat_dragon.png",
     "Giraffe": "https://cdn.playadopt.me/items/giraffe.png",
@@ -159,22 +159,127 @@ function getPetImage(pet) {
     "Cat": "https://cdn.playadopt.me/items/cat.png",
     "Mouse": "https://cdn.playadopt.me/items/basic_egg_2022_mouse.png",
     "Otter": "https://cdn.playadopt.me/items/otter.png"
+
   };
 
   return images[pet.name] || "";
+
 }
+
+
+/* =========================================================
+   VARIANT IMAGE SYSTEM
+   ========================================================= */
+
+function getVariantImage(pet, variant) {
+
+  const normalImage =
+    getPetImage(pet);
+
+  /*
+    Neon / Mega görselleri için ayrı sistem.
+
+    Şu an güvenilir şekilde doğrulanmış
+    ayrı CDN dosya yolu olmadığı için
+    sahte URL kullanılmıyor.
+
+    Sistem hazır:
+    Neon ve Mega görseli eklendiğinde
+    otomatik olarak kullanılır.
+  */
+
+  const variantImages = {
+
+    /*
+    "Shadow Dragon": {
+      neon: "NEON_URL",
+      mega: "MEGA_URL"
+    }
+    */
+
+  };
+
+
+  const data =
+    variantImages[pet.name];
+
+
+  if (!data) {
+    return normalImage;
+  }
+
+
+  if (
+    variant.includes("Mega") &&
+    data.mega
+  ) {
+
+    return data.mega;
+
+  }
+
+
+  if (
+    variant.includes("Neon") &&
+    data.neon
+  ) {
+
+    return data.neon;
+
+  }
+
+
+  return normalImage;
+
+}
+
+
+/* =========================================================
+   VARIANT VISUAL EFFECT
+   ========================================================= */
+
+function getVariantClass(variant) {
+
+  if (variant.includes("Mega")) {
+    return "mega-visual";
+  }
+
+  if (variant.includes("Neon")) {
+    return "neon-visual";
+  }
+
+  return "";
+
+}
+
 
 /* =========================================================
    IMAGE HTML
    ========================================================= */
 
-function petImageHTML(pet, size = 50) {
+function petImageHTML(
+  pet,
+  size = 50,
+  variant = "Normal"
+) {
 
-  const image = getPetImage(pet);
+  const image =
+    variant === "Normal"
+      ? getPetImage(pet)
+      : getVariantImage(
+          pet,
+          variant
+        );
+
+
+  const visualClass =
+    getVariantClass(variant);
+
 
   return `
 
     <div
+      class="${visualClass}"
       style="
         width:${size}px;
         height:${size}px;
@@ -182,6 +287,7 @@ function petImageHTML(pet, size = 50) {
         align-items:center;
         justify-content:center;
         flex-shrink:0;
+        position:relative;
       "
     >
 
@@ -192,6 +298,8 @@ function petImageHTML(pet, size = 50) {
           width:100%;
           height:100%;
           object-fit:contain;
+          position:relative;
+          z-index:2;
         "
         onerror="
           this.style.display='none';
@@ -205,6 +313,8 @@ function petImageHTML(pet, size = 50) {
           align-items:center;
           justify-content:center;
           font-size:${Math.round(size * 0.55)}px;
+          position:relative;
+          z-index:2;
         "
       >
         ${pet.icon || "🐾"}
@@ -224,13 +334,17 @@ function petImageHTML(pet, size = 50) {
 function renderValues() {
 
   const grid =
-    document.getElementById("valueGrid");
+    document.getElementById(
+      "valueGrid"
+    );
 
   if (!grid) return;
 
 
   const searchInput =
-    document.getElementById("search");
+    document.getElementById(
+      "search"
+    );
 
   const search =
     searchInput?.value
@@ -239,57 +353,69 @@ function renderValues() {
 
 
   const filtered =
-    pets.filter(pet =>
-      pet.name
-        .toLowerCase()
-        .includes(search)
+    pets.filter(
+      pet =>
+        pet.name
+          .toLowerCase()
+          .includes(search)
     );
 
 
   grid.innerHTML =
-    filtered.map(pet => `
+    filtered
+      .map(
+        pet => `
 
-      <div class="value-card">
+          <div class="value-card">
 
-        ${petImageHTML(pet, 65)}
+            ${petImageHTML(
+              pet,
+              65
+            )}
 
-        <div>
+            <div>
 
-          <h3>
-            ${pet.name}
-          </h3>
+              <h3>
+                ${pet.name}
+              </h3>
 
-          <small>
-            ${pet.rarity}
-          </small>
+              <small>
+                ${pet.rarity}
+              </small>
 
-          <strong>
-            ${pet.value.toLocaleString()}
-          </strong>
+              <strong>
+                ${pet.value.toLocaleString()}
+              </strong>
 
-        </div>
+            </div>
 
-      </div>
+          </div>
 
-    `).join("");
+        `
+      )
+      .join("");
 
 }
 
 
 /* =========================================================
-   CREATE MODAL IF MISSING
+   CREATE MODAL
    ========================================================= */
 
 function ensurePetModal() {
 
   let modal =
-    document.getElementById("petModal");
+    document.getElementById(
+      "petModal"
+    );
 
 
   if (!modal) {
 
     modal =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     modal.id =
       "petModal";
@@ -299,13 +425,13 @@ function ensurePetModal() {
 
 
     modal.innerHTML = `
-
       <div class="pet-modal-box"></div>
-
     `;
 
 
-    document.body.appendChild(modal);
+    document.body.appendChild(
+      modal
+    );
 
   }
 
@@ -316,18 +442,24 @@ function ensurePetModal() {
 
 
 /* =========================================================
-   OPEN PET MODAL
+   OPEN MODAL
    ========================================================= */
 
-function openPetModal(side = currentSide) {
+function openPetModal(
+  side = currentSide
+) {
 
-  currentSide = side;
+  currentSide =
+    side;
 
   const modal =
     ensurePetModal();
 
 
-  modal.classList.add("show");
+  modal.classList.add(
+    "show"
+  );
+
 
   renderPetModal();
 
@@ -344,7 +476,9 @@ function renderPetModal() {
     ensurePetModal();
 
   const box =
-    modal.querySelector(".pet-modal-box");
+    modal.querySelector(
+      ".pet-modal-box"
+    );
 
   if (!box) return;
 
@@ -355,12 +489,15 @@ function renderPetModal() {
       : [...extraItems];
 
 
-  if (currentRarity !== "All") {
+  if (
+    currentRarity !== "All"
+  ) {
 
     list =
       list.filter(
         item =>
-          item.rarity === currentRarity
+          item.rarity ===
+          currentRarity
       );
 
   }
@@ -369,12 +506,14 @@ function renderPetModal() {
   if (currentSearch) {
 
     list =
-      list.filter(item =>
-        item.name
-          .toLowerCase()
-          .includes(
-            currentSearch.toLowerCase()
-          )
+      list.filter(
+        item =>
+          item.name
+            .toLowerCase()
+            .includes(
+              currentSearch
+                .toLowerCase()
+            )
       );
 
   }
@@ -406,7 +545,9 @@ function renderPetModal() {
             ? "active"
             : ""
         }"
-        onclick="setCategory('Pets')"
+        onclick="
+          setCategory('Pets')
+        "
       >
         🐾 Pets
       </button>
@@ -418,7 +559,9 @@ function renderPetModal() {
             ? "active"
             : ""
         }"
-        onclick="setCategory('Items')"
+        onclick="
+          setCategory('Items')
+        "
       >
         🎒 Items
       </button>
@@ -430,33 +573,46 @@ function renderPetModal() {
       class="pet-search"
       placeholder="🔎 Pet ara..."
       value="${currentSearch}"
-      oninput="updatePetSearch(this.value)"
+      oninput="
+        updatePetSearch(this.value)
+      "
     >
 
 
     <div class="rarity-filters">
 
-      ${[
-        "All",
-        "Common",
-        "Uncommon",
-        "Rare",
-        "Ultra-Rare",
-        "Legendary"
-      ].map(rarity => `
+      ${
+        [
+          "All",
+          "Common",
+          "Uncommon",
+          "Rare",
+          "Ultra-Rare",
+          "Legendary"
+        ]
+          .map(
+            rarity => `
 
-        <button
-          class="${
-            currentRarity === rarity
-              ? "active"
-              : ""
-          }"
-          onclick="setRarity('${rarity}')"
-        >
-          ${rarity}
-        </button>
+              <button
+                class="${
+                  currentRarity ===
+                  rarity
+                    ? "active"
+                    : ""
+                }"
+                onclick="
+                  setRarity(
+                    '${rarity}'
+                  )
+                "
+              >
+                ${rarity}
+              </button>
 
-      `).join("")}
+            `
+          )
+          .join("")
+      }
 
     </div>
 
@@ -465,68 +621,89 @@ function renderPetModal() {
 
       ${
         list.length
-          ? list.map(item => {
+          ? list
+              .map(item => {
 
-              const favorite =
-                favorites.includes(
+                const favorite =
+                  favorites.includes(
+                    item.name
+                  );
+
+
+                const safeName =
                   item.name
-                );
+                    .replace(
+                      /\\/g,
+                      "\\\\"
+                    )
+                    .replace(
+                      /'/g,
+                      "\\'"
+                    );
 
 
-              const safeName =
-                item.name
-                  .replace(/\\/g, "\\\\")
-                  .replace(/'/g, "\\'");
+                return `
+
+                  <div class="pet-option">
+
+                    ${petImageHTML(
+                      item,
+                      55
+                    )}
 
 
-              return `
+                    <div
+                      class="pet-option-info"
+                      onclick="
+                        selectPet(
+                          '${safeName}'
+                        )
+                      "
+                    >
 
-                <div class="pet-option">
+                      <strong>
+                        ${item.name}
+                      </strong>
 
-                  ${petImageHTML(item, 55)}
+                      <small>
+                        ${item.rarity}
+                        ·
+                        ${item.value.toLocaleString()}
+                      </small>
+
+                    </div>
 
 
-                  <div
-                    class="pet-option-info"
-                    onclick="selectPet('${safeName}')"
-                  >
-
-                    <strong>
-                      ${item.name}
-                    </strong>
-
-                    <small>
-                      ${item.rarity}
-                      ·
-                      ${item.value.toLocaleString()}
-                    </small>
+                    <button
+                      class="favorite-button"
+                      onclick="
+                        event.stopPropagation();
+                        toggleFavorite(
+                          '${safeName}'
+                        )
+                      "
+                    >
+                      ${
+                        favorite
+                          ? "★"
+                          : "☆"
+                      }
+                    </button>
 
                   </div>
 
+                `;
 
-                  <button
-                    class="favorite-button"
-                    onclick="
-                      event.stopPropagation();
-                      toggleFavorite('${safeName}')
-                    "
-                  >
-                    ${favorite ? "★" : "☆"}
-                  </button>
-
-                </div>
-
-              `;
-
-            }).join("")
+              })
+              .join("")
 
           : `
 
-            <div class="empty">
-              Pet bulunamadı.
-            </div>
+              <div class="empty">
+                Pet bulunamadı.
+              </div>
 
-          `
+            `
       }
 
     </div>
@@ -540,7 +717,9 @@ function renderPetModal() {
    CATEGORY
    ========================================================= */
 
-function setCategory(category) {
+function setCategory(
+  category
+) {
 
   currentCategory =
     category;
@@ -560,7 +739,9 @@ function setCategory(category) {
    RARITY
    ========================================================= */
 
-function setRarity(rarity) {
+function setRarity(
+  rarity
+) {
 
   currentRarity =
     rarity;
@@ -574,7 +755,9 @@ function setRarity(rarity) {
    SEARCH
    ========================================================= */
 
-function updatePetSearch(value) {
+function updatePetSearch(
+  value
+) {
 
   currentSearch =
     value;
@@ -588,10 +771,13 @@ function updatePetSearch(value) {
    SELECT PET
    ========================================================= */
 
-function selectPet(name) {
+function selectPet(
+  name
+) {
 
   const list =
-    currentCategory === "Pets"
+    currentCategory ===
+    "Pets"
       ? pets
       : extraItems;
 
@@ -607,7 +793,8 @@ function selectPet(name) {
 
 
   if (
-    currentCategory === "Pets"
+    currentCategory ===
+    "Pets"
   ) {
 
     showVariantSelector(
@@ -636,9 +823,11 @@ function addSelectedItem() {
 
     ...selectedPet,
 
-    variant: "Normal",
+    variant:
+      "Normal",
 
-    quantity: 1
+    quantity:
+      1
 
   };
 
@@ -654,18 +843,27 @@ function addSelectedItem() {
    ADD TO TRADE
    ========================================================= */
 
-function addToTrade(item) {
+function addToTrade(
+  item
+) {
 
-  if (!tradeState[currentSide]) {
+  if (
+    !tradeState[
+      currentSide
+    ]
+  ) {
 
-    tradeState[currentSide] =
-      [];
+    tradeState[
+      currentSide
+    ] = [];
 
   }
 
 
   const existing =
-    tradeState[currentSide].find(
+    tradeState[
+      currentSide
+    ].find(
       existingItem =>
         existingItem.name ===
           item.name &&
@@ -677,17 +875,21 @@ function addToTrade(item) {
   if (existing) {
 
     existing.quantity =
-      (existing.quantity || 1) + 1;
+      (existing.quantity || 1)
+      + 1;
 
   } else {
 
-    tradeState[currentSide].push(
-      {
-        ...item,
-        quantity:
-          item.quantity || 1
-      }
-    );
+    tradeState[
+      currentSide
+    ].push({
+
+      ...item,
+
+      quantity:
+        item.quantity || 1
+
+    });
 
   }
 
@@ -701,28 +903,41 @@ function addToTrade(item) {
    ADD ITEM BUTTON
    ========================================================= */
 
-function addItem(side) {
+function addItem(
+  side
+) {
 
   currentSide =
     side;
 
-  openPetModal(side);
+  openPetModal(
+    side
+  );
 
 }
 
 
 /* =========================================================
-   REMOVE ITEM
+   REMOVE
    ========================================================= */
 
-function removeItem(side, index) {
+function removeItem(
+  side,
+  index
+) {
 
-  if (!tradeState[side]) return;
+  if (
+    !tradeState[side]
+  ) return;
 
-  tradeState[side].splice(
+
+  tradeState[
+    side
+  ].splice(
     index,
     1
   );
+
 
   renderTrade();
 
@@ -740,7 +955,10 @@ function changeQuantity(
 ) {
 
   const item =
-    tradeState[side]?.[index];
+    tradeState[
+      side
+    ]?.[index];
+
 
   if (!item) return;
 
@@ -750,9 +968,13 @@ function changeQuantity(
     + amount;
 
 
-  if (item.quantity <= 0) {
+  if (
+    item.quantity <= 0
+  ) {
 
-    tradeState[side].splice(
+    tradeState[
+      side
+    ].splice(
       index,
       1
     );
@@ -766,19 +988,29 @@ function changeQuantity(
 
 
 /* =========================================================
-   TRADE TOTAL
+   TOTAL
    ========================================================= */
 
-function getTradeTotal(side) {
+function getTradeTotal(
+  side
+) {
 
   return (
-    tradeState[side] || []
+    tradeState[
+      side
+    ] || []
   ).reduce(
-    (total, item) =>
+    (
+      total,
+      item
+    ) =>
       total +
       (
         item.value *
-        (item.quantity || 1)
+        (
+          item.quantity ||
+          1
+        )
       ),
     0
   );
@@ -806,7 +1038,9 @@ function renderTrade() {
   if (youBox) {
 
     youBox.innerHTML =
-      renderTradeItems("you");
+      renderTradeItems(
+        "you"
+      );
 
   }
 
@@ -814,16 +1048,22 @@ function renderTrade() {
   if (themBox) {
 
     themBox.innerHTML =
-      renderTradeItems("them");
+      renderTradeItems(
+        "them"
+      );
 
   }
 
 
   const youTotal =
-    getTradeTotal("you");
+    getTradeTotal(
+      "you"
+    );
 
   const themTotal =
-    getTradeTotal("them");
+    getTradeTotal(
+      "them"
+    );
 
 
   const youTotalElement =
@@ -837,7 +1077,9 @@ function renderTrade() {
     );
 
 
-  if (youTotalElement) {
+  if (
+    youTotalElement
+  ) {
 
     youTotalElement.textContent =
       youTotal.toLocaleString();
@@ -845,7 +1087,9 @@ function renderTrade() {
   }
 
 
-  if (themTotalElement) {
+  if (
+    themTotalElement
+  ) {
 
     themTotalElement.textContent =
       themTotal.toLocaleString();
@@ -862,10 +1106,14 @@ function renderTrade() {
    TRADE ITEMS
    ========================================================= */
 
-function renderTradeItems(side) {
+function renderTradeItems(
+  side
+) {
 
   const items =
-    tradeState[side] || [];
+    tradeState[
+      side
+    ] || [];
 
 
   if (!items.length) {
@@ -881,84 +1129,107 @@ function renderTradeItems(side) {
   }
 
 
-  return items.map(
-    (item, index) => `
+  return items
+    .map(
+      (
+        item,
+        index
+      ) => `
 
-      <div class="trade-item">
+        <div class="trade-item">
 
-        ${petImageHTML(item, 55)}
-
-
-        <div class="trade-item-info">
-
-          <strong>
-            ${item.name}
-          </strong>
-
-          <small>
-            ${item.variant || "Normal"}
-          </small>
-
-          <span>
-            ${item.value.toLocaleString()}
-            ×
-            ${item.quantity || 1}
-          </span>
-
-        </div>
+          ${petImageHTML(
+            item,
+            55,
+            item.variant ||
+              "Normal"
+          )}
 
 
-        <div class="quantity-controls">
-
-          <button
-            onclick="
-              changeQuantity(
-                '${side}',
-                ${index},
-                -1
-              )
-            "
+          <div
+            class="trade-item-info"
           >
-            −
-          </button>
 
+            <strong>
+              ${item.name}
+            </strong>
 
-          <span>
-            ${item.quantity || 1}
-          </span>
+            <small>
+              ${
+                item.variant ||
+                "Normal"
+              }
+            </small>
 
-
-          <button
-            onclick="
-              changeQuantity(
-                '${side}',
-                ${index},
+            <span>
+              ${item.value.toLocaleString()}
+              ×
+              ${
+                item.quantity ||
                 1
+              }
+            </span>
+
+          </div>
+
+
+          <div
+            class="quantity-controls"
+          >
+
+            <button
+              onclick="
+                changeQuantity(
+                  '${side}',
+                  ${index},
+                  -1
+                )
+              "
+            >
+              −
+            </button>
+
+
+            <span>
+              ${
+                item.quantity ||
+                1
+              }
+            </span>
+
+
+            <button
+              onclick="
+                changeQuantity(
+                  '${side}',
+                  ${index},
+                  1
+                )
+              "
+            >
+              +
+            </button>
+
+          </div>
+
+
+          <button
+            class="remove"
+            onclick="
+              removeItem(
+                '${side}',
+                ${index}
               )
             "
           >
-            +
+            ×
           </button>
 
         </div>
 
-
-        <button
-          class="remove"
-          onclick="
-            removeItem(
-              '${side}',
-              ${index}
-            )
-          "
-        >
-          ×
-        </button>
-
-      </div>
-
-    `
-  ).join("");
+      `
+    )
+    .join("");
 
 }
 
@@ -974,14 +1245,19 @@ function updateResult() {
       "resultCard"
     );
 
+
   if (!card) return;
 
 
   const you =
-    getTradeTotal("you");
+    getTradeTotal(
+      "you"
+    );
 
   const them =
-    getTradeTotal("them");
+    getTradeTotal(
+      "them"
+    );
 
 
   if (
@@ -1060,8 +1336,9 @@ function updateResult() {
 
   const percentage =
     (
-      Math.abs(difference)
-      / you
+      Math.abs(
+        difference
+      ) / you
     ) * 100;
 
 
@@ -1105,7 +1382,9 @@ function updateResult() {
 
 
   card.className =
-    `result-card ${result.toLowerCase()}`;
+    `result-card ${
+      result.toLowerCase()
+    }`;
 
 
   card.innerHTML = `
@@ -1143,6 +1422,7 @@ function clearTrade() {
     them: []
   };
 
+
   renderTrade();
 
 }
@@ -1152,10 +1432,14 @@ function clearTrade() {
    FAVORITES
    ========================================================= */
 
-function toggleFavorite(name) {
+function toggleFavorite(
+  name
+) {
 
   if (
-    favorites.includes(name)
+    favorites.includes(
+      name
+    )
   ) {
 
     favorites =
@@ -1166,7 +1450,9 @@ function toggleFavorite(name) {
 
   } else {
 
-    favorites.push(name);
+    favorites.push(
+      name
+    );
 
   }
 
@@ -1198,7 +1484,9 @@ function toggleFavorite(name) {
    VARIANT SELECTOR
    ========================================================= */
 
-function showVariantSelector(pet) {
+function showVariantSelector(
+  pet
+) {
 
   const modal =
     ensurePetModal();
@@ -1208,14 +1496,12 @@ function showVariantSelector(pet) {
       ".pet-modal-box"
     );
 
+
   if (!box) return;
 
 
   const base =
     pet.value;
-
-  const image =
-    getPetImage(pet);
 
 
   const variants = [
@@ -1228,73 +1514,82 @@ function showVariantSelector(pet) {
 
     {
       name: "Fly",
-      value: Math.round(
-        base * 1.1
-      ),
+      value:
+        Math.round(
+          base * 1.1
+        ),
       className: ""
     },
 
     {
       name: "Ride",
-      value: Math.round(
-        base * 1.1
-      ),
+      value:
+        Math.round(
+          base * 1.1
+        ),
       className: ""
     },
 
     {
       name: "Fly Ride",
-      value: Math.round(
-        base * 1.2
-      ),
+      value:
+        Math.round(
+          base * 1.2
+        ),
       className: ""
     },
 
     {
       name: "Neon",
-      value: Math.round(
-        base * 4
-      ),
+      value:
+        Math.round(
+          base * 4
+        ),
       className: "neon"
     },
 
     {
       name: "Neon Fly",
-      value: Math.round(
-        base * 4.1
-      ),
+      value:
+        Math.round(
+          base * 4.1
+        ),
       className: "neon"
     },
 
     {
       name: "Neon Ride",
-      value: Math.round(
-        base * 4.1
-      ),
+      value:
+        Math.round(
+          base * 4.1
+        ),
       className: "neon"
     },
 
     {
       name: "Neon Fly Ride",
-      value: Math.round(
-        base * 4.2
-      ),
+      value:
+        Math.round(
+          base * 4.2
+        ),
       className: "neon"
     },
 
     {
       name: "Mega Neon",
-      value: Math.round(
-        base * 16
-      ),
+      value:
+        Math.round(
+          base * 16
+        ),
       className: "mega"
     },
 
     {
       name: "Mega Fly Ride",
-      value: Math.round(
-        base * 16.2
-      ),
+      value:
+        Math.round(
+          base * 16.2
+        ),
       className: "mega"
     }
 
@@ -1307,19 +1602,10 @@ function showVariantSelector(pet) {
 
       <h2>
 
-        <img
-          src="${image}"
-          alt="${pet.name}"
-          style="
-            width:42px;
-            height:42px;
-            object-fit:contain;
-            vertical-align:middle;
-          "
-          onerror="
-            this.style.display='none';
-          "
-        >
+        ${petImageHTML(
+          pet,
+          42
+        )}
 
         ${pet.name}
 
@@ -1328,7 +1614,9 @@ function showVariantSelector(pet) {
 
       <button
         class="modal-close"
-        onclick="closePetModal()"
+        onclick="
+          closePetModal()
+        "
       >
         ×
       </button>
@@ -1346,59 +1634,80 @@ function showVariantSelector(pet) {
 
     <div class="variant-grid">
 
-      ${variants.map(
-        v => `
+      ${
+        variants
+          .map(
+            v => `
 
-          <button
-            class="
-              variant-card
-              ${v.className}
-            "
-            onclick="
-              chooseVariant(
-                '${v.name}'
-              )
-            "
-          >
-
-            <div class="variant-image">
-
-              <img
-                src="${image}"
-                alt="${pet.name}"
-                onerror="
-                  this.style.display='none';
-                  this.nextElementSibling.style.display='flex';
+              <button
+                class="
+                  variant-card
+                  ${v.className}
+                "
+                onclick="
+                  chooseVariant(
+                    '${v.name}'
+                  )
                 "
               >
 
+                <div
+                  class="
+                    variant-image
+                    ${getVariantClass(
+                      v.name
+                    )}
+                  "
+                >
 
-              <span
-                style="
-                  display:none;
-                  font-size:30px;
-                "
-              >
-                ${pet.icon || "🐾"}
-              </span>
-
-            </div>
-
-
-            <strong>
-              ${v.name}
-            </strong>
+                  <img
+                    src="${getVariantImage(
+                      pet,
+                      v.name
+                    )}"
+                    alt="${pet.name} ${v.name}"
+                    onerror="
+                      this.style.display='none';
+                      this.nextElementSibling.style.display='flex';
+                    "
+                  >
 
 
-            <small>
-              ${v.value.toLocaleString()}
-              Value
-            </small>
+                  <span
+                    style="
+                      display:none;
+                      font-size:30px;
+                      align-items:center;
+                      justify-content:center;
+                    "
+                  >
+                    ${
+                      pet.icon ||
+                      "🐾"
+                    }
+                  </span>
 
-          </button>
+                </div>
 
-        `
-      ).join("")}
+
+                <strong>
+                  ${v.name}
+                </strong>
+
+
+                <small>
+                  ${
+                    v.value.toLocaleString()
+                  }
+                  Value
+                </small>
+
+              </button>
+
+            `
+          )
+          .join("")
+      }
 
     </div>
 
@@ -1421,7 +1730,9 @@ function showVariantSelector(pet) {
    CHOOSE VARIANT
    ========================================================= */
 
-function chooseVariant(variant) {
+function chooseVariant(
+  variant
+) {
 
   if (!selectedPet) return;
 
@@ -1443,7 +1754,9 @@ function chooseVariant(variant) {
 
 
   const multiplier =
-    multipliers[variant] || 1;
+    multipliers[
+      variant
+    ] || 1;
 
 
   const newItem = {
@@ -1467,8 +1780,9 @@ function chooseVariant(variant) {
       variant,
 
     image:
-      getPetImage(
-        selectedPet
+      getVariantImage(
+        selectedPet,
+        variant
       ),
 
     quantity:
@@ -1480,6 +1794,7 @@ function chooseVariant(variant) {
   addToTrade(
     newItem
   );
+
 
   closePetModal();
 
@@ -1496,6 +1811,7 @@ function closePetModal() {
     document.getElementById(
       "petModal"
     );
+
 
   if (modal) {
 
