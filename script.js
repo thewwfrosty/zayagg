@@ -666,33 +666,94 @@ function clearTrade() {
 
 /* RESULT */
 
-function updateTradeUI() {
+function updateResult(y, t) {
 
-  const y =
-    calculateTotal(youTrade);
+  const card = $("resultCard");
+  const status = $("resultStatusText");
+  const diff = $("resultDiffNumber");
 
-  const t =
-    calculateTotal(themTrade);
-
-  renderTradeSide(
-    "youItems",
-    youTrade,
-    "you"
+  card?.classList.remove(
+    "win",
+    "small-win",
+    "fair",
+    "small-lose",
+    "lose"
   );
 
-  renderTradeSide(
-    "themItems",
-    themTrade,
-    "them"
-  );
+  if (y === 0 && t === 0) {
+    if (status) {
+      status.textContent = "Pet ekleyerek başla";
+    }
 
-  $("youTotal").textContent =
-    formatValue(y);
+    if (diff) {
+      diff.textContent = "—";
+    }
 
-  $("themTotal").textContent =
-    formatValue(t);
+    return;
+  }
 
-  updateResult(y, t);
+  /*
+    KARŞILAŞTIRMA:
+
+    Karşı taraf daha fazla veriyorsa → WIN
+    Biraz daha fazla veriyorsa       → SMALL WIN
+    Yakınsa                           → FAIR
+    Sen biraz daha fazla veriyorsan  → SMALL LOSE
+    Sen çok daha fazla veriyorsan    → LOSE
+  */
+
+  const difference = t - y;
+
+  const base = Math.max(y, t);
+
+  const percentage =
+    base > 0
+      ? Math.abs(difference) / base * 100
+      : 0;
+
+  let result;
+
+  if (percentage <= 3) {
+
+    result = "fair";
+
+  } else if (difference > 0) {
+
+    result =
+      percentage >= 10
+        ? "win"
+        : "small-win";
+
+  } else {
+
+    result =
+      percentage >= 10
+        ? "lose"
+        : "small-lose";
+  }
+
+  card?.classList.add(result);
+
+  const names = {
+    win: "WIN",
+    "small-win": "SMALL WIN",
+    fair: "FAIR",
+    "small-lose": "SMALL LOSE",
+    lose: "LOSE"
+  };
+
+  if (status) {
+    status.textContent = names[result];
+  }
+
+  if (diff) {
+    diff.textContent =
+      difference > 0
+        ? `+${formatValue(difference)}`
+        : formatValue(difference);
+  }
+
+  recordTradeResult(result);
 }
 
 
