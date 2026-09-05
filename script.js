@@ -76,46 +76,22 @@ let picker = {
   rarity: "all"
 };
 
+// SVG İKONLAR
 function iconFly(size = 18) {
-  return `<svg class="am-icon icon-fly" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Fly" fill="none">
-    <path d="M12 4c2.2 3.2 3 6.2 3 9.2 0 2.6-1.2 5.3-3 7.8-1.8-2.5-3-5.2-3-7.8C9 10.2 9.8 7.2 12 4Z" fill="#38bdf8"/>
-    <path d="M7 9.5c-2.4.4-4.2 1.6-5 3.4 1.8.3 3.6-.1 5.2-1.2.4-.8.7-1.6.8-2.2Zm10 0c2.4.4 4.2 1.6 5 3.4-1.8.3-3.6-.1-5.2-1.2-.4-.8-.7-1.6-.8-2.2Z" fill="#7dd3fc"/>
-    <path d="M12 11.2c.9 0 1.5.8 1.3 1.7l-.8 4.2h-1l-.8-4.2c-.2-.9.4-1.7 1.3-1.7Z" fill="#e0f2fe"/>
-  </svg>`;
+  return `<svg class="am-icon icon-fly" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><path d="M12 4c2.2 3.2 3 6.2 3 9.2 0 2.6-1.2 5.3-3 7.8-1.8-2.5-3-5.2-3-7.8C9 10.2 9.8 7.2 12 4Z" fill="#38bdf8"/><path d="M7 9.5c-2.4.4-4.2 1.6-5 3.4 1.8.3 3.6-.1 5.2-1.2.4-.8.7-1.6.8-2.2Zm10 0c2.4.4 4.2 1.6 5 3.4-1.8.3-3.6-.1-5.2-1.2-.4-.8-.7-1.6-.8-2.2Z" fill="#7dd3fc"/><path d="M12 11.2c.9 0 1.5.8 1.3 1.7l-.8 4.2h-1l-.8-4.2c-.2-.9.4-1.7 1.3-1.7Z" fill="#e0f2fe"/></svg>`;
 }
 function iconRide(size = 18) {
-  return `<svg class="am-icon icon-ride" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Ride" fill="none">
-    <path d="M8 5.5c0-1.4 1.2-2.5 2.6-2.5h2.8C14.8 3 16 4.1 16 5.5V8H8V5.5Z" fill="#f0abfc"/>
-    <path d="M7 8h10l.8 2.2c.3.9-.3 1.8-1.2 2L16 13v4.2c0 .7-.6 1.3-1.3 1.3h-1.2c-.6 0-1.1-.4-1.2-1l-.3-1.5h-.1l-.3 1.5c-.1.6-.6 1-1.2 1H9.3C8.6 18.5 8 17.9 8 17.2V13l-.6-.8c-.9-.2-1.5-1.1-1.2-2L7 8Z" fill="#e879f9"/>
-    <path d="M9.2 10.2h5.6c.4 0 .7.4.6.8l-.2.7H8.8l-.2-.7c-.1-.4.2-.8.6-.8Z" fill="#fce7f3"/>
-  </svg>`;
+  return `<svg class="am-icon icon-ride" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><path d="M8 5.5c0-1.4 1.2-2.5 2.6-2.5h2.8C14.8 3 16 4.1 16 5.5V8H8V5.5Z" fill="#f0abfc"/><path d="M7 8h10l.8 2.2c.3.9-.3 1.8-1.2 2L16 13v4.2c0 .7-.6 1.3-1.3 1.3h-1.2c-.6 0-1.1-.4-1.2-1l-.3-1.5h-.1l-.3 1.5c-.1.6-.6 1-1.2 1H9.3C8.6 18.5 8 17.9 8 17.2V13l-.6-.8c-.9-.2-1.5-1.1-1.2-2L7 8Z" fill="#e879f9"/><path d="M9.2 10.2h5.6c.4 0 .7.4.6.8l-.2.7H8.8l-.2-.7c-.1-.4.2-.8.6-.8Z" fill="#fce7f3"/></svg>`;
 }
 function iconNeon(size = 18) {
-  return `<svg class="am-icon icon-neon" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Neon" fill="none">
-    <path d="M12 2.4 14.2 9l7 1-5.2 4.6 1.6 6.8L12 17.8 6.4 21.4 8 14.6 2.8 10l7-1L12 2.4Z" fill="#22d3ee"/>
-    <path d="M12 6.2 13.3 10l2.9.4-2.2 1.9.7 2.8L12 13.6l-2.7 1.5.7-2.8-2.2-1.9 2.9-.4L12 6.2Z" fill="#ecfeff"/>
-  </svg>`;
+  return `<svg class="am-icon icon-neon" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><path d="M12 2.4 14.2 9l7 1-5.2 4.6 1.6 6.8L12 17.8 6.4 21.4 8 14.6 2.8 10l7-1L12 2.4Z" fill="#22d3ee"/><path d="M12 6.2 13.3 10l2.9.4-2.2 1.9.7 2.8L12 13.6l-2.7 1.5.7-2.8-2.2-1.9 2.9-.4L12 6.2Z" fill="#ecfeff"/></svg>`;
 }
 function iconMega(size = 18) {
   const id = "megaGrad" + Math.random().toString(36).slice(2, 8);
-  return `<svg class="am-icon icon-mega" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Mega" fill="none">
-    <defs>
-      <linearGradient id="${id}" x1="2" y1="3" x2="22" y2="21">
-        <stop stop-color="#ff4d6d"/>
-        <stop offset=".25" stop-color="#f5c451"/>
-        <stop offset=".5" stop-color="#35d399"/>
-        <stop offset=".75" stop-color="#38bdf8"/>
-        <stop offset="1" stop-color="#a78bfa"/>
-      </linearGradient>
-    </defs>
-    <path d="M12 2 14.6 8.2 21.5 9l-5 4.4 1.5 6.8L12 16.8 6 20.2l1.5-6.8-5-4.4 6.9-.8L12 2Z" fill="url(#${id})"/>
-  </svg>`;
+  return `<svg class="am-icon icon-mega" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="${id}" x1="2" y1="3" x2="22" y2="21"><stop stop-color="#ff4d6d"/><stop offset=".25" stop-color="#f5c451"/><stop offset=".5" stop-color="#35d399"/><stop offset=".75" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs><path d="M12 2 14.6 8.2 21.5 9l-5 4.4 1.5 6.8L12 16.8 6 20.2l1.5-6.8-5-4.4 6.9-.8L12 2Z" fill="url(#${id})"/></svg>`;
 }
 function iconNormal(size = 18) {
-  return `<svg class="am-icon icon-normal" width="${size}" height="${size}" viewBox="0 0 24 24" aria-label="Normal" fill="none">
-    <circle cx="12" cy="12" r="8" fill="#334155"/>
-    <circle cx="12" cy="12" r="3.2" fill="#cbd5e1"/>
-  </svg>`;
+  return `<svg class="am-icon icon-normal" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" fill="#334155"/><circle cx="12" cy="12" r="3.2" fill="#cbd5e1"/></svg>`;
 }
 
 function buildVariant(form, fly, ride) {
@@ -162,24 +138,29 @@ function petImageHTML(pet, variant) {
   if (variant && variant.ride) badges += `<span class="pet-badge ride" title="Ride">${iconRide(12)}</span>`;
   if (variant && variant.mega) badges += `<span class="pet-badge mega" title="Mega">${iconMega(12)}</span>`;
   else if (variant && variant.neon) badges += `<span class="pet-badge neon" title="Neon">${iconNeon(12)}</span>`;
+  
+  // Resim bulunamazsa varsayılan SVG'ye fallback mekanizması
+  const fallbackSvg = svgPet("#64748b", "#38bdf8", "mammal");
   return `
     <div class="pet-image-wrap">
       ${effects}
-      <img class="pet-photo" src="${pet.image}" alt="${pet.name}" title="${pet.name}">
+      <img class="pet-photo" src="${pet.image}" alt="${pet.name}" title="${pet.name}" onerror="this.src='${fallbackSvg}'">
       <div class="pet-badges">${badges}</div>
     </div>
   `;
 }
+
 // ===============================
-// ADD ITEM
+// ADD ITEM & MODALS
 // ===============================
+function openPetPicker(side) { addItem(side); } // Alias
+function closePetPicker() { closePetModal(); } // Alias
+
 function addItem(side) {
   currentSide = side;
   openPetModal();
 }
-// ===============================
-// PET MODAL
-// ===============================
+
 function openPetModal() {
   picker = { petIndex: null, form: "normal", fly: false, ride: false, rarity: "all" };
   let oldModal = document.getElementById("petModal");
@@ -197,12 +178,7 @@ function openPetModal() {
         </div>
         <button class="pet-modal-close" onclick="closePetModal()">×</button>
       </div>
-      <input
-        id="petSearch"
-        class="pet-search"
-        placeholder="Pet ara..."
-        oninput="renderPetChoices()"
-      >
+      <input id="petSearch" class="pet-search" placeholder="Pet ara..." oninput="renderPetChoices()">
       <div class="rarity-filters" id="rarityFilters"></div>
       <div id="petChoices" class="pet-choice-grid"></div>
       <div id="pickerBar" class="picker-bar hidden"></div>
@@ -215,31 +191,30 @@ function openPetModal() {
   renderRarityFilters();
   renderPetChoices();
 }
+
 function closePetModal() {
   const modal = document.getElementById("petModal");
   if (modal) modal.remove();
   picker.petIndex = null;
 }
-function closeVariantModal() {
-  closePetModal();
-}
+
 function renderRarityFilters() {
   const wrap = document.getElementById("rarityFilters");
   if (!wrap) return;
   const keys = ["all", "legendary", "ultra", "rare", "uncommon", "common"];
   wrap.innerHTML = keys.map((key) => `
-    <button
-      class="rarity-chip ${picker.rarity === key ? "active" : ""} ${key}"
-      onclick="setRarityFilter('${key}')">
+    <button class="rarity-chip ${picker.rarity === key ? "active" : ""} ${key}" onclick="setRarityFilter('${key}')">
       ${rarityLabels[key]}
     </button>
   `).join("");
 }
+
 function setRarityFilter(key) {
   picker.rarity = key;
   renderRarityFilters();
   renderPetChoices();
 }
+
 function renderPetChoices() {
   const container = document.getElementById("petChoices");
   if (!container) return;
@@ -254,12 +229,13 @@ function renderPetChoices() {
     container.innerHTML = `<div class="empty-items">Pet bulunamadı.</div>`;
     return;
   }
+  const fallbackSvg = svgPet("#64748b", "#38bdf8", "mammal");
   container.innerHTML = filteredPets.map((pet) => {
     const index = pets.indexOf(pet);
     const selected = picker.petIndex === index ? "selected" : "";
     return `
       <button class="pet-choice ${selected}" onclick="selectPet(${index})">
-        <img class="pet-photo" src="${pet.image}" alt="${pet.name}">
+        <img class="pet-photo" src="${pet.image}" alt="${pet.name}" onerror="this.src='${fallbackSvg}'">
         <strong>${pet.name}</strong>
         <span>${pet.value} Value</span>
         <small class="rarity-tag ${pet.rarity}">${rarityLabels[pet.rarity] || pet.rarity}</small>
@@ -267,19 +243,23 @@ function renderPetChoices() {
     `;
   }).join("");
 }
+
 function selectPet(index) {
   picker.petIndex = index;
   renderPetChoices();
   renderPickerBar();
 }
+
 function setForm(form) {
   picker.form = form;
   renderPickerBar();
 }
+
 function togglePotion(type) {
   picker[type] = !picker[type];
   renderPickerBar();
 }
+
 function renderPickerBar() {
   const bar = document.getElementById("pickerBar");
   if (!bar) return;
@@ -302,23 +282,13 @@ function renderPickerBar() {
     </div>
     <div class="picker-controls">
       <div class="form-toggles">
-        <button class="form-btn ${picker.form === "normal" ? "active" : ""}" onclick="setForm('normal')">
-          ${iconNormal(16)} Normal
-        </button>
-        <button class="form-btn neon ${picker.form === "neon" ? "active" : ""}" onclick="setForm('neon')">
-          ${iconNeon(16)} Neon
-        </button>
-        <button class="form-btn mega ${picker.form === "mega" ? "active" : ""}" onclick="setForm('mega')">
-          ${iconMega(16)} Mega
-        </button>
+        <button class="form-btn ${picker.form === "normal" ? "active" : ""}" onclick="setForm('normal')">${iconNormal(16)} Normal</button>
+        <button class="form-btn neon ${picker.form === "neon" ? "active" : ""}" onclick="setForm('neon')">${iconNeon(16)} Neon</button>
+        <button class="form-btn mega ${picker.form === "mega" ? "active" : ""}" onclick="setForm('mega')">${iconMega(16)} Mega</button>
       </div>
       <div class="potion-toggles">
-        <button class="potion-btn fly ${picker.fly ? "active" : ""}" onclick="togglePotion('fly')">
-          ${iconFly(18)} Fly
-        </button>
-        <button class="potion-btn ride ${picker.ride ? "active" : ""}" onclick="togglePotion('ride')">
-          ${iconRide(18)} Ride
-        </button>
+        <button class="potion-btn fly ${picker.fly ? "active" : ""}" onclick="togglePotion('fly')">${iconFly(18)} Fly</button>
+        <button class="potion-btn ride ${picker.ride ? "active" : ""}" onclick="togglePotion('ride')">${iconRide(18)} Ride</button>
       </div>
     </div>
     <div class="picker-add">
@@ -327,6 +297,7 @@ function renderPickerBar() {
     </div>
   `;
 }
+
 function confirmAddPet() {
   if (picker.petIndex === null || !currentSide) return;
   const pet = pets[picker.petIndex];
@@ -341,6 +312,7 @@ function confirmAddPet() {
   renderTrade();
   calculateWFL();
 }
+
 // ===============================
 // RENDER TRADE
 // ===============================
@@ -349,112 +321,76 @@ function renderTrade() {
   renderSide("them");
   updateTotals();
 }
+
 function renderSide(side) {
-  const container = document.getElementById(
-    side === "you" ? "youItems" : "themItems"
-  );
+  const container = document.getElementById(side === "you" ? "youItems" : "themItems");
   if (!container) return;
   const items = state[side];
   if (items.length === 0) {
-    container.innerHTML = `
-      <div class="empty-items">
-        Henüz pet eklenmedi.
-      </div>
-    `;
+    container.innerHTML = `<div class="empty-items">Henüz pet eklenmedi.</div>`;
     return;
   }
-  container.innerHTML = items.map(item => {
-    return `
-      <div class="trade-item">
-        <div class="trade-item-image">
-          ${petImageHTML(item.pet, item.variant)}
-        </div>
-        <div class="trade-item-info">
-          <strong>${item.pet.name}</strong>
-          ${variantChipsHTML(item.variant)}
-          <small>Value: ${item.value.toFixed(1)}</small>
-        </div>
-        <button
-          class="remove-item"
-          onclick="removeItem('${side}', '${item.id}')">
-          ×
-        </button>
+  container.innerHTML = items.map(item => `
+    <div class="trade-item">
+      <div class="trade-item-image">
+        ${petImageHTML(item.pet, item.variant)}
       </div>
-    `;
-  }).join("");
+      <div class="trade-item-info">
+        <strong>${item.pet.name}</strong>
+        ${variantChipsHTML(item.variant)}
+        <small>Value: ${item.value.toFixed(1)}</small>
+      </div>
+      <button class="remove-item" onclick="removeItem('${side}', '${item.id}')">×</button>
+    </div>
+  `).join("");
 }
-// ===============================
-// REMOVE ITEM
-// ===============================
+
 function removeItem(side, id) {
-  state[side] = state[side].filter(
-    item => String(item.id) !== String(id)
-  );
+  state[side] = state[side].filter(item => String(item.id) !== String(id));
   renderTrade();
   calculateWFL();
 }
-// ===============================
-// TOTALS
-// ===============================
+
 function updateTotals() {
-  const youTotal = state.you.reduce(
-    (sum, item) => sum + item.value,
-    0
-  );
-  const themTotal = state.them.reduce(
-    (sum, item) => sum + item.value,
-    0
-  );
+  const youTotal = state.you.reduce((sum, item) => sum + item.value, 0);
+  const themTotal = state.them.reduce((sum, item) => sum + item.value, 0);
   const youElement = document.getElementById("youTotal");
   const themElement = document.getElementById("themTotal");
-  if (youElement) {
-    youElement.textContent = youTotal.toFixed(1);
-  }
-  if (themElement) {
-    themElement.textContent = themTotal.toFixed(1);
-  }
+  if (youElement) youElement.textContent = youTotal.toFixed(1);
+  if (themElement) themElement.textContent = themTotal.toFixed(1);
 }
+
 // ===============================
 // W/F/L CALCULATOR
 // ===============================
 function calculateWFL() {
-  const youTotal = state.you.reduce(
-    (sum, item) => sum + item.value,
-    0
-  );
-  const themTotal = state.them.reduce(
-    (sum, item) => sum + item.value,
-    0
-  );
+  const youTotal = state.you.reduce((sum, item) => sum + item.value, 0);
+  const themTotal = state.them.reduce((sum, item) => sum + item.value, 0);
   const resultCard = document.getElementById("resultCard");
   if (!resultCard) return;
+
   if (youTotal === 0 && themTotal === 0) {
     resultCard.className = "result-card neutral";
     resultCard.innerHTML = `
-      <div>
-        <small>TRADE SONUCU</small>
-        <h3>Pet ekleyerek başla</h3>
-      </div>
+      <div><small>TRADE SONUCU</small><h3>Pet ekleyerek başla</h3></div>
       <div class="result-number">—</div>
     `;
     return;
   }
+
   if (youTotal === 0 || themTotal === 0) {
     resultCard.className = "result-card neutral";
     resultCard.innerHTML = `
-      <div>
-        <small>TRADE SONUCU</small>
-        <h3>İki tarafa da pet ekle</h3>
-      </div>
+      <div><small>TRADE SONUCU</small><h3>İki tarafa da pet ekle</h3></div>
       <div class="result-number">—</div>
     `;
     return;
   }
+
   const difference = themTotal - youTotal;
   const percent = (difference / youTotal) * 100;
-  let result;
-  let resultClass;
-  let message;
+  let result, resultClass, message;
+
   if (percent >= 10) {
     result = "WIN";
     resultClass = "win";
@@ -468,74 +404,39 @@ function calculateWFL() {
     resultClass = "fair";
     message = "İki teklif birbirine oldukça yakın.";
   }
+
   const ratio = themTotal / youTotal;
-  const barPercent = Math.min(
-    Math.max((themTotal / (youTotal + themTotal)) * 100, 5),
-    95
-  );
+  const barPercent = Math.min(Math.max((themTotal / (youTotal + themTotal)) * 100, 5), 95);
+
   resultCard.className = `result-card advanced ${resultClass}`;
   resultCard.innerHTML = `
     <div class="wfl-top">
-      <div class="wfl-total">
-        <small>SENİN TEKLİFİN</small>
-        <strong>${youTotal.toFixed(1)}</strong>
-      </div>
-      <div class="wfl-circle">
-        <span>${result}</span>
-      </div>
-      <div class="wfl-total">
-        <small>KARŞI TARAF</small>
-        <strong>${themTotal.toFixed(1)}</strong>
-      </div>
+      <div class="wfl-total"><small>SENİN TEKLİFİN</small><strong>${youTotal.toFixed(1)}</strong></div>
+      <div class="wfl-circle"><span>${result}</span></div>
+      <div class="wfl-total"><small>KARŞI TARAF</small><strong>${themTotal.toFixed(1)}</strong></div>
     </div>
-    <div class="wfl-subtitle">
-      ${message}
-    </div>
+    <div class="wfl-subtitle">${message}</div>
     <div class="wfl-details">
-      <div>
-        <span>Fark</span>
-        <strong>
-          ${difference >= 0 ? "+" : ""}
-          ${difference.toFixed(1)}
-        </strong>
-      </div>
-      <div>
-        <span>Yüzde</span>
-        <strong>
-          ${percent >= 0 ? "+" : ""}
-          ${percent.toFixed(1)}%
-        </strong>
-      </div>
-      <div>
-        <span>Oran</span>
-        <strong>${ratio.toFixed(2)}x</strong>
-      </div>
+      <div><span>Fark</span><strong>${difference >= 0 ? "+" : ""}${difference.toFixed(1)}</strong></div>
+      <div><span>Yüzde</span><strong>${percent >= 0 ? "+" : ""}${percent.toFixed(1)}%</strong></div>
+      <div><span>Oran</span><strong>${ratio.toFixed(2)}x</strong></div>
     </div>
     <div class="comparison-bar">
-      <div
-        class="comparison-fill"
-        style="width:${barPercent}%">
-      </div>
+      <div class="comparison-fill" style="width:${barPercent}%"></div>
     </div>
-    <button class="save-trade-btn" onclick="saveTradeResult('${result}')">
-      Sonucu profile kaydet
-    </button>
+    <button class="save-trade-btn" onclick="saveTradeResult('${result}')">Sonucu profile kaydet</button>
   `;
 }
+
 // ===============================
 // CLEAR TRADE
 // ===============================
-const clearBtn = document.getElementById("clearBtn");
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    state = {
-      you: [],
-      them: []
-    };
-    renderTrade();
-    calculateWFL();
-  });
+function clearTrade() {
+  state = { you: [], them: [] };
+  renderTrade();
+  calculateWFL();
 }
+
 // ===============================
 // VALUE LIST
 // ===============================
@@ -543,29 +444,22 @@ function renderValues() {
   const grid = document.getElementById("valueGrid");
   if (!grid) return;
   const searchInput = document.getElementById("search");
-  const search = searchInput
-    ? searchInput.value.toLowerCase()
-    : "";
-  const filteredPets = pets.filter(pet =>
-    pet.name.toLowerCase().includes(search)
-  );
-  grid.innerHTML = filteredPets.map(pet => {
-    return `
-      <div class="value-card">
-        <img class="pet-photo" src="${pet.image}" alt="${pet.name}">
-        <div>
-          <h3>${pet.name}</h3>
-          <span>Value</span>
-          <strong>${pet.value}</strong>
-        </div>
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
+  const filteredPets = pets.filter(pet => pet.name.toLowerCase().includes(search));
+  
+  const fallbackSvg = svgPet("#64748b", "#38bdf8", "mammal");
+  grid.innerHTML = filteredPets.map(pet => `
+    <div class="value-card">
+      <img class="pet-photo" src="${pet.image}" alt="${pet.name}" onerror="this.src='${fallbackSvg}'">
+      <div>
+        <h3>${pet.name}</h3>
+        <span>Value</span>
+        <strong>${pet.value}</strong>
       </div>
-    `;
-  }).join("");
+    </div>
+  `).join("");
 }
-// İlk değerleri göster
-renderValues();
-renderTrade();
-calculateWFL();
+
 // ==================================================
 // PROFİL SİSTEMİ
 // ==================================================
@@ -574,47 +468,26 @@ const defaultProfile = {
   username: "kullanici",
   avatar: "🐉",
   bio: "Henüz bir biyografi eklenmedi.",
-  stats: {
-    trades: 0,
-    wins: 0,
-    fairs: 0,
-    loses: 0
-  }
+  stats: { trades: 0, wins: 0, fairs: 0, loses: 0 }
 };
-// ===============================
-// LOAD PROFILE
-// ===============================
+
 function getProfile() {
   const saved = localStorage.getItem("zayaggProfile");
   if (!saved) {
-    localStorage.setItem(
-      "zayaggProfile",
-      JSON.stringify(defaultProfile)
-    );
+    localStorage.setItem("zayaggProfile", JSON.stringify(defaultProfile));
     return { ...defaultProfile };
   }
   try {
     return JSON.parse(saved);
   } catch {
-    localStorage.setItem(
-      "zayaggProfile",
-      JSON.stringify(defaultProfile)
-    );
     return { ...defaultProfile };
   }
 }
-// ===============================
-// SAVE PROFILE
-// ===============================
+
 function saveProfile(profile) {
-  localStorage.setItem(
-    "zayaggProfile",
-    JSON.stringify(profile)
-  );
+  localStorage.setItem("zayaggProfile", JSON.stringify(profile));
 }
-// ===============================
-// OPEN PROFILE
-// ===============================
+
 function openProfile() {
   const modal = document.getElementById("profileModal");
   if (!modal) return;
@@ -622,9 +495,7 @@ function openProfile() {
   modal.classList.add("show");
   document.body.classList.add("profile-open");
 }
-// ===============================
-// CLOSE PROFILE
-// ===============================
+
 function closeProfile() {
   const modal = document.getElementById("profileModal");
   if (!modal) return;
@@ -632,46 +503,27 @@ function closeProfile() {
   document.body.classList.remove("profile-open");
   closeEditProfile();
 }
-// ===============================
-// LOAD PROFILE TO SCREEN
-// ===============================
+
 function loadProfileToScreen() {
   const profile = getProfile();
   const name = document.getElementById("profileName");
   const username = document.getElementById("profileUsername");
   const avatar = document.getElementById("profileAvatar");
   const bio = document.getElementById("profileBio");
-  if (name) {
-    name.textContent = profile.name;
-  }
-  if (username) {
-    username.textContent = "@" + profile.username;
-  }
-  if (avatar) {
-    avatar.textContent = profile.avatar;
-  }
-  if (bio) {
-    bio.textContent = profile.bio;
-  }
+
+  if (name) name.textContent = profile.name;
+  if (username) username.textContent = "@" + profile.username;
+  if (avatar) avatar.textContent = profile.avatar;
+  if (bio) bio.textContent = profile.bio;
+
   if (profile.stats) {
-    const tradeCount = document.getElementById("tradeCount");
-    const winCount = document.getElementById("winCount");
-    const fairCount = document.getElementById("fairCount");
-    const loseCount = document.getElementById("loseCount");
-    if (tradeCount) {
-      tradeCount.textContent = profile.stats.trades;
-    }
-    if (winCount) {
-      winCount.textContent = profile.stats.wins;
-    }
-    if (fairCount) {
-      fairCount.textContent = profile.stats.fairs;
-    }
-    if (loseCount) {
-      loseCount.textContent = profile.stats.loses;
-    }
+    document.getElementById("tradeCount") && (document.getElementById("tradeCount").textContent = profile.stats.trades);
+    document.getElementById("winCount") && (document.getElementById("winCount").textContent = profile.stats.wins);
+    document.getElementById("fairCount") && (document.getElementById("fairCount").textContent = profile.stats.fairs);
+    document.getElementById("loseCount") && (document.getElementById("loseCount").textContent = profile.stats.loses);
   }
 }
+
 const AVATARS = ["🐉","🐲","🦊","🐺","🦁","🐯","🐸","🦄","🐼","🐨","🐵","👑"];
 let selectedAvatar = "🐉";
 
@@ -688,10 +540,12 @@ function openEditProfile() {
   document.getElementById("profileEditBtn")?.classList.add("hidden");
   document.getElementById("profileEditForm")?.classList.remove("hidden");
 }
+
 function closeEditProfile() {
   document.getElementById("profileEditBtn")?.classList.remove("hidden");
   document.getElementById("profileEditForm")?.classList.add("hidden");
 }
+
 function renderAvatarPick() {
   const box = document.getElementById("avatarPick");
   if (!box) return;
@@ -699,93 +553,65 @@ function renderAvatarPick() {
     <button type="button" class="avatar-opt ${icon === selectedAvatar ? "active" : ""}" onclick="chooseAvatar('${icon}')">${icon}</button>
   `).join("");
 }
+
 function chooseAvatar(icon) {
   selectedAvatar = icon;
   renderAvatarPick();
 }
+
 function saveEditedProfile(event) {
   event.preventDefault();
   const profile = getProfile();
   const name = document.getElementById("editName")?.value || "";
   const username = document.getElementById("editUsername")?.value || "";
   const bio = document.getElementById("editBio")?.value || "";
+
   profile.name = name.trim() || "Zayagg Kullanıcısı";
   profile.username = username.trim().replace(/\s+/g, "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20) || "kullanici";
   profile.bio = bio.trim().slice(0, 120) || "Henüz bir biyografi eklenmedi.";
   profile.avatar = selectedAvatar || "🐉";
+
   saveProfile(profile);
   loadProfileToScreen();
   updateNavbarProfile();
   closeEditProfile();
 }
-function editProfile() {
-  openEditProfile();
-}
 
-function toggleMenu() {
-  document.body.classList.toggle("menu-open");
-}
-function closeMenu() {
-  document.body.classList.remove("menu-open");
-}
-// ===============================
-// NAVBAR PROFILE
-// ===============================
+function toggleMenu() { document.body.classList.toggle("menu-open"); }
+function closeMenu() { document.body.classList.remove("menu-open"); }
+
 function updateNavbarProfile() {
   const profile = getProfile();
   const button = document.getElementById("profileBtn");
   if (!button) return;
-  button.innerHTML = `
-    ${profile.avatar} ${profile.name}
-  `;
+  button.innerHTML = `👤 ${profile.avatar} ${profile.name}`;
 }
-// Sayfa açıldığında profil bilgilerini yükle
-updateNavbarProfile();
-// ===============================
-// CLOSE MODAL WHEN CLICKING OUTSIDE
-// ===============================
-const profileModal = document.getElementById("profileModal");
-if (profileModal) {
-  profileModal.addEventListener("click", function(event) {
-    if (event.target === profileModal) {
-      closeProfile();
-    }
-  });
-}
-// ===============================
-// ESC = CLOSE PROFILE
-// ===============================
-document.addEventListener("keydown", function(event) {
-  if (event.key === "Escape") {
-    closeProfile();
-    closePetModal();
-    closeVariantModal();
-  }
-});
-// ===============================
-// W/F/L → PROFILE STATISTICS
-// ===============================
+
 function saveTradeResult(result) {
   const profile = getProfile();
   if (!profile.stats) {
-    profile.stats = {
-      trades: 0,
-      wins: 0,
-      fairs: 0,
-      loses: 0
-    };
+    profile.stats = { trades: 0, wins: 0, fairs: 0, loses: 0 };
   }
   profile.stats.trades++;
-  if (result === "WIN") {
-    profile.stats.wins++;
-  }
-  if (result === "FAIR") {
-    profile.stats.fairs++;
-  }
-  if (result === "LOSE") {
-    profile.stats.loses++;
-  }
+  if (result === "WIN") profile.stats.wins++;
+  if (result === "FAIR") profile.stats.fairs++;
+  if (result === "LOSE") profile.stats.loses++;
+
   saveProfile(profile);
   loadProfileToScreen();
   updateNavbarProfile();
 }
+
+// Global Kısayollar ve Başlatma
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeProfile();
+    closePetModal();
+  }
+});
+
+// Sayfa yüklendiğinde çalıştır
+renderValues();
+renderTrade();
+calculateWFL();
+updateNavbarProfile();
