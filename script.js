@@ -120,14 +120,49 @@ try {
    ========================================================= */
 
 function getPetImage(pet) {
+  const images = {
+    "Shadow Dragon": "https://cdn.playadopt.me/items/shadow_dragon.png",
+    "Bat Dragon": "https://cdn.playadopt.me/items/bat_dragon.png",
+    "Giraffe": "https://cdn.playadopt.me/items/giraffe.png",
+    "Frost Dragon": "https://cdn.playadopt.me/items/frost_dragon.png",
+    "Owl": "https://cdn.playadopt.me/items/owl.png",
+    "Parrot": "https://cdn.playadopt.me/items/parrot.png",
+    "Evil Unicorn": "https://cdn.playadopt.me/items/evil_unicorn.png",
+    "Crow": "https://cdn.playadopt.me/items/crow.png",
+    "Arctic Reindeer": "https://cdn.playadopt.me/items/arctic_reindeer.png",
+    "Albino Monkey": "https://cdn.playadopt.me/items/albino_monkey.png",
+    "Turtle": "https://cdn.playadopt.me/items/turtle.png",
+    "Kangaroo": "https://cdn.playadopt.me/items/kangaroo.png",
+    "Diamond Butterfly": "https://cdn.playadopt.me/items/sanctuary_2022_diamond_premium_butterfly.png",
 
-  const fileName = pet.name
-    .toLowerCase()
-    .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+    "Dalmatian": "https://cdn.playadopt.me/items/santa_dog.png",
+    "Flamingo": "https://cdn.playadopt.me/items/flamingo.png",
+    "Lion": "https://cdn.playadopt.me/items/lion.png",
+    "Cow": "https://cdn.playadopt.me/items/cow.png",
+    "Hedgehog": "https://cdn.playadopt.me/items/elf_hedgehog.png",
+    "Elephant": "https://cdn.playadopt.me/items/elephant.png",
+    "Hyena": "https://cdn.playadopt.me/items/hyena.png",
+    "Pig": "https://cdn.playadopt.me/items/pig.png",
 
-  return `images/pets/${fileName}.png`;
+    "Platypus": "https://cdn.playadopt.me/items/platypus.png",
+    "Polar Bear": "https://cdn.playadopt.me/items/polar_bear.png",
+    "Swan": "https://cdn.playadopt.me/items/swan.png",
+    "Reindeer": "https://cdn.playadopt.me/items/reindeer.png",
+    "Rabbit": "https://cdn.playadopt.me/items/rabbit.png",
+
+    "Silly Duck": "https://cdn.playadopt.me/items/silly_duck.png",
+    "Capybara": "https://cdn.playadopt.me/items/capybara.png",
+    "Meerkat": "https://cdn.playadopt.me/items/meerkat.png",
+    "Snow Cat": "https://cdn.playadopt.me/items/snow_cat.png",
+
+    "Dog": "https://cdn.playadopt.me/items/dog.png",
+    "Cat": "https://cdn.playadopt.me/items/cat.png",
+    "Mouse": "https://cdn.playadopt.me/items/basic_egg_2022_mouse.png",
+    "Otter": "https://cdn.playadopt.me/items/otter.png"
+  };
+
+  return images[pet.name] || "";
+}
 
 }
 
