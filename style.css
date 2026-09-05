@@ -3532,3 +3532,140 @@ body.modal-open {
     opacity: 1;
   }
 }
+/* =========================================
+   ELVEBREDD PET BADGES
+========================================= */
+
+.trade-slot-badges {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  display: flex;
+  gap: 3px;
+  z-index: 8;
+}
+
+.trade-slot-badge {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 9px;
+  font-weight: 900;
+  line-height: 1;
+
+  color: white;
+
+  background: rgba(12, 15, 24, 0.92);
+  border: 1px solid rgba(255,255,255,.15);
+
+  box-shadow:
+    0 2px 6px rgba(0,0,0,.35);
+
+  backdrop-filter: blur(5px);
+}
+
+
+/* NEON */
+
+.trade-slot-badge.neon {
+  color: #8dffb0;
+  border-color: rgba(80,255,140,.45);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(45,180,95,.45),
+      rgba(10,35,20,.92)
+    );
+
+  box-shadow:
+    0 0 8px rgba(75,255,130,.3);
+}
+
+
+/* MEGA */
+
+.trade-slot-badge.mega {
+  color: #f0b6ff;
+  border-color: rgba(190,100,255,.55);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(135,60,180,.55),
+      rgba(28,12,40,.94)
+    );
+
+  box-shadow:
+    0 0 8px rgba(190,90,255,.35);
+}
+
+
+/* FLY */
+
+.trade-slot-badge.fly {
+  color: #8bdcff;
+  border-color: rgba(80,190,255,.45);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(45,135,190,.5),
+      rgba(10,25,38,.94)
+    );
+}
+
+
+/* RIDE */
+
+.trade-slot-badge.ride {
+  color: #ffd58c;
+  border-color: rgba(255,190,80,.45);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(190,125,40,.5),
+      rgba(38,25,10,.94)
+    );
+}
+
+
+/* Birden fazla rozet olduğunda biraz daha kompakt */
+
+.trade-slot-badges .trade-slot-badge:nth-child(2) {
+  margin-left: -1px;
+}
+
+.trade-slot-badges .trade-slot-badge:nth-child(3) {
+  margin-left: -1px;
+}
+
+.trade-slot-badges .trade-slot-badge:nth-child(4) {
+  margin-left: -1px;
+}
+
+
+/* MOBİL */
+
+@media (max-width: 700px) {
+
+  .trade-slot-badge {
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    border-radius: 4px;
+  }
+
+  .trade-slot-badges {
+    left: 3px;
+    bottom: 3px;
+    gap: 2px;
+  }
+
+}
