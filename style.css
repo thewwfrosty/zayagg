@@ -2746,3 +2746,171 @@ footer {
   }
 
 }
+/* =========================================
+   ZAYAGG FIX
+========================================= */
+
+.trade-box-head {
+  position: relative;
+  z-index: 3;
+}
+
+.trade-box-head h3 {
+  margin-top: 5px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.trade-side-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+}
+
+.trade-total-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.trade-total-label {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.trade-total-value {
+  color: var(--purple-light);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.trade-box-them .trade-total-value {
+  color: var(--blue);
+}
+
+.trade-empty {
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
+
+.empty-plus {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(139,92,246,.22);
+  border-radius: 12px;
+  color: var(--purple-light);
+  background: rgba(139,92,246,.07);
+  font-size: 20px;
+  margin-bottom: 3px;
+}
+
+.trade-empty strong {
+  color: #868ca0;
+  font-size: 12px;
+}
+
+.trade-empty small {
+  color: #555b6d;
+  font-size: 10px;
+}
+
+.trade-add {
+  position: relative;
+  z-index: 3;
+  margin-top: 12px;
+}
+
+
+/* PET PICKER */
+
+.pet-choice {
+  overflow: hidden;
+}
+
+.pet-choice strong {
+  font-size: 12px;
+  text-align: center;
+}
+
+.pet-choice small {
+  color: var(--purple-light);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.choice-image {
+  flex-shrink: 0;
+}
+
+.choice-image img {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+}
+
+
+/* TRADE PET IMAGE */
+
+.trade-item-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.trade-item-image {
+  overflow: hidden;
+}
+
+
+/* RESULT */
+
+.result-card.trade-result-card {
+  min-height: 92px;
+}
+
+.result-card.trade-result-card .result-score strong {
+  white-space: nowrap;
+}
+
+
+/* MODAL */
+
+.profile-modal.active {
+  display: flex;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+  .trade-box-head h3 {
+    font-size: 15px;
+  }
+
+  .trade-total-value {
+    font-size: 14px;
+  }
+
+  .trade-item {
+    width: 100%;
+  }
+
+  .pet-choice-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
