@@ -189,6 +189,7 @@ function imageHTML(pet, cls = 'pet-photo') {
    ========================================================= */
 
 function renderValues() {
+
   const grid = $('valueGrid');
 
   if (!grid) return;
@@ -206,6 +207,7 @@ function renderValues() {
   grid.innerHTML = '';
 
   if (!list.length) {
+
     grid.innerHTML = `
       <div class="empty-picker">
         <span>🔎</span>
@@ -213,6 +215,7 @@ function renderValues() {
         <small>Başka bir isim dene.</small>
       </div>
     `;
+
     return;
   }
 
@@ -299,7 +302,6 @@ function openPetPicker(side) {
     search?.focus();
   }, 50);
 }
-
 
 function closePetPicker() {
 
@@ -929,6 +931,16 @@ function updateTradeUI() {
 }
 
 
+/*
+   ========================================================
+   DÜZELTİLMİŞ W/F/L MANTIĞI
+
+   Sen daha fazla veriyorsan       = LOSE
+   Karşı taraf daha fazla veriyorsa = WIN
+   Eşitse                            = FAIR
+   ========================================================
+*/
+
 function updateResult(y, t) {
 
   const card =
@@ -946,8 +958,6 @@ function updateResult(y, t) {
     'fair'
   );
 
-  const d = y - t;
-
   if (y === 0 && t === 0) {
 
     if (status) {
@@ -963,35 +973,52 @@ function updateResult(y, t) {
     return;
   }
 
-  let s;
+  /*
+    Pozitifse karşı taraf daha fazla veriyor.
+    Negatifse sen daha fazla veriyorsun.
+  */
 
-  if (Math.abs(d) <= 0.05) {
-    s = 'fair';
-  } else if (d > 0) {
-    s = 'win';
+  const difference = t - y;
+
+  let result;
+
+  if (Math.abs(difference) <= 0.05) {
+
+    result = 'fair';
+
+  } else if (difference > 0) {
+
+    result = 'win';
+
   } else {
-    s = 'lose';
+
+    result = 'lose';
+
   }
 
-  card?.classList.add(s);
+  card?.classList.add(result);
 
   if (status) {
+
     status.textContent =
-      s === 'win'
+      result === 'win'
         ? 'WIN'
-        : s === 'lose'
+        : result === 'lose'
         ? 'LOSE'
         : 'FAIR';
+
   }
 
   if (diff) {
+
     diff.textContent =
-      d > 0
-        ? `+${formatValue(d)}`
-        : formatValue(d);
+      difference > 0
+        ? `+${formatValue(difference)}`
+        : formatValue(difference);
+
   }
 
-  recordTradeResult(s);
+  recordTradeResult(result);
 }
 
 
@@ -1409,7 +1436,7 @@ function closeMenu() {
 
 
 /* =========================================================
-   EVENTS
+   MODAL EVENTS
    ========================================================= */
 
 document.addEventListener(
