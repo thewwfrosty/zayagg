@@ -1,12 +1,27 @@
 /* =========================================================
-   ZAYAXRA TRADE CALCULATOR
-   - 2600+ Adopt Me item
-   - Pets / Pet Wear / Eggs / Vehicles / Toys / Gifts
-   - D / N / M / F / R
-   - Search
-   - Trade calculator
-   - Profile
-   ========================================================= */
+   ZAYAXRA — FINAL SCRIPT
+   Adopt Me Trading Calculator
+
+   DATA:
+   2600+ items
+   Pets
+   Pet Wear
+   Eggs
+   Vehicles
+   Toys
+   Gifts
+   Strollers
+   Food
+   Stickers
+
+   FORMS:
+   D = Normal
+   N = Neon
+   M = Mega
+   F = Fly
+   R = Ride
+   F/R = Fly Ride
+========================================================= */
 
 const DATA_URL =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
@@ -15,47 +30,34 @@ const IMAGE_BASE =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main";
 
 let items = [];
-let pets = [];
+
 let youTrade = [];
 let themTrade = [];
 
 let pickerSide = null;
 let selectedItem = null;
+
 let selectedForm = "D";
 let selectedPotion = "normal";
+
 let pickerCategory = "all";
-let pickerValuesVisible = true;
 
 let profileData = loadProfile();
 
-const $ = (id) => document.getElementById(id);
+const $ = (id) =>
+  document.getElementById(id);
 
 /* =========================================================
    HELPERS
-   ========================================================= */
+========================================================= */
 
 function escapeHTML(value) {
   return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function formatValue(value) {
-  const n = Number(value || 0);
-
-  if (!Number.isFinite(n)) return "0";
-
-  if (Number.isInteger(n)) {
-    return String(n);
-  }
-
-  return n
-    .toFixed(2)
-    .replace(/0+$/, "")
-    .replace(/\.$/, "");
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function normalizeText(value) {
@@ -65,195 +67,269 @@ function normalizeText(value) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function formatValue(value) {
+  const number = Number(value || 0);
+
+  if (!Number.isFinite(number)) {
+    return "0";
+  }
+
+  if (Number.isInteger(number)) {
+    return String(number);
+  }
+
+  return number
+    .toFixed(2)
+    .replace(/0+$/, "")
+    .replace(/\.$/, "");
+}
+
+/* =========================================================
+   RARITY
+========================================================= */
+
+function rarityClass(rarity) {
+  const r = normalizeText(rarity);
+
+  if (r.includes("legendary")) return "legendary";
+  if (r.includes("ultra")) return "ultra";
+  if (r.includes("rare")) return "rare";
+  if (r.includes("uncommon")) return "uncommon";
+
+  return "common";
+}
+
 function rarityName(rarity) {
   const r = normalizeText(rarity);
 
-  if (r.includes("legendary")) return "Legendary";
-  if (r.includes("ultra")) return "Ultra-Rare";
-  if (r.includes("rare")) return "Rare";
-  if (r.includes("uncommon")) return "Uncommon";
-  if (r.includes("common")) return "Common";
+  if (r.includes("legendary")) {
+    return "Legendary";
+  }
+
+  if (r.includes("ultra")) {
+    return "Ultra-Rare";
+  }
+
+  if (r === "rare" || r.includes(" rare")) {
+    return "Rare";
+  }
+
+  if (r.includes("uncommon")) {
+    return "Uncommon";
+  }
+
+  if (r.includes("common")) {
+    return "Common";
+  }
 
   return rarity || "";
 }
 
-function categoryName(type) {
-  const t = normalizeText(type);
-
-  if (t.includes("pet wear") || t.includes("petwear") || t.includes("wear")) {
-    return "PET WEAR";
-  }
-
-  if (t.includes("vehicle")) {
-    return "VEHICLES";
-  }
-
-  if (t.includes("toy")) {
-    return "TOYS";
-  }
-
-  if (t.includes("gift")) {
-    return "GIFTS";
-  }
-
-  if (t.includes("egg")) {
-    return "EGGS";
-  }
-
-  if (t.includes("stroller")) {
-    return "STROLLERS";
-  }
-
-  if (t.includes("food")) {
-    return "FOOD";
-  }
-
-  if (t.includes("sticker")) {
-    return "STICKERS";
-  }
-
-  if (t.includes("pet")) {
-    return "PETS";
-  }
-
-  return String(type || "PETS").toUpperCase();
-}
+/* =========================================================
+   CATEGORY
+========================================================= */
 
 function itemCategory(item) {
-  const t = normalizeText(item?.type);
+  const type = normalizeText(item?.type);
 
-  if (t.includes("pet wear") || t.includes("petwear") || t.includes("wear")) {
+  if (
+    type.includes("pet wear") ||
+    type.includes("petwear") ||
+    type.includes("wear")
+  ) {
     return "petwear";
   }
 
-  if (t.includes("vehicle")) {
+  if (type.includes("vehicle")) {
     return "vehicles";
   }
 
-  if (t.includes("toy")) {
+  if (type.includes("toy")) {
     return "toys";
   }
 
-  if (t.includes("gift")) {
+  if (type.includes("gift")) {
     return "gifts";
   }
 
-  if (t.includes("egg")) {
+  if (type.includes("egg")) {
     return "eggs";
   }
 
-  if (t.includes("stroller")) {
+  if (type.includes("stroller")) {
     return "strollers";
   }
 
-  if (t.includes("food")) {
+  if (type.includes("food")) {
     return "food";
   }
 
-  if (t.includes("sticker")) {
+  if (type.includes("sticker")) {
     return "stickers";
   }
 
   return "pets";
 }
 
+function categoryLabel(category) {
+  const labels = {
+    all: "ALL",
+    pets: "PETS",
+    petwear: "PET WEAR",
+    eggs: "EGGS",
+    vehicles: "VEHICLES",
+    toys: "TOYS",
+    gifts: "GIFTS",
+    strollers: "STROLLERS",
+    food: "FOOD",
+    stickers: "STICKERS"
+  };
+
+  return labels[category] || category.toUpperCase();
+}
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
 function imageURL(item) {
-  if (!item?.image) {
+  const image = item?.image || "";
+
+  if (!image) {
     return "";
   }
 
-  if (item.image.startsWith("http://")) {
-    return item.image;
+  if (
+    image.startsWith("http://") ||
+    image.startsWith("https://")
+  ) {
+    return image;
   }
 
-  if (item.image.startsWith("https://")) {
-    return item.image;
-  }
-
-  return IMAGE_BASE + "/" + item.image.replace(/^\/+/, "");
+  return (
+    IMAGE_BASE +
+    "/" +
+    image.replace(/^\/+/, "")
+  );
 }
 
-function imageHTML(item, cls = "pet-photo") {
+function imageHTML(item, className = "pet-photo") {
+  const src = imageURL(item);
+
   return `
     <img
-      src="${escapeHTML(imageURL(item))}"
+      src="${escapeHTML(src)}"
       alt="${escapeHTML(item?.name || "Item")}"
-      class="${cls}"
+      class="${escapeHTML(className)}"
       loading="lazy"
-      onerror="this.style.display='none'"
+      onerror="this.classList.add('image-error')"
     >
   `;
 }
 
 /* =========================================================
    VALUE SYSTEM
-   D = Default / Normal
-   N = Neon
-   M = Mega
-   F = Fly
-   R = Ride
-   ========================================================= */
 
-function getValue(item, form = "D", potion = "normal") {
-  if (!item) return 0;
+   Database structure:
+
+   regular.value
+   regular.no_potion
+   regular.ride
+   regular.fly
+   regular.fly_ride
+
+   neon.value
+   neon.no_potion
+   neon.ride
+   neon.fly
+   neon.fly_ride
+
+   mega.value
+   mega.no_potion
+   mega.ride
+   mega.fly
+   mega.fly_ride
+========================================================= */
+
+function getValue(
+  item,
+  form = "D",
+  potion = "normal"
+) {
+  if (!item) {
+    return 0;
+  }
 
   let group = item.regular || {};
-  let key = "value";
 
   if (form === "N") {
-    group = item.neon || item.regular || {};
+    group =
+      item.neon ||
+      item.regular ||
+      {};
   }
 
   if (form === "M") {
-    group = item.mega || item.neon || item.regular || {};
+    group =
+      item.mega ||
+      item.neon ||
+      item.regular ||
+      {};
   }
 
-  if (potion === "fly") {
-    key = "fly";
+  let key = "value";
+
+  if (potion === "normal") {
+    key = "no_potion";
+
+    if (
+      group.no_potion === undefined
+    ) {
+      key = "value";
+    }
   }
 
   if (potion === "ride") {
     key = "ride";
   }
 
+  if (potion === "fly") {
+    key = "fly";
+  }
+
   if (potion === "flyride") {
     key = "fly_ride";
   }
 
-  if (potion === "normal") {
-    if (form === "D") {
-      key = "value";
-    }
+  const result =
+    Number(group[key]);
 
-    if (form === "N") {
-      key = "value";
-    }
-
-    if (form === "M") {
-      key = "value";
-    }
+  if (Number.isFinite(result)) {
+    return result;
   }
 
-  const direct = Number(group[key]);
+  const fallback =
+    Number(group.value);
 
-  if (Number.isFinite(direct)) {
-    return direct;
-  }
-
-  const fallback = Number(group.value);
-
-  return Number.isFinite(fallback) ? fallback : 0;
+  return Number.isFinite(fallback)
+    ? fallback
+    : 0;
 }
 
 /* =========================================================
    PROFILE
-   ========================================================= */
+========================================================= */
 
 const DEFAULT_PROFILE = {
   name: "Zayaxra Kullanıcısı",
+
   username: "@kullanici",
-  bio: "Henüz bir biyografi eklenmedi.",
+
+  bio:
+    "Henüz bir biyografi eklenmedi.",
+
   avatar: "🐉",
+
   stats: {
     trades: 0,
     wins: 0,
@@ -265,27 +341,39 @@ const DEFAULT_PROFILE = {
 function loadProfile() {
   try {
     const raw =
-      localStorage.getItem("zayaxra_profile") ||
-      localStorage.getItem("zayagg_profile");
+      localStorage.getItem(
+        "zayaxra_profile"
+      ) ||
+      localStorage.getItem(
+        "zayagg_profile"
+      );
 
     if (!raw) {
-      return structuredClone
-        ? structuredClone(DEFAULT_PROFILE)
-        : JSON.parse(JSON.stringify(DEFAULT_PROFILE));
+      return JSON.parse(
+        JSON.stringify(
+          DEFAULT_PROFILE
+        )
+      );
     }
 
-    const parsed = JSON.parse(raw);
+    const parsed =
+      JSON.parse(raw);
 
     return {
       ...DEFAULT_PROFILE,
       ...parsed,
+
       stats: {
         ...DEFAULT_PROFILE.stats,
         ...(parsed.stats || {})
       }
     };
   } catch {
-    return JSON.parse(JSON.stringify(DEFAULT_PROFILE));
+    return JSON.parse(
+      JSON.stringify(
+        DEFAULT_PROFILE
+      )
+    );
   }
 }
 
@@ -298,7 +386,8 @@ function saveProfile() {
 
 function renderProfile() {
   if ($("profileName")) {
-    $("profileName").textContent = profileData.name;
+    $("profileName").textContent =
+      profileData.name;
   }
 
   if ($("profileUsername")) {
@@ -309,66 +398,79 @@ function renderProfile() {
   }
 
   if ($("profileBio")) {
-    $("profileBio").textContent = profileData.bio;
+    $("profileBio").textContent =
+      profileData.bio;
   }
 
   if ($("profileAvatar")) {
-    $("profileAvatar").textContent = profileData.avatar;
+    $("profileAvatar").textContent =
+      profileData.avatar;
   }
 
   if ($("profileTrades")) {
-    $("profileTrades").textContent = profileData.stats.trades;
+    $("profileTrades").textContent =
+      profileData.stats.trades;
   }
 
   if ($("profileWins")) {
-    $("profileWins").textContent = profileData.stats.wins;
+    $("profileWins").textContent =
+      profileData.stats.wins;
   }
 
   if ($("profileFair")) {
-    $("profileFair").textContent = profileData.stats.fairs;
+    $("profileFair").textContent =
+      profileData.stats.fairs;
   }
 
   if ($("profileLoses")) {
-    $("profileLoses").textContent = profileData.stats.loses;
-  }
-
-  if ($("tradeCount")) {
-    $("tradeCount").textContent = profileData.stats.trades;
-  }
-
-  if ($("winCount")) {
-    $("winCount").textContent = profileData.stats.wins;
-  }
-
-  if ($("fairCount")) {
-    $("fairCount").textContent = profileData.stats.fairs;
-  }
-
-  if ($("loseCount")) {
-    $("loseCount").textContent = profileData.stats.loses;
+    $("profileLoses").textContent =
+      profileData.stats.loses;
   }
 }
 
 function openProfile() {
   renderProfile();
 
-  $("profileModal")?.classList.add("show", "open");
-  $("profileModal")?.setAttribute("aria-hidden", "false");
+  $("profileModal")
+    ?.classList.add(
+      "show",
+      "open"
+    );
 
-  document.body.classList.add("profile-open");
+  $("profileModal")
+    ?.setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+  document.body.classList.add(
+    "profile-open"
+  );
 }
 
 function closeProfile() {
-  $("profileModal")?.classList.remove("show", "open");
-  $("profileModal")?.setAttribute("aria-hidden", "true");
+  $("profileModal")
+    ?.classList.remove(
+      "show",
+      "open"
+    );
 
-  document.body.classList.remove("profile-open");
+  $("profileModal")
+    ?.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+  document.body.classList.remove(
+    "profile-open"
+  );
 
   closeEditProfile();
 }
 
 function renderAvatars() {
-  const box = $("avatarPick");
+  const box =
+    $("avatarPick");
 
   if (!box) return;
 
@@ -389,375 +491,541 @@ function renderAvatars() {
     "🌙"
   ];
 
-  avatars.forEach((avatar) => {
-    const btn = document.createElement("button");
+  avatars.forEach(
+    (avatar) => {
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    btn.type = "button";
-    btn.className =
-      "avatar-opt" +
-      (avatar === profileData.avatar ? " active" : "");
+      button.type = "button";
 
-    btn.textContent = avatar;
+      button.className =
+        "avatar-opt" +
+        (
+          avatar ===
+          profileData.avatar
+            ? " active"
+            : ""
+        );
 
-    btn.addEventListener("click", () => {
-      profileData.avatar = avatar;
+      button.textContent =
+        avatar;
 
-      box
-        .querySelectorAll(".avatar-opt")
-        .forEach((x) => x.classList.remove("active"));
+      button.onclick = () => {
+        profileData.avatar =
+          avatar;
 
-      btn.classList.add("active");
-    });
+        box
+          .querySelectorAll(
+            ".avatar-opt"
+          )
+          .forEach(
+            (element) =>
+              element.classList.remove(
+                "active"
+              )
+          );
 
-    box.appendChild(btn);
-  });
+        button.classList.add(
+          "active"
+        );
+      };
+
+      box.appendChild(
+        button
+      );
+    }
+  );
 }
 
 function openEditProfile() {
-  const form = $("profileEditForm");
+  const form =
+    $("profileEditForm");
 
   if (!form) return;
 
   if ($("editName")) {
-    $("editName").value = profileData.name;
+    $("editName").value =
+      profileData.name;
   }
 
   if ($("editUsername")) {
     $("editUsername").value =
-      profileData.username.replace(/^@/, "");
+      profileData.username.replace(
+        /^@/,
+        ""
+      );
   }
 
   if ($("editBio")) {
-    $("editBio").value = profileData.bio;
+    $("editBio").value =
+      profileData.bio;
   }
 
   renderAvatars();
 
-  form.classList.remove("hidden");
+  form.classList.remove(
+    "hidden"
+  );
 
-  $("profileEditBtn")?.classList.add("hidden");
+  $("profileEditBtn")
+    ?.classList.add(
+      "hidden"
+    );
 }
 
 function closeEditProfile() {
-  $("profileEditForm")?.classList.add("hidden");
+  $("profileEditForm")
+    ?.classList.add(
+      "hidden"
+    );
 
-  $("profileEditBtn")?.classList.remove("hidden");
+  $("profileEditBtn")
+    ?.classList.remove(
+      "hidden"
+    );
 }
 
-function saveEditedProfile(event) {
+function saveEditedProfile(
+  event
+) {
   event?.preventDefault();
 
-  const name = ($("editName")?.value || "").trim();
-  const username = ($("editUsername")?.value || "").trim();
-  const bio = ($("editBio")?.value || "").trim();
+  const name =
+    ($("editName")?.value || "")
+      .trim();
 
-  if (!name || !username) return;
+  const username =
+    ($("editUsername")?.value || "")
+      .trim();
 
-  profileData.name = name;
-  profileData.username = username.startsWith("@")
-    ? username
-    : "@" + username;
+  const bio =
+    ($("editBio")?.value || "")
+      .trim();
+
+  if (!name || !username) {
+    return;
+  }
+
+  profileData.name =
+    name;
+
+  profileData.username =
+    username.startsWith("@")
+      ? username
+      : "@" + username;
 
   profileData.bio =
-    bio || DEFAULT_PROFILE.bio;
+    bio ||
+    DEFAULT_PROFILE.bio;
 
   saveProfile();
+
   renderProfile();
+
   closeEditProfile();
 }
 
 /* =========================================================
-   CATEGORY UI
-   ========================================================= */
+   PICKER ELEMENTS
+========================================================= */
 
-function getPickerModal() {
-  return $("petPicker") || $("petPickerModal");
+function pickerModal() {
+  return (
+    $("petPicker") ||
+    $("petPickerModal")
+  );
 }
 
-function getPickerSearch() {
-  return $("petSearch") || $("pickerSearch");
+function pickerSearch() {
+  return (
+    $("petSearch") ||
+    $("pickerSearch")
+  );
 }
 
-function getPickerGrid() {
-  return $("pickerPets") || $("pickerPetList");
+function pickerGrid() {
+  return (
+    $("pickerPets") ||
+    $("pickerPetList")
+  );
 }
 
-function installCategoryUI() {
-  const modal = getPickerModal();
+/* =========================================================
+   CATEGORY BAR
+========================================================= */
+
+function createCategoryBar() {
+  const modal =
+    pickerModal();
 
   if (!modal) return;
 
   const windowEl =
     modal.querySelector(
-      ".profile-window, .pet-modal-box, .modal-box, .modal-content"
-    ) || modal;
+      ".profile-window"
+    );
 
-  let sidebar =
-    windowEl.querySelector(".zayaxra-category-sidebar");
+  if (!windowEl) return;
 
-  if (!sidebar) {
-    sidebar = document.createElement("div");
+  let bar =
+    windowEl.querySelector(
+      ".zayaxra-category-sidebar"
+    );
 
-    sidebar.className =
+  if (!bar) {
+    bar =
+      document.createElement(
+        "div"
+      );
+
+    bar.className =
       "zayaxra-category-sidebar";
 
     const search =
       windowEl.querySelector(
-        ".modal-search, #pickerSearch, #petSearch, .pet-search"
+        ".modal-search"
       );
 
     if (search) {
-      search.insertAdjacentElement(
-        "beforebegin",
-        sidebar
-      );
+      search.before(bar);
     } else {
-      windowEl.insertBefore(
-        sidebar,
-        windowEl.firstChild
-      );
+      windowEl.prepend(bar);
     }
   }
 
-  sidebar.innerHTML = "";
+  bar.innerHTML = "";
 
   const categories = [
-    ["all", "ALL"],
-    ["pets", "PETS"],
-    ["petwear", "PET WEAR"],
-    ["eggs", "EGGS"],
-    ["vehicles", "VEHICLES"],
-    ["toys", "TOYS"],
-    ["gifts", "GIFTS"],
-    ["strollers", "STROLLERS"],
-    ["food", "FOOD"],
-    ["stickers", "STICKERS"]
+    "all",
+    "pets",
+    "petwear",
+    "eggs",
+    "vehicles",
+    "toys",
+    "gifts",
+    "strollers",
+    "food",
+    "stickers"
   ];
 
-  categories.forEach(([key, label]) => {
-    const btn = document.createElement("button");
+  categories.forEach(
+    (category) => {
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    btn.type = "button";
+      button.type = "button";
 
-    btn.className =
-      "zayaxra-category-btn" +
-      (pickerCategory === key ? " active" : "");
+      button.textContent =
+        categoryLabel(
+          category
+        );
 
-    btn.textContent = label;
+      button.className =
+        "zayaxra-category-btn" +
+        (
+          category ===
+          pickerCategory
+            ? " active"
+            : ""
+        );
 
-    btn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+      button.onclick = (
+        event
+      ) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-      pickerCategory = key;
+        pickerCategory =
+          category;
 
-      installCategoryUI();
-      renderPicker();
-    });
+        createCategoryBar();
 
-    sidebar.appendChild(btn);
-  });
+        renderPicker();
+      };
 
-  if (!$("zayaxraCategoryStyles")) {
-    const style = document.createElement("style");
-
-    style.id = "zayaxraCategoryStyles";
-
-    style.textContent = `
-      .zayaxra-category-sidebar {
-        display:flex;
-        gap:7px;
-        overflow-x:auto;
-        padding:0 0 10px;
-        margin-bottom:10px;
-        scrollbar-width:thin;
-      }
-
-      .zayaxra-category-btn {
-        flex:0 0 auto;
-        border:1px solid rgba(255,255,255,.08);
-        background:rgba(255,255,255,.035);
-        color:#8d93a5;
-        border-radius:10px;
-        padding:8px 11px;
-        font-size:9px;
-        font-weight:900;
-        letter-spacing:.08em;
-        cursor:pointer;
-      }
-
-      .zayaxra-category-btn:hover,
-      .zayaxra-category-btn.active {
-        color:#fff;
-        background:rgba(139,124,255,.16);
-        border-color:rgba(139,124,255,.38);
-      }
-
-      .zayaxra-form-row {
-        display:flex!important;
-        flex-wrap:nowrap!important;
-        align-items:center!important;
-        gap:7px!important;
-      }
-
-      .zayaxra-form-row button {
-        min-width:44px!important;
-        height:38px!important;
-        padding:0 10px!important;
-      }
-
-      .zayaxra-loading {
-        padding:30px;
-        text-align:center;
-        opacity:.75;
-      }
-    `;
-
-    document.head.appendChild(style);
-  }
+      bar.appendChild(
+        button
+      );
+    }
+  );
 }
 
 /* =========================================================
-   FORM BUTTONS
-   ========================================================= */
+   D N M F R CONTROLS
+========================================================= */
 
-function installFormControls() {
-  const formBox =
-    document.querySelector(".form-toggles");
-
-  const potionBox =
-    document.querySelector(".potion-toggles");
-
-  if (!formBox && !potionBox) return;
-
+function setupVariantControls() {
   const options =
-    document.querySelector(".picker-options");
+    document.querySelector(
+      ".picker-options"
+    );
 
   if (!options) return;
 
+  const oldForm =
+    options.querySelector(
+      ".form-toggles"
+    );
+
+  const oldPotion =
+    options.querySelector(
+      ".potion-toggles"
+    );
+
+  if (!oldForm && !oldPotion) {
+    return;
+  }
+
   let row =
-    options.querySelector(".zayaxra-form-row");
+    options.querySelector(
+      ".zayaxra-variant-row"
+    );
 
   if (!row) {
-    row = document.createElement("div");
+    row =
+      document.createElement(
+        "div"
+      );
 
     row.className =
-      "zayaxra-form-row";
+      "zayaxra-variant-row";
 
-    options.appendChild(row);
+    options.prepend(row);
   }
 
   row.innerHTML = "";
 
-  const d =
-    formBox?.querySelector("#normalFormBtn") ||
-    document.createElement("button");
+  const buttons = [
+    {
+      element:
+        oldForm?.querySelector(
+          "#normalFormBtn"
+        ),
+      text: "D",
+      type: "D"
+    },
+    {
+      element:
+        oldForm?.querySelector(
+          "#btnNeon"
+        ),
+      text: "N",
+      type: "N"
+    },
+    {
+      element:
+        oldForm?.querySelector(
+          "#btnMega"
+        ),
+      text: "M",
+      type: "M"
+    },
+    {
+      element:
+        oldPotion?.querySelector(
+          "#btnFly"
+        ),
+      text: "F",
+      type: "F"
+    },
+    {
+      element:
+        oldPotion?.querySelector(
+          "#btnRide"
+        ),
+      text: "R",
+      type: "R"
+    }
+  ];
 
-  const n =
-    formBox?.querySelector("#btnNeon") ||
-    document.createElement("button");
+  buttons.forEach(
+    ({
+      element,
+      text,
+      type
+    }) => {
+      let button =
+        element;
 
-  const m =
-    formBox?.querySelector("#btnMega") ||
-    document.createElement("button");
+      if (!button) {
+        button =
+          document.createElement(
+            "button"
+          );
 
-  const f =
-    potionBox?.querySelector("#btnFly") ||
-    document.createElement("button");
-
-  const r =
-    potionBox?.querySelector("#btnRide") ||
-    document.createElement("button");
-
-  d.textContent = "D";
-  n.textContent = "N";
-  m.textContent = "M";
-  f.textContent = "F";
-  r.textContent = "R";
-
-  d.id = "zayaxraDButton";
-  n.id = "zayaxraNButton";
-  m.id = "zayaxraMButton";
-  f.id = "zayaxraFButton";
-  r.id = "zayaxraRButton";
-
-  [
-    [d, "D"],
-    [n, "N"],
-    [m, "M"],
-    [f, "F"],
-    [r, "R"]
-  ].forEach(([button, type]) => {
-    button.type = "button";
-
-    button.onclick = (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      if (type === "D" || type === "N" || type === "M") {
-        selectedForm = type;
+        button.type =
+          "button";
       }
 
-      if (type === "F") {
-        selectedPotion =
-          selectedPotion === "fly"
-            ? "normal"
-            : "fly";
-      }
+      button.textContent =
+        text;
 
-      if (type === "R") {
-        selectedPotion =
-          selectedPotion === "ride"
-            ? "normal"
-            : "ride";
-      }
+      button.className =
+        "form-btn";
 
-      updateFormButtons();
-      renderPreview();
-    };
+      button.onclick =
+        (event) => {
+          event.preventDefault();
+          event.stopPropagation();
 
-    row.appendChild(button);
-  });
+          if (
+            type === "D" ||
+            type === "N" ||
+            type === "M"
+          ) {
+            selectedForm =
+              type;
+          }
 
-  updateFormButtons();
+          if (type === "F") {
+            selectedPotion =
+              selectedPotion ===
+              "fly"
+                ? "normal"
+                : "fly";
+          }
+
+          if (type === "R") {
+            selectedPotion =
+              selectedPotion ===
+              "ride"
+                ? "normal"
+                : "ride";
+          }
+
+          updateVariantButtons();
+
+          renderPreview();
+
+          renderPicker();
+        };
+
+      row.appendChild(
+        button
+      );
+    }
+  );
+
+  updateVariantButtons();
 }
 
-function updateFormButtons() {
-  const d = $("zayaxraDButton");
-  const n = $("zayaxraNButton");
-  const m = $("zayaxraMButton");
-  const f = $("zayaxraFButton");
-  const r = $("zayaxraRButton");
+function updateVariantButtons() {
+  const buttons =
+    document.querySelectorAll(
+      ".zayaxra-variant-row button"
+    );
 
-  d?.classList.toggle("active", selectedForm === "D");
-  n?.classList.toggle("active", selectedForm === "N");
-  m?.classList.toggle("active", selectedForm === "M");
+  buttons.forEach(
+    (button) => {
+      const text =
+        button.textContent
+          .trim()
+          .toUpperCase();
 
-  f?.classList.toggle(
-    "active",
-    selectedPotion === "fly"
+      let active =
+        false;
+
+      if (
+        text === "D"
+      ) {
+        active =
+          selectedForm === "D";
+      }
+
+      if (
+        text === "N"
+      ) {
+        active =
+          selectedForm === "N";
+      }
+
+      if (
+        text === "M"
+      ) {
+        active =
+          selectedForm === "M";
+      }
+
+      if (
+        text === "F"
+      ) {
+        active =
+          selectedPotion ===
+          "fly";
+      }
+
+      if (
+        text === "R"
+      ) {
+        active =
+          selectedPotion ===
+          "ride";
+      }
+
+      button.classList.toggle(
+        "active",
+        active
+      );
+    }
   );
 
-  r?.classList.toggle(
-    "active",
-    selectedPotion === "ride"
-  );
+  $("normalFormBtn")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "D"
+    );
+
+  $("btnNeon")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "N"
+    );
+
+  $("btnMega")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "M"
+    );
+
+  $("btnFly")
+    ?.classList.toggle(
+      "active",
+      selectedPotion === "fly"
+    );
+
+  $("btnRide")
+    ?.classList.toggle(
+      "active",
+      selectedPotion === "ride"
+    );
 }
 
 /* =========================================================
-   PICKER
-   ========================================================= */
+   OPEN PICKER
+========================================================= */
 
 function openPetPicker(side) {
-  pickerSide = side;
-  selectedItem = null;
+  pickerSide =
+    side;
 
-  selectedForm = "D";
-  selectedPotion = "normal";
-  pickerCategory = "all";
-  pickerValuesVisible = true;
+  selectedItem =
+    null;
 
-  const title = $("petPickerTitle");
+  selectedForm =
+    "D";
+
+  selectedPotion =
+    "normal";
+
+  pickerCategory =
+    "all";
+
+  const title =
+    $("petPickerTitle");
 
   if (title) {
     title.textContent =
@@ -766,82 +1034,140 @@ function openPetPicker(side) {
         : "Karşı tarafın teklifine item ekle";
   }
 
-  const search = getPickerSearch();
+  const search =
+    pickerSearch();
 
   if (search) {
     search.value = "";
   }
 
-  installCategoryUI();
-  installFormControls();
+  createCategoryBar();
+  setupVariantControls();
 
   renderPreview();
   renderPicker();
 
-  const modal = getPickerModal();
+  const modal =
+    pickerModal();
 
-  if (!modal) return;
+  if (!modal) {
+    return;
+  }
 
-  modal.classList.add("show", "open");
-  modal.setAttribute("aria-hidden", "false");
+  modal.classList.add(
+    "show",
+    "open"
+  );
 
-  document.body.classList.add("profile-open");
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
 
-  setTimeout(() => {
-    getPickerSearch()?.focus();
-  }, 50);
+  document.body.classList.add(
+    "profile-open"
+  );
+
+  setTimeout(
+    () => {
+      pickerSearch()
+        ?.focus();
+    },
+    50
+  );
 }
 
 function closePetPicker() {
-  const modal = getPickerModal();
+  const modal =
+    pickerModal();
 
   if (!modal) return;
 
-  modal.classList.remove("show", "open");
-  modal.setAttribute("aria-hidden", "true");
+  modal.classList.remove(
+    "show",
+    "open"
+  );
 
-  document.body.classList.remove("profile-open");
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
-  pickerSide = null;
-  selectedItem = null;
+  document.body.classList.remove(
+    "profile-open"
+  );
+
+  pickerSide =
+    null;
+
+  selectedItem =
+    null;
 }
 
-function filteredItems() {
+/* =========================================================
+   FILTER
+========================================================= */
+
+function filteredPickerItems() {
   const query =
     normalizeText(
-      getPickerSearch()?.value || ""
+      pickerSearch()?.value ||
+      ""
     );
 
-  return items.filter((item) => {
-    const cat =
-      pickerCategory === "all" ||
-      itemCategory(item) === pickerCategory;
+  return items.filter(
+    (item) => {
 
-    const search =
-      !query ||
-      normalizeText(item.name).includes(query) ||
-      normalizeText(item.rarity).includes(query) ||
-      normalizeText(item.type).includes(query);
+      const categoryMatch =
+        pickerCategory ===
+          "all" ||
+        itemCategory(item) ===
+          pickerCategory;
 
-    return cat && search;
-  });
+      const searchMatch =
+        !query ||
+        normalizeText(
+          item.name
+        ).includes(query) ||
+        normalizeText(
+          item.rarity
+        ).includes(query) ||
+        normalizeText(
+          item.type
+        ).includes(query);
+
+      return (
+        categoryMatch &&
+        searchMatch
+      );
+    }
+  );
 }
 
-function renderPicker() {
-  const grid = getPickerGrid();
+/* =========================================================
+   RENDER PICKER
+========================================================= */
 
-  if (!grid) return;
+function renderPicker() {
+  const grid =
+    pickerGrid();
+
+  if (!grid) {
+    return;
+  }
 
   if (!items.length) {
     grid.innerHTML = `
       <div class="zayaxra-loading">
-        Veriler yükleniyor...
+        Adopt Me itemleri yükleniyor...
       </div>
     `;
+
     return;
   }
 
-  const list = filteredItems();
+  const list =
+    filteredPickerItems();
 
   grid.innerHTML = "";
 
@@ -850,93 +1176,174 @@ function renderPicker() {
       <div class="empty-picker">
         <span>🔎</span>
         <strong>Item bulunamadı</strong>
-        <small>Başka bir isim veya kategori dene.</small>
+        <small>
+          Arama veya kategoriyi değiştir.
+        </small>
       </div>
     `;
+
     return;
   }
 
-  list.forEach((item) => {
-    const button =
-      document.createElement("button");
+  const fragment =
+    document.createDocumentFragment();
 
-    button.type = "button";
+  list.forEach(
+    (item) => {
 
-    button.className =
-      "pet-choice" +
-      (selectedItem?.id === item.id
-        ? " selected"
-        : "");
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    button.innerHTML = `
-      <div class="choice-image">
-        ${imageHTML(item)}
-      </div>
+      button.type =
+        "button";
 
-      <strong>
-        ${escapeHTML(item.name)}
-      </strong>
+      button.className =
+        "pet-choice" +
+        (
+          selectedItem?.id ===
+          item.id
+            ? " selected"
+            : ""
+        );
 
-      <span class="rarity-tag">
-        ${escapeHTML(
-          rarityName(item.rarity)
-        )}
-      </span>
+      const currentValue =
+        getValue(
+          item,
+          selectedForm,
+          selectedPotion
+        );
 
-      <small class="picker-choice-value">
-        ${formatValue(
-          getValue(
-            item,
-            selectedForm,
-            selectedPotion
-          )
-        )}
-      </small>
-    `;
+      button.innerHTML = `
+        <div class="choice-image">
+          ${imageHTML(item)}
+        </div>
 
-    button.addEventListener(
-      "click",
-      (event) => {
-        event.preventDefault();
-        event.stopPropagation();
+        <strong>
+          ${escapeHTML(
+            item.name
+          )}
+        </strong>
 
-        selectedItem = item;
+        <span
+          class="
+            rarity-tag
+            ${rarityClass(
+              item.rarity
+            )}
+          "
+        >
+          ${escapeHTML(
+            rarityName(
+              item.rarity
+            )
+          )}
+        </span>
 
-        renderPreview();
-        updateFormButtons();
+        <small>
+          ${formatValue(
+            currentValue
+          )}
+        </small>
+      `;
 
-        grid
-          .querySelectorAll(".pet-choice")
-          .forEach((x) =>
-            x.classList.remove("selected")
+      button.onclick =
+        (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+
+          selectedItem =
+            item;
+
+          renderPreview();
+
+          grid
+            .querySelectorAll(
+              ".pet-choice"
+            )
+            .forEach(
+              (element) =>
+                element.classList.remove(
+                  "selected"
+                )
+            );
+
+          button.classList.add(
+            "selected"
           );
 
-        button.classList.add("selected");
-      }
-    );
+          const confirm =
+            $("confirmPetBtn");
 
-    grid.appendChild(button);
-  });
+          if (confirm) {
+            confirm.disabled =
+              false;
+          }
+        };
+
+      fragment.appendChild(
+        button
+      );
+    }
+  );
+
+  grid.appendChild(
+    fragment
+  );
+
+  updateVariantButtons();
 }
 
-function renderPreview() {
-  const box = $("pickerPreview");
+/* =========================================================
+   PREVIEW
+========================================================= */
 
-  if (!box) return;
+function renderPreview() {
+  const box =
+    $("pickerPreview");
+
+  if (!box) {
+    return;
+  }
 
   if (!selectedItem) {
     box.innerHTML = "";
+
+    if ($("pickerValue")) {
+      $("pickerValue")
+        .textContent = "0";
+    }
+
+    if ($("confirmPetBtn")) {
+      $("confirmPetBtn")
+        .disabled = true;
+    }
+
     return;
   }
 
-  const value = getValue(
-    selectedItem,
-    selectedForm,
-    selectedPotion
-  );
+  const value =
+    getValue(
+      selectedItem,
+      selectedForm,
+      selectedPotion
+    );
 
   box.innerHTML = `
     <div class="pet-image-wrap">
+
+      ${
+        selectedForm === "N"
+          ? `<div class="neon-effect"></div>`
+          : ""
+      }
+
+      ${
+        selectedForm === "M"
+          ? `<div class="mega-effect"></div>`
+          : ""
+      }
 
       ${imageHTML(
         selectedItem
@@ -968,71 +1375,196 @@ function renderPreview() {
             : ""
         }
 
+        ${
+          selectedPotion === "flyride"
+            ? `
+              <span class="mini-chip fly">
+                F
+              </span>
+              <span class="mini-chip ride">
+                R
+              </span>
+            `
+            : ""
+        }
+
       </div>
 
     </div>
 
     <div class="preview-info">
+
       <strong>
-        ${escapeHTML(selectedItem.name)}
+        ${escapeHTML(
+          selectedItem.name
+        )}
       </strong>
 
       <span>
         ${escapeHTML(
-          rarityName(selectedItem.rarity)
+          rarityName(
+            selectedItem.rarity
+          )
         )}
       </span>
 
       <b>
-        ${formatValue(value)}
+        ${formatValue(
+          value
+        )}
       </b>
+
     </div>
   `;
 
-  const valueBox =
-    $("pickerValue");
-
-  if (valueBox) {
-    valueBox.textContent =
+  if ($("pickerValue")) {
+    $("pickerValue")
+      .textContent =
       formatValue(value);
   }
 
-  const confirm =
-    $("confirmPetBtn");
-
-  if (confirm) {
-    confirm.disabled = false;
+  if ($("confirmPetBtn")) {
+    $("confirmPetBtn")
+      .disabled = false;
   }
 }
 
+/* =========================================================
+   COMPATIBILITY BUTTONS
+========================================================= */
+
+function toggleForm(form) {
+  const value =
+    normalizeText(form);
+
+  if (
+    value === "normal" ||
+    value === "d"
+  ) {
+    selectedForm =
+      "D";
+  }
+
+  if (
+    value === "neon" ||
+    value === "n"
+  ) {
+    selectedForm =
+      "N";
+  }
+
+  if (
+    value === "mega" ||
+    value === "m"
+  ) {
+    selectedForm =
+      "M";
+  }
+
+  updateVariantButtons();
+
+  renderPreview();
+
+  renderPicker();
+}
+
+function togglePotion(type) {
+  const value =
+    normalizeText(type);
+
+  if (
+    value === "none" ||
+    value === "normal"
+  ) {
+    selectedPotion =
+      "normal";
+  }
+
+  if (
+    value === "fly"
+  ) {
+    selectedPotion =
+      selectedPotion ===
+      "fly"
+        ? "normal"
+        : "fly";
+  }
+
+  if (
+    value === "ride"
+  ) {
+    selectedPotion =
+      selectedPotion ===
+      "ride"
+        ? "normal"
+        : "ride";
+  }
+
+  if (
+    value === "flyride"
+  ) {
+    selectedPotion =
+      selectedPotion ===
+      "flyride"
+        ? "normal"
+        : "flyride";
+  }
+
+  updateVariantButtons();
+
+  renderPreview();
+
+  renderPicker();
+}
+
+/* =========================================================
+   CONFIRM ITEM
+========================================================= */
+
 function confirmAddPet() {
-  if (!selectedItem || !pickerSide) return;
+  if (
+    !selectedItem ||
+    !pickerSide
+  ) {
+    return;
+  }
 
-  const item = {
-    ...selectedItem,
+  const item =
+    {
+      ...selectedItem,
 
-    uniqueId:
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .slice(2),
+      uniqueId:
+        Date.now() +
+        "_" +
+        Math.random()
+          .toString(36)
+          .slice(2),
 
-    form: selectedForm,
+      form:
+        selectedForm,
 
-    potion: selectedPotion,
+      potion:
+        selectedPotion,
 
-    value: getValue(
-      selectedItem,
-      selectedForm,
-      selectedPotion
-    )
-  };
+      value:
+        getValue(
+          selectedItem,
+          selectedForm,
+          selectedPotion
+        )
+    };
 
-  if (pickerSide === "you") {
-    youTrade.push(item);
+  if (
+    pickerSide ===
+    "you"
+  ) {
+    youTrade.push(
+      item
+    );
   } else {
-    themTrade.push(item);
+    themTrade.push(
+      item
+    );
   }
 
   closePetPicker();
@@ -1042,84 +1574,155 @@ function confirmAddPet() {
 
 /* =========================================================
    TRADE
-   ========================================================= */
+========================================================= */
 
-function calculateTotal(trade) {
+function calculateTotal(
+  trade
+) {
   return trade.reduce(
     (sum, item) =>
-      sum + Number(item.value || 0),
+      sum +
+      Number(
+        item.value || 0
+      ),
     0
   );
 }
 
-function tradeItemHTML(item, side) {
+/* IMPORTANT:
+   CSS'in trade-slot yapısına göre
+   trade kartlarını gerçekten trade-slot olarak üret.
+*/
+
+function tradeItemHTML(
+  item
+) {
+  const badges = [];
+
+  if (
+    item.form === "N"
+  ) {
+    badges.push(`
+      <span class="
+        trade-slot-badge
+        neon
+      ">
+        N
+      </span>
+    `);
+  }
+
+  if (
+    item.form === "M"
+  ) {
+    badges.push(`
+      <span class="
+        trade-slot-badge
+        mega
+      ">
+        M
+      </span>
+    `);
+  }
+
+  if (
+    item.potion ===
+    "fly"
+  ) {
+    badges.push(`
+      <span class="
+        trade-slot-badge
+        fly
+      ">
+        F
+      </span>
+    `);
+  }
+
+  if (
+    item.potion ===
+    "ride"
+  ) {
+    badges.push(`
+      <span class="
+        trade-slot-badge
+        ride
+      ">
+        R
+      </span>
+    `);
+  }
+
+  if (
+    item.potion ===
+    "flyride"
+  ) {
+    badges.push(`
+      <span class="
+        trade-slot-badge
+        fly
+      ">
+        F
+      </span>
+
+      <span class="
+        trade-slot-badge
+        ride
+      ">
+        R
+      </span>
+    `);
+  }
+
   return `
     <div
-      class="trade-item"
+      class="trade-slot"
       data-trade-id="${escapeHTML(
         item.uniqueId
       )}"
     >
 
-      <div class="pet-image-wrap">
+      ${
+        item.form === "N"
+          ? `<div class="neon-effect"></div>`
+          : ""
+      }
 
-        ${imageHTML(item)}
+      ${
+        item.form === "M"
+          ? `<div class="mega-effect"></div>`
+          : ""
+      }
 
-        <div class="pet-badges">
-
-          ${
-            item.form === "N"
-              ? `<span class="mini-chip neon">N</span>`
-              : ""
-          }
-
-          ${
-            item.form === "M"
-              ? `<span class="mini-chip mega">M</span>`
-              : ""
-          }
-
-          ${
-            item.potion === "fly"
-              ? `<span class="mini-chip fly">F</span>`
-              : ""
-          }
-
-          ${
-            item.potion === "ride"
-              ? `<span class="mini-chip ride">R</span>`
-              : ""
-          }
-
-        </div>
-
+      <div class="trade-slot-image">
+        ${imageHTML(
+          item,
+          "trade-slot-photo"
+        )}
       </div>
 
-      <div class="trade-item-info">
-
-        <strong>
-          ${escapeHTML(item.name)}
-        </strong>
-
-        <small>
-          ${escapeHTML(
-            rarityName(item.rarity)
-          )}
-        </small>
-
+      <div class="trade-slot-name">
+        ${escapeHTML(
+          item.name
+        )}
       </div>
 
-      <strong>
-        ${formatValue(item.value)}
-      </strong>
+      <div class="trade-slot-value">
+        ${formatValue(
+          item.value
+        )}
+      </div>
+
+      <div class="trade-slot-badges">
+        ${badges.join("")}
+      </div>
 
       <button
         type="button"
         class="remove-item"
-        onclick="removeTradePet(
-          '${side}',
-          '${escapeHTML(item.uniqueId)}'
-        )"
+        data-remove-id="${escapeHTML(
+          item.uniqueId
+        )}"
       >
         ×
       </button>
@@ -1133,14 +1736,42 @@ function renderTradeSide(
   trade,
   side
 ) {
-  const element = $(elementId);
+  const element =
+    $(elementId);
 
-  if (!element) return;
+  if (!element) {
+    return;
+  }
 
   if (!trade.length) {
     element.innerHTML = `
-      <div class="empty-items">
-        Henüz item eklenmedi
+      <div
+        class="
+          empty-items
+          trade-empty
+        "
+      >
+
+        <span class="empty-plus">
+          ＋
+        </span>
+
+        <strong>
+          ${
+            side === "you"
+              ? "Henüz pet eklenmedi"
+              : "Henüz pet eklenmedi"
+          }
+        </strong>
+
+        <small>
+          ${
+            side === "you"
+              ? "Teklifini oluşturmak için pet ekle"
+              : "Karşı tarafın teklifini oluştur"
+          }
+        </small>
+
       </div>
     `;
 
@@ -1149,49 +1780,62 @@ function renderTradeSide(
 
   element.innerHTML =
     trade
-      .map((item) =>
-        tradeItemHTML(item, side)
+      .map(
+        (item) =>
+          tradeItemHTML(
+            item
+          )
       )
       .join("");
 
   element
-    .querySelectorAll(".trade-item")
-    .forEach((card) => {
-      card.addEventListener(
-        "click",
-        (event) => {
-          if (
-            event.target.closest(
-              ".remove-item"
-            )
-          ) {
-            return;
-          }
+    .querySelectorAll(
+      ".trade-slot"
+    )
+    .forEach(
+      (card) => {
 
-          const id =
-            card.dataset.tradeId;
+        const remove =
+          card.querySelector(
+            ".remove-item"
+          );
 
-          removeTradePet(side, id);
+        if (remove) {
+          remove.onclick =
+            (event) => {
+              event.stopPropagation();
+
+              removeTradePet(
+                side,
+                remove.dataset
+                  .removeId
+              );
+            };
         }
-      );
-    });
+
+      }
+    );
 }
 
 function removeTradePet(
   side,
-  uniqueId
+  id
 ) {
-  if (side === "you") {
+  if (
+    side === "you"
+  ) {
     youTrade =
       youTrade.filter(
         (item) =>
-          item.uniqueId !== uniqueId
+          item.uniqueId !==
+          id
       );
   } else {
     themTrade =
       themTrade.filter(
         (item) =>
-          item.uniqueId !== uniqueId
+          item.uniqueId !==
+          id
       );
   }
 
@@ -1205,12 +1849,23 @@ function clearTrade() {
   updateTradeUI();
 }
 
+/* =========================================================
+   RESULT
+========================================================= */
+
+let recordedTradeKey =
+  "";
+
 function updateTradeUI() {
   const youTotal =
-    calculateTotal(youTrade);
+    calculateTotal(
+      youTrade
+    );
 
   const themTotal =
-    calculateTotal(themTrade);
+    calculateTotal(
+      themTrade
+    );
 
   renderTradeSide(
     "youItems",
@@ -1225,13 +1880,19 @@ function updateTradeUI() {
   );
 
   if ($("youTotal")) {
-    $("youTotal").textContent =
-      formatValue(youTotal);
+    $("youTotal")
+      .textContent =
+      formatValue(
+        youTotal
+      );
   }
 
   if ($("themTotal")) {
-    $("themTotal").textContent =
-      formatValue(themTotal);
+    $("themTotal")
+      .textContent =
+      formatValue(
+        themTotal
+      );
   }
 
   updateResult(
@@ -1239,10 +1900,6 @@ function updateTradeUI() {
     themTotal
   );
 }
-
-/* =========================================================
-   RESULT
-   ========================================================= */
 
 function updateResult(
   youTotal,
@@ -1255,14 +1912,16 @@ function updateResult(
     $("resultStatusText");
 
   const diff =
-    $("resultDiffDisplay") ||
-    $("resultDiffNumber");
+    $("resultDiffDisplay");
 
   const statusLabel =
     $("tradeStatusLabel");
 
   const statusNumber =
     $("resultDiffNumber");
+
+  const statusBar =
+    $("tradeStatusBar");
 
   card?.classList.remove(
     "win",
@@ -1274,17 +1933,26 @@ function updateResult(
     "small-lose"
   );
 
+  statusBar?.classList.remove(
+    "big-win",
+    "small-win",
+    "fair",
+    "small-lose",
+    "big-lose"
+  );
+
   if (
     !youTotal &&
     !themTotal
   ) {
     if (status) {
       status.textContent =
-        "Item ekleyerek başla";
+        "Pet ekleyerek başla";
     }
 
     if (diff) {
-      diff.textContent = "—";
+      diff.textContent =
+        "—";
     }
 
     if (statusNumber) {
@@ -1306,11 +1974,12 @@ function updateResult(
   ) {
     if (status) {
       status.textContent =
-        "İki tarafa da item ekle";
+        "İki tarafa da pet ekle";
     }
 
     if (diff) {
-      diff.textContent = "—";
+      diff.textContent =
+        "—";
     }
 
     if (statusNumber) {
@@ -1327,56 +1996,97 @@ function updateResult(
   }
 
   const difference =
-    themTotal - youTotal;
+    themTotal -
+    youTotal;
 
   const percent =
     youTotal
-      ? (difference / youTotal) * 100
+      ? (difference /
+          youTotal) *
+        100
       : 0;
 
-  let result = "fair";
-  let label = "FAIR";
+  let state =
+    "fair";
 
-  if (percent >= 10) {
-    result = "big-win";
-    label = "BIG WIN";
-  } else if (percent > 3) {
-    result = "small-win";
-    label = "SMALL WIN";
-  } else if (percent <= -10) {
-    result = "big-lose";
-    label = "BIG LOSE";
-  } else if (percent < -3) {
-    result = "small-lose";
-    label = "SMALL LOSE";
+  let label =
+    "FAIR";
+
+  if (
+    percent >= 10
+  ) {
+    state =
+      "big-win";
+
+    label =
+      "BIG WIN";
+  } else if (
+    percent > 3
+  ) {
+    state =
+      "small-win";
+
+    label =
+      "SMALL WIN";
+  } else if (
+    percent <= -10
+  ) {
+    state =
+      "big-lose";
+
+    label =
+      "BIG LOSE";
+  } else if (
+    percent < -3
+  ) {
+    state =
+      "small-lose";
+
+    label =
+      "SMALL LOSE";
   }
 
   card?.classList.add(
-    result
+    state
+  );
+
+  statusBar?.classList.add(
+    state
   );
 
   if (
-    result.includes("win")
+    state.includes("win")
   ) {
-    card?.classList.add("win");
+    card?.classList.add(
+      "win"
+    );
   }
 
   if (
-    result.includes("lose")
+    state.includes("lose")
   ) {
-    card?.classList.add("lose");
+    card?.classList.add(
+      "lose"
+    );
   }
 
   if (
-    result === "fair"
+    state === "fair"
   ) {
-    card?.classList.add("fair");
+    card?.classList.add(
+      "fair"
+    );
   }
 
   const signed =
     difference > 0
-      ? "+" + formatValue(difference)
-      : formatValue(difference);
+      ? "+" +
+        formatValue(
+          difference
+        )
+      : formatValue(
+          difference
+        );
 
   if (status) {
     status.textContent =
@@ -1399,21 +2109,23 @@ function updateResult(
   }
 
   recordTradeResult(
-    result.includes("win")
+    state.includes("win")
       ? "win"
-      : result.includes("lose")
+      : state.includes(
+          "lose"
+        )
       ? "lose"
       : "fair"
   );
 }
 
 /* =========================================================
-   PROFILE TRADE STATS
-   ========================================================= */
+   PROFILE TRADE RECORD
+========================================================= */
 
-let recordedTradeKey = "";
-
-function recordTradeResult(status) {
+function recordTradeResult(
+  status
+) {
   if (
     !youTrade.length ||
     !themTrade.length
@@ -1424,60 +2136,75 @@ function recordTradeResult(status) {
   const key =
     youTrade
       .map(
-        (x) => x.uniqueId
+        (item) =>
+          item.uniqueId
       )
       .join(",") +
     "|" +
     themTrade
       .map(
-        (x) => x.uniqueId
+        (item) =>
+          item.uniqueId
       )
       .join(",") +
     "|" +
     status;
 
   if (
-    key === recordedTradeKey
+    key ===
+    recordedTradeKey
   ) {
     return;
   }
 
-  recordedTradeKey = key;
+  recordedTradeKey =
+    key;
 
   profileData.stats.trades++;
 
-  if (status === "win") {
+  if (
+    status === "win"
+  ) {
     profileData.stats.wins++;
   }
 
-  if (status === "fair") {
+  if (
+    status === "fair"
+  ) {
     profileData.stats.fairs++;
   }
 
-  if (status === "lose") {
+  if (
+    status === "lose"
+  ) {
     profileData.stats.loses++;
   }
 
   saveProfile();
+
   renderProfile();
 }
 
 /* =========================================================
-   INFO / MENU
-   ========================================================= */
+   INFO
+========================================================= */
 
-function openInfo(event) {
+function openInfo(
+  event
+) {
   event?.preventDefault();
 
-  $("infoModal")?.classList.add(
-    "show",
-    "open"
-  );
+  $("infoModal")
+    ?.classList.add(
+      "show",
+      "open"
+    );
 
-  $("infoModal")?.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+  $("infoModal")
+    ?.setAttribute(
+      "aria-hidden",
+      "false"
+    );
 
   document.body.classList.add(
     "profile-open"
@@ -1485,20 +2212,26 @@ function openInfo(event) {
 }
 
 function closeInfo() {
-  $("infoModal")?.classList.remove(
-    "show",
-    "open"
-  );
+  $("infoModal")
+    ?.classList.remove(
+      "show",
+      "open"
+    );
 
-  $("infoModal")?.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+  $("infoModal")
+    ?.setAttribute(
+      "aria-hidden",
+      "true"
+    );
 
   document.body.classList.remove(
     "profile-open"
   );
 }
+
+/* =========================================================
+   MENU
+========================================================= */
 
 function toggleMenu() {
   document.body.classList.toggle(
@@ -1513,29 +2246,29 @@ function closeMenu() {
 }
 
 /* =========================================================
-   VALUE LIST
-   ========================================================= */
+   SEARCH
+========================================================= */
 
 function renderValues() {
   const grid =
     $("valueGrid");
 
-  if (!grid) return;
+  if (!grid) {
+    return;
+  }
 
   const search =
     normalizeText(
-      $("search")?.value || ""
+      $("search")
+        ?.value || ""
     );
 
-  const list =
+  const results =
     items.filter(
       (item) =>
         !search ||
         normalizeText(
           item.name
-        ).includes(search) ||
-        normalizeText(
-          item.rarity
         ).includes(search) ||
         normalizeText(
           item.type
@@ -1544,78 +2277,89 @@ function renderValues() {
 
   grid.innerHTML = "";
 
-  if (!list.length) {
-    grid.innerHTML = `
-      <div class="empty-picker">
-        <span>🔎</span>
-        <strong>Item bulunamadı</strong>
-        <small>Başka bir isim dene.</small>
-      </div>
-    `;
+  results
+    .slice(0, 300)
+    .forEach(
+      (item) => {
+        const card =
+          document.createElement(
+            "div"
+          );
 
-    return;
-  }
+        card.className =
+          "value-card";
 
-  list
-    .slice(0, 500)
-    .forEach((item) => {
-      const card =
-        document.createElement("div");
-
-      card.className =
-        "value-card";
-
-      card.innerHTML = `
-        <div class="value-image">
-          ${imageHTML(item)}
-        </div>
-
-        <div class="value-info">
-
-          <h3>
-            ${escapeHTML(item.name)}
-          </h3>
-
-          <span class="rarity-small">
-            ${escapeHTML(
-              rarityName(item.rarity)
+        card.innerHTML = `
+          <div class="value-image">
+            ${imageHTML(
+              item
             )}
-          </span>
+          </div>
 
-          <small>
-            ${escapeHTML(
-              categoryName(item.type)
-            )}
-          </small>
+          <div class="value-info">
 
-          <strong>
-            Value:
-            ${formatValue(
-              getValue(
-                item,
-                "D",
-                "normal"
-              )
-            )}
-          </strong>
+            <h3>
+              ${escapeHTML(
+                item.name
+              )}
+            </h3>
 
-        </div>
-      `;
+            <span
+              class="
+                rarity-small
+                ${rarityClass(
+                  item.rarity
+                )}
+              "
+            >
+              ${escapeHTML(
+                rarityName(
+                  item.rarity
+                )
+              )}
+            </span>
 
-      grid.appendChild(card);
-    });
+            <small>
+              ${escapeHTML(
+                categoryLabel(
+                  itemCategory(
+                    item
+                  )
+                )
+              )}
+            </small>
+
+            <strong>
+              Value:
+              ${formatValue(
+                getValue(
+                  item,
+                  "D",
+                  "normal"
+                )
+              )}
+            </strong>
+
+          </div>
+        `;
+
+        grid.appendChild(
+          card
+        );
+      }
+    );
 }
 
 /* =========================================================
-   DATA LOADER
-   ========================================================= */
+   DATA
+========================================================= */
 
 async function loadData() {
-  const pickerGrid =
-    getPickerGrid();
+  const grid =
+    pickerGrid();
 
-  if (pickerGrid) {
-    pickerGrid.innerHTML = `
+  if (grid) {
+    grid.innerHTML = `
       <div class="zayaxra-loading">
         Adopt Me itemleri yükleniyor...
       </div>
@@ -1627,11 +2371,14 @@ async function loadData() {
       await fetch(
         DATA_URL,
         {
-          cache: "no-store"
+          cache:
+            "no-store"
         }
       );
 
-    if (!response.ok) {
+    if (
+      !response.ok
+    ) {
       throw new Error(
         "HTTP " +
           response.status
@@ -1641,9 +2388,11 @@ async function loadData() {
     const data =
       await response.json();
 
-    if (!Array.isArray(data)) {
+    if (
+      !Array.isArray(data)
+    ) {
       throw new Error(
-        "Veri formatı geçersiz."
+        "JSON array değil."
       );
     }
 
@@ -1670,19 +2419,14 @@ async function loadData() {
         })
       );
 
-    pets =
-      items.filter(
-        (item) =>
-          itemCategory(item) ===
-          "pets"
-      );
-
-    installCategoryUI();
-    installFormControls();
+    createCategoryBar();
+    setupVariantControls();
 
     renderPicker();
     renderValues();
+
     renderProfile();
+
     updateTradeUI();
 
   } catch (error) {
@@ -1692,8 +2436,8 @@ async function loadData() {
       error
     );
 
-    if (pickerGrid) {
-      pickerGrid.innerHTML = `
+    if (grid) {
+      grid.innerHTML = `
         <div class="empty-picker">
 
           <span>⚠️</span>
@@ -1703,8 +2447,7 @@ async function loadData() {
           </strong>
 
           <small>
-            İnternet bağlantını kontrol edip
-            sayfayı yenile.
+            Sayfayı yenile ve internet bağlantını kontrol et.
           </small>
 
         </div>
@@ -1714,8 +2457,8 @@ async function loadData() {
 }
 
 /* =========================================================
-   EVENTS
-   ========================================================= */
+   GLOBAL EVENTS
+========================================================= */
 
 document.addEventListener(
   "click",
@@ -1723,7 +2466,7 @@ document.addEventListener(
 
     if (
       event.target ===
-      getPickerModal()
+      pickerModal()
     ) {
       closePetPicker();
     }
@@ -1741,6 +2484,7 @@ document.addEventListener(
     ) {
       closeInfo();
     }
+
   }
 );
 
@@ -1749,26 +2493,29 @@ document.addEventListener(
   (event) => {
 
     if (
-      event.key === "Escape"
+      event.key ===
+      "Escape"
     ) {
       closePetPicker();
       closeProfile();
       closeInfo();
       closeMenu();
     }
+
   }
 );
 
 /* =========================================================
    INIT
-   ========================================================= */
+========================================================= */
 
 function initZayaxra() {
 
   renderProfile();
 
-  installCategoryUI();
-  installFormControls();
+  createCategoryBar();
+
+  setupVariantControls();
 
   const search =
     $("search");
@@ -1780,21 +2527,14 @@ function initZayaxra() {
     );
   }
 
-  const pickerSearch =
-    getPickerSearch();
+  const petSearch =
+    pickerSearch();
 
-  if (pickerSearch) {
-    pickerSearch.addEventListener(
+  if (petSearch) {
+    petSearch.addEventListener(
       "input",
       renderPicker
     );
-  }
-
-  const confirm =
-    $("confirmPetBtn");
-
-  if (confirm) {
-    confirm.disabled = true;
   }
 
   updateTradeUI();
@@ -1803,8 +2543,8 @@ function initZayaxra() {
 }
 
 /* =========================================================
-   GLOBALS FOR EXISTING HTML
-   ========================================================= */
+   GLOBAL FUNCTIONS FOR HTML
+========================================================= */
 
 window.openPetPicker =
   openPetPicker;
@@ -1820,6 +2560,12 @@ window.clearTrade =
 
 window.removeTradePet =
   removeTradePet;
+
+window.toggleForm =
+  toggleForm;
+
+window.togglePotion =
+  togglePotion;
 
 window.openProfile =
   openProfile;
@@ -1847,65 +2593,6 @@ window.toggleMenu =
 
 window.closeMenu =
   closeMenu;
-
-/* Compatibility */
-window.toggleForm = (
-  form
-) => {
-
-  if (
-    ["D", "normal"].includes(
-      String(form)
-    )
-  ) {
-    selectedForm = "D";
-  }
-
-  if (
-    String(form)
-      .toLowerCase() ===
-    "neon"
-  ) {
-    selectedForm = "N";
-  }
-
-  if (
-    String(form)
-      .toLowerCase() ===
-    "mega"
-  ) {
-    selectedForm = "M";
-  }
-
-  updateFormButtons();
-  renderPreview();
-};
-
-window.togglePotion = (
-  type
-) => {
-
-  const t =
-    String(type)
-      .toLowerCase();
-
-  if (t === "fly") {
-    selectedPotion =
-      selectedPotion === "fly"
-        ? "normal"
-        : "fly";
-  }
-
-  if (t === "ride") {
-    selectedPotion =
-      selectedPotion === "ride"
-        ? "normal"
-        : "ride";
-  }
-
-  updateFormButtons();
-  renderPreview();
-};
 
 document.addEventListener(
   "DOMContentLoaded",
