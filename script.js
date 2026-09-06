@@ -1,6 +1,6 @@
 /* =========================================================
    ZAYAXRA — SCRIPT.JS
-   TEMİZ + PREMIUM TRADE GRID SÜRÜMÜ
+   TEMİZ + PREMIUM TRADE + PROFILE SÜRÜMÜ
 ========================================================= */
 
 
@@ -880,7 +880,6 @@ function escapeHTML(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-
 }
 
 
@@ -1041,7 +1040,7 @@ function getProfileData() {
     return {
       name:
         data.name ||
-        "Zayagg Kullanıcısı",
+        "Zayaxra Kullanıcısı",
 
       username:
         data.username ||
@@ -1060,7 +1059,7 @@ function getProfileData() {
 
     return {
       name:
-        "Zayagg Kullanıcısı",
+        "Zayaxra Kullanıcısı",
 
       username:
         "@kullanici",
@@ -1071,6 +1070,124 @@ function getProfileData() {
       avatar:
         "🐉"
     };
+
+  }
+
+}
+
+
+/* =========================================================
+   LEGACY PROFILE CLEANUP
+========================================================= */
+
+function migrateLegacyProfile() {
+
+  const migrationKey =
+    "zayaxraProfileMigrationV1";
+
+  if (
+    localStorage.getItem(
+      migrationKey
+    ) === "1"
+  ) {
+    return;
+  }
+
+
+  try {
+
+    const raw =
+      localStorage.getItem(
+        "zayaggProfile"
+      );
+
+
+    if (!raw) {
+
+      localStorage.setItem(
+        migrationKey,
+        "1"
+      );
+
+      return;
+
+    }
+
+
+    const data =
+      JSON.parse(raw);
+
+
+    const name =
+      String(
+        data?.name || ""
+      ).toLowerCase();
+
+
+    const username =
+      String(
+        data?.username || ""
+      ).toLowerCase();
+
+
+    const bio =
+      String(
+        data?.bio || ""
+      ).toLowerCase();
+
+
+    const isOldZayagg =
+      name.includes("zayagg") ||
+      username.includes("zayagg") ||
+      bio.includes("adm");
+
+
+    if (isOldZayagg) {
+
+      saveProfileData({
+        name:
+          "Zayaxra Kullanıcısı",
+
+        username:
+          "@kullanici",
+
+        bio:
+          "Henüz bir biyografi eklenmedi.",
+
+        avatar:
+          data?.avatar ||
+          "🐉"
+      });
+
+    }
+
+
+    localStorage.setItem(
+      migrationKey,
+      "1"
+    );
+
+  } catch {
+
+    saveProfileData({
+      name:
+        "Zayaxra Kullanıcısı",
+
+      username:
+        "@kullanici",
+
+      bio:
+        "Henüz bir biyografi eklenmedi.",
+
+      avatar:
+        "🐉"
+    });
+
+
+    localStorage.setItem(
+      migrationKey,
+      "1"
+    );
 
   }
 
@@ -1175,7 +1292,6 @@ function openPetPicker(side) {
   document.body.classList.add(
     "modal-open"
   );
-
 
   document.body.classList.add(
     "profile-open"
@@ -2064,7 +2180,6 @@ function confirmAddPet() {
 
   }
 
-
   else {
 
     themTrade.push(
@@ -2133,11 +2248,7 @@ function calculateTotal(
 
 
 /* =========================================================
-   PREMIUM TRADE CARD
-========================================================= */
-
-/* =========================================================
-   ELVEBREDD STYLE TRADE SLOTS
+   TRADE SLOTS
 ========================================================= */
 
 function renderTradeSide(
@@ -2153,8 +2264,6 @@ function renderTradeSide(
     return;
   }
 
-
-  /* EMPTY */
 
   if (
     !trade.length
@@ -2188,16 +2297,12 @@ function renderTradeSide(
   }
 
 
-  /* PET SLOTS */
-
   element.innerHTML =
     trade.map(
       pet => {
 
         const badges = [];
 
-
-        /* NEON */
 
         if (
           pet.form === "neon"
@@ -2212,8 +2317,6 @@ function renderTradeSide(
         }
 
 
-        /* MEGA */
-
         if (
           pet.form === "mega"
         ) {
@@ -2227,8 +2330,6 @@ function renderTradeSide(
         }
 
 
-        /* FLY */
-
         if (
           pet.fly
         ) {
@@ -2241,8 +2342,6 @@ function renderTradeSide(
 
         }
 
-
-        /* RIDE */
 
         if (
           pet.ride
@@ -2358,7 +2457,6 @@ function removeTradePet(
       );
 
   }
-
 
   else if (
     side === "them"
@@ -2569,6 +2667,7 @@ function updateResult() {
 
 
     return;
+
   }
 
 
@@ -2604,7 +2703,6 @@ function updateResult() {
       `+${roundedPercent.toFixed(1)}%`;
 
   }
-
 
   else if (
     roundedPercent < 0
@@ -2897,7 +2995,6 @@ function recordTradeResult(
 
   }
 
-
   else if (
     status === "FAIR"
   ) {
@@ -2905,7 +3002,6 @@ function recordTradeResult(
     stats.fair++;
 
   }
-
 
   else if (
     status === "BIG LOSE" ||
@@ -2987,6 +3083,28 @@ function renderProfile() {
     getProfileData();
 
 
+  /* PROFILE LABEL */
+
+  const profileModal =
+    $("profileModal");
+
+
+  profileModal
+    ?.querySelectorAll(
+      ".profile-eyebrow"
+    )
+    .forEach(
+      element => {
+
+        element.textContent =
+          "PROFILE";
+
+      }
+    );
+
+
+  /* NAME */
+
   if ($("profileName")) {
 
     $("profileName").textContent =
@@ -2994,6 +3112,8 @@ function renderProfile() {
 
   }
 
+
+  /* USERNAME */
 
   if ($("profileUsername")) {
 
@@ -3003,6 +3123,8 @@ function renderProfile() {
   }
 
 
+  /* BIO */
+
   if ($("profileBio")) {
 
     $("profileBio").textContent =
@@ -3011,6 +3133,8 @@ function renderProfile() {
   }
 
 
+  /* AVATAR */
+
   if ($("profileAvatar")) {
 
     $("profileAvatar").textContent =
@@ -3018,6 +3142,8 @@ function renderProfile() {
 
   }
 
+
+  /* EDIT FORM */
 
   if ($("editName")) {
 
@@ -3283,7 +3409,7 @@ function saveEditedProfile(
   const name =
     $("editName")?.value
       .trim() ||
-    "Zayagg Kullanıcısı";
+    "Zayaxra Kullanıcısı";
 
 
   let username =
@@ -3522,10 +3648,17 @@ function initSearch() {
   }
 
 
-  search.addEventListener(
-    "input",
-    renderValues
-  );
+  if (
+    typeof renderValues ===
+    "function"
+  ) {
+
+    search.addEventListener(
+      "input",
+      renderValues
+    );
+
+  }
 
 }
 
@@ -3737,7 +3870,7 @@ function validateDatabase() {
   ) {
 
     console.error(
-      "ZAYAGG: PET_DATABASE bulunamadı."
+      "ZAYAXRA: PET_DATABASE bulunamadı."
     );
 
     return;
@@ -3756,7 +3889,7 @@ function validateDatabase() {
       ) {
 
         console.warn(
-          `ZAYAGG: ${index}. petin adı eksik.`
+          `ZAYAXRA: ${index}. petin adı eksik.`
         );
 
       }
@@ -3768,7 +3901,7 @@ function validateDatabase() {
       ) {
 
         console.warn(
-          `ZAYAGG: ${pet.name || index} değerinde sorun var.`
+          `ZAYAXRA: ${pet.name || index} değerinde sorun var.`
         );
 
       }
@@ -3779,7 +3912,7 @@ function validateDatabase() {
       ) {
 
         console.warn(
-          `ZAYAGG: ${pet.name || index} için image yok.`
+          `ZAYAXRA: ${pet.name || index} için image yok.`
         );
 
       }
@@ -3794,7 +3927,11 @@ function validateDatabase() {
    INIT
 ========================================================= */
 
-function initZayagg() {
+function initZayaxra() {
+
+  /* ESki ZAYAGG profilini bir kere temizle */
+  migrateLegacyProfile();
+
 
   ensureStorageData();
 
@@ -3826,7 +3963,7 @@ function initZayagg() {
 
 
   console.log(
-    "Zayagg başarıyla başlatıldı."
+    "ZAYAXRA başarıyla başlatıldı."
   );
 
 }
@@ -3843,7 +3980,7 @@ if (
 
   document.addEventListener(
     "DOMContentLoaded",
-    initZayagg,
+    initZayaxra,
     {
       once: true
     }
@@ -3853,7 +3990,7 @@ if (
 
 else {
 
-  initZayagg();
+  initZayaxra();
 
 }
 
@@ -3867,7 +4004,7 @@ window.addEventListener(
   event => {
 
     console.error(
-      "ZAYAGG JavaScript hatası:",
+      "ZAYAXRA JavaScript hatası:",
       event.error ||
       event.message
     );
@@ -3881,7 +4018,7 @@ window.addEventListener(
   event => {
 
     console.error(
-      "ZAYAGG Promise hatası:",
+      "ZAYAXRA Promise hatası:",
       event.reason
     );
 
