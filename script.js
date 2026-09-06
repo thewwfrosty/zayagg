@@ -11272,120 +11272,57 @@ document.addEventListener(
 
 })();
 /* =========================================
-   ZAYAXRA — CLEAN FORM PANEL
-   F / R / N / M / NORMAL
+   ZAYAXRA — FINAL PICKER BEHAVIOR
 ========================================= */
 
 (function () {
 
+  /* -----------------------------------------
+     PANEL + BUTON TASARIMI
+  ----------------------------------------- */
+
   const style = document.createElement("style");
 
-  style.id = "zayaxra-clean-form-panel";
+  style.id = "zayaxra-final-picker";
 
   style.textContent = `
 
-    /* =====================================
-       ALT PANEL
-    ===================================== */
+    /* PANEL HER ZAMAN AÇIK */
 
-    .pet-modal-window .picker-settings {
-      margin-left: 220px !important;
-      width: calc(100% - 220px) !important;
-      margin-top: 12px !important;
-    }
-
-    .pet-modal-window #pickerBar {
-      width: 100% !important;
-      min-height: 82px !important;
-
+    #pickerBar {
       display: flex !important;
-      align-items: center !important;
-      gap: 16px !important;
+    }
 
-      padding: 12px 15px !important;
-
-      border-radius: 16px !important;
-
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.055),
-          rgba(255,255,255,.018)
-        ) !important;
-
-      border:
-        1px solid rgba(255,255,255,.07) !important;
-
-      box-shadow:
-        0 12px 35px rgba(0,0,0,.18),
-        inset 0 1px 0 rgba(255,255,255,.025) !important;
+    #pickerBar.hidden {
+      display: flex !important;
     }
 
 
-    /* =====================================
-       PET ÖNİZLEME
-    ===================================== */
+    /* SADECE F R D N M */
 
-    .pet-modal-window .picker-preview {
-      flex: 0 0 150px !important;
-
-      min-height: 58px !important;
-
+    .picker-options {
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-
-      border-radius: 12px !important;
-
-      background:
-        rgba(255,255,255,.025) !important;
-
-      border:
-        1px solid rgba(255,255,255,.05) !important;
     }
 
 
-    /* =====================================
-       SADECE BUTONLAR
-    ===================================== */
-
-    .pet-modal-window .picker-options {
-      flex: 1 !important;
-
+    .form-toggles,
+    .potion-toggles {
       display: flex !important;
+      flex-direction: row !important;
       align-items: center !important;
-
       justify-content: center !important;
-
-      min-width: 0 !important;
-    }
-
-
-    .pet-modal-window .form-toggles,
-    .pet-modal-window .potion-toggles {
-
-      display: flex !important;
-
-      align-items: center !important;
-
-      justify-content: center !important;
-
-      gap: 9px !important;
-
+      gap: 8px !important;
       flex-wrap: nowrap !important;
     }
 
 
-    /* =====================================
-       TÜM FORM BUTONLARI
-    ===================================== */
+    /* TÜM BUTONLARDA EMOJİ YOK */
 
-    .pet-modal-window .form-btn,
-    .pet-modal-window .potion-btn {
-
-      position: relative !important;
-
-      width: 58px !important;
+    .form-btn,
+    .potion-btn {
+      width: 54px !important;
       height: 38px !important;
 
       padding: 0 !important;
@@ -11396,298 +11333,188 @@ document.addEventListener(
 
       border-radius: 10px !important;
 
-      border:
-        1px solid rgba(255,255,255,.075) !important;
+      font-size: 12px !important;
+      font-weight: 900 !important;
+
+      color: rgba(255,255,255,.55) !important;
 
       background:
         rgba(255,255,255,.035) !important;
 
-      color:
-        rgba(255,255,255,.55) !important;
-
-      font-family: inherit !important;
-
-      font-size: 11px !important;
-
-      font-weight: 900 !important;
-
-      letter-spacing: .04em !important;
-
-      cursor: pointer !important;
-
-      transition:
-        transform .18s ease,
-        color .18s ease,
-        background .18s ease,
-        border-color .18s ease,
-        box-shadow .18s ease !important;
-    }
-
-
-    /* Hover */
-
-    .pet-modal-window .form-btn:hover,
-    .pet-modal-window .potion-btn:hover {
-
-      transform:
-        translateY(-2px) !important;
-
-      color:
-        #fff !important;
-
-      background:
+      border:
+        1px solid
         rgba(255,255,255,.07) !important;
 
-      border-color:
-        rgba(145,120,255,.35) !important;
-
-      box-shadow:
-        0 7px 22px
-        rgba(100,75,220,.14) !important;
+      transition:
+        .18s ease !important;
     }
 
 
-    /* =====================================
-       AKTİF / PARLAYAN
-    ===================================== */
+    /* SEÇİLİ BUTON PARLASIN */
 
-    .pet-modal-window .form-btn.active,
-    .pet-modal-window .potion-btn.active {
+    .form-btn.active,
+    .potion-btn.active {
 
-      color:
-        #fff !important;
+      color: #fff !important;
 
       background:
         linear-gradient(
           135deg,
-          rgba(134,105,255,.28),
-          rgba(82,108,255,.14)
+          rgba(137,105,255,.28),
+          rgba(80,105,255,.15)
         ) !important;
 
       border-color:
-        rgba(157,130,255,.68) !important;
+        rgba(165,140,255,.72) !important;
 
       box-shadow:
         0 0 0 1px
-        rgba(150,125,255,.12),
+        rgba(145,115,255,.12),
 
         0 0 18px
-        rgba(125,95,255,.32),
+        rgba(125,95,255,.38),
 
-        0 7px 25px
-        rgba(88,65,210,.22) !important;
+        0 8px 25px
+        rgba(90,65,220,.22) !important;
+
+      transform:
+        translateY(-1px) !important;
     }
 
 
-    /* İç parlama */
+    .form-btn:hover,
+    .potion-btn:hover {
 
-    .pet-modal-window .form-btn.active::after,
-    .pet-modal-window .potion-btn.active::after {
+      color: #fff !important;
 
-      content: "";
+      transform:
+        translateY(-2px) !important;
 
-      position: absolute;
-
-      inset: 0;
-
-      border-radius: inherit;
-
-      background:
-        linear-gradient(
-          120deg,
-          rgba(255,255,255,.10),
-          transparent 45%
-        );
-
-      pointer-events:
-        none;
-    }
-
-
-    /* =====================================
-       BUTTON YAZILARI
-    ===================================== */
-
-    #normalFormBtn::after {
-      content: none !important;
-    }
-
-
-    #btnNeon::after,
-    #btnMega::after,
-    #btnFly::after,
-    #btnRide::after,
-    #flyRideBtn::after {
-      content: none !important;
-    }
-
-
-    /* =====================================
-       NORMAL / N / M / F / R
-       SADE METİN
-    ===================================== */
-
-    #normalFormBtn,
-    #noPotionBtn,
-    #btnNeon,
-    #btnMega,
-    #btnFly,
-    #btnRide,
-    #flyRideBtn {
-
-      font-size: 11px !important;
+      border-color:
+        rgba(145,120,255,.38) !important;
 
     }
 
 
-    /* =====================================
-       EKLE ALANI
-    ===================================== */
+    /* -----------------------------------------
+       SADE YAZILAR
+    ----------------------------------------- */
 
-    .pet-modal-window .picker-add {
+    #btnFly {
+      font-size: 0 !important;
+    }
 
-      flex:
-        0 0 110px !important;
-
-      display:
-        flex !important;
-
-      flex-direction:
-        row !important;
-
-      align-items:
-        center !important;
-
-      gap:
-        8px !important;
-
+    #btnFly::before {
+      content: "F";
+      font-size: 12px;
     }
 
 
-    .pet-modal-window .picker-value {
+    #btnRide {
+      font-size: 0 !important;
+    }
 
-      min-width:
-        48px !important;
-
-      height:
-        36px !important;
-
-      display:
-        flex !important;
-
-      align-items:
-        center !important;
-
-      justify-content:
-        center !important;
-
-      border-radius:
-        9px !important;
-
-      background:
-        rgba(255,255,255,.035) !important;
-
-      color:
-        rgba(255,255,255,.72) !important;
-
-      font-size:
-        10px !important;
-
-      font-weight:
-        900 !important;
-
+    #btnRide::before {
+      content: "R";
+      font-size: 12px;
     }
 
 
-    .pet-modal-window .add-confirm {
+    #btnNeon {
+      font-size: 0 !important;
+    }
 
-      height:
-        36px !important;
-
-      padding:
-        0 15px !important;
-
-      border-radius:
-        9px !important;
-
+    #btnNeon::before {
+      content: "N";
+      font-size: 12px;
     }
 
 
-    /* =====================================
-       HIDDEN
-    ===================================== */
+    #btnMega {
+      font-size: 0 !important;
+    }
 
-    .pet-modal-window #pickerBar.hidden {
-
-      display:
-        none !important;
-
+    #btnMega::before {
+      content: "M";
+      font-size: 12px;
     }
 
 
-    /* =====================================
+    #normalFormBtn {
+      font-size: 0 !important;
+    }
+
+    #normalFormBtn::before {
+      content: "D";
+      font-size: 12px;
+    }
+
+
+    /* NORMAL POTION BUTONU GÖRÜNMESİN */
+
+    #noPotionBtn {
+      display: none !important;
+    }
+
+
+    /* F/R'yi ayrı butonlar halinde tut */
+
+    .potion-toggles {
+      display: contents !important;
+    }
+
+
+    /* FORM SIRASI:
+       D N M F R
+    */
+
+    .form-toggles {
+      order: 1;
+    }
+
+
+    .potion-toggles {
+      order: 2;
+    }
+
+
+    /* -----------------------------------------
+       PET LİSTESİ
+    ----------------------------------------- */
+
+    .pet-choice {
+      transition:
+        transform .18s ease,
+        opacity .18s ease,
+        filter .18s ease !important;
+    }
+
+
+    /* Seçilen pet kaybolmasın */
+
+    .pet-choice.selected {
+      opacity: 1 !important;
+    }
+
+
+    /* -----------------------------------------
        MOBİL
-    ===================================== */
+    ----------------------------------------- */
 
     @media (max-width: 800px) {
 
-      .pet-modal-window .picker-settings {
+      .form-toggles,
+      .potion-toggles {
 
-        margin-left:
-          0 !important;
-
-        width:
-          100% !important;
+        gap: 6px !important;
 
       }
 
+      .form-btn,
+      .potion-btn {
 
-      .pet-modal-window #pickerBar {
-
-        flex-direction:
-          column !important;
-
-        align-items:
-          stretch !important;
-
-      }
-
-
-      .pet-modal-window .picker-preview {
-
-        flex:
-          none !important;
-
-        width:
-          100% !important;
-
-      }
-
-
-      .pet-modal-window .picker-options {
-
-        width:
-          100% !important;
-
-      }
-
-
-      .pet-modal-window .form-toggles,
-      .pet-modal-window .potion-toggles {
-
-        flex-wrap:
-          wrap !important;
-
-      }
-
-
-      .pet-modal-window .picker-add {
-
-        width:
-          100% !important;
-
-        justify-content:
-          flex-end !important;
+        width: 48px !important;
+        height: 36px !important;
 
       }
 
@@ -11698,258 +11525,209 @@ document.addEventListener(
   document.head.appendChild(style);
 
 
-  /* =====================================
-     BUTONLARDAKİ EMOJİLERİ TEMİZLE
-  ===================================== */
-
-  function cleanFormButtons() {
-
-    const replacements = {
-      "✨ Neon": "N",
-      "🌈 Mega": "M",
-      "🪽 Fly": "F",
-      "🐴 Ride": "R",
-      "🪽🐴 F/R": "F/R"
-    };
-
-
-    document
-      .querySelectorAll(
-        ".form-btn, .potion-btn"
-      )
-      .forEach(button => {
-
-        const text =
-          button.textContent
-            .trim();
-
-        if (
-          replacements[text]
-        ) {
-
-          button.textContent =
-            replacements[text];
-
-        }
-
-      });
-
-  }
-
-
-  /* =====================================
-     PICKER AÇILDIĞINDA
-  ===================================== */
-
-  function runCleanup() {
-
-    setTimeout(() => {
-
-      cleanFormButtons();
-
-    }, 100);
-
-    setTimeout(() => {
-
-      cleanFormButtons();
-
-    }, 400);
-
-  }
-
-
-  const oldOpenPetPicker =
-    window.openPetPicker;
-
-
-  if (
-    typeof oldOpenPetPicker ===
-    "function"
-  ) {
-
-    window.openPetPicker =
-      function (side) {
-
-        oldOpenPetPicker(side);
-
-        runCleanup();
-
-      };
-
-  }
-
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-      runCleanup();
-
-    }
-  );
-
-})();
-/* =========================================
-   ZAYAXRA — FIX PICKER BEHAVIOR
-========================================= */
-
-(function () {
-
   /* -----------------------------------------
-     PANEL HER ZAMAN GÖRÜNSÜN
+     PET SEÇİNCE KATEGORİ KORU
   ----------------------------------------- */
 
-  function forcePickerBarVisible() {
+  function getActiveCategoryButton() {
 
-    const bar =
-      document.getElementById("pickerBar");
-
-    if (!bar) return;
-
-    bar.classList.remove("hidden");
-
-    bar.style.display = "flex";
+    return document.querySelector(
+      ".zayaxra-category-btn.active"
+    );
 
   }
 
 
-  /* -----------------------------------------
-     PET SEÇİLDİĞİNDE KATEGORİ DEĞİŞMESİN
-  ----------------------------------------- */
-
-  const oldSelectPickerPet =
+  const originalSelect =
     window.selectPickerPet;
 
 
-  if (
-    typeof oldSelectPickerPet === "function"
-  ) {
+  if (typeof originalSelect === "function") {
 
-    window.selectPickerPet =
-      function (pet) {
+    window.selectPickerPet = function (pet) {
 
-        // O anki kategori kaydediliyor
-        const categoryBefore =
-          typeof currentCategory !== "undefined"
-            ? currentCategory
-            : null;
+      /*
+       * Seçimden ÖNCE aktif kategoriyi
+       * DOM üzerinden saklıyoruz.
+       */
 
-
-        // Eski seçim fonksiyonu
-        oldSelectPickerPet(pet);
+      const activeCategory =
+        getActiveCategoryButton();
 
 
-        // Panel hep açık
-        forcePickerBarVisible();
+      const category =
+        activeCategory
+          ? activeCategory.dataset.category
+          : null;
 
 
-        // Kategori aynı kalsın
-        if (
-          categoryBefore !== null &&
-          typeof currentCategory !== "undefined"
-        ) {
+      /*
+       * Normal seçim çalışsın.
+       */
 
-          currentCategory =
-            categoryBefore;
-
-        }
+      originalSelect(pet);
 
 
-        // Mevcut kategori yeniden çizilsin
-        if (
-          typeof renderCurrentCategory ===
-          "function"
-        ) {
+      /*
+       * Pet seçildikten sonra panel açık kalsın.
+       */
 
-          renderCurrentCategory();
+      const pickerBar =
+        document.getElementById("pickerBar");
 
-        }
+      if (pickerBar) {
 
-      };
+        pickerBar.classList.remove("hidden");
+
+        pickerBar.style.display = "flex";
+
+      }
+
+
+      /*
+       * Kategori ALL'a döndüyse
+       * eski kategoriye tekrar bas.
+       */
+
+      if (category) {
+
+        setTimeout(() => {
+
+          const oldButton =
+            document.querySelector(
+              `.zayaxra-category-btn[data-category="${category}"]`
+            );
+
+          if (oldButton) {
+
+            oldButton.click();
+
+          }
+
+        }, 30);
+
+      }
+
+
+      /*
+       * Seçilen petin kartı listede kalsın.
+       */
+
+      setTimeout(() => {
+
+        document
+          .querySelectorAll(".pet-choice")
+          .forEach(card => {
+
+            card.style.opacity = "1";
+            card.style.visibility = "visible";
+
+          });
+
+      }, 40);
+
+    };
 
   }
 
 
   /* -----------------------------------------
-     OPEN PICKER SONRASI PANELİ AÇ
+     OPEN PICKER
   ----------------------------------------- */
 
-  const oldOpenPetPicker =
+  const originalOpen =
     window.openPetPicker;
 
 
-  if (
-    typeof oldOpenPetPicker === "function"
-  ) {
+  if (typeof originalOpen === "function") {
 
-    window.openPetPicker =
-      function (side) {
+    window.openPetPicker = function (side) {
 
-        oldOpenPetPicker(side);
+      originalOpen(side);
 
 
-        setTimeout(() => {
+      setTimeout(() => {
 
-          forcePickerBarVisible();
+        const bar =
+          document.getElementById("pickerBar");
 
-        }, 50);
+        if (bar) {
 
+          bar.classList.remove("hidden");
 
-        setTimeout(() => {
+          bar.style.display = "flex";
 
-          forcePickerBarVisible();
+        }
 
-        }, 250);
+      }, 50);
 
-      };
+    };
 
   }
 
 
   /* -----------------------------------------
-     HIDDEN CLASS PANELİ KAPATAMASIN
+     BUTONLARI TEMİZLE
   ----------------------------------------- */
 
-  const style =
-    document.createElement("style");
+  function cleanButtons() {
 
-  style.id =
-    "zayaxra-picker-always-visible";
+    const normal =
+      document.getElementById("normalFormBtn");
 
-  style.textContent = `
+    const neon =
+      document.getElementById("btnNeon");
 
-    #pickerBar {
+    const mega =
+      document.getElementById("btnMega");
 
-      display: flex !important;
+    const fly =
+      document.getElementById("btnFly");
 
+    const ride =
+      document.getElementById("btnRide");
+
+
+    if (normal) {
+      normal.innerHTML = "D";
     }
 
-    #pickerBar.hidden {
-
-      display: flex !important;
-
+    if (neon) {
+      neon.innerHTML = "N";
     }
 
-  `;
+    if (mega) {
+      mega.innerHTML = "M";
+    }
 
-  document.head.appendChild(style);
+    if (fly) {
+      fly.innerHTML = "F";
+    }
+
+    if (ride) {
+      ride.innerHTML = "R";
+    }
 
 
-  /* -----------------------------------------
-     PICKER AÇILDIĞINDA
-  ----------------------------------------- */
+    const noPotion =
+      document.getElementById("noPotionBtn");
+
+    if (noPotion) {
+      noPotion.style.display = "none";
+    }
+
+  }
+
 
   document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-      setTimeout(() => {
-
-        forcePickerBarVisible();
-
-      }, 500);
+      setTimeout(cleanButtons, 200);
+      setTimeout(cleanButtons, 600);
 
     }
   );
+
 
 })();
