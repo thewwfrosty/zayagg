@@ -11271,3 +11271,521 @@ document.addEventListener(
   document.head.appendChild(style);
 
 })();
+/* =========================================
+   ZAYAXRA — CLEAN FORM PANEL
+   F / R / N / M / NORMAL
+========================================= */
+
+(function () {
+
+  const style = document.createElement("style");
+
+  style.id = "zayaxra-clean-form-panel";
+
+  style.textContent = `
+
+    /* =====================================
+       ALT PANEL
+    ===================================== */
+
+    .pet-modal-window .picker-settings {
+      margin-left: 220px !important;
+      width: calc(100% - 220px) !important;
+      margin-top: 12px !important;
+    }
+
+    .pet-modal-window #pickerBar {
+      width: 100% !important;
+      min-height: 82px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      gap: 16px !important;
+
+      padding: 12px 15px !important;
+
+      border-radius: 16px !important;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.018)
+        ) !important;
+
+      border:
+        1px solid rgba(255,255,255,.07) !important;
+
+      box-shadow:
+        0 12px 35px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.025) !important;
+    }
+
+
+    /* =====================================
+       PET ÖNİZLEME
+    ===================================== */
+
+    .pet-modal-window .picker-preview {
+      flex: 0 0 150px !important;
+
+      min-height: 58px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      border-radius: 12px !important;
+
+      background:
+        rgba(255,255,255,.025) !important;
+
+      border:
+        1px solid rgba(255,255,255,.05) !important;
+    }
+
+
+    /* =====================================
+       SADECE BUTONLAR
+    ===================================== */
+
+    .pet-modal-window .picker-options {
+      flex: 1 !important;
+
+      display: flex !important;
+      align-items: center !important;
+
+      justify-content: center !important;
+
+      min-width: 0 !important;
+    }
+
+
+    .pet-modal-window .form-toggles,
+    .pet-modal-window .potion-toggles {
+
+      display: flex !important;
+
+      align-items: center !important;
+
+      justify-content: center !important;
+
+      gap: 9px !important;
+
+      flex-wrap: nowrap !important;
+    }
+
+
+    /* =====================================
+       TÜM FORM BUTONLARI
+    ===================================== */
+
+    .pet-modal-window .form-btn,
+    .pet-modal-window .potion-btn {
+
+      position: relative !important;
+
+      width: 58px !important;
+      height: 38px !important;
+
+      padding: 0 !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      border-radius: 10px !important;
+
+      border:
+        1px solid rgba(255,255,255,.075) !important;
+
+      background:
+        rgba(255,255,255,.035) !important;
+
+      color:
+        rgba(255,255,255,.55) !important;
+
+      font-family: inherit !important;
+
+      font-size: 11px !important;
+
+      font-weight: 900 !important;
+
+      letter-spacing: .04em !important;
+
+      cursor: pointer !important;
+
+      transition:
+        transform .18s ease,
+        color .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease !important;
+    }
+
+
+    /* Hover */
+
+    .pet-modal-window .form-btn:hover,
+    .pet-modal-window .potion-btn:hover {
+
+      transform:
+        translateY(-2px) !important;
+
+      color:
+        #fff !important;
+
+      background:
+        rgba(255,255,255,.07) !important;
+
+      border-color:
+        rgba(145,120,255,.35) !important;
+
+      box-shadow:
+        0 7px 22px
+        rgba(100,75,220,.14) !important;
+    }
+
+
+    /* =====================================
+       AKTİF / PARLAYAN
+    ===================================== */
+
+    .pet-modal-window .form-btn.active,
+    .pet-modal-window .potion-btn.active {
+
+      color:
+        #fff !important;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(134,105,255,.28),
+          rgba(82,108,255,.14)
+        ) !important;
+
+      border-color:
+        rgba(157,130,255,.68) !important;
+
+      box-shadow:
+        0 0 0 1px
+        rgba(150,125,255,.12),
+
+        0 0 18px
+        rgba(125,95,255,.32),
+
+        0 7px 25px
+        rgba(88,65,210,.22) !important;
+    }
+
+
+    /* İç parlama */
+
+    .pet-modal-window .form-btn.active::after,
+    .pet-modal-window .potion-btn.active::after {
+
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      border-radius: inherit;
+
+      background:
+        linear-gradient(
+          120deg,
+          rgba(255,255,255,.10),
+          transparent 45%
+        );
+
+      pointer-events:
+        none;
+    }
+
+
+    /* =====================================
+       BUTTON YAZILARI
+    ===================================== */
+
+    #normalFormBtn::after {
+      content: none !important;
+    }
+
+
+    #btnNeon::after,
+    #btnMega::after,
+    #btnFly::after,
+    #btnRide::after,
+    #flyRideBtn::after {
+      content: none !important;
+    }
+
+
+    /* =====================================
+       NORMAL / N / M / F / R
+       SADE METİN
+    ===================================== */
+
+    #normalFormBtn,
+    #noPotionBtn,
+    #btnNeon,
+    #btnMega,
+    #btnFly,
+    #btnRide,
+    #flyRideBtn {
+
+      font-size: 11px !important;
+
+    }
+
+
+    /* =====================================
+       EKLE ALANI
+    ===================================== */
+
+    .pet-modal-window .picker-add {
+
+      flex:
+        0 0 110px !important;
+
+      display:
+        flex !important;
+
+      flex-direction:
+        row !important;
+
+      align-items:
+        center !important;
+
+      gap:
+        8px !important;
+
+    }
+
+
+    .pet-modal-window .picker-value {
+
+      min-width:
+        48px !important;
+
+      height:
+        36px !important;
+
+      display:
+        flex !important;
+
+      align-items:
+        center !important;
+
+      justify-content:
+        center !important;
+
+      border-radius:
+        9px !important;
+
+      background:
+        rgba(255,255,255,.035) !important;
+
+      color:
+        rgba(255,255,255,.72) !important;
+
+      font-size:
+        10px !important;
+
+      font-weight:
+        900 !important;
+
+    }
+
+
+    .pet-modal-window .add-confirm {
+
+      height:
+        36px !important;
+
+      padding:
+        0 15px !important;
+
+      border-radius:
+        9px !important;
+
+    }
+
+
+    /* =====================================
+       HIDDEN
+    ===================================== */
+
+    .pet-modal-window #pickerBar.hidden {
+
+      display:
+        none !important;
+
+    }
+
+
+    /* =====================================
+       MOBİL
+    ===================================== */
+
+    @media (max-width: 800px) {
+
+      .pet-modal-window .picker-settings {
+
+        margin-left:
+          0 !important;
+
+        width:
+          100% !important;
+
+      }
+
+
+      .pet-modal-window #pickerBar {
+
+        flex-direction:
+          column !important;
+
+        align-items:
+          stretch !important;
+
+      }
+
+
+      .pet-modal-window .picker-preview {
+
+        flex:
+          none !important;
+
+        width:
+          100% !important;
+
+      }
+
+
+      .pet-modal-window .picker-options {
+
+        width:
+          100% !important;
+
+      }
+
+
+      .pet-modal-window .form-toggles,
+      .pet-modal-window .potion-toggles {
+
+        flex-wrap:
+          wrap !important;
+
+      }
+
+
+      .pet-modal-window .picker-add {
+
+        width:
+          100% !important;
+
+        justify-content:
+          flex-end !important;
+
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+
+  /* =====================================
+     BUTONLARDAKİ EMOJİLERİ TEMİZLE
+  ===================================== */
+
+  function cleanFormButtons() {
+
+    const replacements = {
+      "✨ Neon": "N",
+      "🌈 Mega": "M",
+      "🪽 Fly": "F",
+      "🐴 Ride": "R",
+      "🪽🐴 F/R": "F/R"
+    };
+
+
+    document
+      .querySelectorAll(
+        ".form-btn, .potion-btn"
+      )
+      .forEach(button => {
+
+        const text =
+          button.textContent
+            .trim();
+
+        if (
+          replacements[text]
+        ) {
+
+          button.textContent =
+            replacements[text];
+
+        }
+
+      });
+
+  }
+
+
+  /* =====================================
+     PICKER AÇILDIĞINDA
+  ===================================== */
+
+  function runCleanup() {
+
+    setTimeout(() => {
+
+      cleanFormButtons();
+
+    }, 100);
+
+    setTimeout(() => {
+
+      cleanFormButtons();
+
+    }, 400);
+
+  }
+
+
+  const oldOpenPetPicker =
+    window.openPetPicker;
+
+
+  if (
+    typeof oldOpenPetPicker ===
+    "function"
+  ) {
+
+    window.openPetPicker =
+      function (side) {
+
+        oldOpenPetPicker(side);
+
+        runCleanup();
+
+      };
+
+  }
+
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      runCleanup();
+
+    }
+  );
+
+})();
