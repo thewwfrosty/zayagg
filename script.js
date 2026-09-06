@@ -1,18 +1,26 @@
 /* =========================================================
    ZAYAXRA — SCRIPT.JS
-   TEMİZ + PREMIUM TRADE + PROFILE SÜRÜMÜ
+   PREMIUM TRADE + PROFILE + FULL PET DATABASE
 ========================================================= */
 
+"use strict";
 
 /* =========================================================
-   PET DATABASE
+   DATABASE SETTINGS
 ========================================================= */
 
-/* =========================================================
-   ZAYAXRA — COMPLETE PET DATABASE
-========================================================= */
+const PET_DATA_URL =
+  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
 
-const PET_VALUES = {
+const PET_IMAGE_BASE =
+  "https://ironbabatekkral.github.io/adoptme-values";
+
+/*
+  Mevcut ZAYAXRA değerlerin.
+  Veritabanında aynı pet varsa bunlar öncelikli kullanılır.
+*/
+
+const CUSTOM_VALUE_OVERRIDES = {
   "Shadow Dragon": 125,
   "Bat Dragon": 110,
   "Giraffe": 70,
@@ -115,1749 +123,24 @@ const PET_VALUES = {
   "Cracked Egg": 0.1
 };
 
-const PET_NAMES = [
-
-  "2021 Uplift Butterfly",
-  "2022 Uplift Butterfly",
-  "2025 Birthday Butterfly",
-  "2026 Birthday Butterfly",
-  "2D Doggy",
-  "2D Kitty",
-  "Abyssinian Cat",
-  "Aestus",
-  "African Wild Dog",
-  "Albatross",
-  "Albino Bat",
-  "Albino Gorilla",
-  "Albino Monkey",
-  "Alicorn",
-  "Alley Cat",
-  "Alpaca",
-  "Amami Rabbit",
-  "Amber Butterfly",
-  "Ancient Dragon",
-  "Angelfish",
-  "Angler Fish",
-  "Angus Bull",
-  "Angus Calf",
-  "Angus Cow",
-  "Ankylosaurus",
-  "Ant",
-  "Apple Owl",
-  "Arctic Dusk Dragon",
-  "Arctic Fox",
-  "Arctic Hare",
-  "Arctic Reindeer",
-  "Arctic Tern",
-  "Armadillo",
-  "Ash Zebra",
-  "Astronaut Gorilla",
-  "Aurora Fox",
-  "Australian Kelpie",
-  "Axolotl",
-  "Aye Aye",
-  "Badger",
-  "Bakeneko",
-  "Baku",
-  "Bald Eagle",
-  "Bali Starling",
-  "Balloon Unicorn",
-  "Banded Palm Civet",
-  "Bandicoot",
-  "Basilisk",
-  "Bat",
-  "Bat Dragon",
-  "Bauble Buddies",
-  "Beaver",
-  "Bee",
-  "Beluga Whale",
-  "Berry Cool Cube",
-  "Billy Goat",
-  "Binturong",
-  "Bird of Paradise",
-  "Birthday Butterfly 2023",
-  "Birthday Butterfly 2024",
-  "Bison",
-  "Black Chow-Chow",
-  "Black Kite",
-  "Black Macaque",
-  "Black Marlin",
-  "Black Moon Bear",
-  "Black Panther",
-  "Black Rhino",
-  "Black Springer Spaniel",
-  "Black Tiger",
-  "Black Widow",
-  "Black-Chested Pheasant",
-  "Black-Footed Ferret",
-  "Blazing Lion",
-  "Bloodhound",
-  "Blossom Snake",
-  "Blue Betta Fish",
-  "Blue Butterfly",
-  "Blue Dog",
-  "Blue Jay",
-  "Blue Ringed Octopus",
-  "Blue Whale",
-  "Bluebottle Fly",
-  "Border Collie",
-  "Borhyaena Gigantica",
-  "Brachiosaurus",
-  "Brown Bear",
-  "Brown Springer Spaniel",
-  "Brown-Chested Pheasant",
-  "Budgie Witch",
-  "Buffalo",
-  "Bullfrog",
-  "Bunny",
-  "Bunny Swirl",
-  "Burger Bear",
-  "Burning Bunny",
-  "Bush Elephant",
-  "Business Monkey",
-  "Cabbit",
-  "Cactus Friend",
-  "Caelum Cervi",
-  "Cake Friend",
-  "California Condor",
-  "Camel",
-  "Canadian Goose",
-  "Candicorn",
-  "Candy Cane Snail",
-  "Candy Hare",
-  "Candyfloss Chick",
-  "Capricorn",
-  "Capuchin Monkey",
-  "Capybara",
-  "Cassowary",
-  "Castle Hermit Crab",
-  "Cat",
-  "Caterpillar",
-  "Cerberus",
-  "Chameleon",
-  "Chanekeh",
-  "Cheetah",
-  "Chef Gorilla",
-  "Cherub Chipmunk",
-  "Chestnut Glyptodon",
-  "Chick",
-  "Chickatrice",
-  "Chicken",
-  "Chihuahua",
-  "Chilling Spider",
-  "Chimera",
-  "Chipmunk",
-  "Choco Penguin",
-  "Chocolate Chip Bat Dragon",
-  "Chocolate Chow-Chow",
-  "Chocolate Dutch Guinea Pig",
-  "Chocolate Labrador",
-  "Christmas Pudding Pup",
-  "Christmas Spirit",
-  "Classic Teapot",
-  "Clementine Owl",
-  "Clover Cow",
-  "Clownfish",
-  "Clubtail Dragonfly",
-  "Clumpty",
-  "Cobra",
-  "Cockroach",
-  "Cocoadile",
-  "Coconut Friend",
-  "Cold Cube",
-  "Corgi",
-  "Corn Doggo",
-  "Cow",
-  "Cow Calf",
-  "Coyote",
-  "Cozy Mistletroll",
-  "Crab",
-  "Cracked Egg",
-  "Crimson Cape",
-  "Criosphinx",
-  "Crocodile",
-  "Crow",
-  "Cryptid",
-  "Crystal Egg",
-  "Cuddly Candle",
-  "Cupid Dragon",
-  "Cute-A-Cabra",
-  "Dalmatian",
-  "Dancing Dragon",
-  "Dango Penguins",
-  "Dark Choccybunny",
-  "Deathstalker Scorpion",
-  "Deinonychus",
-  "Diamond Albatross",
-  "Diamond Amazon",
-  "Diamond Butterfly",
-  "Diamond Dragon",
-  "Diamond Griffin",
-  "Diamond Hamster",
-  "Diamond Hummingbird",
-  "Diamond King Penguin",
-  "Diamond Ladybug",
-  "Diamond Mahi Mahi",
-  "Diamond Unicorn",
-  "Dilophosaurus",
-  "Dimension Drifter",
-  "Dimorphodon",
-  "Dingo",
-  "Dire Stag",
-  "Dire Wolf",
-  "Dirty Ducky",
-  "DJ Snooze",
-  "Dodo",
-  "Dog",
-  "Dolphin",
-  "Donkey",
-  "Dotted Eggy",
-  "Dracula Fish",
-  "Dracula Parrot",
-  "Dragon",
-  "Dragonfly",
-  "Dragonfruit Fox",
-  "Drake",
-  "Dugong",
-  "Eel",
-  "Eggnog Dog",
-  "Eggnog Hare",
-  "Ehecatl",
-  "Elasmosaurus",
-  "Elephant",
-  "Emberlight",
-  "Emperor Gorilla",
-  "Emperor Shrimp",
-  "Emu",
-  "English Sheepdog",
-  "Ermine",
-  "Evil Basilisk",
-  "Evil Chick",
-  "Evil Chickatrice",
-  "Evil Rock",
-  "Evil Unicorn",
-  "Fairy Bat Dragon",
-  "Fallow Deer",
-  "Fanghorn Tortoise",
-  "Feesh",
-  "Fennec Fox",
-  "Field Mouse",
-  "Fire Foal",
-  "Fire Mare",
-  "Fire Stallion",
-  "Firefighter Gibbon",
-  "Firefly",
-  "Flaming Fox",
-  "Flaming Zebra",
-  "Flamingo",
-  "Fleur De Ice",
-  "Flower Power Duckling",
-  "Flying Fish",
-  "Forest Sprite",
-  "Fossa",
-  "Frankenfeline",
-  "French Bulldog",
-  "Frog",
-  "Frogspawn",
-  "Frost Dragon",
-  "Frost Fury",
-  "Frost Phoenix",
-  "Frost Unicorn",
-  "Frostbite Bear",
-  "Frostbite Cub",
-  "Frostclaw",
-  "Frozen Penguin",
-  "Gaelic Fae",
-  "Galapagos Sea Lion",
-  "Garden Snake",
-  "Gargoyle",
-  "Gecko",
-  "Gecko Ducky",
-  "General Sheepdog",
-  "German Shepherd",
-  "Ghost",
-  "Ghost Bunny",
-  "Ghost Chick",
-  "Ghost Dog",
-  "Ghost Wolf",
-  "Ghostly Cat",
-  "Giant Anteater",
-  "Giant Black Scarab",
-  "Giant Blue Scarab",
-  "Giant Gold Scarab",
-  "Giant Panda",
-  "Gibbon",
-  "Gila Monster",
-  "Gilded Snake",
-  "Ginger Cat",
-  "Gingerbread Hare",
-  "Gingerbread Mouse",
-  "Gingerbread Reindeer",
-  "Giraffe",
-  "Glacier Kitsune",
-  "Glacier Moth",
-  "Glormy Crab",
-  "Glormy Dolphin",
-  "Glormy Hound",
-  "Glormy Leo",
-  "Glyptodon",
-  "Glyptodon Ducky",
-  "Goat",
-  "Gold Mahi Mahi",
-  "Golden Albatross",
-  "Golden Chow-Chow",
-  "Golden Dragon",
-  "Golden Griffin",
-  "Golden Hamster",
-  "Golden Hummingbird",
-  "Golden Jaguar",
-  "Golden King Penguin",
-  "Golden Ladybug",
-  "Golden Penguin",
-  "Golden Rat",
-  "Golden Tortoise Beetle",
-  "Golden Unicorn",
-  "Golden Walrus",
-  "Goldfish",
-  "Goldhorn",
-  "Goose",
-  "Gorilla",
-  "Granny Wolf",
-  "Grave Owl",
-  "Great Pyrenees",
-  "Green Amazon",
-  "Green Butterfly",
-  "Green-Chested Pheasant",
-  "Griffin",
-  "Grim Dragon",
-  "Grinmoire",
-  "Ground Sloth",
-  "Groundhog",
-  "Guardian Lion",
-  "Gumball Caterpillar",
-  "Gummy Guana",
-  "Haetae",
-  "Halloween Black Mummy Cat",
-  "Halloween Blue Scorpion",
-  "Halloween Evil Dachshund",
-  "Halloween Golden Mummy Cat",
-  "Halloween White Ghost Dragon",
-  "Halloween White Mummy Cat",
-  "Halloween White Skeleton Dog",
-  "Hammerhead Shark",
-  "Hamster",
-  "Happy Clam",
-  "Happy Duckling",
-  "Hare",
-  "Harp Seal",
-  "Hawk",
-  "Headless Horse",
-  "Hedgehog",
-  "Hermit Crab",
-  "Hero Gibbon",
-  "Highland Cow",
-  "Hippo",
-  "Hippogriff",
-  "Honey Badger",
-  "Hopbop",
-  "Horse",
-  "Hot Doggo",
-  "Humbug",
-  "Hummingbird",
-  "Huntsman Robin",
-  "Husky",
-  "Hydra",
-  "Hyena",
-  "Ibex",
-  "Ibis",
-  "Ice Cream Hermit Crab",
-  "Ice Cube",
-  "Ice Golem",
-  "Ice Moth Dragon",
-  "Ice Wolf",
-  "Icy Porcupine",
-  "Indian Flying Fox",
-  "Indian Leopard",
-  "Influencer Gibbon",
-  "Inmate Capuchin Monkey",
-  "Irish Elk",
-  "Irish Setter",
-  "Irish Water Spaniel",
-  "Island Tarsier",
-  "Japanese Snow Fairy",
-  "Jekyll Hydra",
-  "Jellyfish",
-  "Jiggly Jerboa",
-  "Jousting Horse",
-  "Jumping Spider",
-  "Kage Crow",
-  "Kaijunior",
-  "Kakapo",
-  "Kangaroo",
-  "Kappakid",
-  "Karate Gorilla",
-  "Kelp Captain",
-  "Kelp Crewmate",
-  "Kelp Hunter",
-  "Kelp Raider",
-  "Kid Goat",
-  "King Bee",
-  "King Penguin",
-  "Kirin",
-  "Kitsune",
-  "Kitty Bat",
-  "Kiwi",
-  "Kiwi Kiwi",
-  "Koala",
-  "Koi Carp",
-  "Komodo Dragon",
-  "Kookaburra",
-  "Kraken",
-  "Ladybug",
-  "Lamb",
-  "Lammergeier",
-  "Latte Kitsune",
-  "Lava Dragon",
-  "Lava Wolf",
-  "Lavender Dragon",
-  "Leopard Cat",
-  "Leopard Shark",
-  "Leviathan",
-  "Liger",
-  "Lion",
-  "Lion Cub",
-  "Lionfish",
-  "Little Lamb",
-  "Llama",
-  "Lobster",
-  "Longhorn Cow",
-  "Love Bird",
-  "Lunar Gold Tiger",
-  "Lunar Moon Bear",
-  "Lunar Ox",
-  "Lunar Tiger",
-  "Lunar White Tiger",
-  "Lynx",
-  "Magma Moose",
-  "Magma Snail",
-  "Magpie",
-  "Mahi Mahi",
-  "Maine Coon",
-  "Majestic Pony",
-  "Malayan Tapir",
-  "Maleo Bird",
-  "Maneki-Neko",
-  "Manta Ray",
-  "Many Mackerel",
-  "Marabou Stork",
-  "Mecha Meow",
-  "Mecha R4BBIT",
-  "Mechapup",
-  "Meerkat",
-  "Merhorse",
-  "Mermicorn",
-  "Merry Mistletroll",
-  "Metal Ox",
-  "Mexican Wolf",
-  "Midnight Dragon",
-  "Milk Choccybunny",
-  "Mini Pig",
-  "Mini Schnauzer",
-  "Mirai Moth",
-  "Mistletroll",
-  "Mochi Meow",
-  "Mole",
-  "Momma Moose",
-  "Mongoose",
-  "Monkey",
-  "Monkey King",
-  "Moon Rabbit",
-  "Moonbeam Butterfly",
-  "Moonbeam Peacock",
-  "Moonlight Moth",
-  "Moonpine",
-  "Moose Calf",
-  "Mosquito",
-  "Mouse",
-  "Mr. Whiskerpips",
-  "Mrs. Whiskerpips",
-  "Ms. Muffet",
-  "Mule",
-  "Munchkin Cat",
-  "Mushroom Friend",
-  "Musk Ox",
-  "Muskrat",
-  "Naga Dragon",
-  "Narwhal",
-  "Naughty Mistletroll",
-  "Nautilus",
-  "Nebula Snake",
-  "Nessie",
-  "Nightmare Owl",
-  "Ninja Monkey",
-  "Nurse Shark",
-  "Nutcracker Squirrel",
-  "Oakee",
-  "Oakee Knight",
-  "Oakee Wizard",
-  "Ocelot",
-  "Octopus",
-  "Officer Gibbon",
-  "Old King Coal",
-  "Onza",
-  "Orange Betta Fish",
-  "Orange Butterfly",
-  "Orangutan",
-  "Orca",
-  "Orchid Butterfly",
-  "Ornate Horned Frog",
-  "Oryx",
-  "Ostrich",
-  "Otter",
-  "Owl",
-  "Owlbear",
-  "Ox",
-  "Panda",
-  "Pangolin",
-  "Papa Moose",
-  "Parakeet",
-  "Parrot",
-  "Partridge",
-  "Patchy Bear",
-  "Peach Owl",
-  "Peachick",
-  "Peacock",
-  "Peahen",
-  "Pelican",
-  "Penguin",
-  "Peppermint Penguin",
-  "Peregrine Falcon",
-  "Persian Cat",
-  "Phantom Dragon",
-  "Phoenix",
-  "Pig",
-  "Pilot Gull",
-  "Pine Marten",
-  "Pineapple Owl",
-  "Pink Betta Fish",
-  "Pink Cat",
-  "Pinkypillar",
-  "Piranha",
-  "Pirate Ghost Capuchin Monkey",
-  "Pirate Hermit Crab",
-  "Pistachio",
-  "Platypus",
-  "Poison Dart Frog",
-  "Polar Bear",
-  "Pomeranian",
-  "Poodle",
-  "Possum",
-  "Praying Mantis",
-  "Preppy Capuchin Monkey",
-  "Pretty Pony",
-  "Priceless Shrimp",
-  "Primal Kaijunior",
-  "Princess Capuchin Monkey",
-  "Princess Mare",
-  "Prism Snake",
-  "Prismatic Butterfly",
-  "Pterodactyl",
-  "Pudding Cat",
-  "Puffer Fish",
-  "Puffin",
-  "Puma",
-  "Pumpkin Friend",
-  "Punk Pony",
-  "Pupcake",
-  "Puptune",
-  "Purple Butterfly",
-  "Purrowl",
-  "Queen Bee",
-  "Quetzalcoatl",
-  "Quokka",
-  "Rabbit",
-  "Raccoon",
-  "Rainbow Dragon",
-  "Rainbow Trout",
-  "Ram",
-  "Ranger Beaver",
-  "Rat",
-  "Ratatoskr",
-  "Rattlesnake",
-  "Red Cardinal",
-  "Red Crowned Crane",
-  "Red Dutch Guinea Pig",
-  "Red Fox",
-  "Red Panda",
-  "Red Panda Ducky",
-  "Red Sand Dollar",
-  "Red Squirrel",
-  "Reindeer",
-  "Rhino",
-  "Rhino Beetle",
-  "Ribbon Seal",
-  "Rice Cake Rabbit",
-  "Ring-tailed Lemur",
-  "Ringmaster Gibbon",
-  "River",
-  "River Otter",
-  "Roadrunner",
-  "Robin",
-  "Robo Dog",
-  "Robot",
-  "Rock",
-  "Rock Pigeon",
-  "Rodeo Bull",
-  "Rooster",
-  "Rose Dragon",
-  "Rosy Maple Moth",
-  "Royal Capuchin Monkey",
-  "Royal Corgi",
-  "Royal Palace Spaniel",
-  "Rubber Ducky",
-  "Ruddy Duck",
-  "S'mores Raccoon",
-  "Sabertooth",
-  "Sado Mole",
-  "Sakura Spirit",
-  "Salamander",
-  "Samoyed",
-  "Sandfish",
-  "Sasquatch",
-  "Scarebear",
-  "Scarecrow",
-  "Scarecrow Cat",
-  "Scarecrow Crow",
-  "Scarecrow Horse",
-  "Scarlet Butterfly",
-  "Scorching Kaijunior",
-  "Sea Angel",
-  "Sea Skeleton Panda",
-  "Sea Slug",
-  "Sea Turtle",
-  "Seabed Creeper",
-  "Seafoam Butterfly",
-  "Seagull",
-  "Seahorse",
-  "Shadow Dragon",
-  "Shadow Dragon Ducky",
-  "Shark",
-  "Shark Puppy",
-  "Sheeeeep",
-  "Sheepdog Ducky",
-  "Shetland Pony Dark Brown",
-  "Shetland Pony Light Brown",
-  "Shetland Pony White",
-  "Shiba Inu",
-  "Shih Tzu",
-  "Shiver Wolf",
-  "Show Pony",
-  "Shrew",
-  "Siamese Cat",
-  "Silly Duck",
-  "Silverback Gorilla",
-  "Singularity Beetle",
-  "Singularity Pisces",
-  "Skele-Rex",
-  "Skelebat",
-  "Skunk",
-  "Slime",
-  "Slimingo",
-  "Sloth",
-  "Slug",
-  "Sneak Weasel",
-  "Snorgle",
-  "Snow Cat",
-  "Snow Leopard",
-  "Snow Monkey",
-  "Snow Owl",
-  "Snow Puma",
-  "Snowball Pet",
-  "Snowball Pug",
-  "Snowman",
-  "Snowy Mammoth",
-  "Solaris",
-  "Space Whale",
-  "Spider Crab",
-  "Spinosaurus",
-  "Sprout Snail",
-  "Squid",
-  "St Bernard",
-  "Starfish",
-  "Starhopper",
-  "Starmite",
-  "Stegosaurus",
-  "Steppe Lion",
-  "Stingray",
-  "Storm Condor",
-  "Strawberry Penguin",
-  "Strawberry Shortcake Bat Dragon",
-  "Strawberry Shortcake Ducky",
-  "Strawberry Tortle",
-  "Striped Eggy",
-  "Stygian Owl",
-  "Subzero Scorpion",
-  "Sugar Axolotl",
-  "Sugar Glider",
-  "Summer Walrus",
-  "Sunflower Friend",
-  "Sunglider",
-  "Sunrise Duckling",
-  "Super Saru",
-  "Sushi Penguin",
-  "Swan",
-  "Sweetheart Rat",
-  "Swordfish",
-  "Tan Chow-Chow",
-  "Tanuki",
-  "Tarantula",
-  "Tarsier",
-  "Tasmanian Devil",
-  "Tasmanian Tiger",
-  "Tawny Frogmouth",
-  "Tealwood Monster",
-  "Tegu",
-  "Temple Friend",
-  "The Black Dog",
-  "Therapy Dog",
-  "Thorny Devil",
-  "Three Blind Mice",
-  "Tió De Nadal",
-  "Toasty Red Panda",
-  "Tortoiseshell Guinea Pig",
-  "Tortuga de la Isla",
-  "Toucan",
-  "Toxic Kaijunior",
-  "Toy Monkey",
-  "Toy Poodle",
-  "Trapdoor Snail",
-  "Tree Frog",
-  "Tree Kangaroo",
-  "Tree Sasquatch",
-  "Tri-horned Treehopper",
-  "Triceratops",
-  "Turkey",
-  "Turtle",
-  "Turtle Doves",
-  "Tuxedo Cat",
-  "Undead Elk",
-  "Undead Jousting Horse",
-  "Unicorn",
-  "Unicorn Ducky",
-  "Urchin",
-  "Vampire Dragon",
-  "Vanilla Penguin",
-  "Velociraptor",
-  "Velocirooster",
-  "Vermilion Butterfly",
-  "Villain Gibbon",
-  "Violet Butterfly",
-  "Violet Friend",
-  "Volcanic Rhino",
-  "Vulture",
-  "Waffle Wyrm",
-  "Walrus",
-  "Warthog",
-  "Water Moon Bear",
-  "Water Opossum",
-  "Water Rabbit",
-  "Weevil",
-  "Werewolf",
-  "White Amazon",
-  "White Choccybunny",
-  "White Sand Dollar",
-  "Wild Boar",
-  "Wildfire Hawk",
-  "Winged Horse",
-  "Winged Tiger",
-  "Winter Buck",
-  "Winter Doe",
-  "Winter Fawn",
-  "Wolf",
-  "Wolpertinger",
-  "Wood Pigeon",
-  "Woodpecker",
-  "Woolly Mammoth",
-  "Woolly Rhino",
-  "Wrapped Doll",
-  "Wren",
-  "Wyvern",
-  "Yellow Butterfly",
-  "Yellow-lipped Sea Krait",
-  "Yeti",
-  "Yule Log Dog",
-  "Zebra",
-  "Zeopod",
-  "Zodiac Minion Chick",
-  "Zombie Buffalo",
-  "Zombie Chick",
-  "Zombie Wolf"
-];
-
 
 /* =========================================================
-   PET DATABASE OLUŞTUR
+   DATABASE BAŞLANGIÇ
 ========================================================= */
 
-function petSlug(name) {
-
-  const special = {
-    "T-Rex": "t_rex",
-    "Skele-Rex": "skele_rex",
-    "S'mores Raccoon": "smores_raccoon",
-    "Tió De Nadal": "tio_de_nadal",
-    "Mr. Whiskerpips": "mr_whiskerpips",
-    "Mrs. Whiskerpips": "mrs_whiskerpips",
-    "Ms. Muffet": "ms_muffet",
-    "Mecha R4BBIT": "mecha_r4bbit"
-  };
-
-  if (special[name]) {
-    return special[name];
-  }
-
-  return String(name)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "_")
-    .replace(/^_+|_+$/g, "");
-}
-
-
-const PET_DATABASE = PET_NAMES.map(
-  name => ({
-    id: petSlug(name),
-    name,
-    rarity: "unknown",
-    value: Number(PET_VALUES[name] ?? 0),
-    image:
-      `https://cdn.playadopt.me/items/${petSlug(name)}.png`
-  })
-);
-
-
-/* =========================================================
-   BİLİNEN RARITY'LER
-========================================================= */
-
-const KNOWN_RARITIES = {
-  "Shadow Dragon": "legendary",
-  "Bat Dragon": "legendary",
-  "Giraffe": "legendary",
-  "Frost Dragon": "legendary",
-  "Owl": "legendary",
-  "Parrot": "legendary",
-  "Evil Unicorn": "legendary",
-  "Crow": "legendary",
-  "Frost Fury": "legendary",
-  "Arctic Reindeer": "legendary",
-  "Diamond Butterfly": "legendary",
-  "Turtle": "ultra",
-  "Kangaroo": "legendary",
-  "Albino Monkey": "legendary",
-  "Hedgehog": "ultra",
-  "Lion": "ultra",
-  "Flamingo": "ultra",
-  "Dalmatian": "ultra",
-  "Crocodile": "ultra",
-  "Elephant": "ultra",
-  "Cow": "ultra",
-  "Brown Bear": "rare",
-  "Pink Cat": "rare",
-  "Blue Dog": "rare",
-  "Meerkat": "rare",
-  "Rhino": "rare",
-  "Hyena": "rare",
-  "Black Panther": "uncommon",
-  "Platypus": "ultra",
-  "Goat": "ultra",
-  "Swan": "rare",
-  "Ancient Dragon": "legendary",
-  "Unicorn": "legendary",
-  "Dragon": "legendary",
-  "Golden Dragon": "legendary",
-  "Golden Unicorn": "legendary",
-  "Golden Penguin": "legendary",
-  "King Bee": "legendary",
-  "Queen Bee": "legendary",
-  "Kitsune": "legendary",
-  "Octopus": "legendary",
-  "Shark": "legendary",
-  "Dodo": "legendary",
-  "T-Rex": "legendary",
-  "Skele-Rex": "legendary",
-  "Lavender Dragon": "legendary",
-  "Lava Dragon": "legendary",
-  "Phoenix": "legendary",
-  "Golden Rat": "legendary",
-  "Metal Ox": "legendary",
-  "Snow Owl": "legendary",
-  "Goldhorn": "legendary",
-  "Griffin": "legendary",
-  "Albino Bat": "ultra",
-  "Business Monkey": "ultra",
-  "Ghost Bunny": "ultra",
-  "Ginger Cat": "ultra",
-  "Panda": "ultra",
-  "Red Panda": "ultra",
-  "Bee": "ultra",
-  "Penguin": "ultra",
-  "Toucan": "ultra",
-  "Starfish": "ultra",
-  "Koala": "ultra",
-  "Frog": "ultra",
-  "Sloth": "ultra",
-  "Polar Bear": "rare",
-  "Reindeer": "rare",
-  "Rabbit": "rare",
-  "Monkey": "rare",
-  "Bunny": "rare",
-  "Emu": "rare",
-  "Beaver": "rare",
-  "Musk Ox": "rare",
-  "Woolly Mammoth": "rare",
-  "Dilophosaurus": "rare",
-  "Stegosaurus": "rare",
-  "Triceratops": "rare",
-  "Shrew": "uncommon",
-  "Megalodon": "uncommon",
-  "Bat": "uncommon",
-  "Snow Cat": "uncommon",
-  "Fennec Fox": "uncommon",
-  "Red Fox": "uncommon",
-  "Shiba Inu": "uncommon",
-  "Dingo": "uncommon",
-  "Snow Puma": "uncommon",
-  "Puma": "uncommon",
-  "Cat": "common",
-  "Dog": "common",
-  "Mouse": "common",
-  "Chick": "common",
-  "Robin": "common",
-  "Chicken": "common",
-  "Bandicoot": "common",
-  "Ground Sloth": "common",
-  "Wolpertinger": "common",
-  "Otter": "common",
-  "Buffalo": "common"
-};
-
-
-PET_DATABASE.forEach(
-  pet => {
-    if (KNOWN_RARITIES[pet.name]) {
-      pet.rarity =
-        KNOWN_RARITIES[pet.name];
-    }
-  }
-);
-
-
-console.log(
-  `ZAYAXRA: ${PET_DATABASE.length} pet verisi yüklendi.`
-);
-    id: "shadow_dragon",
-    name: "Shadow Dragon",
-    rarity: "legendary",
-    value: 125,
-    image: "https://cdn.playadopt.me/items/shadow_dragon.png"
-  },
-
-  {
-    id: "bat_dragon",
-    name: "Bat Dragon",
-    rarity: "legendary",
-    value: 110,
-    image: "https://cdn.playadopt.me/items/bat_dragon.png"
-  },
-
-  {
-    id: "giraffe",
-    name: "Giraffe",
-    rarity: "legendary",
-    value: 70,
-    image: "https://cdn.playadopt.me/items/giraffe.png"
-  },
-
-  {
-    id: "frost_dragon",
-    name: "Frost Dragon",
-    rarity: "legendary",
-    value: 58,
-    image: "https://cdn.playadopt.me/items/frost_dragon.png"
-  },
-
-  {
-    id: "owl",
-    name: "Owl",
-    rarity: "legendary",
-    value: 42,
-    image: "https://cdn.playadopt.me/items/owl.png"
-  },
-
-  {
-    id: "parrot",
-    name: "Parrot",
-    rarity: "legendary",
-    value: 38,
-    image: "https://cdn.playadopt.me/items/parrot.png"
-  },
-
-  {
-    id: "evil_unicorn",
-    name: "Evil Unicorn",
-    rarity: "legendary",
-    value: 32,
-    image: "https://cdn.playadopt.me/items/evil_unicorn.png"
-  },
-
-  {
-    id: "crow",
-    name: "Crow",
-    rarity: "legendary",
-    value: 28,
-    image: "https://cdn.playadopt.me/items/crow.png"
-  },
-
-  {
-    id: "frost_fury",
-    name: "Frost Fury",
-    rarity: "legendary",
-    value: 16,
-    image: "https://cdn.playadopt.me/items/frost_fury.png"
-  },
-
-  {
-    id: "arctic_reindeer",
-    name: "Arctic Reindeer",
-    rarity: "legendary",
-    value: 15,
-    image: "https://cdn.playadopt.me/items/arctic_reindeer.png"
-  },
-
-  {
-    id: "diamond_butterfly",
-    name: "Diamond Butterfly",
-    rarity: "legendary",
-    value: 14,
-    image: "https://cdn.playadopt.me/items/diamond_butterfly.png"
-  },
-
-  {
-    id: "turtle",
-    name: "Turtle",
-    rarity: "ultra",
-    value: 12,
-    image: "https://cdn.playadopt.me/items/turtle.png"
-  },
-
-  {
-    id: "kangaroo",
-    name: "Kangaroo",
-    rarity: "legendary",
-    value: 11,
-    image: "https://cdn.playadopt.me/items/kangaroo.png"
-  },
-
-  {
-    id: "albino_monkey",
-    name: "Albino Monkey",
-    rarity: "legendary",
-    value: 10,
-    image: "https://cdn.playadopt.me/items/albino_monkey.png"
-  },
-
-  {
-    id: "hedgehog",
-    name: "Hedgehog",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/hedgehog.png"
-  },
-
-  {
-    id: "lion",
-    name: "Lion",
-    rarity: "ultra",
-    value: 9,
-    image: "https://cdn.playadopt.me/items/lion.png"
-  },
-
-  {
-    id: "flamingo",
-    name: "Flamingo",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/flamingo.png"
-  },
-
-  {
-    id: "dalmatian",
-    name: "Dalmatian",
-    rarity: "ultra",
-    value: 8,
-    image: "https://cdn.playadopt.me/items/dalmatian.png"
-  },
-
-  {
-    id: "crocodile",
-    name: "Crocodile",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/crocodile.png"
-  },
-
-  {
-    id: "elephant",
-    name: "Elephant",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/elephant.png"
-  },
-
-  {
-    id: "cow",
-    name: "Cow",
-    rarity: "ultra",
-    value: 7,
-    image: "https://cdn.playadopt.me/items/cow.png"
-  },
-
-  {
-    id: "brown_bear",
-    name: "Brown Bear",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/brown_bear.png"
-  },
-
-  {
-    id: "pink_cat",
-    name: "Pink Cat",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/pink_cat.png"
-  },
-
-  {
-    id: "blue_dog",
-    name: "Blue Dog",
-    rarity: "rare",
-    value: 6,
-    image: "https://cdn.playadopt.me/items/blue_dog.png"
-  },
-
-  {
-    id: "meerkat",
-    name: "Meerkat",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/meerkat.png"
-  },
-
-  {
-    id: "rhino",
-    name: "Rhino",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/rhino.png"
-  },
-
-  {
-    id: "hyena",
-    name: "Hyena",
-    rarity: "rare",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/hyena.png"
-  },
-
-  {
-    id: "black_panther",
-    name: "Black Panther",
-    rarity: "uncommon",
-    value: 5,
-    image: "https://cdn.playadopt.me/items/black_panther.png"
-  },
-
-  {
-    id: "platypus",
-    name: "Platypus",
-    rarity: "ultra",
-    value: 4.5,
-    image: "https://cdn.playadopt.me/items/platypus.png"
-  },
-
-  {
-    id: "goat",
-    name: "Goat",
-    rarity: "ultra",
-    value: 4.5,
-    image: "https://cdn.playadopt.me/items/goat.png"
-  },
-
-  {
-    id: "swan",
-    name: "Swan",
-    rarity: "rare",
-    value: 4,
-    image: "https://cdn.playadopt.me/items/swan.png"
-  },
-
-  {
-    id: "ancient_dragon",
-    name: "Ancient Dragon",
-    rarity: "legendary",
-    value: 4,
-    image: "https://cdn.playadopt.me/items/ancient_dragon.png"
-  },
-
-  {
-    id: "unicorn",
-    name: "Unicorn",
-    rarity: "legendary",
-    value: 3.5,
-    image: "https://cdn.playadopt.me/items/unicorn.png"
-  },
-
-  {
-    id: "dragon",
-    name: "Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/dragon.png"
-  },
-
-  {
-    id: "golden_dragon",
-    name: "Golden Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/golden_dragon.png"
-  },
-
-  {
-    id: "golden_unicorn",
-    name: "Golden Unicorn",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/golden_unicorn.png"
-  },
-
-  {
-    id: "golden_penguin",
-    name: "Golden Penguin",
-    rarity: "legendary",
-    value: 2.8,
-    image: "https://cdn.playadopt.me/items/golden_penguin.png"
-  },
-
-  {
-    id: "king_bee",
-    name: "King Bee",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/king_bee.png"
-  },
-
-  {
-    id: "queen_bee",
-    name: "Queen Bee",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/queen_bee.png"
-  },
-
-  {
-    id: "kitsune",
-    name: "Kitsune",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/kitsune.png"
-  },
-
-  {
-    id: "octopus",
-    name: "Octopus",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/octopus.png"
-  },
-
-  {
-    id: "shark",
-    name: "Shark",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/shark.png"
-  },
-
-  {
-    id: "dodo",
-    name: "Dodo",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/dodo.png"
-  },
-
-  {
-    id: "t_rex",
-    name: "T-Rex",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/t_rex.png"
-  },
-
-  {
-    id: "skele_rex",
-    name: "Skele-Rex",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/skele_rex.png"
-  },
-
-  {
-    id: "lavender_dragon",
-    name: "Lavender Dragon",
-    rarity: "legendary",
-    value: 2.5,
-    image: "https://cdn.playadopt.me/items/lavender_dragon.png"
-  },
-
-  {
-    id: "lava_dragon",
-    name: "Lava Dragon",
-    rarity: "legendary",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/lava_dragon.png"
-  },
-
-  {
-    id: "phoenix",
-    name: "Phoenix",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/phoenix.png"
-  },
-
-  {
-    id: "golden_rat",
-    name: "Golden Rat",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/golden_rat.png"
-  },
-
-  {
-    id: "metal_ox",
-    name: "Metal Ox",
-    rarity: "legendary",
-    value: 1.5,
-    image: "https://cdn.playadopt.me/items/metal_ox.png"
-  },
-
-  {
-    id: "snow_owl",
-    name: "Snow Owl",
-    rarity: "legendary",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/snow_owl.png"
-  },
-
-  {
-    id: "goldhorn",
-    name: "Goldhorn",
-    rarity: "legendary",
-    value: 1.8,
-    image: "https://cdn.playadopt.me/items/goldhorn.png"
-  },
-
-  {
-    id: "griffin",
-    name: "Griffin",
-    rarity: "legendary",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/griffin.png"
-  },
-
-  {
-    id: "albino_bat",
-    name: "Albino Bat",
-    rarity: "ultra",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/albino_bat.png"
-  },
-
-  {
-    id: "business_monkey",
-    name: "Business Monkey",
-    rarity: "ultra",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/business_monkey.png"
-  },
-
-  {
-    id: "ghost_bunny",
-    name: "Ghost Bunny",
-    rarity: "ultra",
-    value: 2,
-    image: "https://cdn.playadopt.me/items/ghost_bunny.png"
-  },
-
-  {
-    id: "ginger_cat",
-    name: "Ginger Cat",
-    rarity: "ultra",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/ginger_cat.png"
-  },
-
-  {
-    id: "panda",
-    name: "Panda",
-    rarity: "ultra",
-    value: 1.2,
-    image: "https://cdn.playadopt.me/items/panda.png"
-  },
-
-  {
-    id: "red_panda",
-    name: "Red Panda",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/red_panda.png"
-  },
-
-  {
-    id: "bee",
-    name: "Bee",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/bee.png"
-  },
-
-  {
-    id: "penguin",
-    name: "Penguin",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/penguin.png"
-  },
-
-  {
-    id: "toucan",
-    name: "Toucan",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/toucan.png"
-  },
-
-  {
-    id: "starfish",
-    name: "Starfish",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/starfish.png"
-  },
-
-  {
-    id: "koala",
-    name: "Koala",
-    rarity: "ultra",
-    value: 1.5,
-    image: "https://cdn.playadopt.me/items/koala.png"
-  },
-
-  {
-    id: "frog",
-    name: "Frog",
-    rarity: "ultra",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/frog.png"
-  },
-
-  {
-    id: "sloth",
-    name: "Sloth",
-    rarity: "ultra",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/sloth.png"
-  },
-
-  {
-    id: "polar_bear",
-    name: "Polar Bear",
-    rarity: "rare",
-    value: 3.5,
-    image: "https://cdn.playadopt.me/items/polar_bear.png"
-  },
-
-  {
-    id: "reindeer",
-    name: "Reindeer",
-    rarity: "rare",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/reindeer.png"
-  },
-
-  {
-    id: "rabbit",
-    name: "Rabbit",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/rabbit.png"
-  },
-
-  {
-    id: "monkey",
-    name: "Monkey",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/monkey.png"
-  },
-
-  {
-    id: "bunny",
-    name: "Bunny",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/bunny.png"
-  },
-
-  {
-    id: "emu",
-    name: "Emu",
-    rarity: "rare",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/emu.png"
-  },
-
-  {
-    id: "beaver",
-    name: "Beaver",
-    rarity: "rare",
-    value: 0.6,
-    image: "https://cdn.playadopt.me/items/beaver.png"
-  },
-
-  {
-    id: "musk_ox",
-    name: "Musk Ox",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/musk_ox.png"
-  },
-
-  {
-    id: "woolly_mammoth",
-    name: "Woolly Mammoth",
-    rarity: "rare",
-    value: 0.8,
-    image: "https://cdn.playadopt.me/items/woolly_mammoth.png"
-  },
-
-  {
-    id: "dilophosaurus",
-    name: "Dilophosaurus",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/dilophosaurus.png"
-  },
-
-  {
-    id: "stegosaurus",
-    name: "Stegosaurus",
-    rarity: "rare",
-    value: 0.7,
-    image: "https://cdn.playadopt.me/items/stegosaurus.png"
-  },
-
-  {
-    id: "triceratops",
-    name: "Triceratops",
-    rarity: "rare",
-    value: 0.6,
-    image: "https://cdn.playadopt.me/items/triceratops.png"
-  },
-
-  {
-    id: "shrew",
-    name: "Shrew",
-    rarity: "uncommon",
-    value: 3,
-    image: "https://cdn.playadopt.me/items/shrew.png"
-  },
-
-  {
-    id: "megalodon",
-    name: "Megalodon",
-    rarity: "uncommon",
-    value: 1,
-    image: "https://cdn.playadopt.me/items/megalodon.png"
-  },
-
-  {
-    id: "bat",
-    name: "Bat",
-    rarity: "uncommon",
-    value: 0.5,
-    image: "https://cdn.playadopt.me/items/bat.png"
-  },
-
-  {
-    id: "snow_cat",
-    name: "Snow Cat",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/snow_cat.png"
-  },
-
-  {
-    id: "fennec_fox",
-    name: "Fennec Fox",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/fennec_fox.png"
-  },
-
-  {
-    id: "red_fox",
-    name: "Red Fox",
-    rarity: "uncommon",
-    value: 0.4,
-    image: "https://cdn.playadopt.me/items/red_fox.png"
-  },
-
-  {
-    id: "shiba_inu",
-    name: "Shiba Inu",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/shiba_inu.png"
-  },
-
-  {
-    id: "dingo",
-    name: "Dingo",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/dingo.png"
-  },
-
-  {
-    id: "snow_puma",
-    name: "Snow Puma",
-    rarity: "uncommon",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/snow_puma.png"
-  },
-
-  {
-    id: "puma",
-    name: "Puma",
-    rarity: "uncommon",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/puma.png"
-  },
-
-  {
-    id: "cat",
-    name: "Cat",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/cat.png"
-  },
-
-  {
-    id: "dog",
-    name: "Dog",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/dog.png"
-  },
-
-  {
-    id: "mouse",
-    name: "Mouse",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/mouse.png"
-  },
-
-  {
-    id: "chick",
-    name: "Chick",
-    rarity: "common",
-    value: 0.15,
-    image: "https://cdn.playadopt.me/items/chick.png"
-  },
-
-  {
-    id: "robin",
-    name: "Robin",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/robin.png"
-  },
-
-  {
-    id: "chicken",
-    name: "Chicken",
-    rarity: "common",
-    value: 0.3,
-    image: "https://cdn.playadopt.me/items/chicken.png"
-  },
-
-  {
-    id: "bandicoot",
-    name: "Bandicoot",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/bandicoot.png"
-  },
-
-  {
-    id: "ground_sloth",
-    name: "Ground Sloth",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/ground_sloth.png"
-  },
-
-  {
-    id: "wolpertinger",
-    name: "Wolpertinger",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/wolpertinger.png"
-  },
-
-  {
-    id: "otter",
-    name: "Otter",
-    rarity: "common",
-    value: 0.2,
-    image: "https://cdn.playadopt.me/items/otter.png"
-  },
-
-  {
-    id: "buffalo",
-    name: "Buffalo",
-    rarity: "common",
-    value: 0.15,
-    image: "https://cdn.playadopt.me/items/buffalo.png"
-  },
-
-  {
-    id: "cracked_egg",
-    name: "Cracked Egg",
-    rarity: "common",
-    value: 0.1,
-    image: "https://cdn.playadopt.me/items/cracked_egg.png"
-  }
-
-];
+let PET_DATABASE = Object.entries(
+  CUSTOM_VALUE_OVERRIDES
+).map(([name, value]) => ({
+  id: slug(name),
+  name,
+  rarity: "unknown",
+  value,
+  image: fallbackImage(name),
+  type: isEggName(name) ? "egg" : "pet",
+  source: "zayaxra"
+}));
+
+let databaseReady = false;
 
 
 /* =========================================================
@@ -1891,17 +174,110 @@ function $(id) {
 }
 
 
-function formatValue(value) {
+function slug(name) {
 
-  const number = Number(value || 0);
+  const special = {
+    "T-Rex": "t_rex",
+    "Skele-Rex": "skele_rex",
+    "S'mores Raccoon": "smores_raccoon",
+    "Tió De Nadal": "tio_de_nadal",
+    "Mr. Whiskerpips": "mr_whiskerpips",
+    "Mrs. Whiskerpips": "mrs_whiskerpips",
+    "Ms. Muffet": "ms_muffet",
+    "Mecha R4BBIT": "mecha_r4bbit"
+  };
 
-  if (!Number.isFinite(number)) {
-    return "0";
+  if (special[name]) {
+    return special[name];
   }
 
-  return Number.isInteger(number)
-    ? String(number)
-    : number.toFixed(1);
+  return String(name)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’']/g, "")
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
+
+function isEggName(name) {
+
+  return /\begg\b/i.test(
+    String(name || "")
+  );
+
+}
+
+
+function fallbackImage(name) {
+
+  return (
+    PET_IMAGE_BASE +
+    "/images/pets/" +
+    encodeURIComponent(name) +
+    ".png"
+  );
+
+}
+
+
+function absoluteImage(path, name) {
+
+  if (!path) {
+    return fallbackImage(name);
+  }
+
+  if (
+    /^https?:\/\//i.test(path)
+  ) {
+    return path;
+  }
+
+  return (
+    PET_IMAGE_BASE +
+    (
+      path.startsWith("/")
+        ? ""
+        : "/"
+    ) +
+    path
+  );
+
+}
+
+
+function normalizeRarity(rarity) {
+
+  const r =
+    String(
+      rarity || ""
+    )
+      .toLowerCase()
+      .trim();
+
+  if (r.includes("legendary")) {
+    return "legendary";
+  }
+
+  if (r.includes("ultra")) {
+    return "ultra";
+  }
+
+  if (r.includes("rare")) {
+    return "rare";
+  }
+
+  if (r.includes("uncommon")) {
+    return "uncommon";
+  }
+
+  if (r.includes("common")) {
+    return "common";
+  }
+
+  return "unknown";
+
 }
 
 
@@ -1912,10 +288,40 @@ function rarityName(rarity) {
     ultra: "Ultra-Rare",
     rare: "Rare",
     uncommon: "Uncommon",
-    common: "Common"
+    common: "Common",
+    unknown: ""
   };
 
-  return names[rarity] || rarity || "";
+  return (
+    names[rarity] ||
+    ""
+  );
+
+}
+
+
+function formatValue(value) {
+
+  const number =
+    Number(value || 0);
+
+  if (
+    !Number.isFinite(number)
+  ) {
+    return "0";
+  }
+
+  if (
+    Number.isInteger(number)
+  ) {
+    return String(number);
+  }
+
+  return number
+    .toFixed(2)
+    .replace(/0+$/, "")
+    .replace(/\.$/, "");
+
 }
 
 
@@ -1927,6 +333,7 @@ function escapeHTML(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
 
 
@@ -1968,6 +375,7 @@ function handleImageError(img) {
         </text>
       </svg>
     `);
+
 }
 
 
@@ -1979,16 +387,323 @@ function imageHTML(
   return `
     <img
       src="${escapeHTML(
-        pet?.image || ""
+        pet?.image ||
+        fallbackImage(
+          pet?.name ||
+          "Pet"
+        )
       )}"
       alt="${escapeHTML(
-        pet?.name || "Pet"
+        pet?.name ||
+        "Pet"
       )}"
       class="${className}"
       loading="lazy"
       onerror="handleImageError(this)"
     >
   `;
+
+}
+
+
+function getVariantMultiplier(
+  form
+) {
+
+  if (
+    form === "mega"
+  ) {
+    return 16;
+  }
+
+  if (
+    form === "neon"
+  ) {
+    return 4;
+  }
+
+  return 1;
+
+}
+
+
+function getItemValue(item) {
+
+  return (
+    Number(
+      item?.value
+    ) || 0
+  );
+
+}
+
+
+/* =========================================================
+   FULL DATABASE LOADER
+========================================================= */
+
+async function loadFullPetDatabase() {
+
+  try {
+
+    const response =
+      await fetch(
+        PET_DATA_URL,
+        {
+          cache: "no-store"
+        }
+      );
+
+
+    if (
+      !response.ok
+    ) {
+
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+
+    }
+
+
+    const raw =
+      await response.json();
+
+
+    if (
+      !Array.isArray(raw)
+    ) {
+
+      throw new Error(
+        "Geçersiz JSON"
+      );
+
+    }
+
+
+    const remotePets =
+      raw
+        .filter(
+          item => {
+
+            const type =
+              String(
+                item?.type ||
+                ""
+              ).toLowerCase();
+
+            /*
+              Sadece pet ve egg
+            */
+
+            return (
+              type === "pet" ||
+              type === "pets" ||
+              type === "egg" ||
+              type === "eggs"
+            );
+
+          }
+        )
+        .map(
+          (
+            item,
+            index
+          ) => {
+
+            const name =
+              String(
+                item?.name ||
+                ""
+              ).trim();
+
+
+            const regularValue =
+              Number(
+                item?.regular?.value
+              );
+
+
+            const fallbackValue =
+              Number(
+                item?.value
+              );
+
+
+            let value =
+              CUSTOM_VALUE_OVERRIDES[
+                name
+              ];
+
+
+            if (
+              value === undefined
+            ) {
+
+              value =
+                Number.isFinite(
+                  regularValue
+                )
+                  ? regularValue
+                  : Number.isFinite(
+                      fallbackValue
+                    )
+                    ? fallbackValue
+                    : 0;
+
+            }
+
+
+            const sourceType =
+              String(
+                item?.type ||
+                ""
+              ).toLowerCase();
+
+
+            return {
+
+              id:
+                `remote_${item?.id ?? index}_${slug(name)}`,
+
+              name,
+
+              rarity:
+                normalizeRarity(
+                  item?.rarity
+                ),
+
+              value:
+                Number.isFinite(
+                  Number(value)
+                )
+                  ? Number(value)
+                  : 0,
+
+              image:
+                absoluteImage(
+                  item?.image,
+                  name
+                ),
+
+              type:
+                sourceType.includes("egg") ||
+                isEggName(name)
+                  ? "egg"
+                  : "pet",
+
+              source:
+                "remote"
+
+            };
+
+          }
+        )
+        .filter(
+          item =>
+            item.name
+        );
+
+
+    /*
+      Aynı isimleri tek kayıt yap.
+    */
+
+    const merged =
+      new Map();
+
+
+    for (
+      const pet of PET_DATABASE
+    ) {
+
+      merged.set(
+        pet.name.toLowerCase(),
+        pet
+      );
+
+    }
+
+
+    for (
+      const pet of remotePets
+    ) {
+
+      const key =
+        pet.name.toLowerCase();
+
+
+      const old =
+        merged.get(key);
+
+
+      merged.set(
+        key,
+        old
+          ? {
+              ...pet,
+
+              value:
+                CUSTOM_VALUE_OVERRIDES[
+                  pet.name
+                ] ??
+                pet.value
+            }
+          : pet
+      );
+
+    }
+
+
+    PET_DATABASE =
+      [
+        ...merged.values()
+      ]
+      .sort(
+        (
+          a,
+          b
+        ) =>
+          a.name.localeCompare(
+            b.name,
+            "en",
+            {
+              sensitivity:
+                "base"
+            }
+          )
+      );
+
+
+    databaseReady =
+      true;
+
+
+    console.log(
+      `ZAYAXRA: ${PET_DATABASE.length} kayıt yüklendi.`
+    );
+
+
+    renderPickerPets();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "ZAYAXRA: full pet database yüklenemedi:",
+      error
+    );
+
+
+    databaseReady =
+      false;
+
+
+    renderPickerPets();
+
+  }
+
 }
 
 
@@ -2007,18 +722,29 @@ function getTradeStats() {
         ) || "{}"
       );
 
+
     return {
+
       wins:
-        Number(data.wins) || 0,
+        Number(
+          data.wins
+        ) || 0,
 
       fair:
-        Number(data.fair) || 0,
+        Number(
+          data.fair
+        ) || 0,
 
       loses:
-        Number(data.loses) || 0
+        Number(
+          data.loses
+        ) || 0
+
     };
 
-  } catch {
+  }
+
+  catch {
 
     return {
       wins: 0,
@@ -2031,19 +757,28 @@ function getTradeStats() {
 }
 
 
-function saveTradeStats(stats) {
+function saveTradeStats(
+  stats
+) {
 
   localStorage.setItem(
     "zayaggTradeStats",
+
     JSON.stringify({
       wins:
-        Number(stats.wins) || 0,
+        Number(
+          stats.wins
+        ) || 0,
 
       fair:
-        Number(stats.fair) || 0,
+        Number(
+          stats.fair
+        ) || 0,
 
       loses:
-        Number(stats.loses) || 0
+        Number(
+          stats.loses
+        ) || 0
     })
   );
 
@@ -2084,7 +819,9 @@ function getProfileData() {
         ) || "{}"
       );
 
+
     return {
+
       name:
         data.name ||
         "Zayaxra Kullanıcısı",
@@ -2100,11 +837,15 @@ function getProfileData() {
       avatar:
         data.avatar ||
         "🐉"
+
     };
 
-  } catch {
+  }
+
+  catch {
 
     return {
+
       name:
         "Zayaxra Kullanıcısı",
 
@@ -2116,6 +857,7 @@ function getProfileData() {
 
       avatar:
         "🐉"
+
     };
 
   }
@@ -2123,14 +865,26 @@ function getProfileData() {
 }
 
 
-/* =========================================================
-   LEGACY PROFILE CLEANUP
-========================================================= */
+function saveProfileData(
+  data
+) {
+
+  localStorage.setItem(
+    "zayaggProfile",
+
+    JSON.stringify(
+      data
+    )
+  );
+
+}
+
 
 function migrateLegacyProfile() {
 
   const migrationKey =
     "zayaxraProfileMigrationV1";
+
 
   if (
     localStorage.getItem(
@@ -2167,31 +921,43 @@ function migrateLegacyProfile() {
 
     const name =
       String(
-        data?.name || ""
+        data?.name ||
+        ""
       ).toLowerCase();
 
 
     const username =
       String(
-        data?.username || ""
+        data?.username ||
+        ""
       ).toLowerCase();
 
 
     const bio =
       String(
-        data?.bio || ""
+        data?.bio ||
+        ""
       ).toLowerCase();
 
 
     const isOldZayagg =
-      name.includes("zayagg") ||
-      username.includes("zayagg") ||
-      bio.includes("adm");
+      name.includes(
+        "zayagg"
+      ) ||
+      username.includes(
+        "zayagg"
+      ) ||
+      bio.includes(
+        "adm"
+      );
 
 
-    if (isOldZayagg) {
+    if (
+      isOldZayagg
+    ) {
 
       saveProfileData({
+
         name:
           "Zayaxra Kullanıcısı",
 
@@ -2204,6 +970,7 @@ function migrateLegacyProfile() {
         avatar:
           data?.avatar ||
           "🐉"
+
       });
 
     }
@@ -2214,9 +981,12 @@ function migrateLegacyProfile() {
       "1"
     );
 
-  } catch {
+  }
+
+  catch {
 
     saveProfileData({
+
       name:
         "Zayaxra Kullanıcısı",
 
@@ -2228,6 +998,7 @@ function migrateLegacyProfile() {
 
       avatar:
         "🐉"
+
     });
 
 
@@ -2241,21 +1012,13 @@ function migrateLegacyProfile() {
 }
 
 
-function saveProfileData(data) {
-
-  localStorage.setItem(
-    "zayaggProfile",
-    JSON.stringify(data)
-  );
-
-}
-
-
 /* =========================================================
    PET PICKER
 ========================================================= */
 
-function openPetPicker(side) {
+function openPetPicker(
+  side
+) {
 
   if (
     side !== "you" &&
@@ -2268,11 +1031,14 @@ function openPetPicker(side) {
   pickerSide =
     side;
 
+
   selectedPet =
     null;
 
+
   selectedForm =
     "normal";
+
 
   selectedPotion = {
     fly: false,
@@ -2283,8 +1049,10 @@ function openPetPicker(side) {
   const modal =
     $("petPicker");
 
+
   const search =
     $("petSearch");
+
 
   const title =
     $("petPickerTitle");
@@ -2301,13 +1069,17 @@ function openPetPicker(side) {
 
 
   if (search) {
-    search.value = "";
+
+    search.value =
+      "";
+
   }
 
 
-  $("pickerBar")?.classList.add(
-    "hidden"
-  );
+  $("pickerBar")
+    ?.classList.add(
+      "hidden"
+    );
 
 
   resetPickerButtons();
@@ -2360,6 +1132,7 @@ function closePetPicker() {
   const modal =
     $("petPicker");
 
+
   if (modal) {
 
     modal.classList.remove(
@@ -2403,6 +1176,7 @@ function closePetPicker() {
   pickerSide =
     null;
 
+
   selectedPet =
     null;
 
@@ -2420,6 +1194,7 @@ function renderPickerPets(
   const box =
     $("pickerPets");
 
+
   if (!box) {
     return;
   }
@@ -2430,7 +1205,9 @@ function renderPickerPets(
 
 
   if (
-    !Array.isArray(list) ||
+    !Array.isArray(
+      list
+    ) ||
     list.length === 0
   ) {
 
@@ -2456,6 +1233,10 @@ function renderPickerPets(
 
     return;
   }
+
+
+  const fragment =
+    document.createDocumentFragment();
 
 
   list.forEach(
@@ -2509,22 +1290,27 @@ function renderPickerPets(
         <span
           class="rarity-tag ${escapeHTML(
             String(
-              pet.rarity || ""
+              pet.rarity ||
+              ""
             )
           )}"
         >
+
           ${escapeHTML(
             rarityName(
               pet.rarity
             )
           )}
+
         </span>
 
 
         <small>
+
           ${formatValue(
             pet.value
           )}
+
         </small>
 
       `;
@@ -2542,11 +1328,16 @@ function renderPickerPets(
       );
 
 
-      box.appendChild(
+      fragment.appendChild(
         button
       );
 
     }
+  );
+
+
+  box.appendChild(
+    fragment
   );
 
 }
@@ -2573,16 +1364,23 @@ function filterPickerPets() {
 
         const name =
           String(
-            pet.name || ""
-          )
-            .toLowerCase();
+            pet.name ||
+            ""
+          ).toLowerCase();
 
 
         const rarity =
           String(
-            pet.rarity || ""
-          )
-            .toLowerCase();
+            pet.rarity ||
+            ""
+          ).toLowerCase();
+
+
+        const type =
+          String(
+            pet.type ||
+            ""
+          ).toLowerCase();
 
 
         return (
@@ -2590,6 +1388,9 @@ function filterPickerPets() {
             query
           ) ||
           rarity.includes(
+            query
+          ) ||
+          type.includes(
             query
           )
         );
@@ -2621,13 +1422,37 @@ function selectPickerPet(
   selectedPet =
     pet;
 
+
   selectedForm =
     "normal";
+
 
   selectedPotion = {
     fly: false,
     ride: false
   };
+
+
+  /*
+    EGGLERDE VARYANT / POTION YOK
+  */
+
+  if (
+    isEgg(
+      pet
+    )
+  ) {
+
+    selectedForm =
+      "normal";
+
+
+    selectedPotion = {
+      fly: false,
+      ride: false
+    };
+
+  }
 
 
   $("pickerBar")
@@ -2648,6 +1473,38 @@ function selectPickerPet(
 
 
 /* =========================================================
+   EGG CHECK
+========================================================= */
+
+function isEgg(
+  pet
+) {
+
+  if (!pet) {
+    return false;
+  }
+
+
+  return (
+    String(
+      pet.type ||
+      ""
+    ).toLowerCase()
+      .includes(
+        "egg"
+      ) ||
+    /\begg\b/i.test(
+      String(
+        pet.name ||
+        ""
+      )
+    )
+  );
+
+}
+
+
+/* =========================================================
    PICKER PREVIEW
 ========================================================= */
 
@@ -2655,6 +1512,7 @@ function renderPickerPreview() {
 
   const box =
     $("pickerPreview");
+
 
   if (
     !box ||
@@ -2668,47 +1526,55 @@ function renderPickerPreview() {
 
 
   if (
-    selectedForm ===
-    "neon"
+    !isEgg(
+      selectedPet
+    )
   ) {
 
-    chips.push(
-      `<span class="vchip neon">NEON</span>`
-    );
+    if (
+      selectedForm ===
+      "neon"
+    ) {
 
-  }
+      chips.push(
+        `<span class="vchip neon">NEON</span>`
+      );
 
-
-  if (
-    selectedForm ===
-    "mega"
-  ) {
-
-    chips.push(
-      `<span class="vchip mega">MEGA</span>`
-    );
-
-  }
+    }
 
 
-  if (
-    selectedPotion.fly
-  ) {
+    if (
+      selectedForm ===
+      "mega"
+    ) {
 
-    chips.push(
-      `<span class="vchip fly">FLY</span>`
-    );
+      chips.push(
+        `<span class="vchip mega">MEGA</span>`
+      );
 
-  }
+    }
 
 
-  if (
-    selectedPotion.ride
-  ) {
+    if (
+      selectedPotion.fly
+    ) {
 
-    chips.push(
-      `<span class="vchip ride">RIDE</span>`
-    );
+      chips.push(
+        `<span class="vchip fly">FLY</span>`
+      );
+
+    }
+
+
+    if (
+      selectedPotion.ride
+    ) {
+
+      chips.push(
+        `<span class="vchip ride">RIDE</span>`
+      );
+
+    }
 
   }
 
@@ -2719,46 +1585,58 @@ function renderPickerPreview() {
 
       ${
         selectedForm ===
-        "neon"
+        "neon" &&
+        !isEgg(selectedPet)
           ? `<div class="neon-effect"></div>`
           : ""
       }
 
+
       ${
         selectedForm ===
-        "mega"
+        "mega" &&
+        !isEgg(selectedPet)
           ? `<div class="mega-effect"></div>`
           : ""
       }
+
 
       ${imageHTML(
         selectedPet
       )}
 
+
       <div class="pet-badges">
 
         ${
           selectedForm ===
-          "neon"
+            "neon" &&
+          !isEgg(selectedPet)
             ? `<span class="mini-chip neon">N</span>`
             : ""
         }
 
+
         ${
           selectedForm ===
-          "mega"
+            "mega" &&
+          !isEgg(selectedPet)
             ? `<span class="mini-chip mega">M</span>`
             : ""
         }
 
+
         ${
-          selectedPotion.fly
+          selectedPotion.fly &&
+          !isEgg(selectedPet)
             ? `<span class="mini-chip fly">F</span>`
             : ""
         }
 
+
         ${
-          selectedPotion.ride
+          selectedPotion.ride &&
+          !isEgg(selectedPet)
             ? `<span class="mini-chip ride">R</span>`
             : ""
         }
@@ -2771,22 +1649,31 @@ function renderPickerPreview() {
     <div class="preview-info">
 
       <strong>
+
         ${escapeHTML(
           selectedPet.name
         )}
+
       </strong>
 
+
       <span>
+
         ${escapeHTML(
           rarityName(
             selectedPet.rarity
           )
         )}
+
       </span>
 
 
       <div class="vchip-row">
-        ${chips.join("")}
+
+        ${chips.join(
+          ""
+        )}
+
       </div>
 
     </div>
@@ -2848,76 +1735,108 @@ function resetPickerButtons() {
 
 function updatePickerButtons() {
 
-  const normal =
-    selectedForm ===
-    "normal";
+  const egg =
+    isEgg(
+      selectedPet
+    );
 
 
   $("normalFormBtn")
     ?.classList.toggle(
       "active",
-      normal
+      selectedForm ===
+        "normal"
     );
 
 
   $("btnNeon")
     ?.classList.toggle(
       "active",
-      selectedForm ===
-        "neon"
+      !egg &&
+        selectedForm ===
+          "neon"
     );
 
 
   $("btnMega")
     ?.classList.toggle(
       "active",
-      selectedForm ===
-        "mega"
+      !egg &&
+        selectedForm ===
+          "mega"
     );
-
-
-  const fly =
-    selectedPotion.fly;
-
-
-  const ride =
-    selectedPotion.ride;
-
-
-  const none =
-    !fly &&
-    !ride;
 
 
   $("noPotionBtn")
     ?.classList.toggle(
       "active",
-      none
+      egg ||
+        (
+          !selectedPotion.fly &&
+          !selectedPotion.ride
+        )
     );
 
 
   $("btnFly")
     ?.classList.toggle(
       "active",
-      fly &&
-      !ride
+      !egg &&
+        selectedPotion.fly &&
+        !selectedPotion.ride
     );
 
 
   $("btnRide")
     ?.classList.toggle(
       "active",
-      ride &&
-      !fly
+      !egg &&
+        selectedPotion.ride &&
+        !selectedPotion.fly
     );
 
 
   $("flyRideBtn")
     ?.classList.toggle(
       "active",
-      fly &&
-      ride
+      !egg &&
+        selectedPotion.fly &&
+        selectedPotion.ride
     );
+
+
+  /*
+    Egg butonlarını tamamen pasifleştir.
+  */
+
+  if (egg) {
+
+    $("btnNeon")?.classList.remove(
+      "active"
+    );
+
+    $("btnMega")?.classList.remove(
+      "active"
+    );
+
+    $("btnFly")?.classList.remove(
+      "active"
+    );
+
+    $("btnRide")?.classList.remove(
+      "active"
+    );
+
+    $("flyRideBtn")?.classList.remove(
+      "active"
+    );
+
+    $("noPotionBtn")
+      ?.classList.add(
+        "active"
+      );
+
+  }
 
 }
 
@@ -2930,8 +1849,24 @@ function toggleForm(
   form
 ) {
 
-  if (!selectedPet) {
+  if (
+    !selectedPet
+  ) {
     return;
+  }
+
+
+  if (
+    isEgg(
+      selectedPet
+    )
+  ) {
+
+    selectedForm =
+      "normal";
+
+    return;
+
   }
 
 
@@ -2940,9 +1875,13 @@ function toggleForm(
       "normal",
       "neon",
       "mega"
-    ].includes(form)
+    ].includes(
+      form
+    )
   ) {
+
     return;
+
   }
 
 
@@ -2970,8 +1909,33 @@ function togglePotion(
   type
 ) {
 
-  if (!selectedPet) {
+  if (
+    !selectedPet ||
+    isEgg(
+      selectedPet
+    )
+  ) {
+
+    if (
+      selectedPet &&
+      isEgg(selectedPet)
+    ) {
+
+      selectedPotion = {
+        fly: false,
+        ride: false
+      };
+
+      updatePickerButtons();
+
+      renderPickerPreview();
+
+      updatePickerValue();
+
+    }
+
     return;
+
   }
 
 
@@ -2992,6 +1956,7 @@ function togglePotion(
   ) {
 
     selectedPotion = {
+
       fly:
         !(
           selectedPotion.fly &&
@@ -2999,6 +1964,7 @@ function togglePotion(
         ),
 
       ride: false
+
     };
 
   }
@@ -3009,6 +1975,7 @@ function togglePotion(
   ) {
 
     selectedPotion = {
+
       fly: false,
 
       ride:
@@ -3016,6 +1983,7 @@ function togglePotion(
           selectedPotion.ride &&
           !selectedPotion.fly
         )
+
     };
 
   }
@@ -3031,11 +1999,13 @@ function togglePotion(
 
 
     selectedPotion = {
+
       fly:
         !active,
 
       ride:
         !active
+
     };
 
   }
@@ -3065,7 +2035,8 @@ function getModifiedValue(
 
   let value =
     Number(
-      pet.value || 0
+      pet.value ||
+      0
     );
 
 
@@ -3075,7 +2046,23 @@ function getModifiedValue(
     )
   ) {
 
-    value = 0;
+    value =
+      0;
+
+  }
+
+
+  /*
+    EGG = SADECE NORMAL
+  */
+
+  if (
+    isEgg(
+      pet
+    )
+  ) {
+
+    return value;
 
   }
 
@@ -3090,7 +2077,7 @@ function getModifiedValue(
   }
 
 
-  if (
+  else if (
     selectedForm ===
     "mega"
   ) {
@@ -3132,12 +2119,15 @@ function updatePickerValue() {
   const element =
     $("pickerValue");
 
+
   if (!element) {
     return;
   }
 
 
-  if (!selectedPet) {
+  if (
+    !selectedPet
+  ) {
 
     element.textContent =
       "0";
@@ -3167,7 +2157,31 @@ function confirmAddPet() {
     !selectedPet ||
     !pickerSide
   ) {
+
     return;
+
+  }
+
+
+  /*
+    Egglerde seçili varyant ve potionları sıfırla.
+  */
+
+  if (
+    isEgg(
+      selectedPet
+    )
+  ) {
+
+    selectedForm =
+      "normal";
+
+
+    selectedPotion = {
+      fly: false,
+      ride: false
+    };
+
   }
 
 
@@ -3185,9 +2199,19 @@ function confirmAddPet() {
     image:
       selectedPet.image,
 
+    type:
+      selectedPet.type || (
+        isEgg(
+          selectedPet
+        )
+          ? "egg"
+          : "pet"
+      ),
+
     baseValue:
       Number(
-        selectedPet.value || 0
+        selectedPet.value ||
+        0
       ),
 
     value:
@@ -3199,14 +2223,18 @@ function confirmAddPet() {
       selectedForm,
 
     fly:
-      Boolean(
-        selectedPotion.fly
-      ),
+      isEgg(selectedPet)
+        ? false
+        : Boolean(
+            selectedPotion.fly
+          ),
 
     ride:
-      Boolean(
-        selectedPotion.ride
-      ),
+      isEgg(selectedPet)
+        ? false
+        : Boolean(
+            selectedPotion.ride
+          ),
 
     uniqueId:
       `${Date.now()}_${Math.random()
@@ -3274,18 +2302,21 @@ function calculateTotal(
 
       const value =
         Number(
-          pet?.value || 0
+          pet?.value ||
+          0
         );
 
 
-      return total +
+      return (
+        total +
         (
           Number.isFinite(
             value
           )
             ? value
             : 0
-        );
+        )
+      );
 
     },
     0
@@ -3306,6 +2337,7 @@ function renderTradeSide(
 
   const element =
     $(elementId);
+
 
   if (!element) {
     return;
@@ -3329,11 +2361,13 @@ function renderTradeSide(
         </strong>
 
         <small>
+
           ${
             side === "you"
               ? "Teklifini oluşturmak için pet ekle"
               : "Karşı tarafın teklifini oluştur"
           }
+
         </small>
 
       </div>
@@ -3341,6 +2375,7 @@ function renderTradeSide(
     `;
 
     return;
+
   }
 
 
@@ -3351,53 +2386,91 @@ function renderTradeSide(
         const badges = [];
 
 
+        /*
+          N
+        */
+
         if (
-          pet.form === "neon"
+          pet.form ===
+          "neon" &&
+          !isEgg(
+            pet
+          )
         ) {
 
           badges.push(`
+
             <span class="trade-slot-badge neon">
               N
             </span>
+
           `);
 
         }
 
 
+        /*
+          M
+        */
+
         if (
-          pet.form === "mega"
+          pet.form ===
+          "mega" &&
+          !isEgg(
+            pet
+          )
         ) {
 
           badges.push(`
+
             <span class="trade-slot-badge mega">
               M
             </span>
+
           `);
 
         }
 
 
+        /*
+          F
+        */
+
         if (
-          pet.fly
+          pet.fly &&
+          !isEgg(
+            pet
+          )
         ) {
 
           badges.push(`
+
             <span class="trade-slot-badge fly">
               F
             </span>
+
           `);
 
         }
 
 
+        /*
+          R
+        */
+
         if (
-          pet.ride
+          pet.ride &&
+          !isEgg(
+            pet
+          )
         ) {
 
           badges.push(`
+
             <span class="trade-slot-badge ride">
               R
             </span>
+
           `);
 
         }
@@ -3415,28 +2488,43 @@ function renderTradeSide(
             <div class="trade-slot-image">
 
               ${
-                pet.form === "neon"
+                pet.form ===
+                  "neon" &&
+                !isEgg(pet)
+
                   ? `
                     <div class="neon-effect"></div>
                   `
+
                   : ""
               }
 
+
               ${
-                pet.form === "mega"
+                pet.form ===
+                  "mega" &&
+                !isEgg(pet)
+
                   ? `
                     <div class="mega-effect"></div>
                   `
+
                   : ""
               }
+
 
               ${imageHTML(
                 pet,
                 "trade-slot-photo"
               )}
 
+
               <div class="trade-slot-badges">
-                ${badges.join("")}
+
+                ${badges.join(
+                  ""
+                )}
+
               </div>
 
             </div>
@@ -3448,16 +2536,20 @@ function renderTradeSide(
                 pet.name
               )}"
             >
+
               ${escapeHTML(
                 pet.name
               )}
+
             </div>
 
 
             <div class="trade-slot-value">
+
               ${formatValue(
                 pet.value
               )}
+
             </div>
 
 
@@ -3470,7 +2562,9 @@ function renderTradeSide(
               )}"
               aria-label="Pet sil"
             >
+
               ×
+
             </button>
 
           </div>
@@ -3478,7 +2572,8 @@ function renderTradeSide(
         `;
 
       }
-    ).join("");
+    )
+    .join("");
 
 }
 
@@ -3493,7 +2588,8 @@ function removeTradePet(
 ) {
 
   if (
-    side === "you"
+    side ===
+    "you"
   ) {
 
     youTrade =
@@ -3505,8 +2601,10 @@ function removeTradePet(
 
   }
 
+
   else if (
-    side === "them"
+    side ===
+    "them"
   ) {
 
     themTrade =
@@ -3534,9 +2632,11 @@ function removeTradePet(
 
 function clearTrade() {
 
-  youTrade = [];
+  youTrade =
+    [];
 
-  themTrade = [];
+  themTrade =
+    [];
 
   recordedTradeKey =
     "";
@@ -3587,7 +2687,9 @@ function updateTradeUI() {
     $("themTotal");
 
 
-  if (youTotalEl) {
+  if (
+    youTotalEl
+  ) {
 
     youTotalEl.textContent =
       formatValue(
@@ -3597,7 +2699,9 @@ function updateTradeUI() {
   }
 
 
-  if (themTotalEl) {
+  if (
+    themTotalEl
+  ) {
 
     themTotalEl.textContent =
       formatValue(
@@ -3621,20 +2725,26 @@ function updateResult() {
   const resultCard =
     $("resultCard");
 
+
   const resultText =
     $("resultStatusText");
+
 
   const resultHint =
     $("resultHint");
 
+
   const diffNumber =
     $("resultDiffNumber");
+
 
   const diffDisplay =
     $("resultDiffDisplay");
 
+
   const statusBar =
     $("tradeStatusBar");
+
 
   const statusLabel =
     $("tradeStatusLabel");
@@ -3657,7 +2767,9 @@ function updateResult() {
     !themTrade.length
   ) {
 
-    if (resultText) {
+    if (
+      resultText
+    ) {
 
       resultText.textContent =
         "Pet ekleyerek başla";
@@ -3665,7 +2777,9 @@ function updateResult() {
     }
 
 
-    if (resultHint) {
+    if (
+      resultHint
+    ) {
 
       resultHint.textContent =
         "İki tarafa da pet eklediğinde avantajı burada göreceksin.";
@@ -3673,7 +2787,9 @@ function updateResult() {
     }
 
 
-    if (diffNumber) {
+    if (
+      diffNumber
+    ) {
 
       diffNumber.textContent =
         "—";
@@ -3681,7 +2797,9 @@ function updateResult() {
     }
 
 
-    if (diffDisplay) {
+    if (
+      diffDisplay
+    ) {
 
       diffDisplay.textContent =
         "—";
@@ -3689,7 +2807,9 @@ function updateResult() {
     }
 
 
-    if (statusLabel) {
+    if (
+      statusLabel
+    ) {
 
       statusLabel.textContent =
         "TRADE HAZIR";
@@ -3697,7 +2817,9 @@ function updateResult() {
     }
 
 
-    if (resultCard) {
+    if (
+      resultCard
+    ) {
 
       resultCard.className =
         "result-card trade-result-card";
@@ -3705,7 +2827,9 @@ function updateResult() {
     }
 
 
-    if (statusBar) {
+    if (
+      statusBar
+    ) {
 
       statusBar.className =
         "trade-status-bar";
@@ -3743,25 +2867,34 @@ function updateResult() {
 
 
   if (
-    roundedPercent > 0
+    roundedPercent >
+    0
   ) {
 
     diffText =
-      `+${roundedPercent.toFixed(1)}%`;
+      `+${roundedPercent.toFixed(
+        1
+      )}%`;
 
   }
+
 
   else if (
-    roundedPercent < 0
+    roundedPercent <
+    0
   ) {
 
     diffText =
-      `${roundedPercent.toFixed(1)}%`;
+      `${roundedPercent.toFixed(
+        1
+      )}%`;
 
   }
 
 
-  if (diffNumber) {
+  if (
+    diffNumber
+  ) {
 
     diffNumber.textContent =
       diffText;
@@ -3769,7 +2902,9 @@ function updateResult() {
   }
 
 
-  if (diffDisplay) {
+  if (
+    diffDisplay
+  ) {
 
     diffDisplay.textContent =
       diffText;
@@ -3780,24 +2915,31 @@ function updateResult() {
   let status =
     "FAIR";
 
+
   let title =
     "Adil Takas";
+
 
   let hint =
     "İki tarafın verdiği değerler neredeyse eşit.";
 
+
   let resultClass =
     "fair";
+
 
   let statusClass =
     "fair";
 
 
-  /* FAIR */
+  /*
+    FAIR
+  */
 
   if (
-    Math.abs(percent) <=
-    3
+    Math.abs(
+      percent
+    ) <= 3
   ) {
 
     status =
@@ -3818,14 +2960,18 @@ function updateResult() {
   }
 
 
-  /* WIN */
+  /*
+    WIN
+  */
 
   else if (
-    percent > 0
+    percent >
+    0
   ) {
 
     if (
-      percent >= 10
+      percent >=
+      10
     ) {
 
       status =
@@ -3844,6 +2990,7 @@ function updateResult() {
         "big-win";
 
     }
+
 
     else {
 
@@ -3867,13 +3014,16 @@ function updateResult() {
   }
 
 
-  /* LOSE */
+  /*
+    LOSE
+  */
 
   else {
 
     if (
-      Math.abs(percent) >=
-      10
+      Math.abs(
+        percent
+      ) >= 10
     ) {
 
       status =
@@ -3892,6 +3042,7 @@ function updateResult() {
         "big-lose";
 
     }
+
 
     else {
 
@@ -3915,7 +3066,9 @@ function updateResult() {
   }
 
 
-  if (resultText) {
+  if (
+    resultText
+  ) {
 
     resultText.textContent =
       title;
@@ -3923,7 +3076,9 @@ function updateResult() {
   }
 
 
-  if (resultHint) {
+  if (
+    resultHint
+  ) {
 
     resultHint.textContent =
       hint;
@@ -3931,7 +3086,9 @@ function updateResult() {
   }
 
 
-  if (statusLabel) {
+  if (
+    statusLabel
+  ) {
 
     statusLabel.textContent =
       status;
@@ -3939,7 +3096,9 @@ function updateResult() {
   }
 
 
-  if (resultCard) {
+  if (
+    resultCard
+  ) {
 
     resultCard.className =
       `result-card trade-result-card ${resultClass}`;
@@ -3947,7 +3106,9 @@ function updateResult() {
   }
 
 
-  if (statusBar) {
+  if (
+    statusBar
+  ) {
 
     statusBar.className =
       `trade-status-bar ${statusClass}`;
@@ -3989,29 +3150,37 @@ function recordTradeResult(
 
   const key =
     JSON.stringify({
+
       you:
         youTrade.map(
           pet => ({
+
             id:
               pet.uniqueId,
 
             value:
               pet.value
+
           })
         ),
+
 
       them:
         themTrade.map(
           pet => ({
+
             id:
               pet.uniqueId,
 
             value:
               pet.value
+
           })
         ),
 
+
       status
+
     });
 
 
@@ -4034,25 +3203,32 @@ function recordTradeResult(
 
 
   if (
-    status === "BIG WIN" ||
-    status === "SMALL WIN"
+    status ===
+      "BIG WIN" ||
+    status ===
+      "SMALL WIN"
   ) {
 
     stats.wins++;
 
   }
 
+
   else if (
-    status === "FAIR"
+    status ===
+    "FAIR"
   ) {
 
     stats.fair++;
 
   }
 
+
   else if (
-    status === "BIG LOSE" ||
-    status === "SMALL LOSE"
+    status ===
+      "BIG LOSE" ||
+    status ===
+      "SMALL LOSE"
   ) {
 
     stats.loses++;
@@ -4086,7 +3262,9 @@ function updateProfileStats() {
     stats.loses;
 
 
-  if ($("profileWins")) {
+  if (
+    $("profileWins")
+  ) {
 
     $("profileWins").textContent =
       stats.wins;
@@ -4094,7 +3272,9 @@ function updateProfileStats() {
   }
 
 
-  if ($("profileFair")) {
+  if (
+    $("profileFair")
+  ) {
 
     $("profileFair").textContent =
       stats.fair;
@@ -4102,7 +3282,9 @@ function updateProfileStats() {
   }
 
 
-  if ($("profileLoses")) {
+  if (
+    $("profileLoses")
+  ) {
 
     $("profileLoses").textContent =
       stats.loses;
@@ -4110,7 +3292,9 @@ function updateProfileStats() {
   }
 
 
-  if ($("profileTrades")) {
+  if (
+    $("profileTrades")
+  ) {
 
     $("profileTrades").textContent =
       total;
@@ -4130,13 +3314,7 @@ function renderProfile() {
     getProfileData();
 
 
-  /* PROFILE LABEL */
-
-  const profileModal =
-    $("profileModal");
-
-
-  profileModal
+  $("profileModal")
     ?.querySelectorAll(
       ".profile-eyebrow"
     )
@@ -4150,9 +3328,9 @@ function renderProfile() {
     );
 
 
-  /* NAME */
-
-  if ($("profileName")) {
+  if (
+    $("profileName")
+  ) {
 
     $("profileName").textContent =
       profile.name;
@@ -4160,9 +3338,9 @@ function renderProfile() {
   }
 
 
-  /* USERNAME */
-
-  if ($("profileUsername")) {
+  if (
+    $("profileUsername")
+  ) {
 
     $("profileUsername").textContent =
       profile.username;
@@ -4170,9 +3348,9 @@ function renderProfile() {
   }
 
 
-  /* BIO */
-
-  if ($("profileBio")) {
+  if (
+    $("profileBio")
+  ) {
 
     $("profileBio").textContent =
       profile.bio;
@@ -4180,9 +3358,9 @@ function renderProfile() {
   }
 
 
-  /* AVATAR */
-
-  if ($("profileAvatar")) {
+  if (
+    $("profileAvatar")
+  ) {
 
     $("profileAvatar").textContent =
       profile.avatar;
@@ -4190,9 +3368,9 @@ function renderProfile() {
   }
 
 
-  /* EDIT FORM */
-
-  if ($("editName")) {
+  if (
+    $("editName")
+  ) {
 
     $("editName").value =
       profile.name;
@@ -4200,7 +3378,9 @@ function renderProfile() {
   }
 
 
-  if ($("editUsername")) {
+  if (
+    $("editUsername")
+  ) {
 
     $("editUsername").value =
       profile.username;
@@ -4208,7 +3388,9 @@ function renderProfile() {
   }
 
 
-  if ($("editBio")) {
+  if (
+    $("editBio")
+  ) {
 
     $("editBio").value =
       profile.bio;
@@ -4236,6 +3418,7 @@ function openProfile() {
   const modal =
     $("profileModal");
 
+
   if (!modal) {
     return;
   }
@@ -4245,12 +3428,10 @@ function openProfile() {
 
 
   modal.classList.add(
-    "show"
-  );
-
-  modal.classList.add(
+    "show",
     "active"
   );
+
 
   modal.setAttribute(
     "aria-hidden",
@@ -4274,18 +3455,17 @@ function closeProfile() {
   const modal =
     $("profileModal");
 
+
   if (!modal) {
     return;
   }
 
 
   modal.classList.remove(
-    "show"
-  );
-
-  modal.classList.remove(
+    "show",
     "active"
   );
+
 
   modal.setAttribute(
     "aria-hidden",
@@ -4306,43 +3486,35 @@ function closeProfile() {
 
 function openEditProfile() {
 
-  const form =
-    $("profileEditForm");
-
-  const button =
-    $("profileEditBtn");
-
-
   renderProfile();
 
 
-  form?.classList.remove(
-    "hidden"
-  );
+  $("profileEditForm")
+    ?.classList.remove(
+      "hidden"
+    );
 
-  button?.classList.add(
-    "hidden"
-  );
+
+  $("profileEditBtn")
+    ?.classList.add(
+      "hidden"
+    );
 
 }
 
 
 function closeEditProfile() {
 
-  const form =
-    $("profileEditForm");
+  $("profileEditForm")
+    ?.classList.add(
+      "hidden"
+    );
 
-  const button =
-    $("profileEditBtn");
 
-
-  form?.classList.add(
-    "hidden"
-  );
-
-  button?.classList.remove(
-    "hidden"
-  );
+  $("profileEditBtn")
+    ?.classList.remove(
+      "hidden"
+    );
 
 }
 
@@ -4355,6 +3527,7 @@ function renderAvatarPicker() {
 
   const box =
     $("avatarPick");
+
 
   if (!box) {
     return;
@@ -4378,24 +3551,28 @@ function renderAvatarPicker() {
 
 
   box.innerHTML =
-    avatars.map(
-      avatar => `
+    avatars
+      .map(
+        avatar => `
 
-        <button
-          type="button"
-          class="avatar-opt ${
-            selectedAvatar ===
-            avatar
-              ? "active"
-              : ""
-          }"
-          data-avatar="${avatar}"
-        >
-          ${avatar}
-        </button>
+          <button
+            type="button"
+            class="avatar-opt ${
+              selectedAvatar ===
+              avatar
+                ? "active"
+                : ""
+            }"
+            data-avatar="${avatar}"
+          >
 
-      `
-    ).join("");
+            ${avatar}
+
+          </button>
+
+        `
+      )
+      .join("");
 
 
   box
@@ -4454,19 +3631,23 @@ function saveEditedProfile(
 
 
   const name =
-    $("editName")?.value
+    $("editName")
+      ?.value
       .trim() ||
     "Zayaxra Kullanıcısı";
 
 
   let username =
-    $("editUsername")?.value
+    $("editUsername")
+      ?.value
       .trim() ||
     "@kullanici";
 
 
   if (
-    !username.startsWith("@")
+    !username.startsWith(
+      "@"
+    )
   ) {
 
     username =
@@ -4477,18 +3658,22 @@ function saveEditedProfile(
 
 
   const bio =
-    $("editBio")?.value
+    $("editBio")
+      ?.value
       .trim() ||
     "Henüz bir biyografi eklenmedi.";
 
 
   saveProfileData({
+
     name,
     username,
     bio,
+
     avatar:
       selectedAvatar ||
       "🐉"
+
   });
 
 
@@ -4514,13 +3699,18 @@ function toggleMenu() {
     $("menuButton");
 
 
-  if (button) {
+  if (
+    button
+  ) {
 
     button.setAttribute(
       "aria-expanded",
+
       document.body.classList.contains(
         "menu-open"
       )
+        ? "true"
+        : "false"
     );
 
   }
@@ -4547,6 +3737,7 @@ function scrollToSection(
 
   const element =
     $(id);
+
 
   if (!element) {
     return;
@@ -4585,16 +3776,22 @@ function initNavigation() {
 
 
             if (
-              target === "top"
+              target ===
+              "top"
             ) {
 
               window.scrollTo({
+
                 top: 0,
-                behavior: "smooth"
+
+                behavior:
+                  "smooth"
+
               });
 
 
               closeMenu();
+
 
               return;
 
@@ -4612,29 +3809,31 @@ function initNavigation() {
     );
 
 
-  const logo =
-    document.querySelector(
+  document
+    .querySelector(
       ".logo"
+    )
+    ?.addEventListener(
+      "click",
+      event => {
+
+        event.preventDefault();
+
+
+        window.scrollTo({
+
+          top: 0,
+
+          behavior:
+            "smooth"
+
+        });
+
+
+        closeMenu();
+
+      }
     );
-
-
-  logo?.addEventListener(
-    "click",
-    event => {
-
-      event.preventDefault();
-
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-      });
-
-
-      closeMenu();
-
-    }
-  );
 
 }
 
@@ -4650,6 +3849,7 @@ function initNavbar() {
       ".navbar"
     );
 
+
   if (!navbar) {
     return;
   }
@@ -4660,6 +3860,7 @@ function initNavbar() {
 
       navbar.classList.toggle(
         "scrolled",
+
         window.scrollY >
           30
       );
@@ -4690,6 +3891,7 @@ function initSearch() {
   const search =
     $("search");
 
+
   if (!search) {
     return;
   }
@@ -4711,13 +3913,14 @@ function initSearch() {
 
 
 /* =========================================================
-   PICKER SEARCH EVENT
+   PICKER SEARCH
 ========================================================= */
 
 function initPickerSearch() {
 
   const search =
     $("petSearch");
+
 
   if (!search) {
     return;
@@ -4740,6 +3943,7 @@ function initRemoveTradeEvents() {
 
   document.addEventListener(
     "click",
+
     event => {
 
       const button =
@@ -4775,24 +3979,17 @@ function initRemoveTradeEvents() {
 
 function initClearTrade() {
 
-  const button =
-    $("clearBtn");
+  $("clearBtn")
+    ?.addEventListener(
+      "click",
+      event => {
 
-  if (!button) {
-    return;
-  }
+        event.preventDefault();
 
+        clearTrade();
 
-  button.addEventListener(
-    "click",
-    event => {
-
-      event.preventDefault();
-
-      clearTrade();
-
-    }
-  );
+      }
+    );
 
 }
 
@@ -4806,12 +4003,18 @@ function initModalEvents() {
   const picker =
     $("petPicker");
 
+
   const profile =
     $("profileModal");
 
 
+  const info =
+    $("infoModal");
+
+
   picker?.addEventListener(
     "click",
+
     event => {
 
       if (
@@ -4829,6 +4032,7 @@ function initModalEvents() {
 
   profile?.addEventListener(
     "click",
+
     event => {
 
       if (
@@ -4837,6 +4041,24 @@ function initModalEvents() {
       ) {
 
         closeProfile();
+
+      }
+
+    }
+  );
+
+
+  info?.addEventListener(
+    "click",
+
+    event => {
+
+      if (
+        event.target ===
+        info
+      ) {
+
+        closeInfo();
 
       }
 
@@ -4854,22 +4076,26 @@ function initKeyboard() {
 
   document.addEventListener(
     "keydown",
+
     event => {
 
       if (
-        event.key ===
+        event.key !==
         "Escape"
       ) {
-
-        closePetPicker();
-
-        closeProfile();
-
-        closeMenu();
-
-        closeEditProfile();
-
+        return;
       }
+
+
+      closePetPicker();
+
+      closeProfile();
+
+      closeInfo();
+
+      closeMenu();
+
+      closeEditProfile();
 
     }
   );
@@ -4885,6 +4111,7 @@ function initVisibility() {
 
   document.addEventListener(
     "visibilitychange",
+
     () => {
 
       if (
@@ -4900,6 +4127,136 @@ function initVisibility() {
 
     }
   );
+
+}
+
+
+/* =========================================================
+   INFO PANEL
+========================================================= */
+
+function toggleZayaxraInfo() {
+
+  const button =
+    document.querySelector(
+      ".info-toggle"
+    );
+
+
+  const panel =
+    $("zayaxraInfoPanel");
+
+
+  if (
+    !button ||
+    !panel
+  ) {
+
+    return;
+
+  }
+
+
+  const isOpen =
+    panel.classList.toggle(
+      "open"
+    );
+
+
+  button.classList.toggle(
+    "active",
+    isOpen
+  );
+
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+      ? "true"
+      : "false"
+  );
+
+}
+
+
+/* =========================================================
+   INFO MODAL
+========================================================= */
+
+function openInfo(
+  event
+) {
+
+  event?.preventDefault();
+
+
+  const modal =
+    $("infoModal");
+
+
+  if (!modal) {
+    return;
+  }
+
+
+  modal.classList.add(
+    "show",
+    "active"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+}
+
+
+function closeInfo() {
+
+  const modal =
+    $("infoModal");
+
+
+  if (!modal) {
+    return;
+  }
+
+
+  modal.classList.remove(
+    "show",
+    "active"
+  );
+
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  if (
+    !$("profileModal")
+      ?.classList.contains(
+        "active"
+      ) &&
+    !$("petPicker")
+      ?.classList.contains(
+        "active"
+      )
+  ) {
+
+    document.body.classList.remove(
+      "modal-open"
+    );
+
+  }
 
 }
 
@@ -4925,46 +4282,8 @@ function validateDatabase() {
   }
 
 
-  PET_DATABASE.forEach(
-    (
-      pet,
-      index
-    ) => {
-
-      if (
-        !pet.name
-      ) {
-
-        console.warn(
-          `ZAYAXRA: ${index}. petin adı eksik.`
-        );
-
-      }
-
-
-      if (
-        typeof pet.value !==
-        "number"
-      ) {
-
-        console.warn(
-          `ZAYAXRA: ${pet.name || index} değerinde sorun var.`
-        );
-
-      }
-
-
-      if (
-        !pet.image
-      ) {
-
-        console.warn(
-          `ZAYAXRA: ${pet.name || index} için image yok.`
-        );
-
-      }
-
-    }
+  console.log(
+    `ZAYAXRA: başlangıçta ${PET_DATABASE.length} kayıt hazır.`
   );
 
 }
@@ -4976,35 +4295,51 @@ function validateDatabase() {
 
 function initZayaxra() {
 
-  /* ESki ZAYAGG profilini bir kere temizle */
+  /*
+    Eski ZAYAGG profilini bir kere temizle.
+  */
+
   migrateLegacyProfile();
 
 
   ensureStorageData();
 
+
   validateDatabase();
+
 
   updateProfileStats();
 
+
   renderProfile();
+
 
   updateTradeUI();
 
+
   initSearch();
+
 
   initPickerSearch();
 
+
   initRemoveTradeEvents();
+
 
   initClearTrade();
 
+
   initNavigation();
+
 
   initNavbar();
 
+
   initModalEvents();
 
+
   initKeyboard();
+
 
   initVisibility();
 
@@ -5012,6 +4347,13 @@ function initZayaxra() {
   console.log(
     "ZAYAXRA başarıyla başlatıldı."
   );
+
+
+  /*
+    Büyük veritabanını sonradan yükle.
+  */
+
+  loadFullPetDatabase();
 
 }
 
@@ -5048,6 +4390,7 @@ else {
 
 window.addEventListener(
   "error",
+
   event => {
 
     console.error(
@@ -5062,6 +4405,7 @@ window.addEventListener(
 
 window.addEventListener(
   "unhandledrejection",
+
   event => {
 
     console.error(
@@ -5071,90 +4415,53 @@ window.addEventListener(
 
   }
 );
-function toggleZayaxraInfo() {
-
-  const button =
-    document.querySelector(
-      ".info-toggle"
-    );
-
-  const panel =
-    $("zayaxraInfoPanel");
-
-  if (!button || !panel) {
-    return;
-  }
 
 
-  const isOpen =
-    panel.classList.toggle(
-      "open"
-    );
-
-
-  button.classList.toggle(
-    "active",
-    isOpen
-  );
-
-
-  button.setAttribute(
-    "aria-expanded",
-    isOpen
-      ? "true"
-      : "false"
-  );
-
-}
 /* =========================================================
-   INFO MODAL
+   HTML'DEN ÇAĞRILABİLSİN
 ========================================================= */
 
-function openInfo(event) {
+window.openPetPicker =
+  openPetPicker;
 
-  if (event) {
-    event.preventDefault();
-  }
+window.closePetPicker =
+  closePetPicker;
 
-  const modal =
-    $("infoModal");
+window.confirmAddPet =
+  confirmAddPet;
 
-  if (!modal) {
-    return;
-  }
+window.toggleForm =
+  toggleForm;
 
-  modal.classList.add("show");
-  modal.classList.add("active");
+window.togglePotion =
+  togglePotion;
 
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+window.openProfile =
+  openProfile;
 
-  document.body.classList.add(
-    "modal-open"
-  );
-}
+window.closeProfile =
+  closeProfile;
 
+window.openEditProfile =
+  openEditProfile;
 
-function closeInfo() {
+window.closeEditProfile =
+  closeEditProfile;
 
-  const modal =
-    $("infoModal");
+window.saveEditedProfile =
+  saveEditedProfile;
 
-  if (!modal) {
-    return;
-  }
+window.toggleMenu =
+  toggleMenu;
 
-  modal.classList.remove("show");
-  modal.classList.remove("active");
+window.closeMenu =
+  closeMenu;
 
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+window.openInfo =
+  openInfo;
 
-  document.body.classList.remove(
-    "modal-open"
-  );
-}
+window.closeInfo =
+  closeInfo;
+
+window.toggleZayaxraInfo =
+  toggleZayaxraInfo;
