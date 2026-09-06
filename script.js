@@ -10279,3 +10279,421 @@ document.addEventListener(
   );
 
 })();
+/* =========================================
+   ZAYAXRA — PICKER SPACE + VALUE TOGGLE
+========================================= */
+
+(function () {
+
+  let showPickerValues = false;
+
+
+  /* -----------------------------------------
+     CSS
+  ----------------------------------------- */
+
+  const style = document.createElement("style");
+  style.id = "zayaxra-picker-improvements";
+
+  style.textContent = `
+
+    /* DAHA GENİŞ PICKER */
+
+    .pet-modal-window {
+      width: min(1180px, 96vw) !important;
+      max-width: 1180px !important;
+      padding: 26px !important;
+    }
+
+
+    /* SOL MENÜ */
+
+    .zayaxra-left-category {
+      width: 195px !important;
+      left: 22px !important;
+      top: 108px !important;
+      bottom: 22px !important;
+      padding: 12px !important;
+    }
+
+
+    /* SAĞ ALAN */
+
+    .pet-modal-window #petSearch {
+      margin-left: 220px !important;
+      width: calc(100% - 220px) !important;
+      box-sizing: border-box;
+    }
+
+
+    .pet-modal-window #pickerPets {
+      margin-left: 220px !important;
+      width: calc(100% - 220px) !important;
+      box-sizing: border-box;
+
+      padding: 8px 4px 12px !important;
+
+      display: grid !important;
+
+      grid-template-columns:
+        repeat(auto-fill, minmax(145px, 1fr)) !important;
+
+      gap: 12px !important;
+    }
+
+
+    /* PET KARTLARI */
+
+    .pet-modal-window
+    .pet-choice {
+
+      min-width: 0 !important;
+      min-height: 168px !important;
+
+      padding: 12px !important;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice-image {
+
+      height: 92px !important;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice-name {
+
+      margin-top: 9px !important;
+
+      font-size: 12px !important;
+
+      line-height: 1.25 !important;
+
+    }
+
+
+    /* DEĞER */
+
+    .pet-choice-value {
+
+      transition:
+        opacity .2s ease,
+        filter .2s ease;
+
+    }
+
+
+    .zayaxra-values-hidden
+    .pet-choice-value {
+
+      opacity: 0 !important;
+
+      filter: blur(7px) !important;
+
+      user-select: none !important;
+
+    }
+
+
+    /* SAĞ ÜST ARAÇ ÇUBUĞU */
+
+    .zayaxra-picker-tools {
+
+      margin-left: 220px;
+
+      width: calc(100% - 220px);
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      margin-bottom: 10px;
+
+    }
+
+
+    .zayaxra-value-toggle {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      height: 38px;
+
+      padding: 0 14px;
+
+      border-radius: 10px;
+
+      border: 1px solid rgba(255,255,255,.08);
+
+      background:
+        rgba(255,255,255,.045);
+
+      color:
+        rgba(255,255,255,.72);
+
+      font-family: inherit;
+
+      font-size: 11px;
+
+      font-weight: 800;
+
+      letter-spacing: .03em;
+
+      cursor: pointer;
+
+      transition: .18s ease;
+
+    }
+
+
+    .zayaxra-value-toggle:hover {
+
+      background:
+        rgba(255,255,255,.08);
+
+      color: #fff;
+
+      transform: translateY(-1px);
+
+    }
+
+
+    .zayaxra-value-toggle.active {
+
+      background:
+        rgba(120,95,255,.16);
+
+      border-color:
+        rgba(120,95,255,.35);
+
+      color: #fff;
+
+    }
+
+
+    /* PICKER AYARLARI */
+
+    .pet-modal-window .picker-settings {
+
+      margin-left: 220px !important;
+
+    }
+
+
+    /* MOBİL */
+
+    @media (max-width: 800px) {
+
+      .pet-modal-window {
+        width: 96vw !important;
+        padding: 18px !important;
+      }
+
+
+      .zayaxra-left-category {
+
+        position: relative !important;
+
+        left: auto !important;
+        top: auto !important;
+        bottom: auto !important;
+
+        width: 100% !important;
+
+        margin: 0 0 14px !important;
+
+      }
+
+
+      .pet-modal-window #petSearch {
+
+        margin-left: 0 !important;
+
+        width: 100% !important;
+
+      }
+
+
+      .zayaxra-picker-tools {
+
+        margin-left: 0 !important;
+
+        width: 100% !important;
+
+      }
+
+
+      .pet-modal-window #pickerPets {
+
+        margin-left: 0 !important;
+
+        width: 100% !important;
+
+        grid-template-columns:
+          repeat(2, minmax(0, 1fr)) !important;
+
+      }
+
+
+      .pet-modal-window .picker-settings {
+
+        margin-left: 0 !important;
+
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+
+  /* -----------------------------------------
+     VALUE BUTTON
+  ----------------------------------------- */
+
+  function createValueButton() {
+
+    const pickerWindow =
+      document.querySelector(".pet-modal-window");
+
+    const search =
+      document.getElementById("petSearch");
+
+    if (!pickerWindow || !search) return;
+
+
+    // Varsa tekrar oluşturma
+    if (
+      document.getElementById(
+        "zayaxraValueToggle"
+      )
+    ) {
+      return;
+    }
+
+
+    const tools =
+      document.createElement("div");
+
+    tools.className =
+      "zayaxra-picker-tools";
+
+
+    const button =
+      document.createElement("button");
+
+    button.type = "button";
+
+    button.id =
+      "zayaxraValueToggle";
+
+    button.className =
+      "zayaxra-value-toggle";
+
+
+    button.innerHTML =
+      "👁 Show Values";
+
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        showPickerValues =
+          !showPickerValues;
+
+
+        pickerWindow.classList.toggle(
+          "zayaxra-values-hidden",
+          !showPickerValues
+        );
+
+
+        button.classList.toggle(
+          "active",
+          showPickerValues
+        );
+
+
+        button.innerHTML =
+          showPickerValues
+            ? "👁 Hide Values"
+            : "👁 Show Values";
+
+      }
+    );
+
+
+    tools.appendChild(button);
+
+
+    search.parentNode.insertBefore(
+      tools,
+      search
+    );
+
+
+    // Başlangıçta gizli
+    pickerWindow.classList.add(
+      "zayaxra-values-hidden"
+    );
+
+  }
+
+
+  /* -----------------------------------------
+     PICKER AÇILINCA BUTONU EKLE
+  ----------------------------------------- */
+
+  function setupValueToggle() {
+
+    setTimeout(() => {
+
+      createValueButton();
+
+    }, 80);
+
+  }
+
+
+  const oldOpen =
+    window.openPetPicker;
+
+
+  if (
+    typeof oldOpen === "function"
+  ) {
+
+    window.openPetPicker =
+      function (side) {
+
+        oldOpen(side);
+
+        setupValueToggle();
+
+      };
+
+  }
+
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      setTimeout(
+        setupValueToggle,
+        400
+      );
+
+    }
+  );
+
+
+})();
