@@ -4059,3 +4059,55 @@ function toggleZayaxraInfo() {
   );
 
 }
+/* =========================================================
+   INFO MODAL
+========================================================= */
+
+function openInfo(event) {
+
+  if (event) {
+    event.preventDefault();
+  }
+
+  const modal =
+    $("infoModal");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("show");
+  modal.classList.add("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "modal-open"
+  );
+}
+
+
+function closeInfo() {
+
+  const modal =
+    $("infoModal");
+
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.remove("show");
+  modal.classList.remove("active");
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+}
