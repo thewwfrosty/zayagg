@@ -9223,3 +9223,1059 @@ document.addEventListener(
   }
 
 })();
+/* =========================================
+   ZAYAXRA — SINGLE LEFT CATEGORY SIDEBAR
+   Eski kategori sistemlerini temizler
+========================================= */
+
+(function () {
+
+  const CATEGORY_LIST = [
+    { id: "all",       name: "ALL" },
+    { id: "pets",      name: "PETS" },
+    { id: "petwear",   name: "PET WEAR" },
+    { id: "eggs",      name: "EGGS" },
+    { id: "vehicles",  name: "VEHICLES" },
+    { id: "toys",      name: "TOYS" },
+    { id: "gifts",     name: "GIFTS" }
+  ];
+
+  let currentCategory = "all";
+
+
+  /* -----------------------------------------
+     ESKİ KATEGORİ SİSTEMLERİNİ TEMİZLE
+  ----------------------------------------- */
+
+  function removeOldCategories() {
+
+    const selectors = [
+      ".category-bar",
+      ".category-tabs",
+      ".category-sidebar",
+      ".zayaxra-category-bar",
+      ".zayaxra-category-sidebar",
+      ".item-category-bar",
+      ".item-categories",
+      "#categoryBar",
+      "#categorySidebar",
+      "#zayaxraCategoryBar",
+      "#zayaxraCategorySidebar"
+    ];
+
+    selectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        el.remove();
+      });
+    });
+
+
+    // Eski sistemlerin oluşturduğu butonları
+    // metinlerinden de temizle
+    document.querySelectorAll("button").forEach(btn => {
+
+      const text = btn.textContent
+        .trim()
+        .replace(/\s+/g, " ")
+        .toUpperCase();
+
+      const names = [
+        "ALL",
+        "PETS",
+        "PET WEAR",
+        "EGGS",
+        "VEHICLES",
+        "TOYS",
+        "GIFTS"
+      ];
+
+      if (names.includes(text)) {
+        btn.remove();
+      }
+
+    });
+
+  }
+
+
+  /* -----------------------------------------
+     SIDEBAR OLUŞTUR
+  ----------------------------------------- */
+
+  function createCategorySidebar() {
+
+    const pickerWindow =
+      document.querySelector(".pet-modal-window");
+
+    if (!pickerWindow) return;
+
+
+    // Daha önce bizim sidebar varsa kaldır
+    const old =
+      document.getElementById("zayaxraLeftCategory");
+
+    if (old) old.remove();
+
+
+    const sidebar =
+      document.createElement("aside");
+
+    sidebar.id = "zayaxraLeftCategory";
+    sidebar.className = "zayaxra-left-category";
+
+
+    const title =
+      document.createElement("div");
+
+    title.className = "zayaxra-category-title";
+    title.textContent = "CATEGORIES";
+
+    sidebar.appendChild(title);
+
+
+    CATEGORY_LIST.forEach(category => {
+
+      const button =
+        document.createElement("button");
+
+      button.type = "button";
+      button.className = "zayaxra-category-btn";
+
+      button.dataset.category =
+        category.id;
+
+      button.innerHTML = `
+        <span class="category-name">
+          ${category.name}
+        </span>
+
+        <span
+          class="category-count"
+          id="count-${category.id}"
+        >
+          0
+        </span>
+      `;
+
+
+      button.addEventListener("click", () => {
+
+        currentCategory =
+          category.id;
+
+        document
+          .querySelectorAll(
+            ".zayaxra-category-btn"
+          )
+          .forEach(btn => {
+
+            btn.classList.toggle(
+              "active",
+              btn.dataset.category ===
+              currentCategory
+            );
+
+          });
+
+
+        renderCurrentCategory();
+
+      });
+
+
+      sidebar.appendChild(button);
+
+    });
+
+
+    pickerWindow.insertBefore(
+      sidebar,
+      pickerWindow.firstChild
+    );
+
+
+    updateCategoryActive();
+
+  }
+
+
+  /* -----------------------------------------
+     KATEGORİ SAYILARI
+  ----------------------------------------- */
+
+  function updateCategoryCounts() {
+
+    if (
+      typeof PET_DATABASE === "undefined" ||
+      !Array.isArray(PET_DATABASE)
+    ) {
+      return;
+    }
+
+
+    const counts = {
+      all: 0,
+      pets: 0,
+      petwear: 0,
+      eggs: 0,
+      vehicles: 0,
+      toys: 0,
+      gifts: 0
+    };
+
+
+    PET_DATABASE.forEach(item => {
+
+      const category =
+        detectCategory(item);
+
+      if (
+        counts[category] !== undefined
+      ) {
+        counts[category]++;
+        counts.all++;
+      }
+
+    });
+
+
+    Object.keys(counts).forEach(key => {
+
+      const el =
+        document.getElementById(
+          `count-${key}`
+        );
+
+      if (el) {
+        el.textContent =
+          counts[key];
+      }
+
+    });
+
+  }
+
+
+  /* -----------------------------------------
+     ITEM KATEGORİSİ BUL
+  ----------------------------------------- */
+
+  function detectCategory(item) {
+
+    const type =
+      String(
+        item?.type ||
+        item?.category ||
+        ""
+      )
+      .toLowerCase()
+      .replace(/[_-]/g, " ");
+
+
+    if (
+      type.includes("pet wear") ||
+      type.includes("petwear") ||
+      type.includes("accessor")
+    ) {
+      return "petwear";
+    }
+
+
+    if (
+      type.includes("egg")
+    ) {
+      return "eggs";
+    }
+
+
+    if (
+      type.includes("vehicle") ||
+      type.includes("vehicles")
+    ) {
+      return "vehicles";
+    }
+
+
+    if (
+      type.includes("toy") ||
+      type.includes("toys")
+    ) {
+      return "toys";
+    }
+
+
+    if (
+      type.includes("gift") ||
+      type.includes("gifts")
+    ) {
+      return "gifts";
+    }
+
+
+    if (
+      type.includes("pet") ||
+      type.includes("pets")
+    ) {
+      return "pets";
+    }
+
+
+    return null;
+
+  }
+
+
+  /* -----------------------------------------
+     FİLTRELENMİŞ LİSTE
+  ----------------------------------------- */
+
+  function getCategoryItems() {
+
+    if (
+      typeof PET_DATABASE === "undefined" ||
+      !Array.isArray(PET_DATABASE)
+    ) {
+      return [];
+    }
+
+
+    if (currentCategory === "all") {
+
+      return PET_DATABASE.filter(item => {
+
+        const category =
+          detectCategory(item);
+
+        return [
+          "pets",
+          "petwear",
+          "eggs",
+          "vehicles",
+          "toys",
+          "gifts"
+        ].includes(category);
+
+      });
+
+    }
+
+
+    return PET_DATABASE.filter(item => {
+
+      return (
+        detectCategory(item) ===
+        currentCategory
+      );
+
+    });
+
+  }
+
+
+  /* -----------------------------------------
+     ARAMA + KATEGORİ RENDER
+  ----------------------------------------- */
+
+  function renderCurrentCategory() {
+
+    const grid =
+      document.getElementById(
+        "pickerPets"
+      );
+
+    if (!grid) return;
+
+
+    let items =
+      getCategoryItems();
+
+
+    const search =
+      document.getElementById(
+        "petSearch"
+      );
+
+
+    const query =
+      search
+        ? search.value
+            .trim()
+            .toLowerCase()
+        : "";
+
+
+    if (query) {
+
+      items =
+        items.filter(item => {
+
+          return String(
+            item.name || ""
+          )
+          .toLowerCase()
+          .includes(query);
+
+        });
+
+    }
+
+
+    grid.innerHTML = "";
+
+
+    if (!items.length) {
+
+      grid.innerHTML = `
+        <div class="zayaxra-no-items">
+          <div>🔎</div>
+          <strong>Eşya bulunamadı</strong>
+          <span>Başka bir arama veya kategori dene.</span>
+        </div>
+      `;
+
+      updateCategoryCounts();
+
+      return;
+
+    }
+
+
+    items.forEach(item => {
+
+      const card =
+        document.createElement("button");
+
+      card.type = "button";
+      card.className = "pet-choice";
+
+
+      const image =
+        item.image ||
+        item.img ||
+        "";
+
+
+      card.innerHTML = `
+        <div class="pet-choice-image">
+          ${
+            image
+              ? `<img
+                  src="${image}"
+                  alt="${escapeCategoryHTML(
+                    item.name || ""
+                  )}"
+                  loading="lazy"
+                >`
+              : `<span>🐾</span>`
+          }
+        </div>
+
+        <div class="pet-choice-name">
+          ${escapeCategoryHTML(
+            item.name || "Unknown"
+          )}
+        </div>
+
+        <div class="pet-choice-value">
+          ${formatCategoryValue(item)}
+        </div>
+      `;
+
+
+      card.addEventListener(
+        "click",
+        () => {
+
+          if (
+            typeof selectPickerPet ===
+            "function"
+          ) {
+            selectPickerPet(item);
+          }
+
+        }
+      );
+
+
+      grid.appendChild(card);
+
+    });
+
+
+    updateCategoryCounts();
+
+  }
+
+
+  /* -----------------------------------------
+     VALUE FORMAT
+  ----------------------------------------- */
+
+  function formatCategoryValue(item) {
+
+    const value =
+      item?.value ??
+      item?.regular?.value ??
+      0;
+
+
+    const number =
+      Number(value);
+
+
+    if (!Number.isFinite(number)) {
+      return "0";
+    }
+
+
+    return number % 1 === 0
+      ? number.toString()
+      : number.toFixed(1);
+
+  }
+
+
+  /* -----------------------------------------
+     HTML GÜVENLİĞİ
+  ----------------------------------------- */
+
+  function escapeCategoryHTML(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  /* -----------------------------------------
+     ACTIVE CATEGORY
+  ----------------------------------------- */
+
+  function updateCategoryActive() {
+
+    document
+      .querySelectorAll(
+        ".zayaxra-category-btn"
+      )
+      .forEach(btn => {
+
+        btn.classList.toggle(
+          "active",
+          btn.dataset.category ===
+          currentCategory
+        );
+
+      });
+
+  }
+
+
+  /* -----------------------------------------
+     ARAMA DEĞİŞİNCE
+  ----------------------------------------- */
+
+  function hookSearch() {
+
+    const search =
+      document.getElementById(
+        "petSearch"
+      );
+
+    if (!search) return;
+
+
+    search.addEventListener(
+      "input",
+      () => {
+
+        renderCurrentCategory();
+
+      }
+    );
+
+  }
+
+
+  /* -----------------------------------------
+     CSS
+  ----------------------------------------- */
+
+  function addCategoryCSS() {
+
+    if (
+      document.getElementById(
+        "zayaxra-category-style"
+      )
+    ) {
+      return;
+    }
+
+
+    const style =
+      document.createElement("style");
+
+    style.id =
+      "zayaxra-category-style";
+
+
+    style.textContent = `
+
+      /* PICKER ANA YAPI */
+
+      .pet-modal-window {
+        position: relative;
+      }
+
+
+      .zayaxra-left-category {
+
+        position: absolute;
+
+        left: 24px;
+        top: 112px;
+        bottom: 24px;
+
+        width: 185px;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 7px;
+
+        padding: 14px;
+
+        border: 1px solid rgba(255,255,255,.07);
+
+        border-radius: 18px;
+
+        background:
+          rgba(12,14,22,.88);
+
+        backdrop-filter:
+          blur(18px);
+
+        z-index: 30;
+
+        overflow-y: auto;
+
+      }
+
+
+      .zayaxra-category-title {
+
+        padding:
+          3px
+          10px
+          10px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        letter-spacing: .18em;
+
+        color:
+          rgba(255,255,255,.35);
+
+      }
+
+
+      .zayaxra-category-btn {
+
+        width: 100%;
+
+        min-height: 42px;
+
+        padding:
+          0 12px;
+
+        border: 1px solid
+          transparent;
+
+        border-radius: 11px;
+
+        background:
+          transparent;
+
+        color:
+          rgba(255,255,255,.62);
+
+        cursor: pointer;
+
+        display:
+          flex;
+
+        align-items:
+          center;
+
+        justify-content:
+          space-between;
+
+        gap: 10px;
+
+        font-family:
+          inherit;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        letter-spacing:
+          .04em;
+
+        transition:
+          .18s ease;
+
+      }
+
+
+      .zayaxra-category-btn:hover {
+
+        background:
+          rgba(255,255,255,.05);
+
+        color:
+          #fff;
+
+      }
+
+
+      .zayaxra-category-btn.active {
+
+        background:
+          linear-gradient(
+            135deg,
+            rgba(130,95,255,.22),
+            rgba(72,125,255,.13)
+          );
+
+        border-color:
+          rgba(130,95,255,.35);
+
+        color:
+          #fff;
+
+        box-shadow:
+          0 8px 25px
+          rgba(73,48,180,.16);
+
+      }
+
+
+      .category-count {
+
+        min-width:
+          27px;
+
+        height:
+          22px;
+
+        padding:
+          0 6px;
+
+        display:
+          flex;
+
+        align-items:
+          center;
+
+        justify-content:
+          center;
+
+        border-radius:
+          7px;
+
+        background:
+          rgba(255,255,255,.055);
+
+        color:
+          rgba(255,255,255,.4);
+
+        font-size:
+          10px;
+
+        font-weight:
+          800;
+
+      }
+
+
+      .zayaxra-category-btn.active
+      .category-count {
+
+        background:
+          rgba(255,255,255,.1);
+
+        color:
+          rgba(255,255,255,.8);
+
+      }
+
+
+      /* SAĞ TARAF */
+
+      .pet-modal-window
+      #petSearch {
+
+        margin-left:
+          230px;
+
+        width:
+          calc(100% - 230px);
+
+      }
+
+
+      .pet-modal-window
+      #pickerPets {
+
+        margin-left:
+          230px;
+
+        width:
+          calc(100% - 230px);
+
+        min-height:
+          330px;
+
+        max-height:
+          510px;
+
+        overflow-y:
+          auto;
+
+      }
+
+
+      .pet-modal-window
+      .picker-settings {
+
+        margin-left:
+          230px;
+
+      }
+
+
+      .zayaxra-no-items {
+
+        min-height:
+          260px;
+
+        display:
+          flex;
+
+        flex-direction:
+          column;
+
+        align-items:
+          center;
+
+        justify-content:
+          center;
+
+        gap: 7px;
+
+        color:
+          rgba(255,255,255,.4);
+
+        text-align:
+          center;
+
+        font-size:
+          12px;
+
+      }
+
+
+      .zayaxra-no-items div {
+
+        font-size:
+          30px;
+
+        opacity:
+          .6;
+
+      }
+
+
+      .zayaxra-no-items strong {
+
+        color:
+          rgba(255,255,255,.75);
+
+        font-size:
+          14px;
+
+      }
+
+
+      .zayaxra-no-items span {
+
+        font-size:
+          11px;
+
+      }
+
+
+      /* MOBİL */
+
+      @media (max-width: 800px) {
+
+        .zayaxra-left-category {
+
+          position:
+            relative;
+
+          left:
+            auto;
+
+          top:
+            auto;
+
+          bottom:
+            auto;
+
+          width:
+            auto;
+
+          margin:
+            0 15px 14px;
+
+          display:
+            grid;
+
+          grid-template-columns:
+            repeat(2, 1fr);
+
+          max-height:
+            none;
+
+        }
+
+
+        .zayaxra-category-title {
+
+          grid-column:
+            1 / -1;
+
+        }
+
+
+        .pet-modal-window
+        #petSearch {
+
+          margin-left:
+            15px;
+
+          width:
+            calc(100% - 30px);
+
+        }
+
+
+        .pet-modal-window
+        #pickerPets {
+
+          margin-left:
+            15px;
+
+          width:
+            calc(100% - 30px);
+
+        }
+
+
+        .pet-modal-window
+        .picker-settings {
+
+          margin-left:
+            0;
+
+        }
+
+      }
+
+    `;
+
+
+    document.head.appendChild(style);
+
+  }
+
+
+  /* -----------------------------------------
+     BAŞLAT
+  ----------------------------------------- */
+
+  function initCategorySystem() {
+
+    addCategoryCSS();
+
+    removeOldCategories();
+
+    setTimeout(() => {
+
+      createCategorySidebar();
+
+      hookSearch();
+
+      updateCategoryCounts();
+
+      renderCurrentCategory();
+
+    }, 100);
+
+  }
+
+
+  /* -----------------------------------------
+     PICKER AÇILINCA TEKRAR KONTROL
+  ----------------------------------------- */
+
+  const originalOpenPicker =
+    window.openPetPicker;
+
+
+  if (
+    typeof originalOpenPicker ===
+    "function"
+  ) {
+
+    window.openPetPicker =
+      function (side) {
+
+        originalOpenPicker(side);
+
+
+        setTimeout(() => {
+
+          initCategorySystem();
+
+        }, 120);
+
+      };
+
+  }
+
+
+  /* -----------------------------------------
+     SAYFA YÜKLENDİ
+  ----------------------------------------- */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      setTimeout(
+        initCategorySystem,
+        300
+      );
+
+    }
+  );
+
+})();
