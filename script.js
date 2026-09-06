@@ -1,2738 +1,1061 @@
-// ===============================
-// ZAYAXRA - PET PICKER FIX
-// ===============================
+/* =====================================================
+   ZAYAXRA - ADOPT ME VALUES
+   ===================================================== */
 
-let currentTradeSide = "you";
-let selectedPet = null;
 
-function openPetPicker(side) {
-    currentTradeSide = side;
+/* =========================
+   ITEM DATABASE
+   ========================= */
 
-    const modal = document.getElementById("petPicker");
+const items = [
 
-    if (!modal) {
-        console.error("petPicker bulunamadı!");
-        return;
+    /* PETS */
+
+    {
+        id: "shadow-dragon",
+        name: "Shadow Dragon",
+        category: "pets",
+        rarity: "Legendary",
+        value: 100,
+        emoji: "🐉",
+        image: "https://cdn.playadopt.me/items/shadow_dragon.png"
+    },
+
+    {
+        id: "frost-dragon",
+        name: "Frost Dragon",
+        category: "pets",
+        rarity: "Legendary",
+        value: 85,
+        emoji: "🐲",
+        image: "https://cdn.playadopt.me/items/frost_dragon.png"
+    },
+
+    {
+        id: "bat-dragon",
+        name: "Bat Dragon",
+        category: "pets",
+        rarity: "Legendary",
+        value: 120,
+        emoji: "🦇",
+        image: "https://cdn.playadopt.me/items/bat_dragon.png"
+    },
+
+    {
+        id: "giraffe",
+        name: "Giraffe",
+        category: "pets",
+        rarity: "Legendary",
+        value: 90,
+        emoji: "🦒",
+        image: "https://cdn.playadopt.me/items/giraffe.png"
+    },
+
+    {
+        id: "parrot",
+        name: "Parrot",
+        category: "pets",
+        rarity: "Legendary",
+        value: 48,
+        emoji: "🦜",
+        image: "https://cdn.playadopt.me/items/parrot.png"
+    },
+
+    {
+        id: "owl",
+        name: "Owl",
+        category: "pets",
+        rarity: "Legendary",
+        value: 55,
+        emoji: "🦉",
+        image: "https://cdn.playadopt.me/items/owl.png"
+    },
+
+    {
+        id: "crow",
+        name: "Crow",
+        category: "pets",
+        rarity: "Legendary",
+        value: 45,
+        emoji: "🐦",
+        image: "https://cdn.playadopt.me/items/crow.png"
+    },
+
+    {
+        id: "evil-unicorn",
+        name: "Evil Unicorn",
+        category: "pets",
+        rarity: "Legendary",
+        value: 42,
+        emoji: "🦄",
+        image: "https://cdn.playadopt.me/items/evil_unicorn.png"
+    },
+
+    {
+        id: "arctic-reindeer",
+        name: "Arctic Reindeer",
+        category: "pets",
+        rarity: "Legendary",
+        value: 24,
+        emoji: "🦌",
+        image: "https://cdn.playadopt.me/items/arctic_reindeer.png"
+    },
+
+    {
+        id: "turtle",
+        name: "Turtle",
+        category: "pets",
+        rarity: "Legendary",
+        value: 16,
+        emoji: "🐢",
+        image: "https://cdn.playadopt.me/items/turtle.png"
+    },
+
+    {
+        id: "kangaroo",
+        name: "Kangaroo",
+        category: "pets",
+        rarity: "Legendary",
+        value: 13,
+        emoji: "🦘",
+        image: "https://cdn.playadopt.me/items/kangaroo.png"
+    },
+
+    {
+        id: "mega-neon-cat",
+        name: "Mega Neon Cat",
+        category: "pets",
+        rarity: "Rare",
+        value: 4,
+        emoji: "🐱",
+        image: ""
+    },
+
+    {
+        id: "neon-dog",
+        name: "Neon Dog",
+        category: "pets",
+        rarity: "Common",
+        value: 0.4,
+        emoji: "🐶",
+        image: ""
+    },
+
+    {
+        id: "unicorn",
+        name: "Unicorn",
+        category: "pets",
+        rarity: "Legendary",
+        value: 3,
+        emoji: "🦄",
+        image: ""
+    },
+
+    {
+        id: "dragon",
+        name: "Dragon",
+        category: "pets",
+        rarity: "Legendary",
+        value: 2,
+        emoji: "🐲",
+        image: ""
+    },
+
+
+    /* VEHICLES */
+
+    {
+        id: "batmobile",
+        name: "Batmobile",
+        category: "vehicles",
+        rarity: "Legendary",
+        value: 15,
+        emoji: "🏎️",
+        image: ""
+    },
+
+    {
+        id: "cloud-car",
+        name: "Cloud Car",
+        category: "vehicles",
+        rarity: "Legendary",
+        value: 11,
+        emoji: "☁️",
+        image: ""
+    },
+
+    {
+        id: "rocket-sled",
+        name: "Rocket Sled",
+        category: "vehicles",
+        rarity: "Legendary",
+        value: 8,
+        emoji: "🚀",
+        image: ""
+    },
+
+    {
+        id: "neon-black-scooter",
+        name: "Neon Black Scooter",
+        category: "vehicles",
+        rarity: "Rare",
+        value: 7,
+        emoji: "🛴",
+        image: ""
+    },
+
+    {
+        id: "pink-cat",
+        name: "Pink Cat Car",
+        category: "vehicles",
+        rarity: "Rare",
+        value: 4,
+        emoji: "🚙",
+        image: ""
+    },
+
+    {
+        id: "banana-car",
+        name: "Banana Car",
+        category: "vehicles",
+        rarity: "Ultra Rare",
+        value: 1.5,
+        emoji: "🍌",
+        image: ""
+    },
+
+
+    /* TOYS */
+
+    {
+        id: "marsh-balloon",
+        name: "Marsh Balloon",
+        category: "toys",
+        rarity: "Rare",
+        value: 3,
+        emoji: "🎈",
+        image: ""
+    },
+
+    {
+        id: "candy-cannon",
+        name: "Candy Cannon",
+        category: "toys",
+        rarity: "Legendary",
+        value: 30,
+        emoji: "🍭",
+        image: ""
+    },
+
+    {
+        id: "christmas-push-toy",
+        name: "Christmas Push Toy",
+        category: "toys",
+        rarity: "Rare",
+        value: 1,
+        emoji: "🎄",
+        image: ""
+    },
+
+    {
+        id: "anna-rattle",
+        name: "Anna Rattle",
+        category: "toys",
+        rarity: "Rare",
+        value: 2,
+        emoji: "🪇",
+        image: ""
+    },
+
+    {
+        id: "ice-pick",
+        name: "Ice Pick Grappling Hook",
+        category: "toys",
+        rarity: "Ultra Rare",
+        value: 1.2,
+        emoji: "🪝",
+        image: ""
+    },
+
+
+    /* GIFTS */
+
+    {
+        id: "small-gift",
+        name: "Small Gift",
+        category: "gifts",
+        rarity: "Common",
+        value: 0.1,
+        emoji: "🎁",
+        image: ""
+    },
+
+    {
+        id: "big-gift",
+        name: "Big Gift",
+        category: "gifts",
+        rarity: "Rare",
+        value: 0.4,
+        emoji: "🎁",
+        image: ""
+    },
+
+    {
+        id: "massive-gift",
+        name: "Massive Gift",
+        category: "gifts",
+        rarity: "Ultra Rare",
+        value: 0.8,
+        emoji: "🎁",
+        image: ""
     }
 
-    modal.classList.add("active");
-    modal.style.display = "flex";
-    modal.style.visibility = "visible";
-    modal.style.opacity = "1";
+];
 
-    const title = document.getElementById("petPickerTitle");
 
-    if (title) {
-        title.textContent =
-            side === "you"
-                ? "SENİN PETİNİ SEÇ"
-                : "KARŞI TARAFIN PETİNİ SEÇ";
+/* =========================
+   STATE
+   ========================= */
+
+let favorites =
+    JSON.parse(localStorage.getItem("zayaxraFavorites")) || [];
+
+let myTrade = [];
+let theirTrade = [];
+let currentTradeSide = "my";
+
+let currentPage = "home";
+let currentSearch = "";
+let currentRarity = "all";
+
+
+/* =========================
+   ELEMENTS
+   ========================= */
+
+const pages = document.querySelectorAll(".page");
+const navButtons = document.querySelectorAll(".nav-btn");
+const globalSearch = document.getElementById("globalSearch");
+
+const itemModal = document.getElementById("itemModal");
+const modalList = document.getElementById("modalList");
+const modalSearch = document.getElementById("modalSearch");
+
+
+/* =========================
+   NAVIGATION
+   ========================= */
+
+function openPage(page) {
+
+    currentPage = page;
+
+    pages.forEach(p => {
+        p.classList.remove("active");
+    });
+
+    const target = document.getElementById("page-" + page);
+
+    if (target) {
+        target.classList.add("active");
     }
 
-    const search = document.getElementById("petSearch");
+    navButtons.forEach(btn => {
+        btn.classList.toggle(
+            "active",
+            btn.dataset.page === page
+        );
+    });
 
-    if (search) {
-        search.value = "";
-        setTimeout(() => search.focus(), 100);
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    if (page === "favorites") {
+        renderFavorites();
     }
-
-    // Veri yüklenmediyse yine de picker açılsın
-    renderPetPicker();
 }
 
-function closePetPicker() {
-    const modal = document.getElementById("petPicker");
+navButtons.forEach(btn => {
 
-    if (!modal) return;
+    btn.addEventListener("click", () => {
+        openPage(btn.dataset.page);
+    });
 
-    modal.classList.remove("active");
-    modal.style.display = "none";
-    modal.style.visibility = "hidden";
-    modal.style.opacity = "0";
-}
+});
 
-function renderPetPicker() {
-    const grid = document.getElementById("pickerPets");
 
-    if (!grid) return;
+document.addEventListener("click", e => {
 
-    grid.innerHTML = `
-        <div style="
-            grid-column:1/-1;
-            padding:40px;
-            text-align:center;
-            color:white;
-            font-size:16px;
-        ">
-            Petler yükleniyor...
-        </div>
-    `;
+    const button = e.target.closest("[data-go]");
 
-    // Global items varsa onları göster
-    if (typeof items !== "undefined" && Array.isArray(items) && items.length) {
-        renderPetList(items);
+    if (button) {
+        openPage(button.dataset.go);
     }
-}
 
-function renderPetList(list) {
-    const grid = document.getElementById("pickerPets");
+});
 
-    if (!grid) return;
 
-    grid.innerHTML = "";
+/* =========================
+   ITEM CARD
+   ========================= */
 
-    list.forEach((pet) => {
-        const card = document.createElement("button");
+function createImage(item) {
 
-        card.type = "button";
-        card.className = "pet-choice";
+    if (item.image) {
 
-        card.innerHTML = `
+        return `
             <img
-                src="${pet.image || ""}"
-                alt="${pet.name || "Pet"}"
-                class="pet-choice-image"
-                onerror="this.style.display='none'"
+                src="${item.image}"
+                alt="${item.name}"
+                loading="lazy"
+                onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
             >
-            <span>${pet.name || "Bilinmeyen Pet"}</span>
+            <span
+                class="emoji-image"
+                style="display:none"
+            >
+                ${item.emoji}
+            </span>
         `;
 
-        card.onclick = () => {
-            selectPet(pet);
-        };
+    }
 
-        grid.appendChild(card);
+    return `
+        <span class="emoji-image">
+            ${item.emoji}
+        </span>
+    `;
+}
+
+
+function createCard(item) {
+
+    const isFavorite = favorites.includes(item.id);
+
+    return `
+        <article class="item-card">
+
+            <button
+                class="favorite ${isFavorite ? "active" : ""}"
+                data-favorite="${item.id}"
+                title="Favorilere ekle"
+            >
+                ${isFavorite ? "♥" : "♡"}
+            </button>
+
+            <div class="item-image">
+                ${createImage(item)}
+            </div>
+
+            <div class="item-name">
+                ${item.name}
+            </div>
+
+            <div class="item-meta">
+                <span class="rarity">
+                    ${item.rarity}
+                </span>
+
+                <span class="value">
+                    ${formatValue(item.value)}
+                </span>
+            </div>
+
+        </article>
+    `;
+}
+
+
+function formatValue(value) {
+
+    return Number(value).toLocaleString("en-US", {
+        maximumFractionDigits: 2
     });
 }
 
-function selectPet(pet) {
-    selectedPet = pet;
 
-    console.log("Seçilen pet:", pet);
+/* =========================
+   RENDER ITEMS
+   ========================= */
 
-    const preview = document.getElementById("pickerPreview");
+function filteredItems(category) {
 
-    if (preview) {
-        preview.innerHTML = `
-            <img
-                src="${pet.image || ""}"
-                style="width:70px;height:70px;object-fit:contain"
-                onerror="this.style.display='none'"
-            >
-            <div>
-                <strong>${pet.name}</strong>
+    return items.filter(item => {
+
+        const categoryMatch =
+            item.category === category;
+
+        const searchMatch =
+            item.name
+                .toLowerCase()
+                .includes(currentSearch.toLowerCase());
+
+        const rarityMatch =
+            currentRarity === "all" ||
+            item.rarity === currentRarity;
+
+        return categoryMatch &&
+               searchMatch &&
+               rarityMatch;
+    });
+
+}
+
+
+function renderCategory(category) {
+
+    const grid =
+        document.getElementById(category + "Grid");
+
+    if (!grid) return;
+
+    const data = filteredItems(category);
+
+    if (!data.length) {
+
+        grid.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                padding:50px;
+                text-align:center;
+                color:#8993a5;
+            ">
+                Bu aramaya uygun eşya bulunamadı.
             </div>
         `;
-    }
-}
 
-// Modalı dışarı tıklayınca kapat
-document.addEventListener("click", function (e) {
-    const modal = document.getElementById("petPicker");
-
-    if (!modal) return;
-
-    if (e.target === modal) {
-        closePetPicker();
-    }
-}); 
-/* =========================================================
-   ZAYAXRA — FINAL SCRIPT
-   Adopt Me Trading Calculator
-
-   DATA:
-   2600+ items
-   Pets
-   Pet Wear
-   Eggs
-   Vehicles
-   Toys
-   Gifts
-   Strollers
-   Food
-   Stickers
-
-   FORMS:
-   D = Normal
-   N = Neon
-   M = Mega
-   F = Fly
-   R = Ride
-   F/R = Fly Ride
-========================================================= */
-
-const DATA_URL =
-  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
-
-const IMAGE_BASE =
-  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main";
-
-let items = [];
-
-let youTrade = [];
-let themTrade = [];
-
-let pickerSide = null;
-let selectedItem = null;
-
-let selectedForm = "D";
-let selectedPotion = "normal";
-
-let pickerCategory = "all";
-
-let profileData = loadProfile();
-
-const $ = (id) =>
-  document.getElementById(id);
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function escapeHTML(value) {
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-
-function normalizeText(value) {
-  return String(value || "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function formatValue(value) {
-  const number = Number(value || 0);
-
-  if (!Number.isFinite(number)) {
-    return "0";
-  }
-
-  if (Number.isInteger(number)) {
-    return String(number);
-  }
-
-  return number
-    .toFixed(2)
-    .replace(/0+$/, "")
-    .replace(/\.$/, "");
-}
-
-/* =========================================================
-   RARITY
-========================================================= */
-
-function rarityClass(rarity) {
-  const r = normalizeText(rarity);
-
-  if (r.includes("legendary")) return "legendary";
-  if (r.includes("ultra")) return "ultra";
-  if (r.includes("rare")) return "rare";
-  if (r.includes("uncommon")) return "uncommon";
-
-  return "common";
-}
-
-function rarityName(rarity) {
-  const r = normalizeText(rarity);
-
-  if (r.includes("legendary")) {
-    return "Legendary";
-  }
-
-  if (r.includes("ultra")) {
-    return "Ultra-Rare";
-  }
-
-  if (r === "rare" || r.includes(" rare")) {
-    return "Rare";
-  }
-
-  if (r.includes("uncommon")) {
-    return "Uncommon";
-  }
-
-  if (r.includes("common")) {
-    return "Common";
-  }
-
-  return rarity || "";
-}
-
-/* =========================================================
-   CATEGORY
-========================================================= */
-
-function itemCategory(item) {
-  const type = normalizeText(item?.type);
-
-  if (
-    type.includes("pet wear") ||
-    type.includes("petwear") ||
-    type.includes("wear")
-  ) {
-    return "petwear";
-  }
-
-  if (type.includes("vehicle")) {
-    return "vehicles";
-  }
-
-  if (type.includes("toy")) {
-    return "toys";
-  }
-
-  if (type.includes("gift")) {
-    return "gifts";
-  }
-
-  if (type.includes("egg")) {
-    return "eggs";
-  }
-
-  if (type.includes("stroller")) {
-    return "strollers";
-  }
-
-  if (type.includes("food")) {
-    return "food";
-  }
-
-  if (type.includes("sticker")) {
-    return "stickers";
-  }
-
-  return "pets";
-}
-
-function categoryLabel(category) {
-  const labels = {
-    all: "ALL",
-    pets: "PETS",
-    petwear: "PET WEAR",
-    eggs: "EGGS",
-    vehicles: "VEHICLES",
-    toys: "TOYS",
-    gifts: "GIFTS",
-    strollers: "STROLLERS",
-    food: "FOOD",
-    stickers: "STICKERS"
-  };
-
-  return labels[category] || category.toUpperCase();
-}
-
-/* =========================================================
-   IMAGE
-========================================================= */
-
-function imageURL(item) {
-  const image = item?.image || "";
-
-  if (!image) {
-    return "";
-  }
-
-  if (
-    image.startsWith("http://") ||
-    image.startsWith("https://")
-  ) {
-    return image;
-  }
-
-  return (
-    IMAGE_BASE +
-    "/" +
-    image.replace(/^\/+/, "")
-  );
-}
-
-function imageHTML(item, className = "pet-photo") {
-  const src = imageURL(item);
-
-  return `
-    <img
-      src="${escapeHTML(src)}"
-      alt="${escapeHTML(item?.name || "Item")}"
-      class="${escapeHTML(className)}"
-      loading="lazy"
-      onerror="this.classList.add('image-error')"
-    >
-  `;
-}
-
-/* =========================================================
-   VALUE SYSTEM
-
-   Database structure:
-
-   regular.value
-   regular.no_potion
-   regular.ride
-   regular.fly
-   regular.fly_ride
-
-   neon.value
-   neon.no_potion
-   neon.ride
-   neon.fly
-   neon.fly_ride
-
-   mega.value
-   mega.no_potion
-   mega.ride
-   mega.fly
-   mega.fly_ride
-========================================================= */
-
-function getValue(
-  item,
-  form = "D",
-  potion = "normal"
-) {
-  if (!item) {
-    return 0;
-  }
-
-  let group = item.regular || {};
-
-  if (form === "N") {
-    group =
-      item.neon ||
-      item.regular ||
-      {};
-  }
-
-  if (form === "M") {
-    group =
-      item.mega ||
-      item.neon ||
-      item.regular ||
-      {};
-  }
-
-  let key = "value";
-
-  if (potion === "normal") {
-    key = "no_potion";
-
-    if (
-      group.no_potion === undefined
-    ) {
-      key = "value";
-    }
-  }
-
-  if (potion === "ride") {
-    key = "ride";
-  }
-
-  if (potion === "fly") {
-    key = "fly";
-  }
-
-  if (potion === "flyride") {
-    key = "fly_ride";
-  }
-
-  const result =
-    Number(group[key]);
-
-  if (Number.isFinite(result)) {
-    return result;
-  }
-
-  const fallback =
-    Number(group.value);
-
-  return Number.isFinite(fallback)
-    ? fallback
-    : 0;
-}
-
-/* =========================================================
-   PROFILE
-========================================================= */
-
-const DEFAULT_PROFILE = {
-  name: "Zayaxra Kullanıcısı",
-
-  username: "@kullanici",
-
-  bio:
-    "Henüz bir biyografi eklenmedi.",
-
-  avatar: "🐉",
-
-  stats: {
-    trades: 0,
-    wins: 0,
-    fairs: 0,
-    loses: 0
-  }
-};
-
-function loadProfile() {
-  try {
-    const raw =
-      localStorage.getItem(
-        "zayaxra_profile"
-      ) ||
-      localStorage.getItem(
-        "zayagg_profile"
-      );
-
-    if (!raw) {
-      return JSON.parse(
-        JSON.stringify(
-          DEFAULT_PROFILE
-        )
-      );
+        return;
     }
 
-    const parsed =
-      JSON.parse(raw);
-
-    return {
-      ...DEFAULT_PROFILE,
-      ...parsed,
-
-      stats: {
-        ...DEFAULT_PROFILE.stats,
-        ...(parsed.stats || {})
-      }
-    };
-  } catch {
-    return JSON.parse(
-      JSON.stringify(
-        DEFAULT_PROFILE
-      )
-    );
-  }
+    grid.innerHTML =
+        data.map(createCard).join("");
 }
 
-function saveProfile() {
-  localStorage.setItem(
-    "zayaxra_profile",
-    JSON.stringify(profileData)
-  );
+
+/* =========================
+   POPULAR
+   ========================= */
+
+function renderPopular() {
+
+    const grid =
+        document.getElementById("popularGrid");
+
+    const popular = [
+        "shadow-dragon",
+        "bat-dragon",
+        "frost-dragon",
+        "giraffe"
+    ];
+
+    grid.innerHTML = popular
+        .map(id => items.find(item => item.id === id))
+        .filter(Boolean)
+        .map(createCard)
+        .join("");
 }
 
-function renderProfile() {
-  if ($("profileName")) {
-    $("profileName").textContent =
-      profileData.name;
-  }
 
-  if ($("profileUsername")) {
-    $("profileUsername").textContent =
-      profileData.username.startsWith("@")
-        ? profileData.username
-        : "@" + profileData.username;
-  }
+/* =========================
+   FAVORITES
+   ========================= */
 
-  if ($("profileBio")) {
-    $("profileBio").textContent =
-      profileData.bio;
-  }
+function renderFavorites() {
 
-  if ($("profileAvatar")) {
-    $("profileAvatar").textContent =
-      profileData.avatar;
-  }
-
-  if ($("profileTrades")) {
-    $("profileTrades").textContent =
-      profileData.stats.trades;
-  }
-
-  if ($("profileWins")) {
-    $("profileWins").textContent =
-      profileData.stats.wins;
-  }
-
-  if ($("profileFair")) {
-    $("profileFair").textContent =
-      profileData.stats.fairs;
-  }
-
-  if ($("profileLoses")) {
-    $("profileLoses").textContent =
-      profileData.stats.loses;
-  }
-}
-
-function openProfile() {
-  renderProfile();
-
-  $("profileModal")
-    ?.classList.add(
-      "show",
-      "open"
-    );
-
-  $("profileModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-  document.body.classList.add(
-    "profile-open"
-  );
-}
-
-function closeProfile() {
-  $("profileModal")
-    ?.classList.remove(
-      "show",
-      "open"
-    );
-
-  $("profileModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-  document.body.classList.remove(
-    "profile-open"
-  );
-
-  closeEditProfile();
-}
-
-function renderAvatars() {
-  const box =
-    $("avatarPick");
-
-  if (!box) return;
-
-  box.innerHTML = "";
-
-  const avatars = [
-    "🐉",
-    "🐲",
-    "🦊",
-    "🐺",
-    "🦁",
-    "🐯",
-    "🐻",
-    "🐼",
-    "🦄",
-    "🐸",
-    "🦋",
-    "🌙"
-  ];
-
-  avatars.forEach(
-    (avatar) => {
-      const button =
-        document.createElement(
-          "button"
-        );
-
-      button.type = "button";
-
-      button.className =
-        "avatar-opt" +
-        (
-          avatar ===
-          profileData.avatar
-            ? " active"
-            : ""
-        );
-
-      button.textContent =
-        avatar;
-
-      button.onclick = () => {
-        profileData.avatar =
-          avatar;
-
-        box
-          .querySelectorAll(
-            ".avatar-opt"
-          )
-          .forEach(
-            (element) =>
-              element.classList.remove(
-                "active"
-              )
-          );
-
-        button.classList.add(
-          "active"
-        );
-      };
-
-      box.appendChild(
-        button
-      );
-    }
-  );
-}
-
-function openEditProfile() {
-  const form =
-    $("profileEditForm");
-
-  if (!form) return;
-
-  if ($("editName")) {
-    $("editName").value =
-      profileData.name;
-  }
-
-  if ($("editUsername")) {
-    $("editUsername").value =
-      profileData.username.replace(
-        /^@/,
-        ""
-      );
-  }
-
-  if ($("editBio")) {
-    $("editBio").value =
-      profileData.bio;
-  }
-
-  renderAvatars();
-
-  form.classList.remove(
-    "hidden"
-  );
-
-  $("profileEditBtn")
-    ?.classList.add(
-      "hidden"
-    );
-}
-
-function closeEditProfile() {
-  $("profileEditForm")
-    ?.classList.add(
-      "hidden"
-    );
-
-  $("profileEditBtn")
-    ?.classList.remove(
-      "hidden"
-    );
-}
-
-function saveEditedProfile(
-  event
-) {
-  event?.preventDefault();
-
-  const name =
-    ($("editName")?.value || "")
-      .trim();
-
-  const username =
-    ($("editUsername")?.value || "")
-      .trim();
-
-  const bio =
-    ($("editBio")?.value || "")
-      .trim();
-
-  if (!name || !username) {
-    return;
-  }
-
-  profileData.name =
-    name;
-
-  profileData.username =
-    username.startsWith("@")
-      ? username
-      : "@" + username;
-
-  profileData.bio =
-    bio ||
-    DEFAULT_PROFILE.bio;
-
-  saveProfile();
-
-  renderProfile();
-
-  closeEditProfile();
-}
-
-/* =========================================================
-   PICKER ELEMENTS
-========================================================= */
-
-function pickerModal() {
-  return (
-    $("petPicker") ||
-    $("petPickerModal")
-  );
-}
-
-function pickerSearch() {
-  return (
-    $("petSearch") ||
-    $("pickerSearch")
-  );
-}
-
-function pickerGrid() {
-  return (
-    $("pickerPets") ||
-    $("pickerPetList")
-  );
-}
-
-/* =========================================================
-   CATEGORY BAR
-========================================================= */
-
-function createCategoryBar() {
-  const modal =
-    pickerModal();
-
-  if (!modal) return;
-
-  const windowEl =
-    modal.querySelector(
-      ".profile-window"
-    );
-
-  if (!windowEl) return;
-
-  let bar =
-    windowEl.querySelector(
-      ".zayaxra-category-sidebar"
-    );
-
-  if (!bar) {
-    bar =
-      document.createElement(
-        "div"
-      );
-
-    bar.className =
-      "zayaxra-category-sidebar";
-
-    const search =
-      windowEl.querySelector(
-        ".modal-search"
-      );
-
-    if (search) {
-      search.before(bar);
-    } else {
-      windowEl.prepend(bar);
-    }
-  }
-
-  bar.innerHTML = "";
-
-  const categories = [
-    "all",
-    "pets",
-    "petwear",
-    "eggs",
-    "vehicles",
-    "toys",
-    "gifts",
-    "strollers",
-    "food",
-    "stickers"
-  ];
-
-  categories.forEach(
-    (category) => {
-      const button =
-        document.createElement(
-          "button"
-        );
-
-      button.type = "button";
-
-      button.textContent =
-        categoryLabel(
-          category
-        );
-
-      button.className =
-        "zayaxra-category-btn" +
-        (
-          category ===
-          pickerCategory
-            ? " active"
-            : ""
-        );
-
-      button.onclick = (
-        event
-      ) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        pickerCategory =
-          category;
-
-        createCategoryBar();
-
-        renderPicker();
-      };
-
-      bar.appendChild(
-        button
-      );
-    }
-  );
-}
-
-/* =========================================================
-   D N M F R CONTROLS
-========================================================= */
-
-function setupVariantControls() {
-  const options =
-    document.querySelector(
-      ".picker-options"
-    );
-
-  if (!options) return;
-
-  const oldForm =
-    options.querySelector(
-      ".form-toggles"
-    );
-
-  const oldPotion =
-    options.querySelector(
-      ".potion-toggles"
-    );
-
-  if (!oldForm && !oldPotion) {
-    return;
-  }
-
-  let row =
-    options.querySelector(
-      ".zayaxra-variant-row"
-    );
-
-  if (!row) {
-    row =
-      document.createElement(
-        "div"
-      );
-
-    row.className =
-      "zayaxra-variant-row";
-
-    options.prepend(row);
-  }
-
-  row.innerHTML = "";
-
-  const buttons = [
-    {
-      element:
-        oldForm?.querySelector(
-          "#normalFormBtn"
-        ),
-      text: "D",
-      type: "D"
-    },
-    {
-      element:
-        oldForm?.querySelector(
-          "#btnNeon"
-        ),
-      text: "N",
-      type: "N"
-    },
-    {
-      element:
-        oldForm?.querySelector(
-          "#btnMega"
-        ),
-      text: "M",
-      type: "M"
-    },
-    {
-      element:
-        oldPotion?.querySelector(
-          "#btnFly"
-        ),
-      text: "F",
-      type: "F"
-    },
-    {
-      element:
-        oldPotion?.querySelector(
-          "#btnRide"
-        ),
-      text: "R",
-      type: "R"
-    }
-  ];
-
-  buttons.forEach(
-    ({
-      element,
-      text,
-      type
-    }) => {
-      let button =
-        element;
-
-      if (!button) {
-        button =
-          document.createElement(
-            "button"
-          );
-
-        button.type =
-          "button";
-      }
-
-      button.textContent =
-        text;
-
-      button.className =
-        "form-btn";
-
-      button.onclick =
-        (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (
-            type === "D" ||
-            type === "N" ||
-            type === "M"
-          ) {
-            selectedForm =
-              type;
-          }
-
-          if (type === "F") {
-            selectedPotion =
-              selectedPotion ===
-              "fly"
-                ? "normal"
-                : "fly";
-          }
-
-          if (type === "R") {
-            selectedPotion =
-              selectedPotion ===
-              "ride"
-                ? "normal"
-                : "ride";
-          }
-
-          updateVariantButtons();
-
-          renderPreview();
-
-          renderPicker();
-        };
-
-      row.appendChild(
-        button
-      );
-    }
-  );
-
-  updateVariantButtons();
-}
-
-function updateVariantButtons() {
-  const buttons =
-    document.querySelectorAll(
-      ".zayaxra-variant-row button"
-    );
-
-  buttons.forEach(
-    (button) => {
-      const text =
-        button.textContent
-          .trim()
-          .toUpperCase();
-
-      let active =
-        false;
-
-      if (
-        text === "D"
-      ) {
-        active =
-          selectedForm === "D";
-      }
-
-      if (
-        text === "N"
-      ) {
-        active =
-          selectedForm === "N";
-      }
-
-      if (
-        text === "M"
-      ) {
-        active =
-          selectedForm === "M";
-      }
-
-      if (
-        text === "F"
-      ) {
-        active =
-          selectedPotion ===
-          "fly";
-      }
-
-      if (
-        text === "R"
-      ) {
-        active =
-          selectedPotion ===
-          "ride";
-      }
-
-      button.classList.toggle(
-        "active",
-        active
-      );
-    }
-  );
-
-  $("normalFormBtn")
-    ?.classList.toggle(
-      "active",
-      selectedForm === "D"
-    );
-
-  $("btnNeon")
-    ?.classList.toggle(
-      "active",
-      selectedForm === "N"
-    );
-
-  $("btnMega")
-    ?.classList.toggle(
-      "active",
-      selectedForm === "M"
-    );
-
-  $("btnFly")
-    ?.classList.toggle(
-      "active",
-      selectedPotion === "fly"
-    );
-
-  $("btnRide")
-    ?.classList.toggle(
-      "active",
-      selectedPotion === "ride"
-    );
-}
-
-/* =========================================================
-   OPEN PICKER
-========================================================= */
-
-function openPetPicker(side) {
-  pickerSide =
-    side;
-
-  selectedItem =
-    null;
-
-  selectedForm =
-    "D";
-
-  selectedPotion =
-    "normal";
-
-  pickerCategory =
-    "all";
-
-  const title =
-    $("petPickerTitle");
-
-  if (title) {
-    title.textContent =
-      side === "you"
-        ? "Senin teklifine item ekle"
-        : "Karşı tarafın teklifine item ekle";
-  }
-
-  const search =
-    pickerSearch();
-
-  if (search) {
-    search.value = "";
-  }
-
-  createCategoryBar();
-  setupVariantControls();
-
-  renderPreview();
-  renderPicker();
-
-  const modal =
-    pickerModal();
-
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.add(
-    "show",
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add(
-    "profile-open"
-  );
-
-  setTimeout(
-    () => {
-      pickerSearch()
-        ?.focus();
-    },
-    50
-  );
-}
-
-function closePetPicker() {
-  const modal =
-    pickerModal();
-
-  if (!modal) return;
-
-  modal.classList.remove(
-    "show",
-    "open"
-  );
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  document.body.classList.remove(
-    "profile-open"
-  );
-
-  pickerSide =
-    null;
-
-  selectedItem =
-    null;
-}
-
-/* =========================================================
-   FILTER
-========================================================= */
-
-function filteredPickerItems() {
-  const query =
-    normalizeText(
-      pickerSearch()?.value ||
-      ""
-    );
-
-  return items.filter(
-    (item) => {
-
-      const categoryMatch =
-        pickerCategory ===
-          "all" ||
-        itemCategory(item) ===
-          pickerCategory;
-
-      const searchMatch =
-        !query ||
-        normalizeText(
-          item.name
-        ).includes(query) ||
-        normalizeText(
-          item.rarity
-        ).includes(query) ||
-        normalizeText(
-          item.type
-        ).includes(query);
-
-      return (
-        categoryMatch &&
-        searchMatch
-      );
-    }
-  );
-}
-
-/* =========================================================
-   RENDER PICKER
-========================================================= */
-
-function renderPicker() {
-  const grid =
-    pickerGrid();
-
-  if (!grid) {
-    return;
-  }
-
-  if (!items.length) {
-    grid.innerHTML = `
-      <div class="zayaxra-loading">
-        Adopt Me itemleri yükleniyor...
-      </div>
-    `;
-
-    return;
-  }
-
-  const list =
-    filteredPickerItems();
-
-  grid.innerHTML = "";
-
-  if (!list.length) {
-    grid.innerHTML = `
-      <div class="empty-picker">
-        <span>🔎</span>
-        <strong>Item bulunamadı</strong>
-        <small>
-          Arama veya kategoriyi değiştir.
-        </small>
-      </div>
-    `;
-
-    return;
-  }
-
-  const fragment =
-    document.createDocumentFragment();
-
-  list.forEach(
-    (item) => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-      button.type =
-        "button";
-
-      button.className =
-        "pet-choice" +
-        (
-          selectedItem?.id ===
-          item.id
-            ? " selected"
-            : ""
-        );
-
-      const currentValue =
-        getValue(
-          item,
-          selectedForm,
-          selectedPotion
-        );
-
-      button.innerHTML = `
-        <div class="choice-image">
-          ${imageHTML(item)}
-        </div>
-
-        <strong>
-          ${escapeHTML(
-            item.name
-          )}
-        </strong>
-
-        <span
-          class="
-            rarity-tag
-            ${rarityClass(
-              item.rarity
-            )}
-          "
-        >
-          ${escapeHTML(
-            rarityName(
-              item.rarity
-            )
-          )}
-        </span>
-
-        <small>
-          ${formatValue(
-            currentValue
-          )}
-        </small>
-      `;
-
-      button.onclick =
-        (event) => {
-          event.preventDefault();
-          event.stopPropagation();
-
-          selectedItem =
-            item;
-
-          renderPreview();
-
-          grid
-            .querySelectorAll(
-              ".pet-choice"
-            )
-            .forEach(
-              (element) =>
-                element.classList.remove(
-                  "selected"
-                )
-            );
-
-          button.classList.add(
-            "selected"
-          );
-
-          const confirm =
-            $("confirmPetBtn");
-
-          if (confirm) {
-            confirm.disabled =
-              false;
-          }
-        };
-
-      fragment.appendChild(
-        button
-      );
-    }
-  );
-
-  grid.appendChild(
-    fragment
-  );
-
-  updateVariantButtons();
-}
-
-/* =========================================================
-   PREVIEW
-========================================================= */
-
-function renderPreview() {
-  const box =
-    $("pickerPreview");
-
-  if (!box) {
-    return;
-  }
-
-  if (!selectedItem) {
-    box.innerHTML = "";
-
-    if ($("pickerValue")) {
-      $("pickerValue")
-        .textContent = "0";
-    }
-
-    if ($("confirmPetBtn")) {
-      $("confirmPetBtn")
-        .disabled = true;
-    }
-
-    return;
-  }
-
-  const value =
-    getValue(
-      selectedItem,
-      selectedForm,
-      selectedPotion
-    );
-
-  box.innerHTML = `
-    <div class="pet-image-wrap">
-
-      ${
-        selectedForm === "N"
-          ? `<div class="neon-effect"></div>`
-          : ""
-      }
-
-      ${
-        selectedForm === "M"
-          ? `<div class="mega-effect"></div>`
-          : ""
-      }
-
-      ${imageHTML(
-        selectedItem
-      )}
-
-      <div class="pet-badges">
-
-        ${
-          selectedForm === "N"
-            ? `<span class="mini-chip neon">N</span>`
-            : ""
-        }
-
-        ${
-          selectedForm === "M"
-            ? `<span class="mini-chip mega">M</span>`
-            : ""
-        }
-
-        ${
-          selectedPotion === "fly"
-            ? `<span class="mini-chip fly">F</span>`
-            : ""
-        }
-
-        ${
-          selectedPotion === "ride"
-            ? `<span class="mini-chip ride">R</span>`
-            : ""
-        }
-
-        ${
-          selectedPotion === "flyride"
-            ? `
-              <span class="mini-chip fly">
-                F
-              </span>
-              <span class="mini-chip ride">
-                R
-              </span>
-            `
-            : ""
-        }
-
-      </div>
-
-    </div>
-
-    <div class="preview-info">
-
-      <strong>
-        ${escapeHTML(
-          selectedItem.name
-        )}
-      </strong>
-
-      <span>
-        ${escapeHTML(
-          rarityName(
-            selectedItem.rarity
-          )
-        )}
-      </span>
-
-      <b>
-        ${formatValue(
-          value
-        )}
-      </b>
-
-    </div>
-  `;
-
-  if ($("pickerValue")) {
-    $("pickerValue")
-      .textContent =
-      formatValue(value);
-  }
-
-  if ($("confirmPetBtn")) {
-    $("confirmPetBtn")
-      .disabled = false;
-  }
-}
-
-/* =========================================================
-   COMPATIBILITY BUTTONS
-========================================================= */
-
-function toggleForm(form) {
-  const value =
-    normalizeText(form);
-
-  if (
-    value === "normal" ||
-    value === "d"
-  ) {
-    selectedForm =
-      "D";
-  }
-
-  if (
-    value === "neon" ||
-    value === "n"
-  ) {
-    selectedForm =
-      "N";
-  }
-
-  if (
-    value === "mega" ||
-    value === "m"
-  ) {
-    selectedForm =
-      "M";
-  }
-
-  updateVariantButtons();
-
-  renderPreview();
-
-  renderPicker();
-}
-
-function togglePotion(type) {
-  const value =
-    normalizeText(type);
-
-  if (
-    value === "none" ||
-    value === "normal"
-  ) {
-    selectedPotion =
-      "normal";
-  }
-
-  if (
-    value === "fly"
-  ) {
-    selectedPotion =
-      selectedPotion ===
-      "fly"
-        ? "normal"
-        : "fly";
-  }
-
-  if (
-    value === "ride"
-  ) {
-    selectedPotion =
-      selectedPotion ===
-      "ride"
-        ? "normal"
-        : "ride";
-  }
-
-  if (
-    value === "flyride"
-  ) {
-    selectedPotion =
-      selectedPotion ===
-      "flyride"
-        ? "normal"
-        : "flyride";
-  }
-
-  updateVariantButtons();
-
-  renderPreview();
-
-  renderPicker();
-}
-
-/* =========================================================
-   CONFIRM ITEM
-========================================================= */
-
-function confirmAddPet() {
-  if (
-    !selectedItem ||
-    !pickerSide
-  ) {
-    return;
-  }
-
-  const item =
-    {
-      ...selectedItem,
-
-      uniqueId:
-        Date.now() +
-        "_" +
-        Math.random()
-          .toString(36)
-          .slice(2),
-
-      form:
-        selectedForm,
-
-      potion:
-        selectedPotion,
-
-      value:
-        getValue(
-          selectedItem,
-          selectedForm,
-          selectedPotion
-        )
-    };
-
-  if (
-    pickerSide ===
-    "you"
-  ) {
-    youTrade.push(
-      item
-    );
-  } else {
-    themTrade.push(
-      item
-    );
-  }
-
-  closePetPicker();
-
-  updateTradeUI();
-}
-
-/* =========================================================
-   TRADE
-========================================================= */
-
-function calculateTotal(
-  trade
-) {
-  return trade.reduce(
-    (sum, item) =>
-      sum +
-      Number(
-        item.value || 0
-      ),
-    0
-  );
-}
-
-/* IMPORTANT:
-   CSS'in trade-slot yapısına göre
-   trade kartlarını gerçekten trade-slot olarak üret.
-*/
-
-function tradeItemHTML(
-  item
-) {
-  const badges = [];
-
-  if (
-    item.form === "N"
-  ) {
-    badges.push(`
-      <span class="
-        trade-slot-badge
-        neon
-      ">
-        N
-      </span>
-    `);
-  }
-
-  if (
-    item.form === "M"
-  ) {
-    badges.push(`
-      <span class="
-        trade-slot-badge
-        mega
-      ">
-        M
-      </span>
-    `);
-  }
-
-  if (
-    item.potion ===
-    "fly"
-  ) {
-    badges.push(`
-      <span class="
-        trade-slot-badge
-        fly
-      ">
-        F
-      </span>
-    `);
-  }
-
-  if (
-    item.potion ===
-    "ride"
-  ) {
-    badges.push(`
-      <span class="
-        trade-slot-badge
-        ride
-      ">
-        R
-      </span>
-    `);
-  }
-
-  if (
-    item.potion ===
-    "flyride"
-  ) {
-    badges.push(`
-      <span class="
-        trade-slot-badge
-        fly
-      ">
-        F
-      </span>
-
-      <span class="
-        trade-slot-badge
-        ride
-      ">
-        R
-      </span>
-    `);
-  }
-
-  return `
-    <div
-      class="trade-slot"
-      data-trade-id="${escapeHTML(
-        item.uniqueId
-      )}"
-    >
-
-      ${
-        item.form === "N"
-          ? `<div class="neon-effect"></div>`
-          : ""
-      }
-
-      ${
-        item.form === "M"
-          ? `<div class="mega-effect"></div>`
-          : ""
-      }
-
-      <div class="trade-slot-image">
-        ${imageHTML(
-          item,
-          "trade-slot-photo"
-        )}
-      </div>
-
-      <div class="trade-slot-name">
-        ${escapeHTML(
-          item.name
-        )}
-      </div>
-
-      <div class="trade-slot-value">
-        ${formatValue(
-          item.value
-        )}
-      </div>
-
-      <div class="trade-slot-badges">
-        ${badges.join("")}
-      </div>
-
-      <button
-        type="button"
-        class="remove-item"
-        data-remove-id="${escapeHTML(
-          item.uniqueId
-        )}"
-      >
-        ×
-      </button>
-
-    </div>
-  `;
-}
-
-function renderTradeSide(
-  elementId,
-  trade,
-  side
-) {
-  const element =
-    $(elementId);
-
-  if (!element) {
-    return;
-  }
-
-  if (!trade.length) {
-    element.innerHTML = `
-      <div
-        class="
-          empty-items
-          trade-empty
-        "
-      >
-
-        <span class="empty-plus">
-          ＋
-        </span>
-
-        <strong>
-          ${
-            side === "you"
-              ? "Henüz pet eklenmedi"
-              : "Henüz pet eklenmedi"
-          }
-        </strong>
-
-        <small>
-          ${
-            side === "you"
-              ? "Teklifini oluşturmak için pet ekle"
-              : "Karşı tarafın teklifini oluştur"
-          }
-        </small>
-
-      </div>
-    `;
-
-    return;
-  }
-
-  element.innerHTML =
-    trade
-      .map(
-        (item) =>
-          tradeItemHTML(
-            item
-          )
-      )
-      .join("");
-
-  element
-    .querySelectorAll(
-      ".trade-slot"
-    )
-    .forEach(
-      (card) => {
-
-        const remove =
-          card.querySelector(
-            ".remove-item"
-          );
-
-        if (remove) {
-          remove.onclick =
-            (event) => {
-              event.stopPropagation();
-
-              removeTradePet(
-                side,
-                remove.dataset
-                  .removeId
-              );
-            };
-        }
-
-      }
-    );
-}
-
-function removeTradePet(
-  side,
-  id
-) {
-  if (
-    side === "you"
-  ) {
-    youTrade =
-      youTrade.filter(
-        (item) =>
-          item.uniqueId !==
-          id
-      );
-  } else {
-    themTrade =
-      themTrade.filter(
-        (item) =>
-          item.uniqueId !==
-          id
-      );
-  }
-
-  updateTradeUI();
-}
-
-function clearTrade() {
-  youTrade = [];
-  themTrade = [];
-
-  updateTradeUI();
-}
-
-/* =========================================================
-   RESULT
-========================================================= */
-
-let recordedTradeKey =
-  "";
-
-function updateTradeUI() {
-  const youTotal =
-    calculateTotal(
-      youTrade
-    );
-
-  const themTotal =
-    calculateTotal(
-      themTrade
-    );
-
-  renderTradeSide(
-    "youItems",
-    youTrade,
-    "you"
-  );
-
-  renderTradeSide(
-    "themItems",
-    themTrade,
-    "them"
-  );
-
-  if ($("youTotal")) {
-    $("youTotal")
-      .textContent =
-      formatValue(
-        youTotal
-      );
-  }
-
-  if ($("themTotal")) {
-    $("themTotal")
-      .textContent =
-      formatValue(
-        themTotal
-      );
-  }
-
-  updateResult(
-    youTotal,
-    themTotal
-  );
-}
-
-function updateResult(
-  youTotal,
-  themTotal
-) {
-  const card =
-    $("resultCard");
-
-  const status =
-    $("resultStatusText");
-
-  const diff =
-    $("resultDiffDisplay");
-
-  const statusLabel =
-    $("tradeStatusLabel");
-
-  const statusNumber =
-    $("resultDiffNumber");
-
-  const statusBar =
-    $("tradeStatusBar");
-
-  card?.classList.remove(
-    "win",
-    "lose",
-    "fair",
-    "big-win",
-    "big-lose",
-    "small-win",
-    "small-lose"
-  );
-
-  statusBar?.classList.remove(
-    "big-win",
-    "small-win",
-    "fair",
-    "small-lose",
-    "big-lose"
-  );
-
-  if (
-    !youTotal &&
-    !themTotal
-  ) {
-    if (status) {
-      status.textContent =
-        "Pet ekleyerek başla";
-    }
-
-    if (diff) {
-      diff.textContent =
-        "—";
-    }
-
-    if (statusNumber) {
-      statusNumber.textContent =
-        "—";
-    }
-
-    if (statusLabel) {
-      statusLabel.textContent =
-        "TRADE HAZIR";
-    }
-
-    return;
-  }
-
-  if (
-    !youTotal ||
-    !themTotal
-  ) {
-    if (status) {
-      status.textContent =
-        "İki tarafa da pet ekle";
-    }
-
-    if (diff) {
-      diff.textContent =
-        "—";
-    }
-
-    if (statusNumber) {
-      statusNumber.textContent =
-        "—";
-    }
-
-    if (statusLabel) {
-      statusLabel.textContent =
-        "TRADE BEKLENİYOR";
-    }
-
-    return;
-  }
-
-  const difference =
-    themTotal -
-    youTotal;
-
-  const percent =
-    youTotal
-      ? (difference /
-          youTotal) *
-        100
-      : 0;
-
-  let state =
-    "fair";
-
-  let label =
-    "FAIR";
-
-  if (
-    percent >= 10
-  ) {
-    state =
-      "big-win";
-
-    label =
-      "BIG WIN";
-  } else if (
-    percent > 3
-  ) {
-    state =
-      "small-win";
-
-    label =
-      "SMALL WIN";
-  } else if (
-    percent <= -10
-  ) {
-    state =
-      "big-lose";
-
-    label =
-      "BIG LOSE";
-  } else if (
-    percent < -3
-  ) {
-    state =
-      "small-lose";
-
-    label =
-      "SMALL LOSE";
-  }
-
-  card?.classList.add(
-    state
-  );
-
-  statusBar?.classList.add(
-    state
-  );
-
-  if (
-    state.includes("win")
-  ) {
-    card?.classList.add(
-      "win"
-    );
-  }
-
-  if (
-    state.includes("lose")
-  ) {
-    card?.classList.add(
-      "lose"
-    );
-  }
-
-  if (
-    state === "fair"
-  ) {
-    card?.classList.add(
-      "fair"
-    );
-  }
-
-  const signed =
-    difference > 0
-      ? "+" +
-        formatValue(
-          difference
-        )
-      : formatValue(
-          difference
-        );
-
-  if (status) {
-    status.textContent =
-      label;
-  }
-
-  if (diff) {
-    diff.textContent =
-      signed;
-  }
-
-  if (statusNumber) {
-    statusNumber.textContent =
-      signed;
-  }
-
-  if (statusLabel) {
-    statusLabel.textContent =
-      label;
-  }
-
-  recordTradeResult(
-    state.includes("win")
-      ? "win"
-      : state.includes(
-          "lose"
-        )
-      ? "lose"
-      : "fair"
-  );
-}
-
-/* =========================================================
-   PROFILE TRADE RECORD
-========================================================= */
-
-function recordTradeResult(
-  status
-) {
-  if (
-    !youTrade.length ||
-    !themTrade.length
-  ) {
-    return;
-  }
-
-  const key =
-    youTrade
-      .map(
-        (item) =>
-          item.uniqueId
-      )
-      .join(",") +
-    "|" +
-    themTrade
-      .map(
-        (item) =>
-          item.uniqueId
-      )
-      .join(",") +
-    "|" +
-    status;
-
-  if (
-    key ===
-    recordedTradeKey
-  ) {
-    return;
-  }
-
-  recordedTradeKey =
-    key;
-
-  profileData.stats.trades++;
-
-  if (
-    status === "win"
-  ) {
-    profileData.stats.wins++;
-  }
-
-  if (
-    status === "fair"
-  ) {
-    profileData.stats.fairs++;
-  }
-
-  if (
-    status === "lose"
-  ) {
-    profileData.stats.loses++;
-  }
-
-  saveProfile();
-
-  renderProfile();
-}
-
-/* =========================================================
-   INFO
-========================================================= */
-
-function openInfo(
-  event
-) {
-  event?.preventDefault();
-
-  $("infoModal")
-    ?.classList.add(
-      "show",
-      "open"
-    );
-
-  $("infoModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-  document.body.classList.add(
-    "profile-open"
-  );
-}
-
-function closeInfo() {
-  $("infoModal")
-    ?.classList.remove(
-      "show",
-      "open"
-    );
-
-  $("infoModal")
-    ?.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-  document.body.classList.remove(
-    "profile-open"
-  );
-}
-
-/* =========================================================
-   MENU
-========================================================= */
-
-function toggleMenu() {
-  document.body.classList.toggle(
-    "menu-open"
-  );
-}
-
-function closeMenu() {
-  document.body.classList.remove(
-    "menu-open"
-  );
-}
-
-/* =========================================================
-   SEARCH
-========================================================= */
-
-function renderValues() {
-  const grid =
-    $("valueGrid");
-
-  if (!grid) {
-    return;
-  }
-
-  const search =
-    normalizeText(
-      $("search")
-        ?.value || ""
-    );
-
-  const results =
-    items.filter(
-      (item) =>
-        !search ||
-        normalizeText(
-          item.name
-        ).includes(search) ||
-        normalizeText(
-          item.type
-        ).includes(search)
-    );
-
-  grid.innerHTML = "";
-
-  results
-    .slice(0, 300)
-    .forEach(
-      (item) => {
-        const card =
-          document.createElement(
-            "div"
-          );
-
-        card.className =
-          "value-card";
-
-        card.innerHTML = `
-          <div class="value-image">
-            ${imageHTML(
-              item
-            )}
-          </div>
-
-          <div class="value-info">
-
-            <h3>
-              ${escapeHTML(
-                item.name
-              )}
-            </h3>
-
-            <span
-              class="
-                rarity-small
-                ${rarityClass(
-                  item.rarity
-                )}
-              "
-            >
-              ${escapeHTML(
-                rarityName(
-                  item.rarity
-                )
-              )}
-            </span>
-
-            <small>
-              ${escapeHTML(
-                categoryLabel(
-                  itemCategory(
-                    item
-                  )
-                )
-              )}
-            </small>
-
-            <strong>
-              Value:
-              ${formatValue(
-                getValue(
-                  item,
-                  "D",
-                  "normal"
-                )
-              )}
-            </strong>
-
-          </div>
-        `;
-
-        grid.appendChild(
-          card
-        );
-      }
-    );
-}
-
-/* =========================================================
-   DATA
-========================================================= */
-
-async function loadData() {
-  const grid =
-    pickerGrid();
-
-  if (grid) {
-    grid.innerHTML = `
-      <div class="zayaxra-loading">
-        Adopt Me itemleri yükleniyor...
-      </div>
-    `;
-  }
-
-  try {
-    const response =
-      await fetch(
-        DATA_URL,
-        {
-          cache:
-            "no-store"
-        }
-      );
-
-    if (
-      !response.ok
-    ) {
-      throw new Error(
-        "HTTP " +
-          response.status
-      );
-    }
+    const grid =
+        document.getElementById("favoritesGrid");
 
     const data =
-      await response.json();
+        items.filter(item => favorites.includes(item.id));
 
-    if (
-      !Array.isArray(data)
-    ) {
-      throw new Error(
-        "JSON array değil."
-      );
+    document.getElementById("favStat").textContent =
+        data.length;
+
+    if (!data.length) {
+
+        grid.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                padding:70px 20px;
+                text-align:center;
+                color:#8993a5;
+            ">
+                <div style="font-size:45px;margin-bottom:10px;">
+                    ♡
+                </div>
+                Henüz favori eşyan yok.
+            </div>
+        `;
+
+        return;
     }
 
-    items =
-      data.map(
-        (item, index) => ({
-          ...item,
-
-          id:
-            item.id ??
-            index,
-
-          name:
-            item.name ||
-            "Unknown Item",
-
-          type:
-            item.type ||
-            "pets",
-
-          rarity:
-            item.rarity ||
-            "common"
-        })
-      );
-
-    createCategoryBar();
-    setupVariantControls();
-
-    renderPicker();
-    renderValues();
-
-    renderProfile();
-
-    updateTradeUI();
-
-  } catch (error) {
-
-    console.error(
-      "ZAYAXRA DATA ERROR:",
-      error
-    );
-
-    if (grid) {
-      grid.innerHTML = `
-        <div class="empty-picker">
-
-          <span>⚠️</span>
-
-          <strong>
-            Veriler yüklenemedi
-          </strong>
-
-          <small>
-            Sayfayı yenile ve internet bağlantını kontrol et.
-          </small>
-
-        </div>
-      `;
-    }
-  }
+    grid.innerHTML =
+        data.map(createCard).join("");
 }
 
-/* =========================================================
-   GLOBAL EVENTS
-========================================================= */
 
-document.addEventListener(
-  "click",
-  (event) => {
+/* =========================
+   FAVORITE BUTTON
+   ========================= */
 
-    if (
-      event.target ===
-      pickerModal()
-    ) {
-      closePetPicker();
+document.addEventListener("click", e => {
+
+    const button =
+        e.target.closest("[data-favorite]");
+
+    if (!button) return;
+
+    const id = button.dataset.favorite;
+
+    if (favorites.includes(id)) {
+
+        favorites =
+            favorites.filter(x => x !== id);
+
+    } else {
+
+        favorites.push(id);
     }
 
-    if (
-      event.target ===
-      $("profileModal")
-    ) {
-      closeProfile();
-    }
-
-    if (
-      event.target ===
-      $("infoModal")
-    ) {
-      closeInfo();
-    }
-
-  }
-);
-
-document.addEventListener(
-  "keydown",
-  (event) => {
-
-    if (
-      event.key ===
-      "Escape"
-    ) {
-      closePetPicker();
-      closeProfile();
-      closeInfo();
-      closeMenu();
-    }
-
-  }
-);
-
-/* =========================================================
-   INIT
-========================================================= */
-
-function initZayaxra() {
-
-  renderProfile();
-
-  createCategoryBar();
-
-  setupVariantControls();
-
-  const search =
-    $("search");
-
-  if (search) {
-    search.addEventListener(
-      "input",
-      renderValues
+    localStorage.setItem(
+        "zayaxraFavorites",
+        JSON.stringify(favorites)
     );
-  }
 
-  const petSearch =
-    pickerSearch();
+    renderAll();
+});
 
-  if (petSearch) {
-    petSearch.addEventListener(
-      "input",
-      renderPicker
-    );
-  }
 
-  updateTradeUI();
+/* =========================
+   SEARCH
+   ========================= */
 
-  loadData();
+globalSearch.addEventListener("input", e => {
+
+    currentSearch = e.target.value;
+
+    if (
+        currentPage === "pets" ||
+        currentPage === "vehicles" ||
+        currentPage === "toys" ||
+        currentPage === "gifts"
+    ) {
+        renderCategory(currentPage);
+    }
+
+});
+
+
+/* =========================
+   RARITY FILTER
+   ========================= */
+
+document.addEventListener("click", e => {
+
+    const filter =
+        e.target.closest(".filter");
+
+    if (!filter) return;
+
+    currentRarity =
+        filter.dataset.rarity;
+
+    document
+        .querySelectorAll(".filter")
+        .forEach(btn =>
+            btn.classList.remove("active")
+        );
+
+    filter.classList.add("active");
+
+    renderCategory("pets");
+});
+
+
+/* =========================
+   TRADE
+   ========================= */
+
+function calculateTrade() {
+
+    const myValue =
+        myTrade.reduce(
+            (sum, item) => sum + item.value,
+            0
+        );
+
+    const theirValue =
+        theirTrade.reduce(
+            (sum, item) => sum + item.value,
+            0
+        );
+
+    document.getElementById("myValue")
+        .textContent = formatValue(myValue);
+
+    document.getElementById("theirValue")
+        .textContent = formatValue(theirValue);
+
+    const result =
+        document.getElementById("tradeResult");
+
+    result.className =
+        "trade-result neutral";
+
+    if (!myValue && !theirValue) {
+
+        result.textContent = "Eşya ekle";
+        return;
+    }
+
+    if (!myValue) {
+
+        result.textContent = "Senin taraf boş";
+        return;
+    }
+
+    if (!theirValue) {
+
+        result.textContent = "Karşı taraf boş";
+        return;
+    }
+
+    const difference =
+        theirValue - myValue;
+
+    const percentage =
+        Math.abs(difference) /
+        Math.max(myValue, theirValue) * 100;
+
+    if (percentage <= 5) {
+
+        result.className =
+            "trade-result fair";
+
+        result.textContent =
+            "FAIR TRADE";
+
+    } else if (theirValue > myValue) {
+
+        result.className =
+            "trade-result win";
+
+        result.textContent =
+            "WIN +" + formatValue(difference);
+
+    } else {
+
+        result.className =
+            "trade-result loss";
+
+        result.textContent =
+            "LOSS " + formatValue(Math.abs(difference));
+    }
+
 }
 
-/* =========================================================
-   GLOBAL FUNCTIONS FOR HTML
-========================================================= */
 
-window.openPetPicker =
-  openPetPicker;
+function renderTrade() {
 
-window.closePetPicker =
-  closePetPicker;
+    renderTradeSide(
+        "myTradeItems",
+        myTrade,
+        "my"
+    );
 
-window.confirmAddPet =
-  confirmAddPet;
+    renderTradeSide(
+        "theirTradeItems",
+        theirTrade,
+        "their"
+    );
 
-window.clearTrade =
-  clearTrade;
+    calculateTrade();
+}
 
-window.removeTradePet =
-  removeTradePet;
 
-window.toggleForm =
-  toggleForm;
+function renderTradeSide(elementId, data, side) {
 
-window.togglePotion =
-  togglePotion;
+    const element =
+        document.getElementById(elementId);
 
-window.openProfile =
-  openProfile;
+    if (!data.length) {
 
-window.closeProfile =
-  closeProfile;
+        element.innerHTML = `
+            <div class="empty-trade">
+                <div>
+                    <div style="font-size:35px;margin-bottom:8px;">
+                        ${side === "my" ? "📦" : "🎁"}
+                    </div>
+                    Henüz eşya eklenmedi.
+                </div>
+            </div>
+        `;
 
-window.openEditProfile =
-  openEditProfile;
+        return;
+    }
 
-window.closeEditProfile =
-  closeEditProfile;
+    element.innerHTML =
+        data.map((item,index) => `
 
-window.saveEditedProfile =
-  saveEditedProfile;
+            <div class="trade-item">
 
-window.openInfo =
-  openInfo;
+                <div class="trade-item-img">
+                    ${item.emoji}
+                </div>
 
-window.closeInfo =
-  closeInfo;
+                <div class="trade-item-info">
+                    <b>${item.name}</b>
+                    <small>${item.rarity}</small>
+                </div>
 
-window.toggleMenu =
-  toggleMenu;
+                <strong class="value">
+                    ${formatValue(item.value)}
+                </strong>
 
-window.closeMenu =
-  closeMenu;
+                <button
+                    class="remove-trade"
+                    data-remove="${side}"
+                    data-index="${index}"
+                >
+                    ×
+                </button>
 
-document.addEventListener(
-  "DOMContentLoaded",
-  initZayaxra
+            </div>
+
+        `).join("");
+}
+
+
+/* =========================
+   ADD TRADE ITEM
+   ========================= */
+
+document.addEventListener("click", e => {
+
+    const button =
+        e.target.closest(".add-item-btn");
+
+    if (!button) return;
+
+    currentTradeSide =
+        button.dataset.side;
+
+    modalSearch.value = "";
+
+    renderModal();
+
+    itemModal.classList.add("open");
+
+});
+
+
+/* =========================
+   MODAL
+   ========================= */
+
+function renderModal() {
+
+    const search =
+        modalSearch.value.toLowerCase();
+
+    const data =
+        items.filter(item =>
+            item.name
+                .toLowerCase()
+                .includes(search)
+        );
+
+    modalList.innerHTML =
+        data.map(item => `
+
+            <div
+                class="modal-item"
+                data-add-item="${item.id}"
+            >
+
+                <div class="modal-item-img">
+                    ${item.emoji}
+                </div>
+
+                <div class="modal-item-info">
+                    <b>${item.name}</b>
+                    <small>${item.rarity}</small>
+                </div>
+
+                <span class="modal-value">
+                    ${formatValue(item.value)}
+                </span>
+
+            </div>
+
+        `).join("");
+}
+
+
+modalSearch.addEventListener(
+    "input",
+    renderModal
+);
+
+
+document.addEventListener("click", e => {
+
+    const item =
+        e.target.closest("[data-add-item]");
+
+    if (!item) return;
+
+    const id =
+        item.dataset.addItem;
+
+    const selected =
+        items.find(x => x.id === id);
+
+    if (!selected) return;
+
+    if (currentTradeSide === "my") {
+
+        myTrade.push(selected);
+
+    } else {
+
+        theirTrade.push(selected);
+    }
+
+    itemModal.classList.remove("open");
+
+    renderTrade();
+});
+
+
+/* =========================
+   REMOVE TRADE ITEM
+   ========================= */
+
+document.addEventListener("click", e => {
+
+    const button =
+        e.target.closest("[data-remove]");
+
+    if (!button) return;
+
+    const side =
+        button.dataset.remove;
+
+    const index =
+        Number(button.dataset.index);
+
+    if (side === "my") {
+
+        myTrade.splice(index,1);
+
+    } else {
+
+        theirTrade.splice(index,1);
+    }
+
+    renderTrade();
+});
+
+
+/* =========================
+   CLOSE MODAL
+   ========================= */
+
+document.getElementById("closeModal")
+    .addEventListener("click", () => {
+
+        itemModal.classList.remove("open");
+
+    });
+
+
+itemModal.addEventListener("click", e => {
+
+    if (e.target === itemModal) {
+
+        itemModal.classList.remove("open");
+
+    }
+
+});
+
+
+/* =========================
+   NOTIFICATION
+   ========================= */
+
+document.getElementById("notificationBtn")
+    .addEventListener("click", () => {
+
+        alert(
+            "🔔 ZAYAXRA\n\n" +
+            "Bildirim sistemi yakında aktif olacak."
+        );
+
+    });
+
+
+/* =========================
+   COUNTERS
+   ========================= */
+
+function updateStats() {
+
+    document.getElementById("petCount")
+        .textContent =
+        items.filter(x => x.category === "pets").length;
+
+    document.getElementById("vehicleCount")
+        .textContent =
+        items.filter(x => x.category === "vehicles").length;
+
+    document.getElementById("toyCount")
+        .textContent =
+        items.filter(x => x.category === "toys").length;
+
+    document.getElementById("giftCount")
+        .textContent =
+        items.filter(x => x.category === "gifts").length;
+
+}
+
+
+/* =========================
+   RENDER ALL
+   ========================= */
+
+function renderAll() {
+
+    renderPopular();
+
+    renderCategory("pets");
+    renderCategory("vehicles");
+    renderCategory("toys");
+    renderCategory("gifts");
+
+    renderFavorites();
+
+    renderTrade();
+
+    updateStats();
+}
+
+
+/* =========================
+   START
+   ========================= */
+
+renderAll();
+
+console.log(
+    "%c ZAYAXRA ",
+    "background:#7c4dff;color:white;font-size:20px;font-weight:bold;padding:8px"
+);
+
+console.log(
+    "ZAYAXRA Adopt Me Values sistemi aktif."
 );
