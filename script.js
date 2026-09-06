@@ -4024,3 +4024,38 @@ window.addEventListener(
 
   }
 );
+function toggleZayaxraInfo() {
+
+  const button =
+    document.querySelector(
+      ".info-toggle"
+    );
+
+  const panel =
+    $("zayaxraInfoPanel");
+
+  if (!button || !panel) {
+    return;
+  }
+
+
+  const isOpen =
+    panel.classList.toggle(
+      "open"
+    );
+
+
+  button.classList.toggle(
+    "active",
+    isOpen
+  );
+
+
+  button.setAttribute(
+    "aria-expanded",
+    isOpen
+      ? "true"
+      : "false"
+  );
+
+}
