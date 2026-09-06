@@ -20,6 +20,10 @@
 
 <body>
 
+  <!-- =========================================
+       NAVBAR
+  ========================================== -->
+
   <header class="navbar">
 
     <a href="#" class="logo">
@@ -55,6 +59,7 @@
         class="menu-btn"
         onclick="toggleMenu()"
         aria-label="Menü"
+        aria-expanded="false"
       >
         ☰
       </button>
@@ -62,167 +67,18 @@
     </div>
 
   </header>
-<!-- ZAYAXRA FEATURES -->
 
-<section class="section zayaxra-features">
-
-  <div class="section-head">
-    <div>
-      <div class="eyebrow">
-        WHY ZAYAXRA
-      </div>
-
-      <h2>
-        Trade'lerini daha bilinçli yap.
-      </h2>
-    </div>
-  </div>
-
-
-  <div class="feature-grid">
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        W/F/L
-      </div>
-
-      <div class="feature-content">
-
-        <h3>
-          Anlık Trade Analizi
-        </h3>
-
-        <p>
-          İki tarafın petlerini karşılaştır,
-          değer farkını anında gör ve trade'inin
-          Win, Fair veya Lose olduğunu öğren.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        ✦
-      </div>
-
-      <div class="feature-content">
-
-        <h3>
-          Pet Formları
-        </h3>
-
-        <p>
-          Normal, Neon ve Mega seçeneklerini
-          kullan. Fly ve Ride gibi özellikleri
-          de trade değerine dahil et.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="feature-card">
-
-      <div class="feature-icon">
-        ⚡
-      </div>
-
-      <div class="feature-content">
-
-        <h3>
-          Hızlı ve Basit
-        </h3>
-
-        <p>
-          Gereksiz ekranlarla uğraşmadan petlerini
-          seç, değerleri karşılaştır ve sonucu
-          saniyeler içinde öğren.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- ZAYAXRA ABOUT -->
-
-<section class="section zayaxra-about">
-
-  <div class="about-panel">
-
-    <div class="about-copy">
-
-      <div class="eyebrow">
-        ZAYAXRA
-      </div>
-
-      <h2>
-        Trade değerini.
-        <span>Kontrol sende.</span>
-      </h2>
-
-      <p>
-        ZAYAXRA, Adopt Me trade'lerini daha kolay
-        değerlendirmek için hazırlanmış modern bir
-        trading calculator deneyimidir.
-      </p>
-
-    </div>
-
-
-    <div class="about-stat-grid">
-
-      <div class="about-stat">
-        <strong>
-          90+
-        </strong>
-
-        <span>
-          PET
-        </span>
-      </div>
-
-
-      <div class="about-stat">
-        <strong>
-          5
-        </strong>
-
-        <span>
-          W/F/L SEVİYESİ
-        </span>
-      </div>
-
-
-      <div class="about-stat">
-        <strong>
-          1
-        </strong>
-
-        <span>
-          HIZLI CALCULATOR
-        </span>
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
 
   <main>
 
-    <section id="top" class="hero">
+    <!-- =========================================
+         HERO
+    ========================================== -->
+
+    <section
+      id="top"
+      class="hero"
+    >
 
       <div class="hero-content">
 
@@ -253,7 +109,14 @@
     </section>
 
 
-    <section id="calculator" class="section">
+    <!-- =========================================
+         CALCULATOR
+    ========================================== -->
+
+    <section
+      id="calculator"
+      class="section"
+    >
 
       <div class="section-head">
 
@@ -281,6 +144,8 @@
       </div>
 
 
+      <!-- STATUS -->
+
       <div
         id="tradeStatusBar"
         class="trade-status-bar"
@@ -306,7 +171,12 @@
       </div>
 
 
+      <!-- TRADE GRID -->
+
       <div class="trade-grid">
+
+
+        <!-- SEN -->
 
         <div class="trade-box trade-box-you">
 
@@ -379,6 +249,8 @@
         </div>
 
 
+        <!-- VS -->
+
         <div class="vs trade-vs">
 
           <div class="vs-ring">
@@ -387,6 +259,8 @@
 
         </div>
 
+
+        <!-- KARŞI TARAF -->
 
         <div class="trade-box trade-box-them">
 
@@ -461,6 +335,8 @@
       </div>
 
 
+      <!-- RESULT -->
+
       <div
         id="resultCard"
         class="result-card trade-result-card"
@@ -499,10 +375,192 @@
 
     </section>
 
+
+    <!-- =========================================
+         ZAYAXRA INFO
+    ========================================== -->
+
+    <section class="section zayaxra-info">
+
+      <button
+        type="button"
+        class="info-toggle"
+        onclick="toggleZayaxraInfo()"
+        aria-expanded="false"
+      >
+
+        <span>
+          ZAYAXRA Hakkında
+        </span>
+
+        <span class="info-toggle-icon">
+          +
+        </span>
+
+      </button>
+
+
+      <div
+        id="zayaxraInfoPanel"
+        class="zayaxra-info-panel"
+      >
+
+        <div class="info-panel-inner">
+
+
+          <!-- ABOUT -->
+
+          <div class="about-copy">
+
+            <div class="eyebrow">
+              ZAYAXRA
+            </div>
+
+            <h2>
+              Trade değerini.
+              <span>Kontrol sende.</span>
+            </h2>
+
+            <p>
+              ZAYAXRA, Adopt Me trade'lerini daha kolay
+              değerlendirmek için hazırlanmış modern bir
+              trading calculator deneyimidir.
+            </p>
+
+          </div>
+
+
+          <!-- FEATURES -->
+
+          <div class="feature-grid">
+
+
+            <div class="feature-card">
+
+              <div class="feature-icon">
+                W/F/L
+              </div>
+
+              <div class="feature-content">
+
+                <h3>
+                  Anlık Trade Analizi
+                </h3>
+
+                <p>
+                  İki tarafın petlerini karşılaştır,
+                  değer farkını anında gör ve trade'inin
+                  Win, Fair veya Lose olduğunu öğren.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="feature-card">
+
+              <div class="feature-icon">
+                ✦
+              </div>
+
+              <div class="feature-content">
+
+                <h3>
+                  Pet Formları
+                </h3>
+
+                <p>
+                  Normal, Neon ve Mega seçeneklerini
+                  kullan. Fly ve Ride özelliklerini
+                  de trade değerine dahil et.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="feature-card">
+
+              <div class="feature-icon">
+                ⚡
+              </div>
+
+              <div class="feature-content">
+
+                <h3>
+                  Hızlı ve Basit
+                </h3>
+
+                <p>
+                  Petlerini seç, iki tarafı karşılaştır
+                  ve sonucu saniyeler içinde öğren.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- STATS -->
+
+          <div class="about-stat-grid">
+
+            <div class="about-stat">
+
+              <strong>
+                90+
+              </strong>
+
+              <span>
+                PET
+              </span>
+
+            </div>
+
+
+            <div class="about-stat">
+
+              <strong>
+                5
+              </strong>
+
+              <span>
+                W/F/L SEVİYESİ
+              </span>
+
+            </div>
+
+
+            <div class="about-stat">
+
+              <strong>
+                1
+              </strong>
+
+              <span>
+                CALCULATOR
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
 
-  <!-- PET PICKER -->
+  <!-- =========================================
+       PET PICKER
+  ========================================== -->
 
   <div
     id="petPicker"
@@ -541,6 +599,8 @@
       </div>
 
 
+      <!-- SEARCH -->
+
       <div class="modal-search">
 
         <input
@@ -554,11 +614,15 @@
       </div>
 
 
+      <!-- PET LIST -->
+
       <div
         id="pickerPets"
         class="pet-choice-grid"
       ></div>
 
+
+      <!-- SETTINGS -->
 
       <div class="picker-settings">
 
@@ -567,11 +631,16 @@
           class="picker-bar hidden"
         >
 
+
+          <!-- PREVIEW -->
+
           <div
             id="pickerPreview"
             class="picker-preview"
           ></div>
 
+
+          <!-- OPTIONS -->
 
           <div class="picker-options">
 
@@ -650,6 +719,8 @@
           </div>
 
 
+          <!-- ADD -->
+
           <div class="picker-add">
 
             <div
@@ -679,7 +750,9 @@
   </div>
 
 
-  <!-- PROFILE -->
+  <!-- =========================================
+       PROFILE
+  ========================================== -->
 
   <div
     id="profileModal"
@@ -883,6 +956,10 @@
 
   </div>
 
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
 
   <footer>
     Zayaxra © 2026 — Adopt Me Trading Values
