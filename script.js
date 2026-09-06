@@ -5875,3 +5875,1629 @@ document.addEventListener(
 
   }
 );
+/* =========================================================
+   ZAYAXRA — FINAL CATEGORY SYSTEM
+   ALL / PETS / PET WEAR / EGGS / VEHICLES / TOYS / GIFTS
+========================================================= */
+
+(function () {
+
+  "use strict";
+
+
+  /* =======================================================
+     CATEGORY STATE
+  ======================================================= */
+
+  let zayaxraCategory = "all";
+
+
+  const ZAYAXRA_CATEGORIES = [
+
+    {
+      id: "all",
+      label: "ALL",
+      icon: "✦"
+    },
+
+    {
+      id: "pets",
+      label: "PETS",
+      icon: "🐾"
+    },
+
+    {
+      id: "petwear",
+      label: "PET WEAR",
+      icon: "👕"
+    },
+
+    {
+      id: "eggs",
+      label: "EGGS",
+      icon: "🥚"
+    },
+
+    {
+      id: "vehicles",
+      label: "VEHICLES",
+      icon: "🚗"
+    },
+
+    {
+      id: "toys",
+      label: "TOYS",
+      icon: "🧸"
+    },
+
+    {
+      id: "gifts",
+      label: "GIFTS",
+      icon: "🎁"
+    }
+
+  ];
+
+
+  /* =======================================================
+     CATEGORY DETECTION
+  ======================================================= */
+
+  function getZayaxraCategory(item) {
+
+    const raw =
+      String(
+        item?.type || ""
+      )
+        .toLowerCase()
+        .trim();
+
+
+    const name =
+      String(
+        item?.name || ""
+      )
+        .toLowerCase();
+
+
+    /* EGG */
+
+    if (
+      raw.includes("egg") ||
+      /\begg\b/.test(name)
+    ) {
+
+      return "eggs";
+
+    }
+
+
+    /* PET WEAR */
+
+    if (
+      raw.includes("pet_wear") ||
+      raw.includes("petwear") ||
+      raw.includes("pet wear") ||
+      raw.includes("accessor") ||
+      raw.includes("wear")
+    ) {
+
+      return "petwear";
+
+    }
+
+
+    /* VEHICLES */
+
+    if (
+      raw.includes("vehicle")
+    ) {
+
+      return "vehicles";
+
+    }
+
+
+    /* TOYS */
+
+    if (
+      raw.includes("toy")
+    ) {
+
+      return "toys";
+
+    }
+
+
+    /* GIFTS */
+
+    if (
+      raw.includes("gift")
+    ) {
+
+      return "gifts";
+
+    }
+
+
+    /* PETS */
+
+    if (
+      raw === "pet" ||
+      raw === "pets" ||
+      raw.includes("pet")
+    ) {
+
+      return "pets";
+
+    }
+
+
+    return null;
+
+  }
+
+
+  /* =======================================================
+     IMAGE PATH
+  ======================================================= */
+
+  function getZayaxraImage(
+    imagePath
+  ) {
+
+    if (!imagePath) {
+
+      return "";
+
+    }
+
+
+    /*
+      Kaynak JSON:
+
+      /images/pets/Hedgehog.png
+
+      Gerçek repository:
+
+      /images/Hedgehog.png
+    */
+
+    const fileName =
+      String(
+        imagePath
+      )
+        .split("/")
+        .pop();
+
+
+    if (!fileName) {
+
+      return "";
+
+    }
+
+
+    return (
+      "https://raw.githubusercontent.com/" +
+      "ironbabatekkral/adoptme-values/main/images/" +
+      encodeURIComponent(
+        fileName
+      )
+    );
+
+  }
+
+
+  /* =======================================================
+     LOAD EVERYTHING
+  ======================================================= */
+
+  async function loadEverything() {
+
+    try {
+
+      console.log(
+        "ZAYAXRA: tüm item kategorileri yükleniyor..."
+      );
+
+
+      const response =
+        await fetch(
+
+          "https://raw.githubusercontent.com/" +
+          "ironbabatekkral/adoptme-values/main/" +
+          "adoptme_values.json?v=" +
+          Date.now(),
+
+          {
+            cache: "no-store"
+          }
+
+        );
+
+
+      if (
+        !response.ok
+      ) {
+
+        throw new Error(
+          "HTTP " +
+          response.status
+        );
+
+      }
+
+
+      const raw =
+        await response.json();
+
+
+      if (
+        !Array.isArray(
+          raw
+        )
+      ) {
+
+        throw new Error(
+          "JSON array değil."
+        );
+
+      }
+
+
+      const items = [];
+
+
+      const seen =
+        new Set();
+
+
+      raw.forEach(
+        (
+          data,
+          index
+        ) => {
+
+          const category =
+            getZayaxraCategory(
+              data
+            );
+
+
+          /*
+            Bizim istediğimiz
+            7 kategori dışındaki
+            itemleri alma.
+          */
+
+          if (!category) {
+
+            return;
+
+          }
+
+
+          const name =
+            String(
+              data?.name ||
+              ""
+            )
+              .trim();
+
+
+          if (!name) {
+
+            return;
+
+          }
+
+
+          const key =
+            category +
+            "|" +
+            name.toLowerCase();
+
+
+          if (
+            seen.has(
+              key
+            )
+          ) {
+
+            return;
+
+          }
+
+
+          seen.add(
+            key
+          );
+
+
+          /*
+            PET VALUE
+          */
+
+          let value =
+            Number(
+              data?.regular?.value
+            );
+
+
+          /*
+            NORMAL ITEM VALUE
+          */
+
+          if (
+            !Number.isFinite(
+              value
+            )
+          ) {
+
+            value =
+              Number(
+                data?.value
+              );
+
+          }
+
+
+          if (
+            !Number.isFinite(
+              value
+            )
+          ) {
+
+            value =
+              0;
+
+          }
+
+
+          /*
+            Senin özel değerlerin
+            varsa onları kullan.
+          */
+
+          if (
+            typeof CUSTOM_VALUE_OVERRIDES !==
+              "undefined" &&
+
+            Object.prototype.hasOwnProperty.call(
+              CUSTOM_VALUE_OVERRIDES,
+              name
+            )
+          ) {
+
+            value =
+              Number(
+                CUSTOM_VALUE_OVERRIDES[
+                  name
+                ]
+              );
+
+          }
+
+
+          /*
+            TYPE
+          */
+
+          let finalType =
+            category;
+
+
+          if (
+            category ===
+            "pets"
+          ) {
+
+            finalType =
+              "pets";
+
+          }
+
+
+          if (
+            category ===
+            "eggs"
+          ) {
+
+            finalType =
+              "eggs";
+
+          }
+
+
+          if (
+            category ===
+            "petwear"
+          ) {
+
+            finalType =
+              "pet_wear";
+
+          }
+
+
+          if (
+            category ===
+            "vehicles"
+          ) {
+
+            finalType =
+              "vehicles";
+
+          }
+
+
+          if (
+            category ===
+            "toys"
+          ) {
+
+            finalType =
+              "toys";
+
+          }
+
+
+          if (
+            category ===
+            "gifts"
+          ) {
+
+            finalType =
+              "gifts";
+
+          }
+
+
+          items.push({
+
+            id:
+              "z_" +
+              String(
+                data?.id ??
+                index
+              ) +
+              "_" +
+              slugSafe(
+                name
+              ),
+
+            name,
+
+            rarity:
+              typeof normalizeRarity ===
+              "function"
+
+                ? normalizeRarity(
+                    data?.rarity
+                  )
+
+                : String(
+                    data?.rarity ||
+                    "unknown"
+                  )
+                    .toLowerCase(),
+
+            value,
+
+            image:
+              getZayaxraImage(
+                data?.image
+              ),
+
+            type:
+              finalType,
+
+            category,
+
+            originalData:
+              data
+
+          });
+
+        }
+      );
+
+
+      /*
+        İsme göre sırala
+      */
+
+      items.sort(
+        (
+          a,
+          b
+        ) =>
+          a.name.localeCompare(
+            b.name,
+            "en",
+            {
+              sensitivity:
+                "base"
+            }
+          )
+      );
+
+
+      PET_DATABASE =
+        items;
+
+
+      databaseReady =
+        true;
+
+
+      console.log(
+        "ZAYAXRA: " +
+        PET_DATABASE.length +
+        " item yüklendi."
+      );
+
+
+      /*
+        Picker açıksa
+        yeniden çiz.
+      */
+
+      renderZayaxraPicker();
+
+      updateZayaxraCounts();
+
+    }
+
+
+    catch (
+      error
+    ) {
+
+      console.error(
+        "ZAYAXRA item database hatası:",
+        error
+      );
+
+    }
+
+  }
+
+
+  /* =======================================================
+     SAFE SLUG
+  ======================================================= */
+
+  function slugSafe(
+    name
+  ) {
+
+    return String(
+      name
+    )
+
+      .toLowerCase()
+
+      .normalize(
+        "NFD"
+      )
+
+      .replace(
+        /[\u0300-\u036f]/g,
+        ""
+      )
+
+      .replace(
+        /[^a-z0-9]+/g,
+        "_"
+      )
+
+      .replace(
+        /^_+|_+$/g,
+        ""
+      );
+
+  }
+
+
+  /* =======================================================
+     CATEGORY SIDEBAR
+  ======================================================= */
+
+  function createZayaxraSidebar() {
+
+    const picker =
+      $("petPicker");
+
+
+    if (!picker) {
+
+      return;
+
+    }
+
+
+    let sidebar =
+      $("zayaxraCategorySidebar");
+
+
+    if (
+      sidebar
+    ) {
+
+      return;
+
+    }
+
+
+    sidebar =
+      document.createElement(
+        "aside"
+      );
+
+
+    sidebar.id =
+      "zayaxraCategorySidebar";
+
+
+    sidebar.className =
+      "zayaxra-category-sidebar";
+
+
+    sidebar.innerHTML = `
+
+      <div class="zayaxra-category-title">
+
+        CATEGORIES
+
+      </div>
+
+
+      <div class="zayaxra-category-list">
+
+        ${ZAYAXRA_CATEGORIES
+          .map(
+            category => `
+
+              <button
+
+                type="button"
+
+                class="
+                  zayaxra-sidebar-btn
+                  ${
+                    category.id ===
+                    "all"
+                      ? "active"
+                      : ""
+                  }
+                "
+
+                data-zayaxra-category="${
+                  category.id
+                }"
+
+              >
+
+                <span class="zayaxra-sidebar-icon">
+
+                  ${category.icon}
+
+                </span>
+
+
+                <span class="zayaxra-sidebar-label">
+
+                  ${category.label}
+
+                </span>
+
+
+                <span class="zayaxra-sidebar-count">
+
+                  0
+
+                </span>
+
+              </button>
+
+            `
+          )
+          .join("")}
+
+      </div>
+
+    `;
+
+
+    /*
+      Pet listesinin olduğu ana bölümü bul.
+    */
+
+    const petsBox =
+      $("pickerPets");
+
+
+    if (
+      petsBox
+    ) {
+
+      const wrapper =
+        document.createElement(
+          "div"
+        );
+
+
+      wrapper.className =
+        "zayaxra-picker-layout";
+
+
+      const parent =
+        petsBox.parentElement;
+
+
+      parent.insertBefore(
+        wrapper,
+        petsBox
+      );
+
+
+      wrapper.appendChild(
+        sidebar
+      );
+
+
+      wrapper.appendChild(
+        petsBox
+      );
+
+    }
+
+
+    sidebar
+      .querySelectorAll(
+        ".zayaxra-sidebar-btn"
+      )
+      .forEach(
+        button => {
+
+          button.addEventListener(
+            "click",
+            () => {
+
+              zayaxraCategory =
+                button.dataset
+                  .zayaxraCategory ||
+                "all";
+
+
+              sidebar
+                .querySelectorAll(
+                  ".zayaxra-sidebar-btn"
+                )
+                .forEach(
+                  item => {
+
+                    item.classList.toggle(
+                      "active",
+
+                      item ===
+                      button
+                    );
+
+                  }
+                );
+
+
+              renderZayaxraPicker();
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+
+  /* =======================================================
+     CATEGORY COUNTS
+  ======================================================= */
+
+  function updateZayaxraCounts() {
+
+    const counts = {
+
+      all:
+        PET_DATABASE.length,
+
+      pets:
+        0,
+
+      petwear:
+        0,
+
+      eggs:
+        0,
+
+      vehicles:
+        0,
+
+      toys:
+        0,
+
+      gifts:
+        0
+
+    };
+
+
+    PET_DATABASE.forEach(
+      item => {
+
+        const category =
+          getZayaxraCategory(
+            item
+          );
+
+
+        if (
+          counts[
+            category
+          ] !== undefined
+        ) {
+
+          counts[
+            category
+          ]++;
+
+        }
+
+      }
+    );
+
+
+    Object.entries(
+      counts
+    ).forEach(
+      (
+        [
+          category,
+          count
+        ]
+      ) => {
+
+        const element =
+          document.querySelector(
+            `[data-zayaxra-category="${category}"] .zayaxra-sidebar-count`
+          );
+
+
+        if (
+          element
+        ) {
+
+          element.textContent =
+            count;
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* =======================================================
+     RENDER PICKER
+  ======================================================= */
+
+  function renderZayaxraPicker() {
+
+    const box =
+      $("pickerPets");
+
+
+    if (!box) {
+
+      return;
+
+    }
+
+
+    let items;
+
+
+    if (
+      zayaxraCategory ===
+      "all"
+    ) {
+
+      items =
+        PET_DATABASE;
+
+    }
+
+    else {
+
+      items =
+        PET_DATABASE.filter(
+          item =>
+            getZayaxraCategory(
+              item
+            ) ===
+            zayaxraCategory
+        );
+
+    }
+
+
+    /*
+      SEARCH
+    */
+
+    const query =
+      String(
+        $("petSearch")?.value ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    if (
+      query
+    ) {
+
+      items =
+        items.filter(
+          item =>
+
+            String(
+              item.name ||
+              ""
+            )
+              .toLowerCase()
+              .includes(
+                query
+              )
+
+        );
+
+    }
+
+
+    box.innerHTML =
+      "";
+
+
+    if (
+      !items.length
+    ) {
+
+      box.innerHTML = `
+
+        <div class="empty-picker">
+
+          <span>
+            🔎
+          </span>
+
+          <strong>
+            Item bulunamadı
+          </strong>
+
+          <small>
+            Bu kategoride sonuç yok.
+          </small>
+
+        </div>
+
+      `;
+
+
+      return;
+
+    }
+
+
+    const fragment =
+      document.createDocumentFragment();
+
+
+    items.forEach(
+      item => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.type =
+          "button";
+
+
+        button.className =
+          "pet-choice";
+
+
+        const category =
+          getZayaxraCategory(
+            item
+          );
+
+
+        /*
+          Pet ise varyant sistemi.
+          Diğer itemlerde sadece normal.
+        */
+
+        button.innerHTML = `
+
+          <div class="choice-image">
+
+            ${imageHTMLZayaxra(
+              item
+            )}
+
+          </div>
+
+
+          <strong>
+
+            ${escapeHTML(
+              item.name
+            )}
+
+          </strong>
+
+
+          <span
+            class="
+              rarity-tag
+              ${escapeHTML(
+                item.rarity ||
+                ""
+              )}
+            "
+          >
+
+            ${escapeHTML(
+              typeof rarityName ===
+              "function"
+
+                ? rarityName(
+                    item.rarity
+                  )
+
+                : item.rarity ||
+                  ""
+            )}
+
+          </span>
+
+
+          <small>
+
+            ${formatValue(
+              item.value
+            )}
+
+          </small>
+
+        `;
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            /*
+              Mevcut pet picker sistemine
+              selectedPet olarak aktar.
+            */
+
+            selectPickerPet(
+              item
+            );
+
+          }
+        );
+
+
+        fragment.appendChild(
+          button
+        );
+
+      }
+    );
+
+
+    box.appendChild(
+      fragment
+    );
+
+  }
+
+
+  /* =======================================================
+     IMAGE HTML
+  ======================================================= */
+
+  function imageHTMLZayaxra(
+    item
+  ) {
+
+    const src =
+      item?.image ||
+      "";
+
+
+    return `
+
+      <img
+
+        src="${escapeHTML(
+          src
+        )}"
+
+        alt="${escapeHTML(
+          item?.name ||
+          "Item"
+        )}"
+
+        class="pet-photo"
+
+        loading="lazy"
+
+        onerror="this.dataset.failed='1'; this.style.opacity='.15';"
+
+      >
+
+    `;
+
+  }
+
+
+  /* =======================================================
+     SEARCH OVERRIDE
+  ======================================================= */
+
+  function initCategorySearch() {
+
+    const search =
+      $("petSearch");
+
+
+    if (!search) {
+
+      return;
+
+    }
+
+
+    /*
+      Eski picker search listenerı
+      çalışsa bile sonrasında bizim
+      renderımız doğru kategoriyi gösterir.
+    */
+
+    search.addEventListener(
+      "input",
+      () => {
+
+        setTimeout(
+          () => {
+
+            renderZayaxraPicker();
+
+          },
+          0
+        );
+
+      }
+    );
+
+  }
+
+
+  /* =======================================================
+     CSS
+  ======================================================= */
+
+  function injectZayaxraCategoryCSS() {
+
+    if (
+      $("zayaxraCategoryCSS")
+    ) {
+
+      return;
+
+    }
+
+
+    const style =
+      document.createElement(
+        "style"
+      );
+
+
+    style.id =
+      "zayaxraCategoryCSS";
+
+
+    style.textContent = `
+
+      .zayaxra-picker-layout {
+
+        display: grid;
+
+        grid-template-columns:
+          185px
+          minmax(0, 1fr);
+
+        gap: 18px;
+
+        width: 100%;
+
+        align-items: start;
+
+      }
+
+
+      .zayaxra-category-sidebar {
+
+        position: sticky;
+
+        top: 16px;
+
+        width: 185px;
+
+        padding: 12px;
+
+        border:
+
+          1px solid
+          rgba(255,255,255,.08);
+
+        border-radius: 18px;
+
+        background:
+
+          linear-gradient(
+
+            180deg,
+
+            rgba(255,255,255,.055),
+
+            rgba(255,255,255,.025)
+
+          );
+
+        backdrop-filter:
+          blur(18px);
+
+      }
+
+
+      .zayaxra-category-title {
+
+        padding:
+
+          4px 8px
+          11px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        letter-spacing: .14em;
+
+        color: #6f7890;
+
+      }
+
+
+      .zayaxra-category-list {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 6px;
+
+      }
+
+
+      .zayaxra-sidebar-btn {
+
+        width: 100%;
+
+        min-height: 42px;
+
+        display: grid;
+
+        grid-template-columns:
+
+          25px
+          minmax(0,1fr)
+          auto;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 10px;
+
+        border:
+
+          1px solid
+          transparent;
+
+        border-radius: 12px;
+
+        background:
+
+          transparent;
+
+        color: #8f98ae;
+
+        cursor: pointer;
+
+        font: inherit;
+
+        font-size: 11px;
+
+        font-weight: 750;
+
+        text-align: left;
+
+        transition:
+
+          transform .18s ease,
+
+          background .18s ease,
+
+          color .18s ease,
+
+          border-color .18s ease;
+
+      }
+
+
+      .zayaxra-sidebar-btn:hover {
+
+        transform:
+          translateX(2px);
+
+        background:
+
+          rgba(255,255,255,.05);
+
+        color: #fff;
+
+      }
+
+
+      .zayaxra-sidebar-btn.active {
+
+        color: #fff;
+
+        background:
+
+          linear-gradient(
+
+            135deg,
+
+            rgba(111,84,255,.28),
+
+            rgba(58,164,255,.13)
+
+          );
+
+        border-color:
+
+          rgba(126,115,255,.35);
+
+        box-shadow:
+
+          0 8px 25px
+          rgba(78,76,190,.12);
+
+      }
+
+
+      .zayaxra-sidebar-icon {
+
+        width: 25px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 15px;
+
+      }
+
+
+      .zayaxra-sidebar-label {
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+      }
+
+
+      .zayaxra-sidebar-count {
+
+        min-width: 21px;
+
+        height: 20px;
+
+        padding:
+          0 5px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 999px;
+
+        background:
+
+          rgba(255,255,255,.065);
+
+        color: #737d95;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+      }
+
+
+      .zayaxra-sidebar-btn.active
+      .zayaxra-sidebar-count {
+
+        background:
+
+          rgba(255,255,255,.13);
+
+        color: #fff;
+
+      }
+
+
+      @media (
+        max-width: 800px
+      ) {
+
+        .zayaxra-picker-layout {
+
+          grid-template-columns:
+            1fr;
+
+        }
+
+
+        .zayaxra-category-sidebar {
+
+          position:
+            relative;
+
+          top:
+            auto;
+
+          width:
+            100%;
+
+        }
+
+
+        .zayaxra-category-list {
+
+          display:
+
+            grid;
+
+          grid-template-columns:
+
+            repeat(
+              2,
+              minmax(0,1fr)
+            );
+
+        }
+
+
+        .zayaxra-sidebar-btn {
+
+          min-height:
+            40px;
+
+        }
+
+      }
+
+
+      @media (
+        max-width: 480px
+      ) {
+
+        .zayaxra-category-list {
+
+          grid-template-columns:
+            1fr;
+
+        }
+
+      }
+
+    `;
+
+
+    document.head.appendChild(
+      style
+    );
+
+  }
+
+
+  /* =======================================================
+     START
+  ======================================================= */
+
+  function startCategorySystem() {
+
+    injectZayaxraCategoryCSS();
+
+    createZayaxraSidebar();
+
+    initCategorySearch();
+
+    updateZayaxraCounts();
+
+    renderZayaxraPicker();
+
+    /*
+      Mevcut loader'ın yerine
+      bütün itemleri getir.
+    */
+
+    loadEverything();
+
+  }
+
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      startCategorySystem,
+      {
+        once:
+          true
+      }
+    );
+
+  }
+
+  else {
+
+    startCategorySystem();
+
+  }
+
+})();
