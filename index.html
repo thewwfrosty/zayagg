@@ -3,719 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>ZAYAGG • Adopt Me Trading</title>
-
+    <title>ZAYAXRA • Adopt Me Values</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
+<div class="app">
 
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-
         <div class="logo">
             <div class="logo-icon">Z</div>
-
             <div>
-                <h2>ZAYAGG</h2>
-                <span>Adopt Me Trading</span>
+                <h1>ZAYAXRA</h1>
+                <span>ADOPT ME VALUES</span>
             </div>
         </div>
 
-        <nav class="navigation">
-
-            <button class="nav-item active" data-page="home">
-                <span>🏠</span>
-                Ana Sayfa
+        <nav>
+            <button class="nav-btn active" data-page="home">
+                <span>⌂</span> Ana Sayfa
             </button>
 
-            <button class="nav-item" data-page="pets">
-                <span>🐾</span>
-                Petler
+            <button class="nav-btn" data-page="pets">
+                <span>🐾</span> Petler
             </button>
 
-            <button class="nav-item" data-page="vehicles">
-                <span>🚗</span>
-                Arabalar
+            <button class="nav-btn" data-page="vehicles">
+                <span>🚗</span> Araçlar
             </button>
 
-            <button class="nav-item" data-page="toys">
-                <span>🧸</span>
-                Oyuncaklar
+            <button class="nav-btn" data-page="toys">
+                <span>🧸</span> Oyuncaklar
             </button>
 
-            <button class="nav-item" data-page="gifts">
-                <span>🎁</span>
-                Hediyeler
+            <button class="nav-btn" data-page="gifts">
+                <span>🎁</span> Hediyeler
             </button>
 
-            <button class="nav-item" data-page="trade">
-                <span>🔄</span>
-                Trade
+            <button class="nav-btn" data-page="trade">
+                <span>⇄</span> Trade
             </button>
 
+            <button class="nav-btn" data-page="favorites">
+                <span>♡</span> Favoriler
+            </button>
+
+            <button class="nav-btn" data-page="profile">
+                <span>👤</span> Profil
+            </button>
         </nav>
 
         <div class="sidebar-bottom">
-
-            <button class="nav-item" data-page="profile">
-                <span>👤</span>
-                Profil
-            </button>
-
-            <div class="online-box">
+            <div class="online">
                 <span class="online-dot"></span>
                 Sistem aktif
             </div>
-
+            <small>ZAYAXRA © 2026</small>
         </div>
-
     </aside>
 
 
-    <!-- =========================
-         MAIN
-    ========================== -->
-
+    <!-- MAIN -->
     <main class="main">
 
         <!-- TOPBAR -->
-
         <header class="topbar">
 
-            <button class="mobile-menu" id="mobileMenu">
-                ☰
-            </button>
-
-            <div class="top-search">
-
-                <span>⌕</span>
-
-                <input
-                    type="text"
-                    id="globalSearch"
-                    placeholder="Pet, araç, oyuncak ara..."
-                >
-
+            <div class="mobile-logo">
+                <b>ZAYAXRA</b>
             </div>
 
-            <div class="top-actions">
+            <div class="search-box">
+                <span>⌕</span>
+                <input
+                    id="globalSearch"
+                    type="text"
+                    placeholder="Pet, araç, oyuncak ara..."
+                >
+            </div>
 
-                <button class="icon-button">
-                    🔔
-                </button>
+            <button class="icon-btn" id="notificationBtn">🔔</button>
 
-                <button class="profile-button" data-page="profile">
-
-                    <div class="avatar">
-                        Z
-                    </div>
-
-                    <div class="profile-mini">
-                        <strong>ZAYAGG</strong>
-                        <small>Trader</small>
-                    </div>
-
-                </button>
-
+            <div class="user-mini">
+                <div class="avatar">Z</div>
+                <div>
+                    <b>ZAYAXRA User</b>
+                    <small>Trader</small>
+                </div>
             </div>
 
         </header>
 
 
-        <!-- =========================
-             PAGE CONTENT
-        ========================== -->
-
-        <div class="content">
-
-
-            <!-- HOME -->
-
-            <section class="page active-page" id="page-home">
-
-                <div class="hero">
-
-                    <div class="hero-content">
-
-                        <div class="hero-badge">
-                            ✨ ZAYAGG TRADING
-                        </div>
-
-                        <h1>
-                            Adopt Me
-                            <span>Trading Hub</span>
-                        </h1>
-
-                        <p>
-                            Petlerini, araçlarını ve oyuncaklarını keşfet.
-                            Değerlerini kontrol et ve daha iyi trade yap.
-                        </p>
-
-                        <div class="hero-buttons">
-
-                            <button
-                                class="primary-button"
-                                data-page="pets"
-                            >
-                                🐾 Petleri Keşfet
-                            </button>
-
-                            <button
-                                class="secondary-button"
-                                data-page="trade"
-                            >
-                                🔄 Trade Yap
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    <div class="hero-pet">
-
-                        <div class="pet-glow"></div>
-
-                        <div class="dragon">
-                            🐉
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- STATS -->
-
-                <div class="stats-grid">
-
-                    <div class="stat-card">
-                        <div class="stat-icon purple">🐾</div>
-
-                        <div>
-                            <strong id="petCount">0</strong>
-                            <span>Pet</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon blue">🚗</div>
-
-                        <div>
-                            <strong id="vehicleCount">0</strong>
-                            <span>Araç</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon orange">🧸</div>
-
-                        <div>
-                            <strong id="toyCount">0</strong>
-                            <span>Oyuncak</span>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon green">📦</div>
-
-                        <div>
-                            <strong id="totalCount">0</strong>
-                            <span>Toplam Item</span>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <!-- POPULAR -->
-
-                <div class="section-header">
-
-                    <div>
-                        <span class="section-label">
-                            TREND
-                        </span>
-
-                        <h2>
-                            Popüler Itemler
-                        </h2>
-                    </div>
-
-                    <button
-                        class="view-all"
-                        data-page="pets"
-                    >
-                        Tümünü Gör →
-                    </button>
-
-                </div>
-
-                <div
-                    class="items-grid"
-                    id="popularItems"
-                ></div>
-
-
-                <!-- CATEGORY -->
-
-                <div class="section-header category-header">
-
-                    <div>
-                        <span class="section-label">
-                            KEŞFET
-                        </span>
-
-                        <h2>
-                            Kategoriler
-                        </h2>
-                    </div>
-
-                </div>
-
-                <div class="category-grid">
-
-                    <button
-                        class="category-card"
-                        data-page="pets"
-                    >
-                        <div>🐾</div>
-                        <strong>Petler</strong>
-                        <span>Pet değerlerini incele</span>
-                    </button>
-
-                    <button
-                        class="category-card"
-                        data-page="vehicles"
-                    >
-                        <div>🚗</div>
-                        <strong>Arabalar</strong>
-                        <span>Araç koleksiyonuna bak</span>
-                    </button>
-
-                    <button
-                        class="category-card"
-                        data-page="toys"
-                    >
-                        <div>🧸</div>
-                        <strong>Oyuncaklar</strong>
-                        <span>Oyuncakları keşfet</span>
-                    </button>
-
-                    <button
-                        class="category-card"
-                        data-page="gifts"
-                    >
-                        <div>🎁</div>
-                        <strong>Hediyeler</strong>
-                        <span>Gift itemlerini incele</span>
-                    </button>
-
-                </div>
-
-            </section>
-
-
-            <!-- PETS -->
-
-            <section class="page" id="page-pets">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">DATABASE</span>
-                        <h1>🐾 Petler</h1>
-                        <p>Adopt Me petlerinin değerlerini keşfet.</p>
-                    </div>
-
-                </div>
-
-                <div class="filter-bar">
-
-                    <div class="search-box">
-
-                        <span>⌕</span>
-
-                        <input
-                            type="text"
-                            class="item-search"
-                            data-type="pet"
-                            placeholder="Pet ara..."
-                        >
-
-                    </div>
-
-                    <select id="petRarity">
-
-                        <option value="all">
-                            Tüm Rarity
-                        </option>
-
-                        <option value="Legendary">
-                            Legendary
-                        </option>
-
-                        <option value="Ultra-Rare">
-                            Ultra-Rare
-                        </option>
-
-                        <option value="Rare">
-                            Rare
-                        </option>
-
-                        <option value="Uncommon">
-                            Uncommon
-                        </option>
-
-                        <option value="Common">
-                            Common
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div
-                    class="items-grid large"
-                    id="petsGrid"
-                ></div>
-
-            </section>
-
-
-            <!-- VEHICLES -->
-
-            <section class="page" id="page-vehicles">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">DATABASE</span>
-                        <h1>🚗 Arabalar</h1>
-                        <p>Adopt Me araçlarını ve değerlerini incele.</p>
-                    </div>
-
-                </div>
-
-                <div class="filter-bar">
-
-                    <div class="search-box">
-
-                        <span>⌕</span>
-
-                        <input
-                            type="text"
-                            class="item-search"
-                            data-type="vehicle"
-                            placeholder="Araç ara..."
-                        >
-
-                    </div>
-
-                </div>
-
-                <div
-                    class="items-grid large"
-                    id="vehiclesGrid"
-                ></div>
-
-            </section>
-
-
-            <!-- TOYS -->
-
-            <section class="page" id="page-toys">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">DATABASE</span>
-                        <h1>🧸 Oyuncaklar</h1>
-                        <p>Oyuncak koleksiyonunu incele.</p>
-                    </div>
-
-                </div>
-
-                <div class="filter-bar">
-
-                    <div class="search-box">
-
-                        <span>⌕</span>
-
-                        <input
-                            type="text"
-                            class="item-search"
-                            data-type="toy"
-                            placeholder="Oyuncak ara..."
-                        >
-
-                    </div>
-
-                </div>
-
-                <div
-                    class="items-grid large"
-                    id="toysGrid"
-                ></div>
-
-            </section>
-
-
-            <!-- GIFTS -->
-
-            <section class="page" id="page-gifts">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">DATABASE</span>
-                        <h1>🎁 Hediyeler</h1>
-                        <p>Hediyeleri ve değerlerini keşfet.</p>
-                    </div>
-
-                </div>
-
-                <div
-                    class="items-grid large"
-                    id="giftsGrid"
-                ></div>
-
-            </section>
-
-
-            <!-- TRADE -->
-
-            <section class="page" id="page-trade">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">TRADING</span>
-
-                        <h1>
-                            🔄 Trade Calculator
-                        </h1>
-
-                        <p>
-                            İki tarafın itemlerini ekle ve trade değerini karşılaştır.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="trade-container">
-
-                    <!-- YOUR OFFER -->
-
-                    <div class="trade-box">
-
-                        <div class="trade-header">
-
-                            <div>
-                                <span class="trade-number">01</span>
-
-                                <div>
-                                    <strong>Senin Offer'ın</strong>
-                                    <small>Itemlerini ekle</small>
-                                </div>
-                            </div>
-
-                            <strong id="yourValue">
-                                0
-                            </strong>
-
-                        </div>
-
-                        <div
-                            class="trade-items"
-                            id="yourTrade"
-                        ></div>
-
-                        <button
-                            class="add-trade"
-                            id="addYourTrade"
-                        >
-                            + Item Ekle
+        <!-- HOME -->
+        <section class="page active" id="page-home">
+
+            <div class="hero">
+
+                <div class="hero-content">
+                    <span class="badge">✦ ZAYAXRA VALUES</span>
+
+                    <h2>
+                        Adopt Me trade'lerini
+                        <strong>daha kolay</strong> yap.
+                    </h2>
+
+                    <p>
+                        Petlerini, araçlarını ve eşyalarını keşfet.
+                        Değerlerini karşılaştır ve trade'ini hesapla.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <button class="primary-btn" data-go="trade">
+                            Trade Hesapla →
                         </button>
 
-                    </div>
-
-
-                    <div class="trade-vs">
-                        VS
-                    </div>
-
-
-                    <!-- THEIR OFFER -->
-
-                    <div class="trade-box">
-
-                        <div class="trade-header">
-
-                            <div>
-                                <span class="trade-number">02</span>
-
-                                <div>
-                                    <strong>Karşı Taraf</strong>
-                                    <small>Itemlerini ekle</small>
-                                </div>
-                            </div>
-
-                            <strong id="theirValue">
-                                0
-                            </strong>
-
-                        </div>
-
-                        <div
-                            class="trade-items"
-                            id="theirTrade"
-                        ></div>
-
-                        <button
-                            class="add-trade"
-                            id="addTheirTrade"
-                        >
-                            + Item Ekle
+                        <button class="secondary-btn" data-go="pets">
+                            Petleri Keşfet
                         </button>
-
                     </div>
-
                 </div>
 
-
-                <div
-                    class="trade-result"
-                    id="tradeResult"
-                >
-                    <span>⚖️</span>
-
-                    <div>
-                        <strong>Trade sonucu</strong>
-                        <p>Item ekleyerek trade'i hesapla.</p>
-                    </div>
-
+                <div class="hero-orb">
+                    <div class="orb">🐉</div>
                 </div>
-
-            </section>
-
-
-            <!-- PROFILE -->
-
-            <section class="page" id="page-profile">
-
-                <div class="page-title">
-
-                    <div>
-                        <span class="section-label">ACCOUNT</span>
-                        <h1>👤 Profil</h1>
-                        <p>Trader profilin.</p>
-                    </div>
-
-                </div>
-
-
-                <div class="profile-card">
-
-                    <div class="profile-cover"></div>
-
-                    <div class="profile-info">
-
-                        <div class="big-avatar">
-                            Z
-                        </div>
-
-                        <div>
-
-                            <h2>ZAYAGG</h2>
-
-                            <p>
-                                Adopt Me Trader
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="profile-stats">
-
-                        <div>
-                            <strong>0</strong>
-                            <span>Trade</span>
-                        </div>
-
-                        <div>
-                            <strong>0</strong>
-                            <span>Favori</span>
-                        </div>
-
-                        <div>
-                            <strong>Trader</strong>
-                            <span>Seviye</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-        </div>
-
-    </main>
-
-
-    <!-- TRADE ITEM MODAL -->
-
-    <div
-        class="modal"
-        id="tradeModal"
-    >
-
-        <div class="modal-content">
-
-            <button
-                class="modal-close"
-                id="closeModal"
-            >
-                ×
-            </button>
-
-            <h2>Item Seç</h2>
-
-            <p>
-                Trade'e eklemek istediğin itemi seç.
-            </p>
-
-            <div class="modal-search">
-
-                <input
-                    type="text"
-                    id="tradeSearch"
-                    placeholder="Item ara..."
-                >
 
             </div>
 
-            <div
-                class="modal-items"
-                id="tradeItemList"
-            ></div>
 
+            <!-- STATS -->
+            <div class="stats">
+
+                <div class="stat-card">
+                    <span>🐾</span>
+                    <div>
+                        <strong id="petCount">0</strong>
+                        <small>Pet</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span>🚗</span>
+                    <div>
+                        <strong id="vehicleCount">0</strong>
+                        <small>Araç</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span>🧸</span>
+                    <div>
+                        <strong id="toyCount">0</strong>
+                        <small>Oyuncak</small>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <span>🎁</span>
+                    <div>
+                        <strong id="giftCount">0</strong>
+                        <small>Hediye</small>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- POPULAR -->
+            <div class="section-head">
+                <div>
+                    <h3>Popüler Eşyalar</h3>
+                    <p>Traderların en çok baktığı eşyalar</p>
+                </div>
+
+                <button class="text-btn" data-go="pets">
+                    Tümünü Gör →
+                </button>
+            </div>
+
+            <div class="item-grid" id="popularGrid"></div>
+
+
+            <!-- CATEGORIES -->
+            <div class="section-head category-head">
+                <div>
+                    <h3>Kategoriler</h3>
+                    <p>ZAYAXRA veritabanını keşfet</p>
+                </div>
+            </div>
+
+            <div class="category-grid">
+
+                <div class="category-card" data-go="pets">
+                    <div class="category-icon">🐾</div>
+                    <div>
+                        <h4>Petler</h4>
+                        <p>Rare • Legendary • Neon</p>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="category-card" data-go="vehicles">
+                    <div class="category-icon">🚗</div>
+                    <div>
+                        <h4>Araçlar</h4>
+                        <p>Cars • Bikes • Wings</p>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="category-card" data-go="toys">
+                    <div class="category-icon">🧸</div>
+                    <div>
+                        <h4>Oyuncaklar</h4>
+                        <p>Rare • Ultra Rare</p>
+                    </div>
+                    <span>→</span>
+                </div>
+
+                <div class="category-card" data-go="gifts">
+                    <div class="category-icon">🎁</div>
+                    <div>
+                        <h4>Hediyeler</h4>
+                        <p>Gift • Event • Limited</p>
+                    </div>
+                    <span>→</span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ITEMS PAGES -->
+        <section class="page" id="page-pets">
+            <div class="page-title">
+                <div>
+                    <span class="badge">🐾 DATABASE</span>
+                    <h2>Petler</h2>
+                    <p>Tüm petleri değerleriyle keşfet.</p>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter active" data-rarity="all">Tümü</button>
+                <button class="filter" data-rarity="Legendary">Legendary</button>
+                <button class="filter" data-rarity="Ultra Rare">Ultra Rare</button>
+                <button class="filter" data-rarity="Rare">Rare</button>
+                <button class="filter" data-rarity="Uncommon">Uncommon</button>
+                <button class="filter" data-rarity="Common">Common</button>
+            </div>
+
+            <div class="item-grid" id="petsGrid"></div>
+        </section>
+
+
+        <section class="page" id="page-vehicles">
+            <div class="page-title">
+                <div>
+                    <span class="badge">🚗 DATABASE</span>
+                    <h2>Araçlar</h2>
+                    <p>Adopt Me araçlarını keşfet.</p>
+                </div>
+            </div>
+
+            <div class="item-grid" id="vehiclesGrid"></div>
+        </section>
+
+
+        <section class="page" id="page-toys">
+            <div class="page-title">
+                <div>
+                    <span class="badge">🧸 DATABASE</span>
+                    <h2>Oyuncaklar</h2>
+                    <p>Oyuncak değerlerini keşfet.</p>
+                </div>
+            </div>
+
+            <div class="item-grid" id="toysGrid"></div>
+        </section>
+
+
+        <section class="page" id="page-gifts">
+            <div class="page-title">
+                <div>
+                    <span class="badge">🎁 DATABASE</span>
+                    <h2>Hediyeler</h2>
+                    <p>Hediye ve kutu değerleri.</p>
+                </div>
+            </div>
+
+            <div class="item-grid" id="giftsGrid"></div>
+        </section>
+
+
+        <!-- TRADE -->
+        <section class="page" id="page-trade">
+
+            <div class="page-title">
+                <div>
+                    <span class="badge">⇄ TRADE CALCULATOR</span>
+                    <h2>Trade Hesaplayıcı</h2>
+                    <p>İki tarafın değerlerini karşılaştır.</p>
+                </div>
+            </div>
+
+            <div class="trade-wrapper">
+
+                <div class="trade-side">
+                    <div class="trade-header">
+                        <div>
+                            <h3>Sen</h3>
+                            <small>Verdiğin eşyalar</small>
+                        </div>
+                        <strong id="myValue">0.00</strong>
+                    </div>
+
+                    <div class="trade-items" id="myTradeItems"></div>
+
+                    <button class="add-item-btn" data-side="my">
+                        + Eşya Ekle
+                    </button>
+                </div>
+
+
+                <div class="trade-middle">
+                    <div class="trade-vs">VS</div>
+                    <div id="tradeResult" class="trade-result neutral">
+                        Eşya ekle
+                    </div>
+                </div>
+
+
+                <div class="trade-side">
+                    <div class="trade-header">
+                        <div>
+                            <h3>Karşı Taraf</h3>
+                            <small>Aldığın eşyalar</small>
+                        </div>
+                        <strong id="theirValue">0.00</strong>
+                    </div>
+
+                    <div class="trade-items" id="theirTradeItems"></div>
+
+                    <button class="add-item-btn" data-side="their">
+                        + Eşya Ekle
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- FAVORITES -->
+        <section class="page" id="page-favorites">
+
+            <div class="page-title">
+                <div>
+                    <span class="badge">♡ SAVED</span>
+                    <h2>Favorilerim</h2>
+                    <p>Kaydettiğin eşyalar burada.</p>
+                </div>
+            </div>
+
+            <div class="item-grid" id="favoritesGrid"></div>
+
+        </section>
+
+
+        <!-- PROFILE -->
+        <section class="page" id="page-profile">
+
+            <div class="profile-card">
+
+                <div class="profile-cover"></div>
+
+                <div class="profile-content">
+
+                    <div class="profile-avatar">Z</div>
+
+                    <div class="profile-info">
+                        <h2>ZAYAXRA User</h2>
+                        <p>Adopt Me Trader</p>
+                    </div>
+
+                    <button class="primary-btn">
+                        Profili Düzenle
+                    </button>
+
+                </div>
+
+                <div class="profile-stats">
+
+                    <div>
+                        <strong id="favStat">0</strong>
+                        <span>Favori</span>
+                    </div>
+
+                    <div>
+                        <strong>0</strong>
+                        <span>Trade</span>
+                    </div>
+
+                    <div>
+                        <strong>Trader</strong>
+                        <span>Rol</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ITEM PICKER MODAL -->
+<div class="modal" id="itemModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <div>
+                <h3>Eşya Seç</h3>
+                <small>Trade'e eklemek istediğin eşyayı seç.</small>
+            </div>
+
+            <button id="closeModal">×</button>
         </div>
+
+        <input
+            class="modal-search"
+            id="modalSearch"
+            placeholder="Eşya ara..."
+        >
+
+        <div class="modal-list" id="modalList"></div>
 
     </div>
 
+</div>
 
-    <script src="script.js"></script>
+
+<script src="script.js"></script>
 
 </body>
 </html>
