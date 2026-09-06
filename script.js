@@ -11867,3 +11867,405 @@ document.addEventListener(
 
 
 })();
+/* =========================================
+   ZAYAXRA — FINAL FIX
+   HORIZONTAL FORMS + ALL ITEM CATEGORIES
+========================================= */
+
+(function () {
+
+  /* =====================================
+     YATAY D / N / M / F / R
+  ===================================== */
+
+  const style = document.createElement("style");
+  style.id = "zayaxra-final-fix";
+
+  style.textContent = `
+
+    /* ALT PANEL */
+    #pickerBar {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      width: 100% !important;
+      gap: 14px !important;
+    }
+
+    #pickerBar.hidden {
+      display: flex !important;
+    }
+
+
+    /* ÖNİZLEME */
+    #pickerPreview {
+      flex: 0 0 145px !important;
+      width: 145px !important;
+    }
+
+
+    /* SEÇİM ALANI */
+    #pickerBar .picker-options {
+      flex: 1 1 auto !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      min-width: 0 !important;
+    }
+
+
+    /*
+      Eski iki ayrı satırı tamamen kaldırıp
+      butonları tek satırda birleştir.
+    */
+
+    #pickerBar .form-toggles,
+    #pickerBar .potion-toggles {
+      display: contents !important;
+    }
+
+
+    #pickerBar .form-btn,
+    #pickerBar .potion-btn {
+      flex: 0 0 52px !important;
+      width: 52px !important;
+      height: 38px !important;
+
+      margin: 0 !important;
+      padding: 0 !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      border-radius: 10px !important;
+
+      font-size: 0 !important;
+      font-weight: 900 !important;
+    }
+
+
+    /* NORMAL FORM = D */
+    #normalFormBtn::before {
+      content: "D";
+      font-size: 12px;
+    }
+
+
+    /* NEON = N */
+    #btnNeon::before {
+      content: "N";
+      font-size: 12px;
+    }
+
+
+    /* MEGA = M */
+    #btnMega::before {
+      content: "M";
+      font-size: 12px;
+    }
+
+
+    /* FLY = F */
+    #btnFly::before {
+      content: "F";
+      font-size: 12px;
+    }
+
+
+    /* RIDE = R */
+    #btnRide::before {
+      content: "R";
+      font-size: 12px;
+    }
+
+
+    /* NORMAL POTION VE F/R KAPALI */
+    #noPotionBtn,
+    #flyRideBtn {
+      display: none !important;
+    }
+
+
+    /* EKLE */
+    #pickerBar .picker-add {
+      flex: 0 0 auto !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+
+
+    /* AKTİF BUTON */
+    #pickerBar .form-btn.active,
+    #pickerBar .potion-btn.active {
+      color: #fff !important;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(140,110,255,.30),
+          rgba(80,110,255,.16)
+        ) !important;
+
+      border-color:
+        rgba(165,140,255,.72) !important;
+
+      box-shadow:
+        0 0 0 1px rgba(145,115,255,.12),
+        0 0 20px rgba(125,95,255,.38),
+        0 7px 22px rgba(90,65,220,.24) !important;
+    }
+
+
+    /* =================================
+       PET KARTLARI + BUTON
+    ================================= */
+
+    #pickerPets .pet-choice {
+      position: relative !important;
+    }
+
+
+    .zayaxra-add-item {
+      position: absolute !important;
+
+      right: 8px !important;
+      bottom: 8px !important;
+
+      width: 28px !important;
+      height: 28px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      border-radius: 8px !important;
+
+      border: 1px solid rgba(255,255,255,.12) !important;
+
+      background:
+        rgba(120,95,255,.16) !important;
+
+      color: #fff !important;
+
+      font-size: 18px !important;
+      font-weight: 900 !important;
+
+      cursor: pointer !important;
+
+      opacity: .75 !important;
+
+      transition: .18s ease !important;
+
+      z-index: 20 !important;
+    }
+
+
+    #pickerPets .pet-choice:hover
+    .zayaxra-add-item {
+      opacity: 1 !important;
+
+      box-shadow:
+        0 0 18px
+        rgba(125,95,255,.45) !important;
+
+      transform:
+        scale(1.06);
+    }
+
+
+    /* =================================
+       MOBİL
+    ================================= */
+
+    @media (max-width: 800px) {
+
+      #pickerBar {
+        flex-direction: column !important;
+      }
+
+      #pickerPreview {
+        width: 100% !important;
+        flex: none !important;
+      }
+
+      #pickerBar .picker-options {
+        width: 100% !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+
+  /* =====================================
+     TÜM JSON KAYITLARINI AL
+     PET / EGG FİLTRESİ YOK
+  ===================================== */
+
+  async function loadZayaxraAllItems() {
+
+    try {
+
+      const response =
+        await fetch(
+          "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json"
+        );
+
+      if (!response.ok) {
+        throw new Error("JSON yüklenemedi");
+      }
+
+      const raw =
+        await response.json();
+
+
+      if (!Array.isArray(raw)) {
+        throw new Error("JSON formatı hatalı");
+      }
+
+
+      const items =
+        raw
+          .map(item => {
+
+            const filename =
+              String(
+                item.image || ""
+              )
+              .split("/")
+              .pop();
+
+
+            const image =
+              filename
+                ? `https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/images/${filename}`
+                : "";
+
+
+            const regularValue =
+              Number(
+                item?.regular?.value ??
+                item?.value ??
+                0
+              );
+
+
+            return {
+
+              ...item,
+
+              image,
+
+              value:
+                Number.isFinite(
+                  regularValue
+                )
+                  ? regularValue
+                  : 0
+
+            };
+
+          })
+          .filter(item => {
+
+            const type =
+              String(
+                item.type ||
+                item.category ||
+                ""
+              )
+              .toLowerCase();
+
+
+            return (
+
+              type.includes("pet") ||
+
+              type.includes("egg") ||
+
+              type.includes("wear") ||
+
+              type.includes("vehicle") ||
+
+              type.includes("toy") ||
+
+              type.includes("gift")
+
+            );
+
+          });
+
+
+      /*
+       * Küresel veritabanını güncelle.
+       */
+
+      window.ZAYAXRA_ALL_ITEMS =
+        items;
+
+
+      /*
+       * Mevcut kod PET_DATABASE'i
+       * global olarak kullanıyorsa bunu da güncelle.
+       */
+
+      if (
+        typeof window.PET_DATABASE !==
+        "undefined"
+      ) {
+
+        window.PET_DATABASE =
+          items;
+
+      }
+
+
+      /*
+       * Sayfa açıkken picker varsa
+       * yeniden çiz.
+       */
+
+      if (
+        typeof renderCurrentCategory ===
+        "function"
+      ) {
+
+        renderCurrentCategory();
+
+      }
+
+      return items;
+
+    } catch (error) {
+
+      console.error(
+        "ZAYAXRA database error:",
+        error
+      );
+
+      return [];
+
+    }
+
+  }
+
+
+  /* =====================================
+     BAŞLAT
+  ===================================== */
+
+  window.ZAYAXRA_ALL_ITEMS = [];
+
+  loadZayaxraAllItems();
+
+
+})();
