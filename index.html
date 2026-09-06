@@ -26,21 +26,35 @@
 
   <header class="navbar">
 
-    <a href="#" class="logo">
+    <a href="#top" class="logo">
       Zayaxra
     </a>
 
+
     <nav id="mainNav">
 
-      <a href="#top" class="active">
+      <a
+        href="#top"
+        class="active"
+      >
         Ana Sayfa
       </a>
+
 
       <a href="#calculator">
         W/F/L Calculator
       </a>
 
+
+      <a
+        href="#"
+        onclick="openInfo(event)"
+      >
+        Bilgiler
+      </a>
+
     </nav>
+
 
     <div class="nav-actions">
 
@@ -52,6 +66,7 @@
       >
         👤 Profil
       </button>
+
 
       <button
         type="button"
@@ -71,6 +86,7 @@
 
   <main>
 
+
     <!-- =========================================
          HERO
     ========================================== -->
@@ -86,16 +102,19 @@
           🐾 Adopt Me Trading
         </div>
 
+
         <h1>
           Trade'inin değerini<br>
           <span>anında öğren.</span>
         </h1>
+
 
         <p>
           Petlerini seç, iki tarafı karşılaştır ve
           trade'inin Win, Fair veya Lose olduğunu
           saniyeler içinde gör.
         </p>
+
 
         <a
           class="hero-btn"
@@ -126,11 +145,13 @@
             TRADE CALCULATOR
           </div>
 
+
           <h2>
             W/F/L Calculator
           </h2>
 
         </div>
+
 
         <button
           type="button"
@@ -155,11 +176,13 @@
 
           <span class="status-dot"></span>
 
+
           <span id="tradeStatusLabel">
             TRADE HAZIR
           </span>
 
         </div>
+
 
         <div
           id="resultDiffNumber"
@@ -188,17 +211,20 @@
                 SEN
               </span>
 
+
               <h3>
                 Senin teklifin
               </h3>
 
             </div>
 
+
             <div class="trade-total-wrap">
 
               <span class="trade-total-label">
                 VALUE
               </span>
+
 
               <span
                 id="youTotal"
@@ -223,9 +249,11 @@
                 ＋
               </span>
 
+
               <strong>
                 Henüz pet eklenmedi
               </strong>
+
 
               <small>
                 Teklifini oluşturmak için pet ekle
@@ -242,8 +270,12 @@
             data-side="you"
             onclick="openPetPicker('you')"
           >
-            <span>＋</span>
+            <span>
+              ＋
+            </span>
+
             Pet Ekle
+
           </button>
 
         </div>
@@ -254,7 +286,11 @@
         <div class="vs trade-vs">
 
           <div class="vs-ring">
-            <span>VS</span>
+
+            <span>
+              VS
+            </span>
+
           </div>
 
         </div>
@@ -272,17 +308,20 @@
                 KARŞI TARAF
               </span>
 
+
               <h3>
                 Karşı taraf
               </h3>
 
             </div>
 
+
             <div class="trade-total-wrap">
 
               <span class="trade-total-label">
                 VALUE
               </span>
+
 
               <span
                 id="themTotal"
@@ -307,9 +346,11 @@
                 ＋
               </span>
 
+
               <strong>
                 Henüz pet eklenmedi
               </strong>
+
 
               <small>
                 Karşı tarafın teklifini oluştur
@@ -326,8 +367,12 @@
             data-side="them"
             onclick="openPetPicker('them')"
           >
-            <span>＋</span>
+            <span>
+              ＋
+            </span>
+
             Pet Ekle
+
           </button>
 
         </div>
@@ -348,9 +393,11 @@
             TRADE ANALİZİ
           </div>
 
+
           <h3 id="resultStatusText">
             Pet ekleyerek başla
           </h3>
+
 
           <p id="resultHint">
             İki tarafa da pet eklediğinde
@@ -359,195 +406,17 @@
 
         </div>
 
+
         <div class="result-score">
 
           <span class="result-score-label">
             FARK
           </span>
 
+
           <strong id="resultDiffDisplay">
             —
           </strong>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================================
-         ZAYAXRA INFO
-    ========================================== -->
-
-    <section class="section zayaxra-info">
-
-      <button
-        type="button"
-        class="info-toggle"
-        onclick="toggleZayaxraInfo()"
-        aria-expanded="false"
-      >
-
-        <span>
-          ZAYAXRA Hakkında
-        </span>
-
-        <span class="info-toggle-icon">
-          +
-        </span>
-
-      </button>
-
-
-      <div
-        id="zayaxraInfoPanel"
-        class="zayaxra-info-panel"
-      >
-
-        <div class="info-panel-inner">
-
-
-          <!-- ABOUT -->
-
-          <div class="about-copy">
-
-            <div class="eyebrow">
-              ZAYAXRA
-            </div>
-
-            <h2>
-              Trade değerini.
-              <span>Kontrol sende.</span>
-            </h2>
-
-            <p>
-              ZAYAXRA, Adopt Me trade'lerini daha kolay
-              değerlendirmek için hazırlanmış modern bir
-              trading calculator deneyimidir.
-            </p>
-
-          </div>
-
-
-          <!-- FEATURES -->
-
-          <div class="feature-grid">
-
-
-            <div class="feature-card">
-
-              <div class="feature-icon">
-                W/F/L
-              </div>
-
-              <div class="feature-content">
-
-                <h3>
-                  Anlık Trade Analizi
-                </h3>
-
-                <p>
-                  İki tarafın petlerini karşılaştır,
-                  değer farkını anında gör ve trade'inin
-                  Win, Fair veya Lose olduğunu öğren.
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <div class="feature-card">
-
-              <div class="feature-icon">
-                ✦
-              </div>
-
-              <div class="feature-content">
-
-                <h3>
-                  Pet Formları
-                </h3>
-
-                <p>
-                  Normal, Neon ve Mega seçeneklerini
-                  kullan. Fly ve Ride özelliklerini
-                  de trade değerine dahil et.
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <div class="feature-card">
-
-              <div class="feature-icon">
-                ⚡
-              </div>
-
-              <div class="feature-content">
-
-                <h3>
-                  Hızlı ve Basit
-                </h3>
-
-                <p>
-                  Petlerini seç, iki tarafı karşılaştır
-                  ve sonucu saniyeler içinde öğren.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- STATS -->
-
-          <div class="about-stat-grid">
-
-            <div class="about-stat">
-
-              <strong>
-                90+
-              </strong>
-
-              <span>
-                PET
-              </span>
-
-            </div>
-
-
-            <div class="about-stat">
-
-              <strong>
-                5
-              </strong>
-
-              <span>
-                W/F/L SEVİYESİ
-              </span>
-
-            </div>
-
-
-            <div class="about-stat">
-
-              <strong>
-                1
-              </strong>
-
-              <span>
-                CALCULATOR
-              </span>
-
-            </div>
-
-          </div>
 
         </div>
 
@@ -582,11 +451,13 @@
             PET SEÇİMİ
           </div>
 
+
           <h2 id="petPickerTitle">
             Pet veya Eşya Ekle
           </h2>
 
         </div>
+
 
         <button
           type="button"
@@ -655,6 +526,7 @@
                 Normal
               </button>
 
+
               <button
                 type="button"
                 id="btnNeon"
@@ -663,6 +535,7 @@
               >
                 ✨ Neon
               </button>
+
 
               <button
                 type="button"
@@ -687,6 +560,7 @@
                 Normal
               </button>
 
+
               <button
                 type="button"
                 id="btnFly"
@@ -696,6 +570,7 @@
                 🪽 Fly
               </button>
 
+
               <button
                 type="button"
                 id="btnRide"
@@ -704,6 +579,7 @@
               >
                 🐴 Ride
               </button>
+
 
               <button
                 type="button"
@@ -729,6 +605,7 @@
             >
               0
             </div>
+
 
             <button
               type="button"
@@ -774,11 +651,13 @@
             PROFILE
           </div>
 
+
           <h2>
             Profil
           </h2>
 
         </div>
+
 
         <button
           type="button"
@@ -800,15 +679,18 @@
           🐉
         </div>
 
+
         <div class="profile-info">
 
           <h2 id="profileName">
             Zayaxra Kullanıcısı
           </h2>
 
+
           <span id="profileUsername">
             @kullanici
           </span>
+
 
           <p id="profileBio">
             Henüz bir biyografi eklenmedi.
@@ -827,11 +709,13 @@
             0
           </strong>
 
+
           <span>
             TRADE
           </span>
 
         </div>
+
 
         <div class="profile-stat win-stat">
 
@@ -839,11 +723,13 @@
             0
           </strong>
 
+
           <span>
             WIN
           </span>
 
         </div>
+
 
         <div class="profile-stat fair-stat">
 
@@ -851,17 +737,20 @@
             0
           </strong>
 
+
           <span>
             FAIR
           </span>
 
         </div>
 
+
         <div class="profile-stat lose-stat">
 
           <strong id="profileLoses">
             0
           </strong>
+
 
           <span>
             LOSE
@@ -892,6 +781,7 @@
           Ad
         </label>
 
+
         <input
           id="editName"
           maxlength="24"
@@ -902,6 +792,7 @@
         <label for="editUsername">
           Kullanıcı adı
         </label>
+
 
         <input
           id="editUsername"
@@ -914,6 +805,7 @@
           Biyografi
         </label>
 
+
         <textarea
           id="editBio"
           maxlength="120"
@@ -924,6 +816,7 @@
         <div class="avatar-pick-label">
           Avatar
         </div>
+
 
         <div
           id="avatarPick"
@@ -941,6 +834,7 @@
             Vazgeç
           </button>
 
+
           <button
             type="submit"
             class="profile-edit"
@@ -951,6 +845,170 @@
         </div>
 
       </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       INFO MODAL
+  ========================================== -->
+
+  <div
+    id="infoModal"
+    class="profile-modal"
+    aria-hidden="true"
+  >
+
+    <div
+      class="profile-window info-window"
+      role="dialog"
+      aria-modal="true"
+    >
+
+      <div class="profile-header">
+
+        <div>
+
+          <div class="profile-eyebrow">
+            ZAYAXRA
+          </div>
+
+
+          <h2>
+            Bilgiler
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="profile-close"
+          onclick="closeInfo()"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="info-content">
+
+
+        <div class="info-block">
+
+          <div class="info-icon">
+            W/F/L
+          </div>
+
+
+          <div>
+
+            <h3>
+              Trade Analizi
+            </h3>
+
+
+            <p>
+              İki tarafın petlerini karşılaştır,
+              toplam değerleri gör ve trade'inin
+              Win, Fair veya Lose olduğunu öğren.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-block">
+
+          <div class="info-icon">
+            ✦
+          </div>
+
+
+          <div>
+
+            <h3>
+              Pet Formları
+            </h3>
+
+
+            <p>
+              Normal, Neon ve Mega seçeneklerini
+              kullanabilir, Fly ve Ride özelliklerini
+              trade değerine dahil edebilirsin.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-block">
+
+          <div class="info-icon">
+            %
+          </div>
+
+
+          <div>
+
+            <h3>
+              W/F/L Sistemi
+            </h3>
+
+
+            <p>
+              Sonuç, iki taraf arasındaki değer
+              farkına göre hesaplanır.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-block">
+
+          <div class="info-icon">
+            ⚡
+          </div>
+
+
+          <div>
+
+            <h3>
+              Hızlı Kullanım
+            </h3>
+
+
+            <p>
+              Pet ekle, özelliklerini seç ve sonucu
+              anında görüntüle.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="info-footer">
+
+          <strong>
+            ZAYAXRA
+          </strong>
+
+
+          <span>
+            Adopt Me Trading Values
+          </span>
+
+        </div>
+
+      </div>
 
     </div>
 
