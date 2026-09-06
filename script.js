@@ -1,13 +1,14 @@
 /* =========================================================
    ZAYAXRA — SCRIPT.JS
-   PREMIUM TRADE + PROFILE + FULL PET DATABASE + IMAGES
+   FULL PET DATABASE + REAL IMAGES
+   PREMIUM TRADE + PROFILE + WFL
 ========================================================= */
 
 "use strict";
 
 
 /* =========================================================
-   DATABASE
+   DATABASE SOURCES
 ========================================================= */
 
 const PET_DATA_URL =
@@ -18,7 +19,7 @@ const PET_IMAGE_BASE =
 
 
 /* =========================================================
-   CUSTOM VALUES
+   ZAYAXRA CUSTOM VALUES
 ========================================================= */
 
 const CUSTOM_VALUE_OVERRIDES = {
@@ -128,10 +129,12 @@ const CUSTOM_VALUE_OVERRIDES = {
 
 
 /* =========================================================
-   PET DATABASE
+   DATABASE STATE
 ========================================================= */
 
 let PET_DATABASE = [];
+
+let databaseReady = false;
 
 
 /* =========================================================
@@ -157,8 +160,6 @@ let recordedTradeKey = "";
 
 let selectedAvatar = "🐉";
 
-let databaseReady = false;
-
 
 /* =========================================================
    BASIC HELPER
@@ -177,20 +178,41 @@ function slug(name) {
 
   const special = {
 
-    "T-Rex": "t_rex",
-    "Skele-Rex": "skele_rex",
-    "S'mores Raccoon": "smores_raccoon",
-    "Tió De Nadal": "tio_de_nadal",
-    "Mr. Whiskerpips": "mr_whiskerpips",
-    "Mrs. Whiskerpips": "mrs_whiskerpips",
-    "Ms. Muffet": "ms_muffet",
-    "Mecha R4BBIT": "mecha_r4bbit"
+    "T-Rex":
+      "t_rex",
+
+    "Skele-Rex":
+      "skele_rex",
+
+    "S'mores Raccoon":
+      "smores_raccoon",
+
+    "Tió De Nadal":
+      "tio_de_nadal",
+
+    "Mr. Whiskerpips":
+      "mr_whiskerpips",
+
+    "Mrs. Whiskerpips":
+      "mrs_whiskerpips",
+
+    "Ms. Muffet":
+      "ms_muffet",
+
+    "Mecha R4BBIT":
+      "mecha_r4bbit"
 
   };
 
-  if (special[name]) {
+
+  if (
+    special[name]
+  ) {
+
     return special[name];
+
   }
+
 
   return String(name)
 
@@ -224,28 +246,31 @@ function slug(name) {
    EGG CHECK
 ========================================================= */
 
-function isEgg(pet) {
+function isEgg(
+  pet
+) {
 
   if (!pet) {
     return false;
   }
 
-  return (
 
+  const type =
     String(
       pet.type || ""
     )
-      .toLowerCase()
-      .includes("egg")
+      .toLowerCase();
 
-    ||
 
-    /\begg\b/i.test(
-      String(
-        pet.name || ""
-      )
-    )
+  const name =
+    String(
+      pet.name || ""
+    );
 
+
+  return (
+    type.includes("egg") ||
+    /\begg\b/i.test(name)
   );
 
 }
@@ -263,97 +288,80 @@ function resolveImage(
   let path =
     String(
       imagePath || ""
-    ).trim();
+    )
+      .trim();
 
 
   /*
-    JSON'daki yol:
-
+    JSON:
     /images/pets/Hedgehog.png
 
-    Repository'deki gerçek yol:
-
+    GERÇEK DOSYA:
     /images/Hedgehog.png
   */
 
-  path =
-    path.replace(
-      /^\/images\/pets\//i,
-      "/images/"
-    );
+  if (path) {
+
+    /*
+      Tam URL
+    */
+
+    if (
+      /^https?:\/\//i.test(
+        path
+      )
+    ) {
+
+      return path;
+
+    }
 
 
-  path =
-    path.replace(
-      /^images\/pets\//i,
-      "images/"
-    );
+    /*
+      Sadece dosya adını al.
+      Böylece /images/pets/
+      veya başka klasör fark etmez.
+    */
 
-
-  /*
-    Tam URL ise direkt döndür.
-  */
-
-  if (
-    /^https?:\/\//i.test(
+    const fileName =
       path
-    )
-  ) {
+        .split("/")
+        .pop();
 
-    return path;
+
+    if (fileName) {
+
+      return (
+        PET_IMAGE_BASE +
+        "/images/" +
+        encodeURIComponent(
+          fileName
+        )
+      );
+
+    }
 
   }
 
 
   /*
-    Image path varsa onu kullan.
-  */
-
-  if (
-    path
-  ) {
-
-    return (
-
-      PET_IMAGE_BASE +
-
-      (
-        path.startsWith("/")
-          ? ""
-          : "/"
-      ) +
-
-      path
-
-    );
-
-  }
-
-
-  /*
-    Son çare:
-    repository'deki gerçek dosya
+    Fallback
   */
 
   return (
-
     PET_IMAGE_BASE +
-
     "/images/" +
-
     encodeURIComponent(
       String(name || "")
     ) +
-
     ".png"
-
   );
 
 }
 
 
 /* =========================================================
-   RARITY NORMALIZER
+   RARITY
 ========================================================= */
 
 function normalizeRarity(
@@ -428,10 +436,6 @@ function normalizeRarity(
 }
 
 
-/* =========================================================
-   RARITY DISPLAY
-========================================================= */
-
 function rarityName(
   rarity
 ) {
@@ -468,7 +472,7 @@ function rarityName(
 
 
 /* =========================================================
-   FORMAT VALUE
+   FORMAT
 ========================================================= */
 
 function formatValue(
@@ -563,64 +567,6 @@ function escapeHTML(
 
 
 /* =========================================================
-   IMAGE ERROR
-========================================================= */
-
-function handleImageError(
-  img
-) {
-
-  if (
-    !img ||
-    img.dataset.failed === "1"
-  ) {
-
-    return;
-
-  }
-
-
-  img.dataset.failed =
-    "1";
-
-
-  img.src =
-    "data:image/svg+xml;charset=UTF-8," +
-
-    encodeURIComponent(`
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="160"
-        height="160"
-      >
-
-        <rect
-          width="160"
-          height="160"
-          rx="20"
-          fill="#15182a"
-        />
-
-        <text
-          x="80"
-          y="86"
-          text-anchor="middle"
-          fill="#8b93a7"
-          font-size="13"
-          font-family="Arial"
-        >
-          NO IMAGE
-        </text>
-
-      </svg>
-
-    `);
-
-}
-
-
-/* =========================================================
    IMAGE HTML
 ========================================================= */
 
@@ -663,7 +609,78 @@ function imageHTML(
 
 
 /* =========================================================
-   LOAD FULL PET DATABASE
+   IMAGE ERROR
+========================================================= */
+
+function handleImageError(
+  img
+) {
+
+  if (
+    !img ||
+    img.dataset.failed === "1"
+  ) {
+
+    return;
+
+  }
+
+
+  img.dataset.failed =
+    "1";
+
+
+  img.src =
+    "data:image/svg+xml;charset=UTF-8," +
+
+    encodeURIComponent(`
+
+      <svg
+
+        xmlns="http://www.w3.org/2000/svg"
+
+        width="160"
+        height="160"
+
+      >
+
+        <rect
+
+          width="160"
+          height="160"
+
+          rx="20"
+
+          fill="#15182a"
+
+        />
+
+        <text
+
+          x="80"
+          y="86"
+
+          text-anchor="middle"
+
+          fill="#8b93a7"
+
+          font-size="13"
+
+          font-family="Arial"
+
+        >
+          NO IMAGE
+        </text>
+
+      </svg>
+
+    `);
+
+}
+
+
+/* =========================================================
+   DATABASE LOADER
 ========================================================= */
 
 async function loadFullPetDatabase() {
@@ -671,13 +688,15 @@ async function loadFullPetDatabase() {
   try {
 
     console.log(
-      "ZAYAXRA: Pet veritabanı yükleniyor..."
+      "ZAYAXRA: FULL PET DATABASE yükleniyor..."
     );
 
 
     const response =
       await fetch(
-        PET_DATA_URL,
+        PET_DATA_URL +
+        "?v=" +
+        Date.now(),
         {
           cache:
             "no-store"
@@ -707,200 +726,163 @@ async function loadFullPetDatabase() {
     ) {
 
       throw new Error(
-        "JSON array değil."
+        "Veritabanı array değil."
       );
 
     }
 
 
-    const remotePets =
-      raw
-
-        .filter(
-          item => {
-
-            const type =
-              String(
-                item?.type ||
-                ""
-              )
-                .toLowerCase();
-
-
-            return (
-
-              type.includes(
-                "pet"
-              )
-
-              ||
-
-              type.includes(
-                "egg"
-              )
-
-            );
-
-          }
-        )
-
-
-        .map(
-          (
-            item,
-            index
-          ) => {
-
-            const name =
-              String(
-                item?.name ||
-                ""
-              ).trim();
-
-
-            const normalValue =
-              Number(
-                item?.regular?.value
-              );
-
-
-            const fallbackValue =
-              Number(
-                item?.value
-              );
-
-
-            let value =
-              CUSTOM_VALUE_OVERRIDES[
-                name
-              ];
-
-
-            if (
-              value === undefined
-            ) {
-
-              if (
-                Number.isFinite(
-                  normalValue
-                )
-              ) {
-
-                value =
-                  normalValue;
-
-              }
-
-              else if (
-                Number.isFinite(
-                  fallbackValue
-                )
-              ) {
-
-                value =
-                  fallbackValue;
-
-              }
-
-              else {
-
-                value = 0;
-
-              }
-
-            }
-
-
-            const type =
-              String(
-                item?.type ||
-                ""
-              )
-                .toLowerCase();
-
-
-            return {
-
-              id:
-
-                `remote_${item?.id ?? index}_${slug(
-                  name
-                )}`,
-
-              name,
-
-              rarity:
-
-                normalizeRarity(
-                  item?.rarity
-                ),
-
-              value:
-
-                Number.isFinite(
-                  Number(value)
-                )
-
-                  ? Number(value)
-
-                  : 0,
-
-
-              /*
-                GERÇEK GÖRSEL
-              */
-
-              image:
-
-                resolveImage(
-                  item?.image,
-                  name
-                ),
-
-
-              type:
-
-                type.includes(
-                  "egg"
-                )
-
-                ||
-
-                isEgg({
-                  name,
-                  type
-                })
-
-                  ? "egg"
-
-                  : "pet"
-
-            };
-
-          }
-        )
-
-
-        .filter(
-          item =>
-            item.name
-        );
-
-
-    /*
-      Duplicate temizle
-    */
-
     const unique =
       new Map();
 
 
-    remotePets.forEach(
-      pet => {
+    raw.forEach(
+      (
+        item,
+        index
+      ) => {
+
+        const rawType =
+          String(
+            item?.type ||
+            ""
+          )
+            .toLowerCase();
+
+
+        /*
+          Sadece pet ve egg.
+          "pets" de eşleşir.
+        */
+
+        const isPet =
+          rawType.includes(
+            "pet"
+          );
+
+
+        const isEggType =
+          rawType.includes(
+            "egg"
+          );
+
+
+        if (
+          !isPet &&
+          !isEggType
+        ) {
+
+          return;
+
+        }
+
+
+        const name =
+          String(
+            item?.name ||
+            ""
+          )
+            .trim();
+
+
+        if (
+          !name
+        ) {
+
+          return;
+
+        }
+
+
+        let value =
+          Number(
+            item?.regular?.value
+          );
+
+
+        if (
+          !Number.isFinite(
+            value
+          )
+        ) {
+
+          value =
+            Number(
+              item?.value
+            );
+
+        }
+
+
+        if (
+          !Number.isFinite(
+            value
+          )
+        ) {
+
+          value = 0;
+
+        }
+
+
+        /*
+          Senin ZAYAXRA değerlerin
+          öncelikli.
+        */
+
+        if (
+          Object.prototype.hasOwnProperty.call(
+            CUSTOM_VALUE_OVERRIDES,
+            name
+          )
+        ) {
+
+          value =
+            CUSTOM_VALUE_OVERRIDES[
+              name
+            ];
+
+        }
+
+
+        const pet = {
+
+          id:
+            `pet_${item?.id ?? index}_${slug(name)}`,
+
+          name,
+
+          rarity:
+            normalizeRarity(
+              item?.rarity
+            ),
+
+          value,
+
+          image:
+            resolveImage(
+              item?.image,
+              name
+            ),
+
+          type:
+            isEggType ||
+            /\begg\b/i.test(
+              name
+            )
+              ? "egg"
+              : "pet"
+
+        };
+
+
+        /*
+          Aynı isimde kayıt varsa
+          son kaydı tut.
+        */
 
         unique.set(
-          pet.name
-            .toLowerCase(),
+          name.toLowerCase(),
           pet
         );
 
@@ -919,7 +901,6 @@ async function loadFullPetDatabase() {
         a,
         b
       ) =>
-
         a.name.localeCompare(
           b.name,
           "en",
@@ -928,7 +909,6 @@ async function loadFullPetDatabase() {
               "base"
           }
         )
-
     );
 
 
@@ -937,9 +917,7 @@ async function loadFullPetDatabase() {
 
 
     console.log(
-
-      `ZAYAXRA: ${PET_DATABASE.length} pet/egg yüklendi.`
-
+      `ZAYAXRA: ${PET_DATABASE.length} PET + EGG yüklendi.`
     );
 
 
@@ -952,20 +930,19 @@ async function loadFullPetDatabase() {
     error
   ) {
 
+    databaseReady =
+      false;
+
+
     console.error(
       "ZAYAXRA DATABASE HATASI:",
       error
     );
 
 
-    databaseReady =
-      false;
-
-
     /*
-      İnternet/veritabanı açılmazsa
-      en azından senin özel değerlerin
-      çalışmaya devam eder.
+      Remote database açılmazsa
+      en azından custom petler kaybolmasın.
     */
 
     PET_DATABASE =
@@ -979,9 +956,7 @@ async function loadFullPetDatabase() {
         ) => ({
 
           id:
-            `fallback_${index}_${slug(
-              name
-            )}`,
+            `fallback_${index}_${slug(name)}`,
 
           name,
 
@@ -1126,7 +1101,7 @@ function ensureStorageData() {
 
 
 /* =========================================================
-   PROFILE
+   PROFILE STORAGE
 ========================================================= */
 
 function getProfileData() {
@@ -1272,7 +1247,7 @@ function migrateLegacyProfile() {
         .toLowerCase();
 
 
-    const isOldZayagg =
+    const oldProfile =
 
       name.includes(
         "zayagg"
@@ -1292,7 +1267,7 @@ function migrateLegacyProfile() {
 
 
     if (
-      isOldZayagg
+      oldProfile
     ) {
 
       saveProfileData({
@@ -1352,7 +1327,7 @@ function migrateLegacyProfile() {
 
 
 /* =========================================================
-   OPEN PET PICKER
+   PET PICKER
 ========================================================= */
 
 function openPetPicker(
@@ -1483,10 +1458,6 @@ function openPetPicker(
 }
 
 
-/* =========================================================
-   CLOSE PICKER
-========================================================= */
-
 function closePetPicker() {
 
   const modal =
@@ -1574,9 +1545,7 @@ function renderPickerPets(
 
       <div class="empty-picker">
 
-        <span>
-          🔎
-        </span>
+        <span>🔎</span>
 
         <strong>
           Pet bulunamadı
@@ -1690,7 +1659,7 @@ function renderPickerPets(
 
 
 /* =========================================================
-   FILTER PICKER
+   SEARCH FILTER
 ========================================================= */
 
 function filterPickerPets() {
@@ -1851,14 +1820,16 @@ function renderPickerPreview() {
   }
 
 
+  const egg =
+    isEgg(
+      selectedPet
+    );
+
+
   const chips = [];
 
 
-  if (
-    !isEgg(
-      selectedPet
-    )
-  ) {
+  if (!egg) {
 
     if (
       selectedForm ===
@@ -1913,9 +1884,8 @@ function renderPickerPreview() {
     <div class="pet-image-wrap">
 
       ${
-        selectedForm ===
-          "neon" &&
-        !isEgg(selectedPet)
+        selectedForm === "neon" &&
+        !egg
 
           ? `<div class="neon-effect"></div>`
 
@@ -1924,9 +1894,8 @@ function renderPickerPreview() {
 
 
       ${
-        selectedForm ===
-          "mega" &&
-        !isEgg(selectedPet)
+        selectedForm === "mega" &&
+        !egg
 
           ? `<div class="mega-effect"></div>`
 
@@ -1942,9 +1911,8 @@ function renderPickerPreview() {
       <div class="pet-badges">
 
         ${
-          selectedForm ===
-            "neon" &&
-          !isEgg(selectedPet)
+          selectedForm === "neon" &&
+          !egg
 
             ? `<span class="mini-chip neon">N</span>`
 
@@ -1953,9 +1921,8 @@ function renderPickerPreview() {
 
 
         ${
-          selectedForm ===
-            "mega" &&
-          !isEgg(selectedPet)
+          selectedForm === "mega" &&
+          !egg
 
             ? `<span class="mini-chip mega">M</span>`
 
@@ -1965,7 +1932,7 @@ function renderPickerPreview() {
 
         ${
           selectedPotion.fly &&
-          !isEgg(selectedPet)
+          !egg
 
             ? `<span class="mini-chip fly">F</span>`
 
@@ -1975,7 +1942,7 @@ function renderPickerPreview() {
 
         ${
           selectedPotion.ride &&
-          !isEgg(selectedPet)
+          !egg
 
             ? `<span class="mini-chip ride">R</span>`
 
@@ -2222,11 +2189,13 @@ function toggleForm(
     selectedForm =
       "normal";
 
+
     updatePickerButtons();
 
     renderPickerPreview();
 
     updatePickerValue();
+
 
     return;
 
@@ -2250,8 +2219,7 @@ function toggleForm(
 
   selectedForm =
 
-    selectedForm ===
-      form
+    selectedForm === form
 
       ? "normal"
 
@@ -2416,8 +2384,7 @@ function getModifiedValue(
 
   let value =
     Number(
-      pet.value ||
-      0
+      pet.value || 0
     );
 
 
@@ -2431,10 +2398,6 @@ function getModifiedValue(
 
   }
 
-
-  /*
-    Egg = normal only
-  */
 
   if (
     isEgg(
@@ -2541,11 +2504,13 @@ function confirmAddPet() {
   }
 
 
-  if (
+  const egg =
     isEgg(
       selectedPet
-    )
-  ) {
+    );
+
+
+  if (egg) {
 
     selectedForm =
       "normal";
@@ -2577,12 +2542,8 @@ function confirmAddPet() {
       selectedPet.image,
 
     type:
-      isEgg(
-        selectedPet
-      )
-
+      egg
         ? "egg"
-
         : "pet",
 
     baseValue:
@@ -2600,19 +2561,15 @@ function confirmAddPet() {
       selectedForm,
 
     fly:
-      isEgg(selectedPet)
-
+      egg
         ? false
-
         : Boolean(
             selectedPotion.fly
           ),
 
     ride:
-      isEgg(selectedPet)
-
+      egg
         ? false
-
         : Boolean(
             selectedPotion.ride
           ),
@@ -2636,7 +2593,6 @@ function confirmAddPet() {
     );
 
   }
-
 
   else {
 
@@ -2715,7 +2671,7 @@ function calculateTotal(
 
 
 /* =========================================================
-   TRADE SIDE
+   TRADE RENDER
 ========================================================= */
 
 function renderTradeSide(
@@ -2745,16 +2701,15 @@ function renderTradeSide(
           ＋
         </span>
 
-
         <strong>
           Henüz pet eklenmedi
         </strong>
 
-
         <small>
 
           ${
-            side === "you"
+            side ===
+            "you"
 
               ? "Teklifini oluşturmak için pet ekle"
 
@@ -2768,14 +2723,12 @@ function renderTradeSide(
 
     `;
 
-
     return;
 
   }
 
 
   element.innerHTML =
-
     trade.map(
       pet => {
 
@@ -2851,16 +2804,20 @@ function renderTradeSide(
         return `
 
           <div
+
             class="trade-slot"
+
             data-trade-id="${escapeHTML(
               pet.uniqueId
             )}"
+
           >
 
             <div class="trade-slot-image">
 
               ${
-                pet.form === "neon" &&
+                pet.form ===
+                  "neon" &&
                 !isEgg(pet)
 
                   ? `<div class="neon-effect"></div>`
@@ -2870,7 +2827,8 @@ function renderTradeSide(
 
 
               ${
-                pet.form === "mega" &&
+                pet.form ===
+                  "mega" &&
                 !isEgg(pet)
 
                   ? `<div class="mega-effect"></div>`
@@ -2887,9 +2845,7 @@ function renderTradeSide(
 
               <div class="trade-slot-badges">
 
-                ${badges.join(
-                  ""
-                )}
+                ${badges.join("")}
 
               </div>
 
@@ -2897,10 +2853,13 @@ function renderTradeSide(
 
 
             <div
+
               class="trade-slot-name"
+
               title="${escapeHTML(
                 pet.name
               )}"
+
             >
 
               ${escapeHTML(
@@ -2920,13 +2879,19 @@ function renderTradeSide(
 
 
             <button
+
               type="button"
+
               class="remove-item"
+
               data-side="${side}"
+
               data-id="${escapeHTML(
                 pet.uniqueId
               )}"
+
               aria-label="Pet sil"
+
             >
 
               ×
@@ -2945,7 +2910,7 @@ function renderTradeSide(
 
 
 /* =========================================================
-   REMOVE PET
+   REMOVE
 ========================================================= */
 
 function removeTradePet(
@@ -3075,7 +3040,7 @@ function updateTradeUI() {
 
 
 /* =========================================================
-   RESULT
+   WFL RESULT
 ========================================================= */
 
 function updateResult() {
@@ -3227,8 +3192,7 @@ function updateResult() {
 
 
   if (
-    roundedPercent >
-    0
+    roundedPercent > 0
   ) {
 
     diffText =
@@ -3240,8 +3204,7 @@ function updateResult() {
 
 
   else if (
-    roundedPercent <
-    0
+    roundedPercent < 0
   ) {
 
     diffText =
@@ -3295,8 +3258,7 @@ function updateResult() {
   if (
     Math.abs(
       percent
-    ) <=
-    3
+    ) <= 3
   ) {
 
     status =
@@ -3318,13 +3280,11 @@ function updateResult() {
 
 
   else if (
-    percent >
-    0
+    percent > 0
   ) {
 
     if (
-      percent >=
-      10
+      percent >= 10
     ) {
 
       status =
@@ -3343,7 +3303,6 @@ function updateResult() {
         "big-win";
 
     }
-
 
     else {
 
@@ -3372,8 +3331,7 @@ function updateResult() {
     if (
       Math.abs(
         percent
-      ) >=
-      10
+      ) >= 10
     ) {
 
       status =
@@ -3392,7 +3350,6 @@ function updateResult() {
         "big-lose";
 
     }
-
 
     else {
 
@@ -3563,7 +3520,6 @@ function recordTradeResult(
 
   }
 
-
   else if (
     status ===
     "FAIR"
@@ -3572,7 +3528,6 @@ function recordTradeResult(
     stats.fair++;
 
   }
-
 
   else {
 
@@ -3764,8 +3719,12 @@ function openProfile() {
     $("profileModal");
 
 
-  if (!modal) {
+  if (
+    !modal
+  ) {
+
     return;
+
   }
 
 
@@ -3801,8 +3760,12 @@ function closeProfile() {
     $("profileModal");
 
 
-  if (!modal) {
+  if (
+    !modal
+  ) {
+
     return;
+
   }
 
 
@@ -3985,6 +3948,7 @@ function saveEditedProfile(
     $("editName")
       ?.value
       .trim() ||
+
     "Zayaxra Kullanıcısı";
 
 
@@ -3992,6 +3956,7 @@ function saveEditedProfile(
     $("editUsername")
       ?.value
       .trim() ||
+
     "@kullanici";
 
 
@@ -4012,6 +3977,7 @@ function saveEditedProfile(
     $("editBio")
       ?.value
       .trim() ||
+
     "Henüz bir biyografi eklenmedi.";
 
 
@@ -4094,8 +4060,12 @@ function scrollToSection(
     $(id);
 
 
-  if (!element) {
+  if (
+    !element
+  ) {
+
     return;
+
   }
 
 
@@ -4212,8 +4182,12 @@ function initNavbar() {
     );
 
 
-  if (!navbar) {
+  if (
+    !navbar
+  ) {
+
     return;
+
   }
 
 
@@ -4261,8 +4235,12 @@ function initSearch() {
     $("search");
 
 
-  if (!search) {
+  if (
+    !search
+  ) {
+
     return;
+
   }
 
 
@@ -4291,8 +4269,12 @@ function initPickerSearch() {
     $("petSearch");
 
 
-  if (!search) {
+  if (
+    !search
+  ) {
+
     return;
+
   }
 
 
@@ -4322,8 +4304,12 @@ function initRemoveTradeEvents() {
         );
 
 
-      if (!button) {
+      if (
+        !button
+      ) {
+
         return;
+
       }
 
 
@@ -4586,8 +4572,12 @@ function openInfo(
     $("infoModal");
 
 
-  if (!modal) {
+  if (
+    !modal
+  ) {
+
     return;
+
   }
 
 
@@ -4616,8 +4606,12 @@ function closeInfo() {
     $("infoModal");
 
 
-  if (!modal) {
+  if (
+    !modal
+  ) {
+
     return;
+
   }
 
 
@@ -4664,21 +4658,6 @@ function closeInfo() {
 
 function validateDatabase() {
 
-  if (
-    !Array.isArray(
-      PET_DATABASE
-    )
-  ) {
-
-    console.error(
-      "ZAYAXRA: PET_DATABASE bulunamadı."
-    );
-
-    return;
-
-  }
-
-
   console.log(
 
     `ZAYAXRA: ${PET_DATABASE.length} kayıt hazır.`
@@ -4696,45 +4675,31 @@ function initZayaxra() {
 
   migrateLegacyProfile();
 
-
   ensureStorageData();
-
 
   validateDatabase();
 
-
   updateProfileStats();
-
 
   renderProfile();
 
-
   updateTradeUI();
-
 
   initSearch();
 
-
   initPickerSearch();
-
 
   initRemoveTradeEvents();
 
-
   initClearTrade();
-
 
   initNavigation();
 
-
   initNavbar();
-
 
   initModalEvents();
 
-
   initKeyboard();
-
 
   initVisibility();
 
@@ -4747,6 +4712,56 @@ function initZayaxra() {
   loadFullPetDatabase();
 
 }
+
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+========================================================= */
+
+window.openPetPicker =
+  openPetPicker;
+
+window.closePetPicker =
+  closePetPicker;
+
+window.confirmAddPet =
+  confirmAddPet;
+
+window.toggleForm =
+  toggleForm;
+
+window.togglePotion =
+  togglePotion;
+
+window.openProfile =
+  openProfile;
+
+window.closeProfile =
+  closeProfile;
+
+window.openEditProfile =
+  openEditProfile;
+
+window.closeEditProfile =
+  closeEditProfile;
+
+window.saveEditedProfile =
+  saveEditedProfile;
+
+window.toggleMenu =
+  toggleMenu;
+
+window.closeMenu =
+  closeMenu;
+
+window.openInfo =
+  openInfo;
+
+window.closeInfo =
+  closeInfo;
+
+window.toggleZayaxraInfo =
+  toggleZayaxraInfo;
 
 
 /* =========================================================
@@ -4821,53 +4836,3 @@ window.addEventListener(
   }
 
 );
-
-
-/* =========================================================
-   GLOBAL FUNCTIONS
-========================================================= */
-
-window.openPetPicker =
-  openPetPicker;
-
-window.closePetPicker =
-  closePetPicker;
-
-window.confirmAddPet =
-  confirmAddPet;
-
-window.toggleForm =
-  toggleForm;
-
-window.togglePotion =
-  togglePotion;
-
-window.openProfile =
-  openProfile;
-
-window.closeProfile =
-  closeProfile;
-
-window.openEditProfile =
-  openEditProfile;
-
-window.closeEditProfile =
-  closeEditProfile;
-
-window.saveEditedProfile =
-  saveEditedProfile;
-
-window.toggleMenu =
-  toggleMenu;
-
-window.closeMenu =
-  closeMenu;
-
-window.openInfo =
-  openInfo;
-
-window.closeInfo =
-  closeInfo;
-
-window.toggleZayaxraInfo =
-  toggleZayaxraInfo;
