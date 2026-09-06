@@ -11789,3 +11789,167 @@ document.addEventListener(
   );
 
 })();
+/* =========================================
+   ZAYAXRA — FIX PICKER BEHAVIOR
+========================================= */
+
+(function () {
+
+  /* -----------------------------------------
+     PANEL HER ZAMAN GÖRÜNSÜN
+  ----------------------------------------- */
+
+  function forcePickerBarVisible() {
+
+    const bar =
+      document.getElementById("pickerBar");
+
+    if (!bar) return;
+
+    bar.classList.remove("hidden");
+
+    bar.style.display = "flex";
+
+  }
+
+
+  /* -----------------------------------------
+     PET SEÇİLDİĞİNDE KATEGORİ DEĞİŞMESİN
+  ----------------------------------------- */
+
+  const oldSelectPickerPet =
+    window.selectPickerPet;
+
+
+  if (
+    typeof oldSelectPickerPet === "function"
+  ) {
+
+    window.selectPickerPet =
+      function (pet) {
+
+        // O anki kategori kaydediliyor
+        const categoryBefore =
+          typeof currentCategory !== "undefined"
+            ? currentCategory
+            : null;
+
+
+        // Eski seçim fonksiyonu
+        oldSelectPickerPet(pet);
+
+
+        // Panel hep açık
+        forcePickerBarVisible();
+
+
+        // Kategori aynı kalsın
+        if (
+          categoryBefore !== null &&
+          typeof currentCategory !== "undefined"
+        ) {
+
+          currentCategory =
+            categoryBefore;
+
+        }
+
+
+        // Mevcut kategori yeniden çizilsin
+        if (
+          typeof renderCurrentCategory ===
+          "function"
+        ) {
+
+          renderCurrentCategory();
+
+        }
+
+      };
+
+  }
+
+
+  /* -----------------------------------------
+     OPEN PICKER SONRASI PANELİ AÇ
+  ----------------------------------------- */
+
+  const oldOpenPetPicker =
+    window.openPetPicker;
+
+
+  if (
+    typeof oldOpenPetPicker === "function"
+  ) {
+
+    window.openPetPicker =
+      function (side) {
+
+        oldOpenPetPicker(side);
+
+
+        setTimeout(() => {
+
+          forcePickerBarVisible();
+
+        }, 50);
+
+
+        setTimeout(() => {
+
+          forcePickerBarVisible();
+
+        }, 250);
+
+      };
+
+  }
+
+
+  /* -----------------------------------------
+     HIDDEN CLASS PANELİ KAPATAMASIN
+  ----------------------------------------- */
+
+  const style =
+    document.createElement("style");
+
+  style.id =
+    "zayaxra-picker-always-visible";
+
+  style.textContent = `
+
+    #pickerBar {
+
+      display: flex !important;
+
+    }
+
+    #pickerBar.hidden {
+
+      display: flex !important;
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+
+  /* -----------------------------------------
+     PICKER AÇILDIĞINDA
+  ----------------------------------------- */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+      setTimeout(() => {
+
+        forcePickerBarVisible();
+
+      }, 500);
+
+    }
+  );
+
+})();
