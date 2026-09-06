@@ -1,6 +1,6 @@
-// =====================================================
-// ZAYAXRA — ADOPT ME W/F/L CALCULATOR
-// =====================================================
+/* =========================================================
+   ZAYAXRA — COMPLETE SCRIPT
+   ========================================================= */
 
 const PET_DATA_URL =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
@@ -8,556 +8,107 @@ const PET_DATA_URL =
 const PET_IMAGE_BASE =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main";
 
-let allItems = [];
-let selectedPet = null;
-let selectedSide = null;
+let pets = [];
+let youTrade = [];
+let themTrade = [];
 
-// D / N / M
+let pickerSide = null;
+let selectedPet = null;
+
+/* D / N / M */
 let selectedForm = "normal";
 
-// none / fly / ride
-let selectedPotion = "none";
-
-let currentCategory = "all";
-let showPickerValues = false;
-
-// Trade data
-let tradeState = {
-  you: [],
-  them: []
+/* F / R */
+let selectedPotion = {
+  fly: false,
+  ride: false
 };
 
-// =====================================================
-// DOM READY
-// =====================================================
+let recordedTradeKey = "";
 
-document.addEventListener("DOMContentLoaded", async () => {
-  preparePetPickerUI();
-  setupMenu();
-  setupProfileDefaults();
-  bindGlobalEvents();
+const $ = id => document.getElementById(id);
 
-  try {
-    await loadPetData();
-  } catch (error) {
-    console.error("Pet verileri yüklenemedi:", error);
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
-    const grid = document.getElementById("pickerPets");
-    if (grid) {
-      grid.innerHTML = `
-        <div class="picker-error">
-          <strong>Veriler yüklenemedi.</strong>
-          <span>İnternet bağlantını kontrol edip sayfayı yenile.</span>
-        </div>
-      `;
-    }
-  }
+function formatValue(value) {
+  const n = Number(value || 0);
 
-  updateTradeUI();
-  updateProfileUI();
-});
+  if (!Number.isFinite(n)) return "0";
 
-// =====================================================
-// GLOBAL EVENTS
-// =====================================================
-
-function bindGlobalEvents() {
-  const search = document.getElementById("petSearch");
-
-  if (search) {
-    search.addEventListener("input", () => {
-      renderPickerPets();
-    });
-  }
-
-  const picker = document.getElementById("petPicker");
-
-  if (picker) {
-    picker.addEventListener("click", (event) => {
-      if (event.target === picker) {
-        closePetPicker();
-      }
-    });
-  }
-
-  const profileModal = document.getElementById("profileModal");
-
-  if (profileModal) {
-    profileModal.addEventListener("click", (event) => {
-      if (event.target === profileModal) {
-        closeProfile();
-      }
-    });
-  }
-
-  const infoModal = document.getElementById("infoModal");
-
-  if (infoModal) {
-    infoModal.addEventListener("click", (event) => {
-      if (event.target === infoModal) {
-        closeInfo();
-      }
-    });
-  }
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closePetPicker();
-      closeProfile();
-      closeInfo();
-      closeEditProfile();
-    }
-  });
+  return Number.isInteger(n)
+    ? String(n)
+    : n.toFixed(1).replace(/\.0$/, "");
 }
 
-// =====================================================
-// PET PICKER UI
-// =====================================================
-
-function preparePetPickerUI() {
-  const settings = document.querySelector(".picker-settings");
-
-  if (!settings) return;
-
-  settings.innerHTML = `
-    <div id="pickerBar" class="picker-bar">
-      
-      <div id="pickerPreview" class="picker-preview">
-        <div class="picker-preview-empty">
-          <span>+</span>
-          <small>Pet seç</small>
-        </div>
-      </div>
-
-      <div class="picker-options">
-
-        <div class="variant-buttons" id="variantButtons">
-
-          <button
-            type="button"
-            id="normalFormBtn"
-            class="form-btn variant-btn active"
-            data-form="normal"
-            onclick="toggleForm('normal'); return false;"
-          >D</button>
-
-          <button
-            type="button"
-            id="btnNeon"
-            class="form-btn variant-btn"
-            data-form="neon"
-            onclick="toggleForm('neon'); return false;"
-          >N</button>
-
-          <button
-            type="button"
-            id="btnMega"
-            class="form-btn variant-btn"
-            data-form="mega"
-            onclick="toggleForm('mega'); return false;"
-          >M</button>
-
-          <button
-            type="button"
-            id="btnFly"
-            class="potion-btn variant-btn"
-            data-potion="fly"
-            onclick="togglePotion('fly'); return false;"
-          >F</button>
-
-          <button
-            type="button"
-            id="btnRide"
-            class="potion-btn variant-btn"
-            data-potion="ride"
-            onclick="togglePotion('ride'); return false;"
-          >R</button>
-
-        </div>
-
-      </div>
-
-      <div class="picker-add">
-
-        <div class="picker-value-wrap">
-          <span class="picker-value-label">VALUE</span>
-          <div id="pickerValue" class="picker-value">—</div>
-        </div>
-
-        <button
-          type="button"
-          id="showValuesBtn"
-          class="show-values-btn"
-          onclick="togglePickerValues(); return false;"
-        >SHOW VALUES</button>
-
-        <button
-          type="button"
-          id="confirmPetBtn"
-          class="add-confirm"
-          onclick="confirmAddPet(); return false;"
-        >Ekle</button>
-
-      </div>
-    </div>
-  `;
-
-  injectPickerRuntimeStyles();
-  updateVariantButtons();
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-// =====================================================
-// PICKER EXTRA CSS
-// =====================================================
-
-function injectPickerRuntimeStyles() {
-  if (document.getElementById("zayaxra-picker-runtime-css")) return;
-
-  const style = document.createElement("style");
-  style.id = "zayaxra-picker-runtime-css";
-
-  style.textContent = `
-    .picker-settings {
-      position: sticky;
-      bottom: 0;
-      z-index: 20;
-    }
-
-    .picker-bar {
-      width: 100%;
-      display: grid;
-      grid-template-columns: minmax(180px, 220px) 1fr auto;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .picker-preview {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .picker-preview-empty {
-      width: 100%;
-      min-height: 72px;
-      border: 1px dashed rgba(255,255,255,.12);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 3px;
-      color: rgba(255,255,255,.35);
-    }
-
-    .picker-preview-empty span {
-      font-size: 24px;
-      line-height: 1;
-    }
-
-    .picker-preview-empty small {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-
-    .picker-preview-card {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .picker-preview-image {
-      width: 66px;
-      height: 66px;
-      object-fit: contain;
-      border-radius: 14px;
-      background: rgba(255,255,255,.035);
-      padding: 6px;
-    }
-
-    .picker-preview-name {
-      font-weight: 800;
-      font-size: 14px;
-      color: #fff;
-      line-height: 1.2;
-    }
-
-    .picker-preview-sub {
-      margin-top: 4px;
-      font-size: 10px;
-      color: rgba(255,255,255,.43);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-
-    .picker-options {
-      min-width: 0;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    .variant-buttons {
-      display: flex !important;
-      flex-direction: row !important;
-      flex-wrap: nowrap !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 8px !important;
-      width: max-content !important;
-      max-width: 100%;
-    }
-
-    .variant-btn {
-      flex: 0 0 52px !important;
-      width: 52px !important;
-      min-width: 52px !important;
-      height: 42px !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      border-radius: 12px !important;
-      font-size: 14px !important;
-      font-weight: 900 !important;
-      letter-spacing: .04em;
-      cursor: pointer !important;
-      user-select: none;
-      transition:
-        transform .18s ease,
-        background .18s ease,
-        border-color .18s ease,
-        box-shadow .18s ease;
-    }
-
-    .variant-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .variant-btn.active {
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.12),
-        0 8px 22px rgba(0,0,0,.25);
-    }
-
-    .picker-add {
-      display: flex !important;
-      align-items: center !important;
-      gap: 10px !important;
-    }
-
-    .picker-value-wrap {
-      min-width: 64px;
-      text-align: right;
-    }
-
-    .picker-value-label {
-      display: block;
-      font-size: 8px;
-      font-weight: 800;
-      letter-spacing: .15em;
-      color: rgba(255,255,255,.32);
-      margin-bottom: 3px;
-    }
-
-    .picker-value {
-      font-size: 17px;
-      font-weight: 900;
-      color: #fff;
-      white-space: nowrap;
-    }
-
-    .show-values-btn {
-      height: 42px;
-      border-radius: 12px;
-      padding: 0 13px;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.04);
-      color: rgba(255,255,255,.68);
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      cursor: pointer;
-      transition: .18s ease;
-      white-space: nowrap;
-    }
-
-    .show-values-btn:hover {
-      background: rgba(255,255,255,.08);
-      color: #fff;
-    }
-
-    .picker-value-hidden {
-      filter: blur(6px);
-      opacity: .6;
-    }
-
-    .pet-choice-card {
-      position: relative;
-      cursor: pointer !important;
-    }
-
-    .pet-choice-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .pet-choice-card.selected {
-      outline: 1px solid rgba(255,255,255,.22);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.06),
-        0 10px 35px rgba(0,0,0,.25);
-    }
-
-    .pet-choice-value {
-      transition: .18s ease;
-    }
-
-    .trade-item {
-      cursor: pointer !important;
-    }
-
-    .trade-item:hover {
-      transform: translateY(-3px);
-    }
-
-    .picker-error {
-      min-height: 200px;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 8px;
-      color: rgba(255,255,255,.45);
-      text-align: center;
-    }
-
-    .picker-error strong {
-      color: #fff;
-    }
-
-    @media (max-width: 900px) {
-      .picker-bar {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      .picker-preview {
-        display: none;
-      }
-
-      .picker-options,
-      .variant-buttons {
-        width: 100% !important;
-      }
-
-      .variant-btn {
-        flex: 1 1 0 !important;
-        width: auto !important;
-      }
-
-      .picker-add {
-        width: 100%;
-        justify-content: flex-end;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .variant-buttons {
-        gap: 6px !important;
-      }
-
-      .picker-add {
-        flex-wrap: wrap;
-      }
-
-      .picker-value-wrap {
-        margin-right: auto;
-      }
-
-      .show-values-btn {
-        flex: 1;
-      }
-
-      .add-confirm {
-        flex: 1;
-      }
-    }
-  `;
-
-  document.head.appendChild(style);
-}
-
-// =====================================================
-// DATA LOAD
-// =====================================================
-
-async function loadPetData() {
-  const response = await fetch(PET_DATA_URL, {
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-
-  const raw = await response.json();
-
-  if (!Array.isArray(raw)) {
-    throw new Error("Beklenmeyen JSON formatı.");
-  }
-
-  allItems = raw
-    .map(normalizeItem)
-    .filter(Boolean);
-
-  renderCategories();
-  renderPickerPets();
-}
-
-// =====================================================
-// NORMALIZE ITEM
-// =====================================================
-
-function normalizeItem(item) {
-  if (!item || !item.name) return null;
-
-  const type = String(item.type || "pets")
-    .toLowerCase()
-    .trim();
-
-  let category = getItemCategory(item);
-
-  let image = item.image || "";
-
-  if (image.startsWith("/")) {
-    image = `${PET_IMAGE_BASE}${image}`;
-  } else if (!/^https?:\/\//i.test(image)) {
-    image = `${PET_IMAGE_BASE}/images/${image}`;
-  }
-
+function rarityName(rarity) {
   return {
-    ...item,
-    category,
-    image,
-    isPet: category === "pets"
-  };
+    legendary: "Legendary",
+    ultra: "Ultra-Rare",
+    rare: "Rare",
+    uncommon: "Uncommon",
+    common: "Common",
+    unknown: "Unknown"
+  }[String(rarity || "").toLowerCase()] || rarity || "";
 }
 
-// =====================================================
-// CATEGORY
-// =====================================================
+function handleImageError(img) {
+  if (!img || img.dataset.failed) return;
+
+  img.dataset.failed = "1";
+
+  img.src =
+    "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">
+        <rect width="160" height="160" rx="20" fill="#15182a"/>
+        <text
+          x="80"
+          y="85"
+          text-anchor="middle"
+          fill="#8b93a7"
+          font-size="13"
+          font-family="Arial"
+        >NO IMAGE</text>
+      </svg>
+    `);
+}
+
+function imageHTML(pet, cls = "pet-photo") {
+  return `
+    <img
+      src="${escapeHTML(pet?.image || "")}"
+      alt="${escapeHTML(pet?.name || "")}"
+      class="${cls}"
+      loading="lazy"
+      onerror="handleImageError(this)"
+    >
+  `;
+}
+
+/* =========================================================
+   DATA
+   ========================================================= */
 
 function getItemCategory(item) {
-  const type = String(item.type || "")
-    .toLowerCase()
-    .trim();
+  const type = String(
+    item?.type ||
+    item?.category ||
+    item?.kind ||
+    ""
+  ).toLowerCase();
 
-  const name = String(item.name || "").toLowerCase();
+  const name = String(item?.name || "").toLowerCase();
 
   if (
     type.includes("petwear") ||
@@ -587,1359 +138,1945 @@ function getItemCategory(item) {
     return "gifts";
   }
 
-  if (type.includes("pet")) {
-    return "pets";
-  }
-
   return "pets";
 }
 
-function getCategoryLabel(category) {
-  const labels = {
-    all: "ALL",
-    pets: "PETS",
-    petwear: "PET WEAR",
-    eggs: "EGGS",
-    vehicles: "VEHICLES",
-    toys: "TOYS",
-    gifts: "GIFTS"
-  };
+function normalizePet(item, index) {
+  if (!item || !item.name) return null;
 
-  return labels[category] || category.toUpperCase();
-}
+  let image =
+    item.image ||
+    item.icon ||
+    "";
 
-// =====================================================
-// SIDEBAR CATEGORIES
-// =====================================================
-
-function renderCategories() {
-  const pickerWindow = document.querySelector(".pet-modal-window");
-
-  if (!pickerWindow) return;
-
-  let oldSidebar = pickerWindow.querySelector(".picker-sidebar");
-
-  if (oldSidebar) {
-    oldSidebar.remove();
+  if (
+    image &&
+    !/^https?:\/\//i.test(image)
+  ) {
+    image =
+      `${PET_IMAGE_BASE}/images/` +
+      image.replace(/^\/+/, "");
   }
 
-  const categories = [
-    "all",
-    "pets",
-    "petwear",
-    "eggs",
-    "vehicles",
-    "toys",
-    "gifts"
-  ];
+  return {
+    ...item,
 
-  const sidebar = document.createElement("aside");
-  sidebar.className = "picker-sidebar";
+    id:
+      item.id ||
+      item.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "_") +
+        "_" +
+        index,
 
-  categories.forEach((category) => {
-    const button = document.createElement("button");
+    name: String(item.name),
 
-    button.type = "button";
-    button.className = "picker-category";
+    rarity:
+      item.rarity ||
+      "unknown",
 
-    if (currentCategory === category) {
-      button.classList.add("active");
-    }
+    value:
+      Number(
+        item.value ??
+        item.regular?.value ??
+        item.regular ??
+        0
+      ),
 
-    button.textContent = getCategoryLabel(category);
+    image,
 
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
+    category: getItemCategory(item)
+  };
+}
 
-      currentCategory = category;
-
-      document
-        .querySelectorAll(".picker-category")
-        .forEach((item) => item.classList.remove("active"));
-
-      button.classList.add("active");
-
-      renderPickerPets();
-    });
-
-    sidebar.appendChild(button);
+async function loadPetDatabase() {
+  const response = await fetch(PET_DATA_URL, {
+    cache: "no-store"
   });
 
-  const search = pickerWindow.querySelector(".modal-search");
-  const grid = document.getElementById("pickerPets");
-
-  if (search) {
-    search.parentNode.insertBefore(sidebar, search);
+  if (!response.ok) {
+    throw new Error(
+      `Pet database HTTP ${response.status}`
+    );
   }
 
-  // ---------------------------------------------------
-  // Sidebar layout
-  // ---------------------------------------------------
+  const raw = await response.json();
 
-  const style = document.createElement("style");
+  let source = raw;
 
-  style.textContent = `
-    .pet-modal-window {
-      position: relative;
-    }
+  if (
+    raw &&
+    typeof raw === "object" &&
+    Array.isArray(raw.pets)
+  ) {
+    source = raw.pets;
+  }
 
-    .picker-sidebar {
-      display: flex;
-      align-items: stretch;
-      gap: 7px;
-      margin-bottom: 14px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      padding-bottom: 2px;
-    }
+  if (
+    raw &&
+    typeof raw === "object" &&
+    Array.isArray(raw.items)
+  ) {
+    source = raw.items;
+  }
 
-    .picker-category {
-      flex: 0 0 auto;
-      height: 36px;
-      padding: 0 13px;
-      border-radius: 11px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.025);
-      color: rgba(255,255,255,.48);
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: .08em;
-      cursor: pointer;
-      transition: .18s ease;
-    }
+  if (!Array.isArray(source)) {
+    throw new Error(
+      "Pet database formatı tanınmadı."
+    );
+  }
 
-    .picker-category:hover {
-      color: #fff;
-      background: rgba(255,255,255,.055);
-    }
+  pets = source
+    .map(normalizePet)
+    .filter(Boolean);
 
-    .picker-category.active {
-      color: #fff;
-      background: rgba(255,255,255,.09);
-      border-color: rgba(255,255,255,.16);
-      box-shadow:
-        0 0 20px rgba(255,255,255,.035),
-        inset 0 1px rgba(255,255,255,.08);
-    }
-  `;
-
-  document.head.appendChild(style);
+  renderValues();
+  renderPickerPets(pets);
 }
 
-// =====================================================
-// PICKER RENDER
-// =====================================================
+/* =========================================================
+   VALUE SECTION
+   ========================================================= */
 
-function renderPickerPets() {
-  const grid = document.getElementById("pickerPets");
+function renderValues() {
+  const grid = $("valueGrid");
 
   if (!grid) return;
 
-  const searchInput = document.getElementById("petSearch");
-  const query = String(searchInput?.value || "")
-    .toLowerCase()
-    .trim();
+  const search = $("search");
 
-  let filtered = allItems.filter((item) => {
-    const categoryMatch =
-      currentCategory === "all" ||
-      item.category === currentCategory;
+  const q =
+    (search?.value || "")
+      .trim()
+      .toLowerCase();
 
-    const searchMatch =
-      !query ||
-      item.name.toLowerCase().includes(query);
-
-    return categoryMatch && searchMatch;
-  });
+  const list = pets.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    String(p.rarity)
+      .toLowerCase()
+      .includes(q)
+  );
 
   grid.innerHTML = "";
 
-  if (!filtered.length) {
+  if (!list.length) {
     grid.innerHTML = `
-      <div class="picker-error">
-        <strong>Bulunamadı</strong>
-        <span>Aradığın eşya veya pet burada görünmüyor.</span>
+      <div class="empty-picker">
+        <span>🔎</span>
+        <strong>Pet bulunamadı</strong>
+        <small>Başka bir isim dene.</small>
       </div>
     `;
-
     return;
   }
 
-  const fragment = document.createDocumentFragment();
+  list.forEach(pet => {
+    const card =
+      document.createElement("div");
 
-  filtered.forEach((item) => {
-    const card = document.createElement("button");
-
-    card.type = "button";
-    card.className = "pet-choice-card";
-
-    if (selectedPet && selectedPet.id === item.id) {
-      card.classList.add("selected");
-    }
-
-    const baseValue = getItemValue(item);
+    card.className = "value-card";
 
     card.innerHTML = `
-      <div class="pet-choice-image-wrap">
-        <img
-          src="${escapeAttribute(item.image)}"
-          alt="${escapeAttribute(item.name)}"
-          class="pet-choice-image"
-          loading="lazy"
-          onerror="this.style.opacity='0.25'"
+      <div class="value-image">
+        ${imageHTML(pet)}
+      </div>
+
+      <div class="value-info">
+        <h3>
+          ${escapeHTML(pet.name)}
+        </h3>
+
+        <span
+          class="rarity-small ${escapeHTML(
+            pet.rarity || ""
+          )}"
         >
-      </div>
+          ${escapeHTML(
+            rarityName(pet.rarity)
+          )}
+        </span>
 
-      <div class="pet-choice-name">
-        ${escapeHTML(item.name)}
-      </div>
-
-      <div class="pet-choice-value ${showPickerValues ? "" : "picker-value-hidden"}">
-        ${formatValue(baseValue)}
+        <strong>
+          Value: ${formatValue(pet.value)}
+        </strong>
       </div>
     `;
 
-    card.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      selectPickerPet(item);
-
-      // Sadece kartın selected görünümü güncellenir.
-      // Liste yeniden render edilmez.
-      document
-        .querySelectorAll(".pet-choice-card")
-        .forEach((cardEl) => cardEl.classList.remove("selected"));
-
-      card.classList.add("selected");
-    });
-
-    fragment.appendChild(card);
+    grid.appendChild(card);
   });
-
-  grid.appendChild(fragment);
 }
 
-// =====================================================
-// OPEN PICKER
-// =====================================================
+/* =========================================================
+   PICKER
+   ========================================================= */
+
+function getPickerModal() {
+  return (
+    $("petPicker") ||
+    $("petPickerModal")
+  );
+}
+
+function getPickerSearch() {
+  return (
+    $("petSearch") ||
+    $("pickerSearch")
+  );
+}
+
+function getPickerGrid() {
+  return (
+    $("pickerPets") ||
+    $("pickerPetList")
+  );
+}
 
 function openPetPicker(side) {
-  selectedSide = side;
-
+  pickerSide = side;
   selectedPet = null;
 
-  const modal = document.getElementById("petPicker");
-  const title = document.getElementById("petPickerTitle");
-  const search = document.getElementById("petSearch");
+  /*
+    ÖNEMLİ:
+    D/N/M/F/R burada sıfırlanmıyor.
+    Kullanıcı modal açmadan önce/önceki seçiminden
+    devam edebiliyor.
+  */
+
+  const title =
+    $("petPickerTitle");
 
   if (title) {
     title.textContent =
       side === "you"
-        ? "Senin teklifine ekle"
-        : "Karşı tarafa ekle";
+        ? "Senin teklifine pet ekle"
+        : "Karşı tarafın teklifine pet ekle";
   }
+
+  const search =
+    getPickerSearch();
 
   if (search) {
     search.value = "";
   }
 
-  currentCategory = "all";
-  showPickerValues = false;
+  const bar =
+    $("pickerBar");
 
-  document
-    .querySelectorAll(".picker-category")
-    .forEach((button) => {
-      button.classList.toggle(
-        "active",
-        button.textContent.trim() === "ALL"
-      );
-    });
+  if (bar) {
+    bar.classList.add("hidden");
+  }
 
-  updatePickerBar();
+  preparePickerButtons();
 
-  renderPickerPets();
+  updatePickerButtons();
+
+  updatePickerValue();
+
+  renderPickerPets(pets);
+
+  const modal =
+    getPickerModal();
 
   if (modal) {
+    modal.classList.add("show");
     modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
-    document.body.classList.add("modal-open");
+    modal.setAttribute(
+      "aria-hidden",
+      "false"
+    );
   }
+
+  document.body.classList.add(
+    "profile-open"
+  );
 
   setTimeout(() => {
-    search?.focus();
-  }, 80);
+    getPickerSearch()?.focus();
+  }, 50);
 }
-
-// =====================================================
-// CLOSE PICKER
-// =====================================================
 
 function closePetPicker() {
-  const modal = document.getElementById("petPicker");
-
-  if (modal) {
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-  }
-
-  document.body.classList.remove("modal-open");
-}
-
-// =====================================================
-// SELECT PET
-// =====================================================
-
-function selectPickerPet(item) {
-  if (!item) return;
-
-  selectedPet = item;
-
-  updatePickerBar();
-}
-
-// =====================================================
-// FORM
-// =====================================================
-
-function toggleForm(form) {
-  const allowed = ["normal", "neon", "mega"];
-
-  if (!allowed.includes(form)) {
-    return;
-  }
-
-  selectedForm = form;
-
-  // ÖNEMLİ:
-  // Burada renderPickerPets() ÇAĞRILMIYOR.
-  // Böylece D/N/M'ye basınca liste yenilenmez.
-  updateVariantButtons();
-  updatePickerBar();
-}
-
-// =====================================================
-// POTION
-// =====================================================
-
-function togglePotion(potion) {
-  const allowed = ["none", "fly", "ride"];
-
-  if (!allowed.includes(potion)) {
-    return;
-  }
-
-  selectedPotion = potion;
-
-  // Liste yenilenmiyor.
-  updateVariantButtons();
-  updatePickerBar();
-}
-
-// =====================================================
-// VARIANT BUTTONS
-// =====================================================
-
-function updateVariantButtons() {
-  const normal = document.getElementById("normalFormBtn");
-  const neon = document.getElementById("btnNeon");
-  const mega = document.getElementById("btnMega");
-
-  const fly = document.getElementById("btnFly");
-  const ride = document.getElementById("btnRide");
-
-  normal?.classList.toggle("active", selectedForm === "normal");
-  neon?.classList.toggle("active", selectedForm === "neon");
-  mega?.classList.toggle("active", selectedForm === "mega");
-
-  fly?.classList.toggle("active", selectedPotion === "fly");
-  ride?.classList.toggle("active", selectedPotion === "ride");
-}
-
-// =====================================================
-// GET CURRENT VALUE
-// =====================================================
-
-function getItemValue(item) {
-  if (!item) return 0;
-
-  // PET
-  if (item.isPet) {
-    const formData =
-      item[selectedForm] ||
-      item.regular ||
-      {};
-
-    // D + Normal Potion
-    if (selectedPotion === "none") {
-      return toNumber(
-        formData.no_potion ??
-        formData.value ??
-        0
-      );
-    }
-
-    // Fly
-    if (selectedPotion === "fly") {
-      return toNumber(
-        formData.fly ??
-        formData.value ??
-        0
-      );
-    }
-
-    // Ride
-    if (selectedPotion === "ride") {
-      return toNumber(
-        formData.ride ??
-        formData.value ??
-        0
-      );
-    }
-  }
-
-  // PET OLMAYANLAR:
-  // Eggs / Pet Wear / Vehicles / Toys / Gifts
-  // D/N/M/F/R uygulanmaz.
-  return getNonPetValue(item);
-}
-
-// =====================================================
-// NON-PET VALUE
-// =====================================================
-
-function getNonPetValue(item) {
-  if (!item) return 0;
-
-  if (item.value !== undefined) {
-    return toNumber(item.value);
-  }
-
-  if (item.regular?.value !== undefined) {
-    return toNumber(item.regular.value);
-  }
-
-  if (item.regular?.no_potion !== undefined) {
-    return toNumber(item.regular.no_potion);
-  }
-
-  if (typeof item.values === "object") {
-    return toNumber(
-      item.values.value ??
-      item.values.regular ??
-      0
-    );
-  }
-
-  return 0;
-}
-
-// =====================================================
-// PICKER BAR
-// =====================================================
-
-function updatePickerBar() {
-  const preview = document.getElementById("pickerPreview");
-  const value = document.getElementById("pickerValue");
-  const confirm = document.getElementById("confirmPetBtn");
-  const showValuesBtn = document.getElementById("showValuesBtn");
-
-  updateVariantButtons();
-
-  if (!selectedPet) {
-    if (preview) {
-      preview.innerHTML = `
-        <div class="picker-preview-empty">
-          <span>+</span>
-          <small>Pet seç</small>
-        </div>
-      `;
-    }
-
-    if (value) {
-      value.textContent = "—";
-    }
-
-    if (confirm) {
-      confirm.disabled = true;
-    }
-  } else {
-    const currentValue = getItemValue(selectedPet);
-
-    if (preview) {
-      preview.innerHTML = `
-        <div class="picker-preview-card">
-
-          <img
-            src="${escapeAttribute(selectedPet.image)}"
-            alt="${escapeAttribute(selectedPet.name)}"
-            class="picker-preview-image"
-            onerror="this.style.opacity='0.25'"
-          >
-
-          <div>
-            <div class="picker-preview-name">
-              ${escapeHTML(selectedPet.name)}
-            </div>
-
-            <div class="picker-preview-sub">
-              ${getVariantLabel()}
-            </div>
-          </div>
-
-        </div>
-      `;
-    }
-
-    if (value) {
-      value.textContent = showPickerValues
-        ? formatValue(currentValue)
-        : "•••";
-    }
-
-    if (confirm) {
-      confirm.disabled = false;
-    }
-  }
-
-  if (showValuesBtn) {
-    showValuesBtn.textContent =
-      showPickerValues
-        ? "HIDE VALUES"
-        : "SHOW VALUES";
-  }
-}
-
-// =====================================================
-// TOGGLE SHOW VALUES
-// =====================================================
-
-function togglePickerValues() {
-  showPickerValues = !showPickerValues;
-
-  const grid = document.getElementById("pickerPets");
-
-  grid
-    ?.querySelectorAll(".pet-choice-value")
-    .forEach((element) => {
-      element.classList.toggle(
-        "picker-value-hidden",
-        !showPickerValues
-      );
-    });
-
-  updatePickerBar();
-}
-
-// =====================================================
-// VARIANT LABEL
-// =====================================================
-
-function getVariantLabel() {
-  let formLabel = "D";
-
-  if (selectedForm === "neon") formLabel = "N";
-  if (selectedForm === "mega") formLabel = "M";
-
-  if (!selectedPet?.isPet) {
-    return "NORMAL";
-  }
-
-  if (selectedPotion === "fly") {
-    return `${formLabel} • F`;
-  }
-
-  if (selectedPotion === "ride") {
-    return `${formLabel} • R`;
-  }
-
-  return formLabel;
-}
-
-// =====================================================
-// CONFIRM ADD
-// =====================================================
-
-function confirmAddPet() {
-  if (!selectedPet || !selectedSide) {
-    return;
-  }
-
-  const itemValue = getItemValue(selectedPet);
-
-  const tradeItem = {
-    id: `${Date.now()}-${Math.random()}`,
-    itemId: selectedPet.id,
-    name: selectedPet.name,
-    image: selectedPet.image,
-    category: selectedPet.category,
-    isPet: selectedPet.isPet,
-    value: itemValue,
-    form: selectedPet.isPet ? selectedForm : "normal",
-    potion: selectedPet.isPet ? selectedPotion : "none"
-  };
-
-  tradeState[selectedSide].push(tradeItem);
-
-  // Yeni pet eklerken seçili D/N/M/F/R aynen korunur.
-  closePetPicker();
-  updateTradeUI();
-}
-
-// =====================================================
-// TRADE UI
-// =====================================================
-
-function updateTradeUI() {
-  renderTradeSide("you");
-  renderTradeSide("them");
-
-  const youTotal = calculateTradeTotal("you");
-  const themTotal = calculateTradeTotal("them");
-
-  setText("youTotal", formatValue(youTotal));
-  setText("themTotal", formatValue(themTotal));
-
-  updateResult(youTotal, themTotal);
-
-  updateProfileStatsFromCurrentTrade();
-}
-
-// =====================================================
-// RENDER TRADE SIDE
-// =====================================================
-
-function renderTradeSide(side) {
-  const container = document.getElementById(
-    side === "you" ? "youItems" : "themItems"
-  );
-
-  if (!container) return;
-
-  const items = tradeState[side];
-
-  container.innerHTML = "";
-
-  if (!items.length) {
-    container.innerHTML = `
-      <div class="empty-items trade-empty">
-        <span class="empty-plus">＋</span>
-        <strong>Henüz pet eklenmedi</strong>
-        <small>
-          ${
-            side === "you"
-              ? "Teklifini oluşturmak için pet ekle"
-              : "Karşı tarafın teklifini oluştur"
-          }
-        </small>
-      </div>
-    `;
-
-    return;
-  }
-
-  items.forEach((item) => {
-    const card = document.createElement("div");
-
-    card.className = "trade-item";
-
-    card.innerHTML = `
-      <div class="trade-item-image-wrap">
-        <img
-          class="trade-item-image"
-          src="${escapeAttribute(item.image)}"
-          alt="${escapeAttribute(item.name)}"
-          onerror="this.style.opacity='0.25'"
-        >
-      </div>
-
-      <div class="trade-item-name">
-        ${escapeHTML(item.name)}
-      </div>
-
-      ${
-        item.isPet
-          ? `
-            <div class="trade-item-badges">
-              ${getTradeBadges(item)}
-            </div>
-          `
-          : ""
-      }
-
-      <div class="trade-item-value">
-        ${formatValue(item.value)}
-      </div>
-
-      <button
-        type="button"
-        class="trade-item-remove"
-        aria-label="Kaldır"
-      >×</button>
-    `;
-
-    // Karta tıklayınca kaldır.
-    card.addEventListener("click", (event) => {
-      if (event.target.closest(".trade-item-remove")) return;
-
-      removeTradeItem(side, item.id);
-    });
-
-    const removeButton =
-      card.querySelector(".trade-item-remove");
-
-    removeButton?.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      removeTradeItem(side, item.id);
-    });
-
-    container.appendChild(card);
-  });
-}
-
-// =====================================================
-// TRADE BADGES
-// =====================================================
-
-function getTradeBadges(item) {
-  const badges = [];
-
-  if (item.form === "neon") badges.push("N");
-  else if (item.form === "mega") badges.push("M");
-  else badges.push("D");
-
-  if (item.potion === "fly") badges.push("F");
-  if (item.potion === "ride") badges.push("R");
-
-  return badges
-    .map(
-      (badge) =>
-        `<span class="trade-badge">${badge}</span>`
-    )
-    .join("");
-}
-
-// =====================================================
-// REMOVE TRADE ITEM
-// =====================================================
-
-function removeTradeItem(side, id) {
-  tradeState[side] = tradeState[side].filter(
-    (item) => item.id !== id
-  );
-
-  updateTradeUI();
-}
-
-// =====================================================
-// CALCULATE TOTAL
-// =====================================================
-
-function calculateTradeTotal(side) {
-  return tradeState[side].reduce(
-    (total, item) => total + toNumber(item.value),
-    0
-  );
-}
-
-// =====================================================
-// RESULT
-// =====================================================
-
-function updateResult(youTotal, themTotal) {
-  const resultCard =
-    document.getElementById("resultCard");
-
-  const resultStatusText =
-    document.getElementById("resultStatusText");
-
-  const resultHint =
-    document.getElementById("resultHint");
-
-  const resultDiffDisplay =
-    document.getElementById("resultDiffDisplay");
-
-  const resultDiffNumber =
-    document.getElementById("resultDiffNumber");
-
-  const statusLabel =
-    document.getElementById("tradeStatusLabel");
-
-  const statusBar =
-    document.getElementById("tradeStatusBar");
-
-  const totalHasItems =
-    tradeState.you.length > 0 ||
-    tradeState.them.length > 0;
-
-  const bothSidesHaveItems =
-    tradeState.you.length > 0 &&
-    tradeState.them.length > 0;
-
-  // Hiçbir şey yok
-  if (!totalHasItems) {
-    setText(statusLabel, "TRADE HAZIR");
-    setText(resultDiffNumber, "—");
-
-    if (statusBar) {
-      statusBar.dataset.status = "ready";
-    }
-
-    if (resultCard) {
-      resultCard.dataset.status = "ready";
-    }
-
-    setText(resultStatusText, "Pet ekleyerek başla");
-    setText(
-      resultHint,
-      "İki tarafa da pet eklediğinde avantajı burada göreceksin."
-    );
-    setText(resultDiffDisplay, "—");
-
-    return;
-  }
-
-  // Sadece bir taraf varsa
-  if (!bothSidesHaveItems) {
-    setText(statusLabel, "TRADE BEKLENİYOR");
-    setText(resultDiffNumber, "—");
-
-    if (statusBar) {
-      statusBar.dataset.status = "waiting";
-    }
-
-    if (resultCard) {
-      resultCard.dataset.status = "waiting";
-    }
-
-    if (tradeState.you.length === 0) {
-      setText(resultStatusText, "Senin teklifin boş");
-      setText(
-        resultHint,
-        "Önce kendi teklifine bir pet veya eşya ekle."
-      );
-    } else {
-      setText(resultStatusText, "Karşı taraf boş");
-      setText(
-        resultHint,
-        "Karşı tarafa da bir pet veya eşya ekle."
-      );
-    }
-
-    setText(resultDiffDisplay, "—");
-
-    return;
-  }
-
-  const difference = themTotal - youTotal;
-
-  const percent =
-    youTotal > 0
-      ? (difference / youTotal) * 100
-      : 0;
-
-  let status = "fair";
-  let label = "FAIR";
-  let hint = "İki tarafın değeri birbirine oldukça yakın.";
-
-  if (percent >= 10) {
-    status = "big-win";
-    label = "BIG WIN";
-    hint = "Bu trade senin için oldukça avantajlı.";
-  } else if (percent > 3) {
-    status = "small-win";
-    label = "SMALL WIN";
-    hint = "Trade senin lehine.";
-  } else if (percent <= -10) {
-    status = "big-lose";
-    label = "BIG LOSE";
-    hint = "Bu trade senin için ciddi şekilde dezavantajlı.";
-  } else if (percent < -3) {
-    status = "small-lose";
-    label = "SMALL LOSE";
-    hint = "Trade karşı tarafın lehine.";
-  }
-
-  const signedDifference =
-    difference > 0
-      ? `+${formatValue(difference)}`
-      : formatValue(difference);
-
-  setText(statusLabel, label);
-  setText(resultDiffNumber, signedDifference);
-  setText(resultStatusText, label);
-  setText(resultHint, hint);
-  setText(resultDiffDisplay, signedDifference);
-
-  if (statusBar) {
-    statusBar.dataset.status = status;
-  }
-
-  if (resultCard) {
-    resultCard.dataset.status = status;
-  }
-}
-
-// =====================================================
-// CLEAR TRADE
-// =====================================================
-
-function clearTrade() {
-  tradeState.you = [];
-  tradeState.them = [];
-
-  selectedPet = null;
-  selectedSide = null;
-
-  updateTradeUI();
-}
-
-// =====================================================
-// PROFILE
-// =====================================================
-
-const DEFAULT_PROFILE = {
-  name: "Zayaxra Kullanıcısı",
-  username: "kullanici",
-  bio: "Henüz bir biyografi eklenmedi.",
-  avatar: "🐉",
-  trades: 0,
-  wins: 0,
-  fair: 0,
-  loses: 0,
-  lastTradeKey: ""
-};
-
-const PROFILE_AVATARS = [
-  "🐉",
-  "🦊",
-  "🐺",
-  "🐱",
-  "🦁",
-  "🐼",
-  "🐸",
-  "🐵",
-  "🦄",
-  "🐲",
-  "🦋",
-  "🐙"
-];
-
-function getProfile() {
-  try {
-    const saved = localStorage.getItem(
-      "zayaxra_profile"
-    );
-
-    if (!saved) {
-      return { ...DEFAULT_PROFILE };
-    }
-
-    return {
-      ...DEFAULT_PROFILE,
-      ...JSON.parse(saved)
-    };
-  } catch (error) {
-    console.warn("Profil okunamadı:", error);
-
-    return { ...DEFAULT_PROFILE };
-  }
-}
-
-function saveProfile(profile) {
-  localStorage.setItem(
-    "zayaxra_profile",
-    JSON.stringify(profile)
-  );
-}
-
-function setupProfileDefaults() {
-  const profile = getProfile();
-
-  saveProfile(profile);
-}
-
-function updateProfileUI() {
-  const profile = getProfile();
-
-  setText("profileAvatar", profile.avatar);
-  setText("profileName", profile.name);
-  setText("profileUsername", `@${profile.username}`);
-  setText("profileBio", profile.bio);
-
-  setText("profileTrades", profile.trades);
-  setText("profileWins", profile.wins);
-  setText("profileFair", profile.fair);
-  setText("profileLoses", profile.loses);
-}
-
-// =====================================================
-// PROFILE MODAL
-// =====================================================
-
-function openProfile() {
   const modal =
-    document.getElementById("profileModal");
+    getPickerModal();
 
   if (!modal) return;
 
-  closeEditProfile();
-
-  updateProfileUI();
-
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
-
-  document.body.classList.add("modal-open");
-}
-
-function closeProfile() {
-  const modal =
-    document.getElementById("profileModal");
-
-  if (!modal) return;
-
+  modal.classList.remove("show");
   modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
 
-  document.body.classList.remove("modal-open");
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
-  closeEditProfile();
+  document.body.classList.remove(
+    "profile-open"
+  );
+
+  pickerSide = null;
+  selectedPet = null;
 }
 
-// =====================================================
-// EDIT PROFILE
-// =====================================================
+function renderPickerPets(list) {
+  const box =
+    getPickerGrid();
 
-function openEditProfile() {
-  const profile = getProfile();
+  if (!box) return;
 
-  const nameInput =
-    document.getElementById("editName");
+  box.innerHTML = "";
 
-  const usernameInput =
-    document.getElementById("editUsername");
-
-  const bioInput =
-    document.getElementById("editBio");
-
-  if (nameInput) nameInput.value = profile.name;
-  if (usernameInput) {
-    usernameInput.value = profile.username;
+  if (!list.length) {
+    box.innerHTML = `
+      <div class="empty-picker">
+        <span>🔎</span>
+        <strong>Pet bulunamadı</strong>
+        <small>Arama kelimesini değiştir.</small>
+      </div>
+    `;
+    return;
   }
-  if (bioInput) bioInput.value = profile.bio;
 
-  renderAvatarPicker();
-
-  document
-    .getElementById("profileEditForm")
-    ?.classList.remove("hidden");
-
-  document
-    .getElementById("profileEditBtn")
-    ?.classList.add("hidden");
-}
-
-function closeEditProfile() {
-  document
-    .getElementById("profileEditForm")
-    ?.classList.add("hidden");
-
-  document
-    .getElementById("profileEditBtn")
-    ?.classList.remove("hidden");
-}
-
-function renderAvatarPicker() {
-  const container =
-    document.getElementById("avatarPick");
-
-  if (!container) return;
-
-  const profile = getProfile();
-
-  container.innerHTML = "";
-
-  PROFILE_AVATARS.forEach((avatar) => {
+  list.forEach(pet => {
     const button =
       document.createElement("button");
 
     button.type = "button";
-    button.className = "avatar-pick-item";
 
-    if (avatar === profile.avatar) {
-      button.classList.add("active");
-    }
+    button.className =
+      "pet-choice" +
+      (
+        selectedPet?.id === pet.id
+          ? " selected"
+          : ""
+      );
 
-    button.textContent = avatar;
+    button.innerHTML = `
+      <div class="choice-image">
+        ${imageHTML(pet)}
+      </div>
 
-    button.addEventListener("click", () => {
-      document
-        .querySelectorAll(".avatar-pick-item")
-        .forEach((item) =>
-          item.classList.remove("active")
+      <strong>
+        ${escapeHTML(pet.name)}
+      </strong>
+
+      <span
+        class="rarity-tag ${escapeHTML(
+          pet.rarity || ""
+        )}"
+      >
+        ${escapeHTML(
+          rarityName(pet.rarity)
+        )}
+      </span>
+
+      <small>
+        ${formatValue(pet.value)}
+      </small>
+    `;
+
+    button.addEventListener(
+      "click",
+      event => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        selectPickerPet(pet);
+
+        document
+          .querySelectorAll(".pet-choice")
+          .forEach(card => {
+            card.classList.remove(
+              "selected"
+            );
+          });
+
+        button.classList.add(
+          "selected"
         );
+      }
+    );
 
-      button.classList.add("active");
-
-      container.dataset.selectedAvatar = avatar;
-    });
-
-    container.appendChild(button);
+    box.appendChild(button);
   });
-
-  container.dataset.selectedAvatar = profile.avatar;
 }
 
-function saveEditedProfile(event) {
+function filterPickerPets() {
+  const search =
+    getPickerSearch();
+
+  const q =
+    (search?.value || "")
+      .trim()
+      .toLowerCase();
+
+  const filtered =
+    pets.filter(pet =>
+      pet.name
+        .toLowerCase()
+        .includes(q) ||
+
+      String(pet.rarity)
+        .toLowerCase()
+        .includes(q)
+    );
+
+  renderPickerPets(filtered);
+}
+
+function selectPickerPet(pet) {
+  selectedPet = pet;
+
+  const bar =
+    $("pickerBar");
+
+  if (bar) {
+    bar.classList.remove(
+      "hidden"
+    );
+  }
+
+  /*
+    Burada D/N/M/F/R sıfırlanmıyor.
+    Kullanıcı bir pet seçtiğinde mevcut seçimleri
+    doğrudan bu pete uygulanıyor.
+  */
+
+  renderPickerPreview();
+  updatePickerButtons();
+  updatePickerValue();
+}
+
+/* =========================================================
+   PICKER BUTTONS
+   ========================================================= */
+
+function preparePickerButtons() {
+  const normal =
+    $("normalFormBtn");
+
+  const neon =
+    $("btnNeon");
+
+  const mega =
+    $("btnMega");
+
+  const none =
+    $("noPotionBtn");
+
+  const fly =
+    $("btnFly");
+
+  const ride =
+    $("btnRide");
+
+  const flyRide =
+    $("flyRideBtn");
+
+  /*
+    Kullanıcının istediği:
+    D N M F R
+
+    Eski:
+    Normal
+    Normal potion
+    F/R
+    butonlarını kaldırıyoruz.
+  */
+
+  if (normal) {
+    normal.textContent = "D";
+    normal.type = "button";
+  }
+
+  if (neon) {
+    neon.textContent = "N";
+    neon.type = "button";
+  }
+
+  if (mega) {
+    mega.textContent = "M";
+    mega.type = "button";
+  }
+
+  if (fly) {
+    fly.textContent = "F";
+    fly.type = "button";
+  }
+
+  if (ride) {
+    ride.textContent = "R";
+    ride.type = "button";
+  }
+
+  if (none) {
+    none.style.display = "none";
+  }
+
+  if (flyRide) {
+    flyRide.style.display =
+      "none";
+  }
+
+  [
+    normal,
+    neon,
+    mega,
+    fly,
+    ride
+  ].forEach(button => {
+    if (!button) return;
+
+    button.disabled = false;
+    button.removeAttribute(
+      "disabled"
+    );
+  });
+}
+
+function resetPickerButtons() {
+  preparePickerButtons();
+
+  [
+    "normalFormBtn",
+    "btnNeon",
+    "btnMega",
+    "btnFly",
+    "btnRide"
+  ].forEach(id => {
+    $(id)?.classList.remove(
+      "active"
+    );
+  });
+}
+
+function updatePickerButtons() {
+  preparePickerButtons();
+
+  $("normalFormBtn")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "normal"
+    );
+
+  $("btnNeon")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "neon"
+    );
+
+  $("btnMega")
+    ?.classList.toggle(
+      "active",
+      selectedForm === "mega"
+    );
+
+  $("btnFly")
+    ?.classList.toggle(
+      "active",
+      selectedPotion.fly
+    );
+
+  $("btnRide")
+    ?.classList.toggle(
+      "active",
+      selectedPotion.ride
+    );
+}
+
+/* =========================================================
+   FORM SELECTION
+   ========================================================= */
+
+function toggleForm(form) {
+  if (
+    ![
+      "normal",
+      "neon",
+      "mega"
+    ].includes(form)
+  ) {
+    return false;
+  }
+
+  selectedForm = form;
+
+  /*
+    ÖNEMLİ:
+    Burada renderPickerPets YOK.
+    Bu yüzden butona basınca liste yenilenmiyor.
+  */
+
+  updatePickerButtons();
+  updatePickerValue();
+
+  if (selectedPet) {
+    renderPickerPreview();
+  }
+
+  return false;
+}
+
+/* =========================================================
+   POTION
+   ========================================================= */
+
+function togglePotion(type) {
+  if (
+    type !== "fly" &&
+    type !== "ride"
+  ) {
+    return false;
+  }
+
+  selectedPotion[type] =
+    !selectedPotion[type];
+
+  /*
+    F ve R birbirinden bağımsızdır.
+    İkisine de basarsan F + R olur.
+    F/R birleşik butonu yok.
+  */
+
+  updatePickerButtons();
+  updatePickerValue();
+
+  if (selectedPet) {
+    renderPickerPreview();
+  }
+
+  return false;
+}
+
+/* =========================================================
+   VALUE
+   ========================================================= */
+
+function getModifiedValue(pet) {
+  if (!pet) return 0;
+
+  let value =
+    Number(pet.value || 0);
+
+  if (
+    selectedForm === "neon"
+  ) {
+    value *= 4;
+  }
+
+  if (
+    selectedForm === "mega"
+  ) {
+    value *= 16;
+  }
+
+  if (
+    selectedPotion.fly
+  ) {
+    value += 0.25;
+  }
+
+  if (
+    selectedPotion.ride
+  ) {
+    value += 0.25;
+  }
+
+  return value;
+}
+
+function updatePickerValue() {
+  const element =
+    $("pickerValue");
+
+  if (!element) return;
+
+  element.textContent =
+    selectedPet
+      ? formatValue(
+          getModifiedValue(
+            selectedPet
+          )
+        )
+      : "0";
+}
+
+/* =========================================================
+   PREVIEW
+   ========================================================= */
+
+function renderPickerPreview() {
+  const box =
+    $("pickerPreview");
+
+  if (!box || !selectedPet) {
+    return;
+  }
+
+  const neon =
+    selectedForm === "neon";
+
+  const mega =
+    selectedForm === "mega";
+
+  box.innerHTML = `
+    <div class="pet-image-wrap">
+
+      ${
+        neon
+          ? `<div class="neon-effect"></div>`
+          : ""
+      }
+
+      ${
+        mega
+          ? `<div class="mega-effect"></div>`
+          : ""
+      }
+
+      ${imageHTML(selectedPet)}
+
+      <div class="pet-badges">
+
+        ${
+          neon
+            ? `<span class="mini-chip neon">N</span>`
+            : ""
+        }
+
+        ${
+          mega
+            ? `<span class="mini-chip mega">M</span>`
+            : ""
+        }
+
+        ${
+          selectedPotion.fly
+            ? `<span class="mini-chip fly">F</span>`
+            : ""
+        }
+
+        ${
+          selectedPotion.ride
+            ? `<span class="mini-chip ride">R</span>`
+            : ""
+        }
+
+      </div>
+
+    </div>
+
+    <div class="preview-info">
+
+      <strong>
+        ${escapeHTML(
+          selectedPet.name
+        )}
+      </strong>
+
+      <span>
+        ${escapeHTML(
+          rarityName(
+            selectedPet.rarity
+          )
+        )}
+      </span>
+
+      <div class="vchip-row">
+
+        ${
+          neon
+            ? `<span class="vchip neon">NEON</span>`
+            : ""
+        }
+
+        ${
+          mega
+            ? `<span class="vchip mega">MEGA</span>`
+            : ""
+        }
+
+        ${
+          selectedPotion.fly
+            ? `<span class="vchip fly">FLY</span>`
+            : ""
+        }
+
+        ${
+          selectedPotion.ride
+            ? `<span class="vchip ride">RIDE</span>`
+            : ""
+        }
+
+      </div>
+
+    </div>
+  `;
+}
+
+/* =========================================================
+   ADD PET
+   ========================================================= */
+
+function confirmAddPet() {
+  if (
+    !selectedPet ||
+    !pickerSide
+  ) {
+    return false;
+  }
+
+  const item = {
+    ...selectedPet,
+
+    baseValue:
+      Number(
+        selectedPet.value || 0
+      ),
+
+    value:
+      getModifiedValue(
+        selectedPet
+      ),
+
+    form:
+      selectedForm,
+
+    fly:
+      !!selectedPotion.fly,
+
+    ride:
+      !!selectedPotion.ride,
+
+    uniqueId:
+      `${Date.now()}_${Math.random()
+        .toString(36)
+        .slice(2)}`
+  };
+
+  if (
+    pickerSide === "you"
+  ) {
+    youTrade.push(item);
+  } else {
+    themTrade.push(item);
+  }
+
+  closePetPicker();
+  updateTradeUI();
+
+  return false;
+}
+
+/* =========================================================
+   TRADE
+   ========================================================= */
+
+function calculateTotal(trade) {
+  return trade.reduce(
+    (sum, pet) =>
+      sum +
+      Number(
+        pet.value || 0
+      ),
+    0
+  );
+}
+
+function tradeItemHTML(
+  pet,
+  side
+) {
+  return `
+    <div
+      class="trade-item"
+      data-id="${escapeHTML(
+        pet.uniqueId
+      )}"
+    >
+
+      <div class="pet-image-wrap">
+
+        ${
+          pet.form === "neon"
+            ? `<div class="neon-effect"></div>`
+            : ""
+        }
+
+        ${
+          pet.form === "mega"
+            ? `<div class="mega-effect"></div>`
+            : ""
+        }
+
+        ${imageHTML(pet)}
+
+        <div class="pet-badges">
+
+          ${
+            pet.form === "neon"
+              ? `<span class="mini-chip neon">N</span>`
+              : ""
+          }
+
+          ${
+            pet.form === "mega"
+              ? `<span class="mini-chip mega">M</span>`
+              : ""
+          }
+
+          ${
+            pet.fly
+              ? `<span class="mini-chip fly">F</span>`
+              : ""
+          }
+
+          ${
+            pet.ride
+              ? `<span class="mini-chip ride">R</span>`
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+      <div class="trade-item-info">
+
+        <strong>
+          ${escapeHTML(
+            pet.name
+          )}
+        </strong>
+
+        <small>
+          ${escapeHTML(
+            rarityName(
+              pet.rarity
+            )
+          )}
+        </small>
+
+        <div class="item-chips">
+
+          ${
+            pet.form === "neon"
+              ? `<span class="mini-chip neon">Neon</span>`
+              : ""
+          }
+
+          ${
+            pet.form === "mega"
+              ? `<span class="mini-chip mega">Mega</span>`
+              : ""
+          }
+
+          ${
+            pet.fly
+              ? `<span class="mini-chip fly">Fly</span>`
+              : ""
+          }
+
+          ${
+            pet.ride
+              ? `<span class="mini-chip ride">Ride</span>`
+              : ""
+          }
+
+        </div>
+
+      </div>
+
+      <strong>
+        ${formatValue(
+          pet.value
+        )}
+      </strong>
+
+      <button
+        type="button"
+        class="remove-item"
+        onclick="
+          removeTradePet(
+            '${side}',
+            '${pet.uniqueId}'
+          );
+          return false;
+        "
+      >
+        ×
+      </button>
+
+    </div>
+  `;
+}
+
+function renderTradeSide(
+  id,
+  trade,
+  side
+) {
+  const element =
+    $(id);
+
+  if (!element) return;
+
+  element.innerHTML =
+    trade.length
+      ? trade
+          .map(pet =>
+            tradeItemHTML(
+              pet,
+              side
+            )
+          )
+          .join("")
+      : `
+        <div class="empty-items trade-empty">
+          <span class="empty-plus">＋</span>
+          <strong>Henüz pet eklenmedi</strong>
+          <small>
+            ${
+              side === "you"
+                ? "Teklifini oluşturmak için pet ekle"
+                : "Karşı tarafın teklifini oluştur"
+            }
+          </small>
+        </div>
+      `;
+}
+
+function removeTradePet(
+  side,
+  id
+) {
+  if (side === "you") {
+    youTrade =
+      youTrade.filter(
+        pet =>
+          pet.uniqueId !== id
+      );
+  } else {
+    themTrade =
+      themTrade.filter(
+        pet =>
+          pet.uniqueId !== id
+      );
+  }
+
+  recordedTradeKey = "";
+
+  updateTradeUI();
+}
+
+function clearTrade() {
+  youTrade = [];
+  themTrade = [];
+
+  recordedTradeKey = "";
+
+  updateTradeUI();
+}
+
+function updateTradeUI() {
+  const youTotal =
+    calculateTotal(
+      youTrade
+    );
+
+  const themTotal =
+    calculateTotal(
+      themTrade
+    );
+
+  renderTradeSide(
+    "youItems",
+    youTrade,
+    "you"
+  );
+
+  renderTradeSide(
+    "themItems",
+    themTrade,
+    "them"
+  );
+
+  if ($("youTotal")) {
+    $("youTotal").textContent =
+      formatValue(
+        youTotal
+      );
+  }
+
+  if ($("themTotal")) {
+    $("themTotal").textContent =
+      formatValue(
+        themTotal
+      );
+  }
+
+  updateResult(
+    youTotal,
+    themTotal
+  );
+}
+
+/* =========================================================
+   RESULT
+   ========================================================= */
+
+function updateResult(
+  youTotal,
+  themTotal
+) {
+  const card =
+    $("resultCard");
+
+  const status =
+    $("resultStatusText");
+
+  const hint =
+    $("resultHint");
+
+  const display =
+    $("resultDiffDisplay");
+
+  const diffNumber =
+    $("resultDiffNumber");
+
+  const statusLabel =
+    $("tradeStatusLabel");
+
+  const statusBar =
+    $("tradeStatusBar");
+
+  if (!card) return;
+
+  card.classList.remove(
+    "win",
+    "lose",
+    "fair",
+    "small-win",
+    "small-lose",
+    "big-win",
+    "big-lose"
+  );
+
+  if (
+    youTotal === 0 &&
+    themTotal === 0
+  ) {
+    if (status)
+      status.textContent =
+        "Pet ekleyerek başla";
+
+    if (hint)
+      hint.textContent =
+        "İki tarafa da pet eklediğinde avantajı burada göreceksin.";
+
+    if (display)
+      display.textContent =
+        "—";
+
+    if (diffNumber)
+      diffNumber.textContent =
+        "—";
+
+    if (statusLabel)
+      statusLabel.textContent =
+        "TRADE HAZIR";
+
+    return;
+  }
+
+  if (
+    youTotal === 0 ||
+    themTotal === 0
+  ) {
+    if (status)
+      status.textContent =
+        "İki tarafa da pet ekle";
+
+    if (hint)
+      hint.textContent =
+        "Her iki tarafta da teklif oluşturduğunda sonucu görebilirsin.";
+
+    if (display)
+      display.textContent =
+        "—";
+
+    if (diffNumber)
+      diffNumber.textContent =
+        "—";
+
+    if (statusLabel)
+      statusLabel.textContent =
+        "TRADE BEKLENİYOR";
+
+    return;
+  }
+
+  const difference =
+    themTotal -
+    youTotal;
+
+  const percent =
+    youTotal > 0
+      ? (
+          difference /
+          youTotal
+        ) * 100
+      : 0;
+
+  let result =
+    "fair";
+
+  let label =
+    "FAIR";
+
+  let text =
+    "İki tarafın değeri birbirine oldukça yakın.";
+
+  /*
+    +10 ve üstü = BIG WIN
+    +3 ile +10 = SMALL WIN
+
+    -3 ile -10 = SMALL LOSE
+    -10 ve altı = BIG LOSE
+
+    Fark:
+    karşı taraf - sen
+  */
+
+  if (percent >= 10) {
+    result =
+      "big-win";
+
+    label =
+      "BIG WIN";
+
+    text =
+      "Bu trade senin için oldukça avantajlı.";
+  } else if (percent > 3) {
+    result =
+      "small-win";
+
+    label =
+      "SMALL WIN";
+
+    text =
+      "Trade senin lehine.";
+  } else if (percent <= -10) {
+    result =
+      "big-lose";
+
+    label =
+      "BIG LOSE";
+
+    text =
+      "Bu trade senin için ciddi şekilde dezavantajlı.";
+  } else if (percent < -3) {
+    result =
+      "small-lose";
+
+    label =
+      "SMALL LOSE";
+
+    text =
+      "Trade karşı tarafın lehine.";
+  }
+
+  card.classList.add(
+    result
+  );
+
+  const diffText =
+    difference > 0
+      ? `+${formatValue(
+          difference
+        )}`
+      : formatValue(
+          difference
+        );
+
+  if (status)
+    status.textContent =
+      label;
+
+  if (hint)
+    hint.textContent =
+      text;
+
+  if (display)
+    display.textContent =
+      diffText;
+
+  if (diffNumber)
+    diffNumber.textContent =
+      diffText;
+
+  if (statusLabel)
+    statusLabel.textContent =
+      label;
+
+  recordTradeResult(
+    result
+  );
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+const DEFAULT_PROFILE = {
+  name:
+    "Zayaxra Kullanıcısı",
+
+  username:
+    "kullanici",
+
+  bio:
+    "Henüz bir biyografi eklenmedi.",
+
+  avatar:
+    "🐉",
+
+  stats: {
+    trades: 0,
+    wins: 0,
+    fairs: 0,
+    loses: 0
+  }
+};
+
+let profileData =
+  loadProfile();
+
+function loadProfile() {
+  try {
+    const raw =
+      localStorage.getItem(
+        "zayaxra_profile"
+      ) ||
+      localStorage.getItem(
+        "zayagg_profile"
+      );
+
+    if (!raw) {
+      return {
+        ...DEFAULT_PROFILE,
+        stats: {
+          ...DEFAULT_PROFILE.stats
+        }
+      };
+    }
+
+    const parsed =
+      JSON.parse(raw);
+
+    return {
+      ...DEFAULT_PROFILE,
+      ...parsed,
+
+      stats: {
+        ...DEFAULT_PROFILE.stats,
+        ...(parsed.stats || {})
+      }
+    };
+  } catch {
+    return {
+      ...DEFAULT_PROFILE,
+      stats: {
+        ...DEFAULT_PROFILE.stats
+      }
+    };
+  }
+}
+
+function saveProfile() {
+  localStorage.setItem(
+    "zayaxra_profile",
+    JSON.stringify(
+      profileData
+    )
+  );
+}
+
+function renderProfile() {
+  if ($("profileName")) {
+    $("profileName")
+      .textContent =
+      profileData.name;
+  }
+
+  if ($("profileUsername")) {
+    $("profileUsername")
+      .textContent =
+      profileData.username
+        .startsWith("@")
+        ? profileData.username
+        : `@${profileData.username}`;
+  }
+
+  if ($("profileBio")) {
+    $("profileBio")
+      .textContent =
+      profileData.bio;
+  }
+
+  if ($("profileAvatar")) {
+    $("profileAvatar")
+      .textContent =
+      profileData.avatar;
+  }
+
+  /*
+    SENİN MEVCUT HTML'İNDEKİ ID'LER
+  */
+
+  if ($("profileTrades")) {
+    $("profileTrades")
+      .textContent =
+      profileData.stats.trades;
+  }
+
+  if ($("profileWins")) {
+    $("profileWins")
+      .textContent =
+      profileData.stats.wins;
+  }
+
+  if ($("profileFair")) {
+    $("profileFair")
+      .textContent =
+      profileData.stats.fairs;
+  }
+
+  if ($("profileLoses")) {
+    $("profileLoses")
+      .textContent =
+      profileData.stats.loses;
+  }
+
+  /*
+    Eski ID'ler de korunuyor.
+  */
+
+  if ($("tradeCount")) {
+    $("tradeCount")
+      .textContent =
+      profileData.stats.trades;
+  }
+
+  if ($("winCount")) {
+    $("winCount")
+      .textContent =
+      profileData.stats.wins;
+  }
+
+  if ($("fairCount")) {
+    $("fairCount")
+      .textContent =
+      profileData.stats.fairs;
+  }
+
+  if ($("loseCount")) {
+    $("loseCount")
+      .textContent =
+      profileData.stats.loses;
+  }
+}
+
+function openProfile() {
+  renderProfile();
+
+  const modal =
+    $("profileModal");
+
+  if (!modal) return;
+
+  modal.classList.add(
+    "show",
+    "open"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "profile-open"
+  );
+}
+
+function closeProfile() {
+  const modal =
+    $("profileModal");
+
+  if (!modal) return;
+
+  modal.classList.remove(
+    "show",
+    "open"
+  );
+
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "profile-open"
+  );
+
+  closeEditProfile();
+}
+
+function openEditProfile() {
+  const form =
+    $("profileEditForm");
+
+  if (!form) return;
+
+  if ($("editName")) {
+    $("editName").value =
+      profileData.name;
+  }
+
+  if ($("editUsername")) {
+    $("editUsername").value =
+      profileData.username;
+  }
+
+  if ($("editBio")) {
+    $("editBio").value =
+      profileData.bio;
+  }
+
+  renderAvatars();
+
+  form.classList.remove(
+    "hidden"
+  );
+
+  $("profileEditBtn")
+    ?.classList.add(
+      "hidden"
+    );
+}
+
+function closeEditProfile() {
+  $("profileEditForm")
+    ?.classList.add(
+      "hidden"
+    );
+
+  $("profileEditBtn")
+    ?.classList.remove(
+      "hidden"
+    );
+}
+
+function renderAvatars() {
+  const box =
+    $("avatarPick");
+
+  if (!box) return;
+
+  box.innerHTML = "";
+
+  [
+    "🐉",
+    "🐲",
+    "🦊",
+    "🐺",
+    "🦁",
+    "🐯",
+    "🐻",
+    "🐼",
+    "🦄",
+    "🐸",
+    "🦋",
+    "🌙"
+  ].forEach(avatar => {
+    const button =
+      document.createElement(
+        "button"
+      );
+
+    button.type = "button";
+
+    button.className =
+      "avatar-opt" +
+      (
+        avatar ===
+        profileData.avatar
+          ? " active"
+          : ""
+      );
+
+    button.textContent =
+      avatar;
+
+    button.onclick = event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      profileData.avatar =
+        avatar;
+
+      box
+        .querySelectorAll(
+          ".avatar-opt"
+        )
+        .forEach(item =>
+          item.classList.remove(
+            "active"
+          )
+        );
+
+      button.classList.add(
+        "active"
+      );
+    };
+
+    box.appendChild(
+      button
+    );
+  });
+}
+
+function saveEditedProfile(
+  event
+) {
   event.preventDefault();
 
-  const profile = getProfile();
-
   const name =
-    document.getElementById("editName")?.value.trim();
+    $("editName")
+      ?.value
+      .trim();
 
   const username =
-    document
-      .getElementById("editUsername")
-      ?.value.trim()
-      .replace(/^@+/, "");
+    $("editUsername")
+      ?.value
+      .trim();
 
   const bio =
-    document.getElementById("editBio")?.value.trim();
-
-  const avatarPick =
-    document.getElementById("avatarPick");
+    $("editBio")
+      ?.value
+      .trim();
 
   if (!name || !username) {
     return;
   }
 
-  profile.name = name;
-  profile.username = username;
-  profile.bio =
-    bio || "Henüz bir biyografi eklenmedi.";
+  profileData.name =
+    name;
 
-  if (avatarPick?.dataset.selectedAvatar) {
-    profile.avatar =
-      avatarPick.dataset.selectedAvatar;
-  }
+  profileData.username =
+    username.startsWith("@")
+      ? username
+      : `@${username}`;
 
-  saveProfile(profile);
-  updateProfileUI();
+  profileData.bio =
+    bio ||
+    DEFAULT_PROFILE.bio;
+
+  saveProfile();
+
+  renderProfile();
   closeEditProfile();
 }
 
-// =====================================================
-// PROFILE STATS
-// =====================================================
+/* =========================================================
+   PROFILE TRADE STATS
+   ========================================================= */
 
-function updateProfileStatsFromCurrentTrade() {
-  const hasBoth =
-    tradeState.you.length > 0 &&
-    tradeState.them.length > 0;
-
-  if (!hasBoth) return;
-
-  const profile = getProfile();
-
-  const key = [
-    tradeState.you.map((item) => item.id).join(","),
-    tradeState.them.map((item) => item.id).join(",")
-  ].join("|");
-
-  if (!key) return;
-
-  // Aynı açık trade için tekrar tekrar sayma.
-  if (profile.lastTradeKey === key) {
+function recordTradeResult(
+  status
+) {
+  if (
+    !youTrade.length ||
+    !themTrade.length
+  ) {
     return;
   }
 
-  const youTotal = calculateTradeTotal("you");
-  const themTotal = calculateTradeTotal("them");
+  /*
+    Stats her updateTradeUI'da
+    sürekli artmasın.
+  */
 
-  if (youTotal <= 0) return;
+  const key =
+    youTrade
+      .map(
+        p => p.uniqueId
+      )
+      .join(",") +
+    "|" +
+    themTrade
+      .map(
+        p => p.uniqueId
+      )
+      .join(",") +
+    "|" +
+    status;
 
-  const difference = themTotal - youTotal;
-  const percent = (difference / youTotal) * 100;
-
-  profile.trades += 1;
-  profile.lastTradeKey = key;
-
-  if (percent >= 3.0000001) {
-    profile.wins += 1;
-  } else if (percent <= -3) {
-    profile.loses += 1;
-  } else {
-    profile.fair += 1;
+  if (
+    key ===
+    recordedTradeKey
+  ) {
+    return;
   }
 
-  saveProfile(profile);
-  updateProfileUI();
+  recordedTradeKey =
+    key;
+
+  profileData.stats.trades++;
+
+  if (
+    status === "big-win" ||
+    status === "small-win"
+  ) {
+    profileData.stats.wins++;
+  }
+
+  if (
+    status === "fair"
+  ) {
+    profileData.stats.fairs++;
+  }
+
+  if (
+    status === "big-lose" ||
+    status === "small-lose"
+  ) {
+    profileData.stats.loses++;
+  }
+
+  saveProfile();
+
+  renderProfile();
 }
 
-// =====================================================
-// INFO MODAL
-// =====================================================
+/* =========================================================
+   INFO
+   ========================================================= */
 
 function openInfo(event) {
   event?.preventDefault();
 
   const modal =
-    document.getElementById("infoModal");
+    $("infoModal");
 
   if (!modal) return;
 
-  modal.classList.add("open");
-  modal.setAttribute("aria-hidden", "false");
+  modal.classList.add(
+    "show",
+    "open"
+  );
 
-  document.body.classList.add("modal-open");
+  modal.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.classList.add(
+    "profile-open"
+  );
 }
 
 function closeInfo() {
   const modal =
-    document.getElementById("infoModal");
+    $("infoModal");
 
   if (!modal) return;
 
-  modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
+  modal.classList.remove(
+    "show",
+    "open"
+  );
 
-  document.body.classList.remove("modal-open");
+  modal.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  document.body.classList.remove(
+    "profile-open"
+  );
 }
 
-// =====================================================
-// MOBILE MENU
-// =====================================================
-
-function setupMenu() {
-  const menuButton =
-    document.getElementById("menuButton");
-
-  if (!menuButton) return;
-
-  menuButton.addEventListener("click", () => {
-    toggleMenu();
-  });
-
-  document
-    .querySelectorAll("#mainNav a")
-    .forEach((link) => {
-      link.addEventListener("click", () => {
-        closeMenu();
-      });
-    });
-}
+/* =========================================================
+   MENU
+   ========================================================= */
 
 function toggleMenu() {
-  const nav =
-    document.getElementById("mainNav");
-
-  const button =
-    document.getElementById("menuButton");
-
-  if (!nav) return;
-
-  nav.classList.toggle("menu-open");
-
-  const isOpen =
-    nav.classList.contains("menu-open");
-
-  button?.setAttribute(
-    "aria-expanded",
-    String(isOpen)
+  document.body.classList.toggle(
+    "menu-open"
   );
 }
 
 function closeMenu() {
-  const nav =
-    document.getElementById("mainNav");
-
-  const button =
-    document.getElementById("menuButton");
-
-  nav?.classList.remove("menu-open");
-
-  button?.setAttribute(
-    "aria-expanded",
-    "false"
+  document.body.classList.remove(
+    "menu-open"
   );
 }
 
-// =====================================================
-// HELPERS
-// =====================================================
+/* =========================================================
+   EVENTS
+   ========================================================= */
 
-function toNumber(value) {
-  const number = Number(value);
+document.addEventListener(
+  "click",
+  event => {
+    if (
+      event.target ===
+      $("profileModal")
+    ) {
+      closeProfile();
+    }
 
-  return Number.isFinite(number)
-    ? number
-    : 0;
-}
+    if (
+      event.target ===
+      $("infoModal")
+    ) {
+      closeInfo();
+    }
 
-function formatValue(value) {
-  const number = toNumber(value);
+    if (
+      event.target ===
+      $("petPicker")
+    ) {
+      closePetPicker();
+    }
 
-  if (Number.isInteger(number)) {
-    return number.toString();
+    if (
+      event.target ===
+      $("petPickerModal")
+    ) {
+      closePetPicker();
+    }
   }
+);
 
-  return number
-    .toFixed(2)
-    .replace(/0+$/, "")
-    .replace(/\.$/, "");
-}
-
-function setText(id, value) {
-  const element =
-    document.getElementById(id);
-
-  if (element) {
-    element.textContent = String(value);
+document.addEventListener(
+  "keydown",
+  event => {
+    if (
+      event.key ===
+      "Escape"
+    ) {
+      closeProfile();
+      closePetPicker();
+      closeInfo();
+      closeMenu();
+    }
   }
-}
+);
 
-function escapeHTML(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+/* =========================================================
+   SEARCH EVENTS
+   ========================================================= */
 
-function escapeAttribute(value) {
-  return escapeHTML(value);
-}
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+    $("search")
+      ?.addEventListener(
+        "input",
+        renderValues
+      );
 
-// =====================================================
-// GLOBAL FUNCTIONS
-// =====================================================
+    getPickerSearch()
+      ?.addEventListener(
+        "input",
+        filterPickerPets
+      );
 
-window.openPetPicker = openPetPicker;
-window.closePetPicker = closePetPicker;
+    /*
+      HTML'deki D/N/M/F/R inline onclick'leri
+      güvenli şekilde koruyoruz.
+    */
 
-window.selectPickerPet = selectPickerPet;
+    preparePickerButtons();
+    updatePickerButtons();
 
-window.toggleForm = toggleForm;
-window.togglePotion = togglePotion;
+    renderProfile();
+    updateTradeUI();
 
-window.confirmAddPet = confirmAddPet;
-window.togglePickerValues = togglePickerValues;
+    loadPetDatabase()
+      .catch(error => {
+        console.error(
+          "ZAYAXRA database error:",
+          error
+        );
 
-window.clearTrade = clearTrade;
+        const box =
+          getPickerGrid();
 
-window.openProfile = openProfile;
-window.closeProfile = closeProfile;
-window.openEditProfile = openEditProfile;
-window.closeEditProfile = closeEditProfile;
-window.saveEditedProfile = saveEditedProfile;
+        if (box) {
+          box.innerHTML = `
+            <div class="empty-picker">
+              <strong>Pet verileri yüklenemedi.</strong>
+              <small>
+                İnternet bağlantını kontrol edip sayfayı yenile.
+              </small>
+            </div>
+          `;
+        }
+      });
+  }
+);
 
-window.openInfo = openInfo;
-window.closeInfo = closeInfo;
+/* =========================================================
+   GLOBAL
+   ========================================================= */
 
-window.toggleMenu = toggleMenu;
+window.openPetPicker =
+  openPetPicker;
+
+window.closePetPicker =
+  closePetPicker;
+
+window.toggleForm =
+  toggleForm;
+
+window.togglePotion =
+  togglePotion;
+
+window.confirmAddPet =
+  confirmAddPet;
+
+window.removeTradePet =
+  removeTradePet;
+
+window.clearTrade =
+  clearTrade;
+
+window.openProfile =
+  openProfile;
+
+window.closeProfile =
+  closeProfile;
+
+window.openEditProfile =
+  openEditProfile;
+
+window.closeEditProfile =
+  closeEditProfile;
+
+window.saveEditedProfile =
+  saveEditedProfile;
+
+window.openInfo =
+  openInfo;
+
+window.closeInfo =
+  closeInfo;
+
+window.toggleMenu =
+  toggleMenu;
+
+window.closeMenu =
+  closeMenu;
