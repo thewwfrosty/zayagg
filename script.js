@@ -4836,3 +4836,1042 @@ window.addEventListener(
   }
 
 );
+/* =========================================================
+   ZAYAXRA — ITEM CATEGORIES
+   ALL / PETS / PET WEAR / EGGS / VEHICLES / TOYS / GIFTS
+========================================================= */
+
+let selectedCategory = "all";
+
+
+/* =========================================================
+   CATEGORY NORMALIZER
+========================================================= */
+
+function normalizeCategory(item) {
+
+  const rawType = String(
+    item?.type || ""
+  )
+    .toLowerCase()
+    .trim()
+    .replace(/[-\s]+/g, "_");
+
+
+  const name = String(
+    item?.name || ""
+  ).toLowerCase();
+
+
+  /* EGGS */
+
+  if (
+    rawType.includes("egg") ||
+    /\begg\b/i.test(name)
+  ) {
+    return "eggs";
+  }
+
+
+  /* PET WEAR */
+
+  if (
+    rawType.includes("pet_wear") ||
+    rawType.includes("petwear") ||
+    rawType.includes("accessory") ||
+    rawType.includes("wear")
+  ) {
+    return "petwear";
+  }
+
+
+  /* VEHICLES */
+
+  if (
+    rawType.includes("vehicle") ||
+    rawType.includes("vehicles")
+  ) {
+    return "vehicles";
+  }
+
+
+  /* TOYS */
+
+  if (
+    rawType.includes("toy") ||
+    rawType.includes("toys")
+  ) {
+    return "toys";
+  }
+
+
+  /* GIFTS */
+
+  if (
+    rawType.includes("gift") ||
+    rawType.includes("gifts")
+  ) {
+    return "gifts";
+  }
+
+
+  /* PETS */
+
+  if (
+    rawType === "pet" ||
+    rawType === "pets" ||
+    rawType.includes("pet")
+  ) {
+    return "pets";
+  }
+
+
+  /*
+    Kaynakta bazı kayıtların type değeri
+    farklı olabilir. Böyle durumlarda
+    bilinen pet rarity'lerini de kontrol et.
+  */
+
+  const rarity =
+    String(
+      item?.rarity || ""
+    ).toLowerCase();
+
+
+  if (
+    [
+      "common",
+      "uncommon",
+      "rare",
+      "ultra rare",
+      "ultra-rare",
+      "legendary"
+    ].includes(rarity)
+  ) {
+
+    return "pets";
+
+  }
+
+
+  return "other";
+
+}
+
+
+/* =========================================================
+   CATEGORY DEFINITIONS
+========================================================= */
+
+const ZAYAXRA_CATEGORIES = [
+
+  {
+    id: "all",
+    label: "ALL",
+    icon: "✦"
+  },
+
+  {
+    id: "pets",
+    label: "PETS",
+    icon: "🐾"
+  },
+
+  {
+    id: "petwear",
+    label: "PET WEAR",
+    icon: "👕"
+  },
+
+  {
+    id: "eggs",
+    label: "EGGS",
+    icon: "🥚"
+  },
+
+  {
+    id: "vehicles",
+    label: "VEHICLES",
+    icon: "🚗"
+  },
+
+  {
+    id: "toys",
+    label: "TOYS",
+    icon: "🧸"
+  },
+
+  {
+    id: "gifts",
+    label: "GIFTS",
+    icon: "🎁"
+  }
+
+];
+
+
+/* =========================================================
+   CREATE CATEGORY BAR
+========================================================= */
+
+function createCategoryBar() {
+
+  const picker =
+    $("petPicker");
+
+
+  if (!picker) {
+    return;
+  }
+
+
+  /*
+    Daha önce oluşturulduysa tekrar oluşturma.
+  */
+
+  if (
+    $("zayaxraCategoryBar")
+  ) {
+    return;
+  }
+
+
+  const bar =
+    document.createElement(
+      "div"
+    );
+
+
+  bar.id =
+    "zayaxraCategoryBar";
+
+
+  bar.className =
+    "zayaxra-category-bar";
+
+
+  bar.innerHTML =
+
+    ZAYAXRA_CATEGORIES
+      .map(
+        category => `
+
+          <button
+
+            type="button"
+
+            class="
+              zayaxra-category-btn
+              ${
+                category.id ===
+                "all"
+                  ? "active"
+                  : ""
+              }
+            "
+
+            data-category="${
+              category.id
+            }"
+
+          >
+
+            <span class="category-icon">
+
+              ${
+                category.icon
+              }
+
+            </span>
+
+            <span class="category-label">
+
+              ${
+                category.label
+              }
+
+            </span>
+
+          </button>
+
+        `
+      )
+      .join("");
+
+
+  /*
+    Arama alanının olduğu barın
+    önüne yerleştir.
+  */
+
+  const searchBar =
+    $("pickerBar");
+
+
+  if (
+    searchBar
+  ) {
+
+    searchBar.before(
+      bar
+    );
+
+  }
+
+  else {
+
+    const pets =
+      $("pickerPets");
+
+
+    if (
+      pets
+    ) {
+
+      pets.before(
+        bar
+      );
+
+    }
+
+    else {
+
+      picker.appendChild(
+        bar
+      );
+
+    }
+
+  }
+
+
+  bar
+    .querySelectorAll(
+      ".zayaxra-category-btn"
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            selectedCategory =
+              button.dataset.category ||
+              "all";
+
+
+            bar
+              .querySelectorAll(
+                ".zayaxra-category-btn"
+              )
+              .forEach(
+                item => {
+
+                  item.classList.toggle(
+
+                    "active",
+
+                    item ===
+                    button
+
+                  );
+
+                }
+              );
+
+
+            filterPickerPets();
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   CATEGORY COUNTS
+========================================================= */
+
+function updateCategoryCounts() {
+
+  const counts = {
+
+    all: PET_DATABASE.length,
+
+    pets: 0,
+
+    petwear: 0,
+
+    eggs: 0,
+
+    vehicles: 0,
+
+    toys: 0,
+
+    gifts: 0
+
+  };
+
+
+  PET_DATABASE.forEach(
+    item => {
+
+      const category =
+        normalizeCategory(
+          item
+        );
+
+
+      if (
+        counts[
+          category
+        ] !== undefined
+      ) {
+
+        counts[
+          category
+        ]++;
+
+      }
+
+    }
+  );
+
+
+  Object.keys(
+    counts
+  ).forEach(
+    category => {
+
+      const button =
+        document.querySelector(
+          `[data-category="${category}"]`
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      let count =
+        button.querySelector(
+          ".category-count"
+        );
+
+
+      if (!count) {
+
+        count =
+          document.createElement(
+            "span"
+          );
+
+
+        count.className =
+          "category-count";
+
+
+        button.appendChild(
+          count
+        );
+
+      }
+
+
+      count.textContent =
+        counts[
+          category
+        ];
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   GET CATEGORY DATA
+========================================================= */
+
+function getCategoryItems() {
+
+  if (
+    selectedCategory ===
+    "all"
+  ) {
+
+    return PET_DATABASE;
+
+  }
+
+
+  return PET_DATABASE.filter(
+    item =>
+      normalizeCategory(
+        item
+      ) ===
+      selectedCategory
+  );
+
+}
+
+
+/* =========================================================
+   CATEGORY + SEARCH
+========================================================= */
+
+function filterPickerPets() {
+
+  const query =
+    String(
+      $("petSearch")?.value ||
+      ""
+    )
+      .trim()
+      .toLowerCase();
+
+
+  const categoryItems =
+    getCategoryItems();
+
+
+  const filtered =
+    categoryItems.filter(
+      pet => {
+
+        if (
+          !query
+        ) {
+
+          return true;
+
+        }
+
+
+        const name =
+          String(
+            pet.name ||
+            ""
+          )
+            .toLowerCase();
+
+
+        const rarity =
+          String(
+            pet.rarity ||
+            ""
+          )
+            .toLowerCase();
+
+
+        const category =
+          normalizeCategory(
+            pet
+          );
+
+
+        return (
+
+          name.includes(
+            query
+          )
+
+          ||
+
+          rarity.includes(
+            query
+          )
+
+          ||
+
+          category.includes(
+            query
+          )
+
+        );
+
+      }
+    );
+
+
+  renderPickerPets(
+    filtered
+  );
+
+}
+
+
+/* =========================================================
+   OVERRIDE PICKER RENDER
+========================================================= */
+
+const originalRenderPickerPets =
+  renderPickerPets;
+
+
+renderPickerPets =
+  function(list) {
+
+    createCategoryBar();
+
+    updateCategoryCounts();
+
+
+    const items =
+      Array.isArray(
+        list
+      )
+
+        ? list
+
+        : PET_DATABASE;
+
+
+    /*
+      Kategori seçimi.
+    */
+
+    const categoryFiltered =
+
+      selectedCategory ===
+      "all"
+
+        ? items
+
+        : items.filter(
+            item =>
+              normalizeCategory(
+                item
+              ) ===
+              selectedCategory
+          );
+
+
+    /*
+      Arama.
+    */
+
+    const query =
+      String(
+        $("petSearch")?.value ||
+        ""
+      )
+        .trim()
+        .toLowerCase();
+
+
+    const finalItems =
+      query
+
+        ? categoryFiltered.filter(
+            pet => {
+
+              const name =
+                String(
+                  pet.name ||
+                  ""
+                )
+                  .toLowerCase();
+
+
+              const rarity =
+                String(
+                  pet.rarity ||
+                  ""
+                )
+                  .toLowerCase();
+
+
+              return (
+
+                name.includes(
+                  query
+                )
+
+                ||
+
+                rarity.includes(
+                  query
+                )
+
+              );
+
+            }
+          )
+
+        : categoryFiltered;
+
+
+    /*
+      Orijinal render fonksiyonu
+      bütün kart görünüşünü korusun.
+    */
+
+    originalRenderPickerPets(
+      finalItems
+    );
+
+  };
+
+
+/* =========================================================
+   RESET CATEGORY WHEN PICKER OPENS
+========================================================= */
+
+const originalOpenPetPicker =
+  openPetPicker;
+
+
+openPetPicker =
+  function(side) {
+
+    selectedCategory =
+      "all";
+
+
+    originalOpenPetPicker(
+      side
+    );
+
+
+    setTimeout(
+      () => {
+
+        createCategoryBar();
+
+        updateCategoryCounts();
+
+
+        document
+          .querySelectorAll(
+            ".zayaxra-category-btn"
+          )
+          .forEach(
+            button => {
+
+              button.classList.toggle(
+
+                "active",
+
+                button.dataset.category ===
+                "all"
+
+              );
+
+            }
+          );
+
+      },
+      0
+    );
+
+  };
+
+
+/* =========================================================
+   DATABASE LOAD CATEGORY FIX
+========================================================= */
+
+const originalLoadFullPetDatabase =
+  loadFullPetDatabase;
+
+
+loadFullPetDatabase =
+  async function() {
+
+    /*
+      Orijinal loader'ın davranışını
+      kullanmaya devam et.
+    */
+
+    await originalLoadFullPetDatabase();
+
+
+    /*
+      Loader'dan sonra her kayda
+      category ekle.
+    */
+
+    PET_DATABASE =
+      PET_DATABASE.map(
+        item => ({
+
+          ...item,
+
+          category:
+            normalizeCategory(
+              item
+            )
+
+        })
+      );
+
+
+    updateCategoryCounts();
+
+
+    renderPickerPets(
+      PET_DATABASE
+    );
+
+  };
+
+
+/* =========================================================
+   CATEGORY CSS
+========================================================= */
+
+(function injectCategoryCSS() {
+
+  if (
+    document.getElementById(
+      "zayaxraCategoryCSS"
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  const style =
+    document.createElement(
+      "style"
+    );
+
+
+  style.id =
+    "zayaxraCategoryCSS";
+
+
+  style.textContent = `
+
+    .zayaxra-category-bar {
+
+      display: flex;
+
+      gap: 8px;
+
+      width: 100%;
+
+      overflow-x: auto;
+
+      overflow-y: hidden;
+
+      padding: 8px 2px 12px;
+
+      margin-bottom: 6px;
+
+      scrollbar-width: thin;
+
+      -webkit-overflow-scrolling: touch;
+
+    }
+
+
+    .zayaxra-category-bar::-webkit-scrollbar {
+
+      height: 4px;
+
+    }
+
+
+    .zayaxra-category-btn {
+
+      flex: 0 0 auto;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 7px;
+
+      min-height: 40px;
+
+      padding: 8px 13px;
+
+      border: 1px solid rgba(255,255,255,.08);
+
+      border-radius: 12px;
+
+      background: rgba(255,255,255,.035);
+
+      color: #9da5ba;
+
+      font: inherit;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      letter-spacing: .04em;
+
+      cursor: pointer;
+
+      transition:
+
+        .2s ease;
+
+      white-space: nowrap;
+
+    }
+
+
+    .zayaxra-category-btn:hover {
+
+      transform: translateY(-1px);
+
+      background: rgba(255,255,255,.07);
+
+      color: #fff;
+
+      border-color: rgba(255,255,255,.14);
+
+    }
+
+
+    .zayaxra-category-btn.active {
+
+      color: #fff;
+
+      background:
+
+        linear-gradient(
+
+          135deg,
+
+          rgba(110,90,255,.28),
+
+          rgba(60,180,255,.16)
+
+        );
+
+      border-color:
+
+        rgba(120,120,255,.45);
+
+      box-shadow:
+
+        0 8px 24px
+
+        rgba(80,80,255,.12);
+
+    }
+
+
+    .category-icon {
+
+      font-size: 15px;
+
+      line-height: 1;
+
+    }
+
+
+    .category-count {
+
+      min-width: 18px;
+
+      height: 18px;
+
+      padding: 0 5px;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      border-radius: 999px;
+
+      background: rgba(255,255,255,.08);
+
+      color: #aeb6ca;
+
+      font-size: 10px;
+
+      font-weight: 800;
+
+    }
+
+
+    .zayaxra-category-btn.active
+    .category-count {
+
+      color: #fff;
+
+      background:
+
+        rgba(255,255,255,.15);
+
+    }
+
+
+    @media (max-width: 650px) {
+
+      .zayaxra-category-bar {
+
+        gap: 6px;
+
+        padding-bottom: 9px;
+
+      }
+
+
+      .zayaxra-category-btn {
+
+        min-height: 37px;
+
+        padding: 7px 10px;
+
+        font-size: 10px;
+
+      }
+
+
+      .category-icon {
+
+        font-size: 13px;
+
+      }
+
+    }
+
+  `;
+
+
+  document.head.appendChild(
+    style
+  );
+
+})();
+
+
+/* =========================================================
+   INITIAL CATEGORY SETUP
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setTimeout(
+      () => {
+
+        createCategoryBar();
+
+        updateCategoryCounts();
+
+      },
+      50
+    );
+
+  }
+);
