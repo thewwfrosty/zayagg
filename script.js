@@ -12106,155 +12106,645 @@ document.addEventListener(
   document.head.appendChild(style);
 
 
+ /* =========================================
+   ZAYAXRA — FINAL PICKER SYSTEM
+   D / N / M / F / R
+========================================= */
+
+(function () {
+
   /* =====================================
-     TÜM JSON KAYITLARINI AL
-     PET / EGG FİLTRESİ YOK
+     CSS
   ===================================== */
 
-  async function loadZayaxraAllItems() {
+  const style = document.createElement("style");
 
-    try {
+  style.id = "zayaxra-final-picker-system";
 
-      const response =
-        await fetch(
-          "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json"
-        );
+  style.textContent = `
 
-      if (!response.ok) {
-        throw new Error("JSON yüklenemedi");
-      }
+    /* ===================================
+       ALT PANEL
+    =================================== */
 
-      const raw =
-        await response.json();
+    #pickerBar {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      gap: 14px !important;
 
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
 
-      if (!Array.isArray(raw)) {
-        throw new Error("JSON formatı hatalı");
-      }
-
-
-      const items =
-        raw
-          .map(item => {
-
-            const filename =
-              String(
-                item.image || ""
-              )
-              .split("/")
-              .pop();
+    #pickerBar.hidden {
+      display: flex !important;
+    }
 
 
-            const image =
-              filename
-                ? `https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/images/${filename}`
-                : "";
+    /* ===================================
+       PREVIEW
+    =================================== */
+
+    #pickerPreview {
+      flex: 0 0 145px !important;
+      width: 145px !important;
+      min-width: 145px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
 
 
-            const regularValue =
-              Number(
-                item?.regular?.value ??
-                item?.value ??
-                0
-              );
+    /* ===================================
+       FORM ALANI
+    =================================== */
 
+    #pickerBar .picker-options {
 
-            return {
+      flex: 1 1 auto !important;
 
-              ...item,
+      display: grid !important;
 
-              image,
+      grid-template-columns:
+        repeat(5, 52px) !important;
 
-              value:
-                Number.isFinite(
-                  regularValue
-                )
-                  ? regularValue
-                  : 0
+      grid-template-rows:
+        38px !important;
 
-            };
+      align-items: center !important;
+      justify-content: center !important;
 
-          })
-          .filter(item => {
+      gap: 8px !important;
 
-            const type =
-              String(
-                item.type ||
-                item.category ||
-                ""
-              )
-              .toLowerCase();
-
-
-            return (
-
-              type.includes("pet") ||
-
-              type.includes("egg") ||
-
-              type.includes("wear") ||
-
-              type.includes("vehicle") ||
-
-              type.includes("toy") ||
-
-              type.includes("gift")
-
-            );
-
-          });
-
-
-      /*
-       * Küresel veritabanını güncelle.
-       */
-
-      window.ZAYAXRA_ALL_ITEMS =
-        items;
-
-
-      /*
-       * Mevcut kod PET_DATABASE'i
-       * global olarak kullanıyorsa bunu da güncelle.
-       */
-
-      if (
-        typeof window.PET_DATABASE !==
-        "undefined"
-      ) {
-
-        window.PET_DATABASE =
-          items;
-
-      }
-
-
-      /*
-       * Sayfa açıkken picker varsa
-       * yeniden çiz.
-       */
-
-      if (
-        typeof renderCurrentCategory ===
-        "function"
-      ) {
-
-        renderCurrentCategory();
-
-      }
-
-      return items;
-
-    } catch (error) {
-
-      console.error(
-        "ZAYAXRA database error:",
-        error
-      );
-
-      return [];
+      min-width: 0 !important;
 
     }
+
+
+    /* İki eski grubun kutusunu kaldır */
+
+    #pickerBar .form-toggles,
+    #pickerBar .potion-toggles {
+
+      display: contents !important;
+
+      margin: 0 !important;
+      padding: 0 !important;
+
+    }
+
+
+    /* ===================================
+       D N M F R
+    =================================== */
+
+    #normalFormBtn,
+    #btnNeon,
+    #btnMega,
+    #btnFly,
+    #btnRide {
+
+      position: relative !important;
+
+      width: 52px !important;
+      min-width: 52px !important;
+      max-width: 52px !important;
+
+      height: 38px !important;
+
+      margin: 0 !important;
+      padding: 0 !important;
+
+      display: flex !important;
+
+      align-items: center !important;
+      justify-content: center !important;
+
+      border-radius: 10px !important;
+
+      font-family: inherit !important;
+
+      font-size: 0 !important;
+      font-weight: 900 !important;
+
+      color:
+        rgba(255,255,255,.55) !important;
+
+      background:
+        rgba(255,255,255,.035) !important;
+
+      border:
+        1px solid
+        rgba(255,255,255,.07) !important;
+
+      cursor: pointer !important;
+
+      transition:
+        .18s ease !important;
+
+      box-sizing: border-box !important;
+
+    }
+
+
+    /* D */
+
+    #normalFormBtn::before {
+      content: "D";
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+
+    /* N */
+
+    #btnNeon::before {
+      content: "N";
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+
+    /* M */
+
+    #btnMega::before {
+      content: "M";
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+
+    /* F */
+
+    #btnFly::before {
+      content: "F";
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+
+    /* R */
+
+    #btnRide::before {
+      content: "R";
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+
+    /* ===================================
+       GEREKSİZ BUTONLAR YOK
+    =================================== */
+
+    #noPotionBtn,
+    #flyRideBtn {
+
+      display: none !important;
+
+      width: 0 !important;
+      min-width: 0 !important;
+      max-width: 0 !important;
+
+      margin: 0 !important;
+      padding: 0 !important;
+
+    }
+
+
+    /* ===================================
+       HOVER
+    =================================== */
+
+    #normalFormBtn:hover,
+    #btnNeon:hover,
+    #btnMega:hover,
+    #btnFly:hover,
+    #btnRide:hover {
+
+      color: #fff !important;
+
+      background:
+        rgba(255,255,255,.07) !important;
+
+      border-color:
+        rgba(150,125,255,.40) !important;
+
+      transform:
+        translateY(-2px) !important;
+
+    }
+
+
+    /* ===================================
+       SEÇİLİ / GLOW
+    =================================== */
+
+    #normalFormBtn.active,
+    #btnNeon.active,
+    #btnMega.active,
+    #btnFly.active,
+    #btnRide.active {
+
+      color: #fff !important;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(140,108,255,.32),
+          rgba(76,105,255,.16)
+        ) !important;
+
+      border-color:
+        rgba(170,145,255,.75) !important;
+
+      box-shadow:
+        0 0 0 1px
+        rgba(150,125,255,.12),
+
+        0 0 20px
+        rgba(125,95,255,.40),
+
+        0 8px 25px
+        rgba(85,60,210,.24) !important;
+
+    }
+
+
+    /* ===================================
+       EKLE ALANI
+    =================================== */
+
+    #pickerBar .picker-add {
+
+      flex: 0 0 auto !important;
+
+      display: flex !important;
+
+      flex-direction: row !important;
+
+      align-items: center !important;
+
+      gap: 8px !important;
+
+    }
+
+
+    /* ===================================
+       PET KARTI
+    =================================== */
+
+    #pickerPets .pet-choice {
+
+      position: relative !important;
+
+      pointer-events: auto !important;
+
+      cursor: pointer !important;
+
+      user-select: none !important;
+
+    }
+
+
+    #pickerPets .pet-choice:hover {
+
+      cursor: pointer !important;
+
+    }
+
+
+    /* ===================================
+       ESKİ + BUTONLARINI TAMAMEN SİL
+    =================================== */
+
+    #pickerPets .zayaxra-add-item {
+
+      display: none !important;
+
+    }
+
+
+    /* ===================================
+       MOBİL
+    =================================== */
+
+    @media (max-width: 800px) {
+
+      #pickerBar {
+
+        flex-direction:
+          column !important;
+
+      }
+
+
+      #pickerPreview {
+
+        width:
+          100% !important;
+
+        min-width:
+          0 !important;
+
+        flex:
+          none !important;
+
+      }
+
+
+      #pickerBar .picker-options {
+
+        width:
+          100% !important;
+
+        grid-template-columns:
+          repeat(5, 48px) !important;
+
+        overflow-x:
+          auto !important;
+
+      }
+
+
+      #normalFormBtn,
+      #btnNeon,
+      #btnMega,
+      #btnFly,
+      #btnRide {
+
+        width:
+          48px !important;
+
+        min-width:
+          48px !important;
+
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+
+  /* =====================================
+     PET SEÇİMİ
+  ===================================== */
+
+  function setupPetSelection() {
+
+    const grid =
+      document.getElementById("pickerPets");
+
+    if (!grid) return;
+
+
+    /*
+     * Event delegation.
+     * Kartın herhangi bir yerine basınca pet seçilir.
+     */
+
+    grid.addEventListener(
+      "click",
+      function (event) {
+
+        const card =
+          event.target.closest(".pet-choice");
+
+        if (!card) return;
+
+
+        /*
+         * + butonu gibi eski bir şey
+         * varsa artık kullanılmaz.
+         */
+
+        if (
+          event.target.closest(
+            ".zayaxra-add-item"
+          )
+        ) {
+
+          event.preventDefault();
+
+        }
+
+
+        /*
+         * Pet adını bul
+         */
+
+        const nameElement =
+          card.querySelector(
+            ".pet-choice-name"
+          );
+
+        if (!nameElement) return;
+
+
+        const name =
+          nameElement
+            .textContent
+            .trim();
+
+
+        /*
+         * Şu anki kategoriyi kaydet.
+         */
+
+        const activeCategory =
+          document.querySelector(
+            ".zayaxra-category-btn.active"
+          );
+
+        const oldCategory =
+          activeCategory
+            ? activeCategory.dataset.category
+            : null;
+
+
+        /*
+         * Itemi bul
+         */
+
+        let item = null;
+
+
+        if (
+          Array.isArray(
+            window.PET_DATABASE
+          )
+        ) {
+
+          item =
+            window.PET_DATABASE.find(
+              x =>
+                String(
+                  x.name || ""
+                ).trim() === name
+            );
+
+        }
+
+
+        if (
+          !item &&
+          Array.isArray(
+            window.ZAYAXRA_ALL_ITEMS
+          )
+        ) {
+
+          item =
+            window.ZAYAXRA_ALL_ITEMS.find(
+              x =>
+                String(
+                  x.name || ""
+                ).trim() === name
+            );
+
+        }
+
+
+        if (!item) return;
+
+
+        /*
+         * Mevcut seçim sistemini çalıştır.
+         */
+
+        if (
+          typeof window.selectPickerPet ===
+          "function"
+        ) {
+
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+
+          window.selectPickerPet(item);
+
+        }
+
+
+        /*
+         * Kategori kaybolmasın.
+         */
+
+        if (oldCategory) {
+
+          setTimeout(() => {
+
+            const sameCategory =
+              document.querySelector(
+                `.zayaxra-category-btn[data-category="${oldCategory}"]`
+              );
+
+            if (sameCategory) {
+
+              sameCategory.click();
+
+            }
+
+          }, 50);
+
+        }
+
+
+        /*
+         * Pet listeden kaybolmasın.
+         */
+
+        setTimeout(() => {
+
+          document
+            .querySelectorAll(
+              "#pickerPets .pet-choice"
+            )
+            .forEach(itemCard => {
+
+              itemCard.style.display = "";
+
+              itemCard.style.visibility =
+                "visible";
+
+              itemCard.style.opacity = "1";
+
+            });
+
+        }, 100);
+
+      },
+      true
+    );
+
+  }
+
+
+  /* =====================================
+     PANELİ HER ZAMAN GÖSTER
+  ===================================== */
+
+  function keepPanelVisible() {
+
+    const bar =
+      document.getElementById("pickerBar");
+
+    if (!bar) return;
+
+
+    bar.classList.remove("hidden");
+
+    bar.style.display = "flex";
+
+  }
+
+
+  /* =====================================
+     BUTON YAZILARINI TEMİZLE
+  ===================================== */
+
+  function cleanButtons() {
+
+    const d =
+      document.getElementById(
+        "normalFormBtn"
+      );
+
+    const n =
+      document.getElementById(
+        "btnNeon"
+      );
+
+    const m =
+      document.getElementById(
+        "btnMega"
+      );
+
+    const f =
+      document.getElementById(
+        "btnFly"
+      );
+
+    const r =
+      document.getElementById(
+        "btnRide"
+      );
+
+
+    if (d) d.innerHTML = "";
+
+    if (n) n.innerHTML = "";
+
+    if (m) m.innerHTML = "";
+
+    if (f) f.innerHTML = "";
+
+    if (r) r.innerHTML = "";
+
+
+    keepPanelVisible();
 
   }
 
@@ -12263,9 +12753,27 @@ document.addEventListener(
      BAŞLAT
   ===================================== */
 
-  window.ZAYAXRA_ALL_ITEMS = [];
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-  loadZayaxraAllItems();
+      setTimeout(
+        setupPetSelection,
+        300
+      );
+
+      setTimeout(
+        cleanButtons,
+        400
+      );
+
+      setTimeout(
+        keepPanelVisible,
+        700
+      );
+
+    }
+  );
 
 
 })();
