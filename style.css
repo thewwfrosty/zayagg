@@ -4769,3 +4769,892 @@ body.modal-open {
   }
 
 }
+/* =========================================================
+   ZAYAXRA — PREMIUM PROFILE + NAVBAR / STAGE 4
+========================================================= */
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.navbar {
+  height: 74px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(8,9,18,.94),
+      rgba(8,9,18,.78)
+    );
+
+  border-bottom:
+    1px solid rgba(255,255,255,.055);
+
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.12);
+
+  transition:
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.navbar.scrolled {
+  background:
+    rgba(8,9,18,.96);
+
+  border-bottom-color:
+    rgba(139,92,246,.12);
+
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.28),
+    0 0 35px rgba(139,92,246,.035);
+}
+
+
+/* =========================================================
+   ZAYAXRA LOGO
+========================================================= */
+
+.logo {
+  position: relative;
+
+  font-size: 25px;
+  font-weight: 950;
+
+  letter-spacing: -1px;
+
+  background:
+    linear-gradient(
+      110deg,
+      #ffffff 0%,
+      #ede9fe 42%,
+      #a78bfa 78%,
+      #8b5cf6 100%
+    );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  transition:
+    transform .2s ease,
+    filter .2s ease;
+}
+
+.logo::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 10%;
+
+  bottom: -5px;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(167,139,250,.7),
+      transparent
+    );
+
+  opacity: 0;
+
+  transform:
+    scaleX(.65);
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.logo:hover {
+  transform: translateY(-1px);
+
+  filter:
+    drop-shadow(
+      0 0 16px rgba(139,92,246,.25)
+    );
+}
+
+.logo:hover::after {
+  opacity: 1;
+
+  transform:
+    scaleX(1);
+}
+
+
+/* =========================================================
+   NAV LINKS
+========================================================= */
+
+.navbar nav {
+  gap: 4px;
+}
+
+.navbar nav a {
+  position: relative;
+
+  padding:
+    9px
+    13px;
+
+  border-radius: 9px;
+
+  color: #858ca0;
+
+  font-size: 13px;
+  font-weight: 750;
+
+  transition:
+    color .2s ease,
+    background .2s ease,
+    transform .2s ease;
+}
+
+.navbar nav a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 20%;
+  right: 20%;
+
+  bottom: 4px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8b5cf6,
+      #c084fc
+    );
+
+  opacity: 0;
+
+  transform:
+    scaleX(.4);
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.navbar nav a:hover {
+  color: white;
+
+  background:
+    rgba(139,92,246,.065);
+
+  transform:
+    translateY(-1px);
+}
+
+.navbar nav a:hover::after {
+  opacity: .75;
+
+  transform:
+    scaleX(1);
+}
+
+.navbar nav a.active {
+  color: white;
+
+  background:
+    rgba(139,92,246,.09);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(139,92,246,.06);
+}
+
+.navbar nav a.active::after {
+  opacity: 1;
+
+  transform:
+    scaleX(1);
+}
+
+
+/* =========================================================
+   LOGIN / PROFILE BUTTON
+========================================================= */
+
+.login {
+  position: relative;
+
+  padding:
+    10px
+    16px;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139,92,246,.18),
+      rgba(139,92,246,.07)
+    );
+
+  border:
+    1px solid rgba(139,92,246,.28);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 6px 20px rgba(139,92,246,.04);
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.login:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(167,139,250,.5);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139,92,246,.24),
+      rgba(139,92,246,.1)
+    );
+
+  box-shadow:
+    0 10px 28px rgba(139,92,246,.1);
+}
+
+
+/* =========================================================
+   PROFILE MODAL OVERLAY
+========================================================= */
+
+.profile-modal {
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(139,92,246,.08),
+      transparent 36%
+    ),
+    rgba(2,3,8,.78);
+
+  backdrop-filter:
+    blur(16px);
+
+  -webkit-backdrop-filter:
+    blur(16px);
+}
+
+
+/* =========================================================
+   PROFILE WINDOW
+========================================================= */
+
+.profile-window {
+  position: relative;
+
+  width: min(560px,100%);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(19,22,39,.985),
+      rgba(10,12,23,.99)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.09);
+
+  border-radius: 26px;
+
+  box-shadow:
+    0 40px 110px rgba(0,0,0,.68),
+    0 0 55px rgba(139,92,246,.045);
+
+  animation:
+    profileOpen .28s cubic-bezier(.2,.75,.2,1);
+}
+
+@keyframes profileOpen {
+
+  from {
+    opacity: 0;
+    transform:
+      translateY(12px)
+      scale(.975);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+
+}
+
+
+/* =========================================================
+   PROFILE HEADER
+========================================================= */
+
+.profile-header {
+  padding:
+    23px
+    24px
+    20px;
+
+  border-bottom:
+    1px solid rgba(255,255,255,.055);
+}
+
+.profile-eyebrow {
+  color:
+    #a78bfa;
+
+  letter-spacing:
+    2px;
+}
+
+.profile-header h2 {
+  font-size: 18px;
+
+  font-weight: 900;
+
+  letter-spacing: -.2px;
+}
+
+
+/* =========================================================
+   PROFILE CLOSE
+========================================================= */
+
+.profile-close {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 11px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  border:
+    1px solid rgba(255,255,255,.06);
+
+  transition:
+    color .2s ease,
+    background .2s ease,
+    border-color .2s ease,
+    transform .2s ease;
+}
+
+.profile-close:hover {
+  transform:
+    rotate(3deg)
+    scale(1.03);
+
+  color: white;
+
+  background:
+    rgba(255,255,255,.065);
+
+  border-color:
+    rgba(255,255,255,.11);
+}
+
+
+/* =========================================================
+   PROFILE MAIN
+========================================================= */
+
+.profile-main {
+  position: relative;
+
+  padding:
+    25px
+    24px
+    21px;
+}
+
+.profile-main::after {
+  content: "";
+
+  position: absolute;
+
+  left: 24px;
+  right: 24px;
+  bottom: 0;
+
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.055),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   PROFILE AVATAR
+========================================================= */
+
+.profile-avatar {
+  position: relative;
+
+  width: 88px;
+  height: 88px;
+
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at 30% 25%,
+      rgba(192,132,252,.18),
+      transparent 60%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(139,92,246,.19),
+      rgba(139,92,246,.035)
+    );
+
+  border:
+    1px solid rgba(167,139,250,.3);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 15px 35px rgba(0,0,0,.18);
+
+  font-size: 46px;
+
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+.profile-avatar::before {
+  content: "";
+
+  position: absolute;
+
+  inset: -1px;
+
+  border-radius: inherit;
+
+  border:
+    1px solid rgba(167,139,250,.16);
+
+  pointer-events: none;
+}
+
+.profile-avatar:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(167,139,250,.5);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.05),
+    0 18px 40px rgba(139,92,246,.08);
+}
+
+
+/* =========================================================
+   PROFILE TEXT
+========================================================= */
+
+.profile-info h2 {
+  font-size: 21px;
+  font-weight: 950;
+
+  letter-spacing: -.35px;
+}
+
+.profile-info > span {
+  display: inline-block;
+
+  margin-top: 3px;
+
+  color: #a78bfa;
+
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.profile-info p {
+  max-width: 390px;
+
+  margin-top: 10px;
+
+  color: #82899d;
+
+  font-size: 11px;
+
+  line-height: 1.65;
+}
+
+
+/* =========================================================
+   PROFILE STATS
+========================================================= */
+
+.profile-stats {
+  padding:
+    20px
+    24px
+    21px;
+
+  gap: 9px;
+}
+
+.profile-stat {
+  position: relative;
+
+  padding:
+    14px
+    8px;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.015)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.065);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025);
+
+  transition:
+    transform .18s ease,
+    border-color .18s ease,
+    background .18s ease;
+}
+
+.profile-stat:hover {
+  transform:
+    translateY(-2px);
+
+  background:
+    rgba(255,255,255,.045);
+
+  border-color:
+    rgba(255,255,255,.1);
+}
+
+.profile-stat strong {
+  font-size: 21px;
+  font-weight: 950;
+}
+
+.profile-stat span {
+  margin-top: 5px;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .5px;
+  text-transform: uppercase;
+}
+
+.win-stat {
+  border-color:
+    rgba(53,211,153,.09);
+}
+
+.win-stat strong {
+  color: var(--green);
+
+  text-shadow:
+    0 0 18px rgba(53,211,153,.11);
+}
+
+.fair-stat {
+  border-color:
+    rgba(245,196,81,.08);
+}
+
+.fair-stat strong {
+  color: var(--yellow);
+}
+
+.lose-stat {
+  border-color:
+    rgba(255,102,125,.09);
+}
+
+.lose-stat strong {
+  color: var(--red);
+
+  text-shadow:
+    0 0 18px rgba(255,102,125,.08);
+}
+
+
+/* =========================================================
+   PROFILE EDIT BUTTON
+========================================================= */
+
+.profile-edit {
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 11px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c3aed,
+      #8b5cf6
+    );
+
+  box-shadow:
+    0 8px 24px rgba(139,92,246,.12);
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    filter .18s ease;
+}
+
+.profile-edit:hover {
+  transform:
+    translateY(-2px);
+
+  filter:
+    brightness(1.06);
+
+  box-shadow:
+    0 12px 30px rgba(139,92,246,.19);
+}
+
+
+/* =========================================================
+   PROFILE FORM
+========================================================= */
+
+.profile-form {
+  padding:
+    0
+    24px
+    24px;
+}
+
+.profile-form label,
+.avatar-pick-label {
+  color: #7f869a;
+
+  font-size: 9px;
+
+  letter-spacing: .7px;
+
+  text-transform: uppercase;
+}
+
+.profile-form input,
+.profile-form textarea {
+  background:
+    rgba(255,255,255,.028);
+
+  border:
+    1px solid rgba(255,255,255,.07);
+
+  border-radius: 10px;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+.profile-form input:hover,
+.profile-form textarea:hover {
+  background:
+    rgba(255,255,255,.038);
+}
+
+.profile-form input:focus,
+.profile-form textarea:focus {
+  border-color:
+    rgba(139,92,246,.45);
+
+  background:
+    rgba(139,92,246,.025);
+
+  box-shadow:
+    0 0 0 3px rgba(139,92,246,.07);
+}
+
+
+/* =========================================================
+   AVATAR PICKER
+========================================================= */
+
+.avatar-opt {
+  border-radius: 11px;
+
+  background:
+    rgba(255,255,255,.025);
+
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    background .15s ease;
+}
+
+.avatar-opt:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(255,255,255,.13);
+
+  background:
+    rgba(255,255,255,.055);
+}
+
+.avatar-opt.active {
+  border-color:
+    rgba(167,139,250,.65);
+
+  background:
+    rgba(139,92,246,.14);
+
+  box-shadow:
+    0 0 0 2px rgba(139,92,246,.06);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .navbar {
+    height: 64px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .login {
+    padding:
+      9px
+      12px;
+
+    font-size: 11px;
+  }
+
+  .profile-window {
+    border-radius: 21px;
+  }
+
+  .profile-header {
+    padding:
+      19px
+      19px
+      17px;
+  }
+
+  .profile-main {
+    padding:
+      21px
+      19px
+      18px;
+
+    gap: 14px;
+  }
+
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+
+    border-radius: 19px;
+
+    font-size: 37px;
+  }
+
+  .profile-info h2 {
+    font-size: 18px;
+  }
+
+  .profile-info p {
+    font-size: 10px;
+  }
+
+  .profile-stats {
+    padding:
+      16px
+      19px
+      18px;
+  }
+
+  .profile-edit {
+    width:
+      calc(100% - 38px);
+
+    margin:
+      0
+      19px
+      19px;
+  }
+
+  .profile-form {
+    padding:
+      0
+      19px
+      19px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .profile-main {
+    align-items: flex-start;
+  }
+
+  .profile-avatar {
+    width: 66px;
+    height: 66px;
+
+    font-size: 33px;
+  }
+
+  .profile-info h2 {
+    font-size: 16px;
+  }
+
+  .profile-stats {
+    gap: 7px;
+  }
+
+}
