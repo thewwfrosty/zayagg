@@ -6674,3 +6674,1038 @@ body.modal-open {
   }
 
 }
+/* =========================================================
+   ZAYAXRA — FINAL MOBILE OPTIMIZATION
+========================================================= */
+
+/* Genel taşmaları engelle */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .navbar {
+    padding: 0 22px;
+  }
+
+  .hero {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .section {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .trade-grid {
+    grid-template-columns:
+      minmax(0,1fr)
+      58px
+      minmax(0,1fr);
+
+    gap: 10px;
+  }
+
+  .trade-box {
+    padding: 15px;
+  }
+
+  .trade-items-grid {
+    grid-template-columns:
+      repeat(3, minmax(0,1fr)) !important;
+
+    gap: 8px !important;
+  }
+
+  .pet-modal-window {
+    width: 94vw;
+  }
+
+  .pet-choice-grid {
+    grid-template-columns:
+      repeat(4, minmax(0,1fr));
+  }
+
+}
+
+
+/* =========================================================
+   PHONE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  /* -----------------------------------------
+     NAVBAR
+  ----------------------------------------- */
+
+  .navbar {
+    width: 100%;
+    height: 64px;
+
+    padding:
+      0
+      14px;
+
+    gap: 10px;
+  }
+
+  .logo {
+    flex-shrink: 0;
+
+    font-size: 21px;
+  }
+
+  .nav-actions {
+    margin-left: auto;
+  }
+
+  .login {
+    padding:
+      8px
+      11px;
+
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .menu-btn {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+  }
+
+  .navbar nav {
+    top: 64px;
+
+    left: 10px;
+    right: 10px;
+
+    padding: 8px;
+
+    gap: 3px;
+
+    border-radius: 14px;
+  }
+
+  .navbar nav a {
+    width: 100%;
+
+    padding:
+      11px
+      12px;
+
+    font-size: 12px;
+  }
+
+
+  /* -----------------------------------------
+     HERO
+  ----------------------------------------- */
+
+  .hero {
+    min-height: auto;
+
+    padding:
+      68px
+      18px
+      55px;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .badge {
+    margin-bottom: 17px;
+
+    padding:
+      7px
+      11px;
+
+    font-size: 11px;
+  }
+
+  .hero h1 {
+    margin-bottom: 18px;
+
+    font-size:
+      clamp(
+        36px,
+        10vw,
+        46px
+      );
+
+    letter-spacing: -2px;
+  }
+
+  .hero p {
+    max-width: 100%;
+
+    margin-bottom: 23px;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+  }
+
+  .hero-btn {
+    width: 100%;
+
+    justify-content: center;
+
+    padding:
+      13px
+      18px;
+
+    font-size: 12px;
+  }
+
+
+  /* -----------------------------------------
+     SECTIONS
+  ----------------------------------------- */
+
+  .section {
+    width: 100%;
+
+    padding:
+      45px
+      16px;
+  }
+
+  .section-head {
+    gap: 13px;
+
+    margin-bottom: 18px;
+  }
+
+  .section h2 {
+    font-size: 26px;
+  }
+
+  .eyebrow {
+    font-size: 9px;
+    letter-spacing: 1.3px;
+  }
+
+  .ghost {
+    width: 100%;
+
+    min-height: 40px;
+  }
+
+
+  /* -----------------------------------------
+     STATUS
+  ----------------------------------------- */
+
+  .trade-status-bar {
+    width: 100%;
+
+    min-height: 43px;
+
+    padding:
+      9px
+      11px;
+
+    border-radius: 12px;
+  }
+
+  .trade-status-pill {
+    font-size: 9px;
+  }
+
+  .trade-status-diff {
+    font-size: 11px;
+  }
+
+
+  /* -----------------------------------------
+     TRADE LAYOUT
+  ----------------------------------------- */
+
+  .trade-grid {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 11px;
+  }
+
+  .trade-box-you {
+    order: 1;
+  }
+
+  .trade-vs {
+    order: 2;
+
+    margin:
+      1px
+      0;
+  }
+
+  .trade-box-them {
+    order: 3;
+  }
+
+  .trade-box {
+    width: 100%;
+
+    min-height: 0;
+
+    padding: 14px;
+
+    border-radius: 18px;
+  }
+
+  .trade-box-head {
+    padding-bottom: 11px;
+
+    margin-bottom: 10px;
+  }
+
+  .trade-box-head h3 {
+    font-size: 14px;
+  }
+
+  .trade-side-label {
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+
+  .trade-total-label {
+    font-size: 7px;
+  }
+
+  .trade-total-value {
+    font-size: 13px;
+  }
+
+
+  /* -----------------------------------------
+     TRADE PET SLOTS
+  ----------------------------------------- */
+
+  .trade-items-grid {
+    display: grid !important;
+
+    grid-template-columns:
+      repeat(2, minmax(0,1fr)) !important;
+
+    gap: 7px !important;
+
+    min-height: 170px;
+
+    padding: 4px !important;
+  }
+
+  .trade-slot {
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 105px;
+
+    padding:
+      6px
+      4px
+      5px;
+
+    border-radius: 11px;
+  }
+
+  .trade-slot-image {
+    height: 55px;
+  }
+
+  .trade-slot-photo {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .trade-slot-name {
+    max-width: 100%;
+
+    font-size: 8px;
+  }
+
+  .trade-slot-value {
+    font-size: 8px;
+  }
+
+  .trade-slot-badge {
+    width: 16px;
+    height: 16px;
+
+    font-size: 8px;
+  }
+
+  .trade-slot-badges {
+    left: 3px;
+    bottom: 3px;
+
+    gap: 2px;
+  }
+
+  .trade-slot > .remove-item {
+    width: 19px !important;
+    height: 19px !important;
+
+    top: 3px !important;
+    right: 3px !important;
+
+    opacity: 1;
+  }
+
+  .trade-empty {
+    grid-column: 1 / -1 !important;
+
+    min-height: 160px !important;
+
+    padding: 15px;
+  }
+
+  .trade-empty strong {
+    font-size: 11px;
+  }
+
+  .trade-empty small {
+    max-width: 210px;
+
+    font-size: 9px;
+  }
+
+  .empty-plus {
+    width: 34px;
+    height: 34px;
+
+    font-size: 18px;
+  }
+
+  .trade-add {
+    height: 42px;
+
+    margin-top: 9px;
+
+    border-radius: 10px;
+
+    font-size: 11px;
+  }
+
+
+  /* -----------------------------------------
+     VS
+  ----------------------------------------- */
+
+  .vs-ring {
+    width: 48px;
+    height: 48px;
+
+    font-size: 9px;
+  }
+
+  .vs-ring::before {
+    inset: -4px;
+  }
+
+
+  /* -----------------------------------------
+     RESULT
+  ----------------------------------------- */
+
+  .trade-result-card {
+    width: 100%;
+
+    margin-top: 15px;
+
+    padding: 17px;
+
+    border-radius: 16px;
+  }
+
+  .trade-result-card h3 {
+    font-size: 18px;
+  }
+
+  .trade-result-card p {
+    font-size: 10px;
+  }
+
+  .trade-result-card .result-score {
+    width: 100%;
+
+    min-width: 0;
+
+    margin-top: 2px;
+
+    padding:
+      12px
+      0
+      0;
+
+    border-left: 0;
+
+    border-top:
+      1px solid rgba(255,255,255,.07);
+
+    text-align: left;
+  }
+
+  .trade-result-card .result-score strong {
+    font-size: 29px;
+  }
+
+
+  /* -----------------------------------------
+     PET PICKER
+  ----------------------------------------- */
+
+  .profile-modal {
+    padding:
+      10px;
+  }
+
+  .pet-modal-window {
+    width: 100%;
+
+    max-width: 100%;
+
+    max-height: 94vh;
+
+    border-radius: 18px;
+  }
+
+  .pet-modal-window .profile-header {
+    padding:
+      16px
+      16px
+      14px;
+  }
+
+  .pet-modal-window .profile-header h2 {
+    font-size: 16px;
+  }
+
+  .modal-search {
+    padding:
+      12px
+      16px
+      9px;
+  }
+
+  .pet-search {
+    height: 43px;
+
+    padding:
+      0
+      12px;
+
+    font-size: 11px;
+  }
+
+  .pet-choice-grid {
+    grid-template-columns:
+      repeat(3, minmax(0,1fr));
+
+    gap: 7px;
+
+    padding:
+      3px
+      14px
+      12px;
+
+    max-height: 305px;
+  }
+
+  .pet-choice {
+    min-height: 132px;
+
+    padding:
+      8px
+      5px;
+
+    border-radius: 12px;
+  }
+
+  .choice-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .choice-image img {
+    width: 57px;
+    height: 57px;
+  }
+
+  .pet-choice strong {
+    font-size: 8px;
+  }
+
+  .pet-choice .rarity-tag {
+    padding:
+      2px
+      5px;
+
+    font-size: 6px;
+  }
+
+  .pet-choice small {
+    margin-top: 3px;
+
+    font-size: 8px;
+  }
+
+
+  /* -----------------------------------------
+     PET OPTIONS
+  ----------------------------------------- */
+
+  .picker-settings {
+    padding:
+      8px
+      14px
+      14px;
+  }
+
+  .picker-bar {
+    grid-template-columns: 1fr !important;
+
+    gap: 8px !important;
+
+    padding: 9px !important;
+
+    border-radius: 13px !important;
+  }
+
+  .picker-preview {
+    min-height: 60px !important;
+
+    padding: 5px !important;
+
+    gap: 7px !important;
+  }
+
+  .picker-preview .pet-image-wrap {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+  .picker-preview .pet-photo {
+    width: 46px !important;
+    height: 46px !important;
+  }
+
+  .preview-info strong {
+    font-size: 10px !important;
+  }
+
+  .preview-info > span {
+    font-size: 7px !important;
+  }
+
+  .vchip {
+    padding:
+      2px
+      4px !important;
+
+    font-size: 6px !important;
+  }
+
+  .picker-options {
+    gap: 5px !important;
+  }
+
+  .form-toggles,
+  .potion-toggles {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2,1fr);
+
+    gap: 5px;
+  }
+
+  .form-btn,
+  .potion-btn {
+    width: 100%;
+
+    min-height: 31px !important;
+
+    padding:
+      6px
+      5px !important;
+
+    font-size: 8px !important;
+
+    border-radius: 7px !important;
+  }
+
+  .picker-add {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: row !important;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding:
+      5px
+      0
+      0 !important;
+
+    border: 0;
+  }
+
+  .picker-value {
+    font-size: 18px !important;
+  }
+
+  .add-confirm {
+    width: auto !important;
+
+    min-width: 92px;
+
+    min-height: 34px;
+
+    padding:
+      6px
+      12px !important;
+
+    font-size: 10px;
+  }
+
+
+  /* -----------------------------------------
+     PROFILE
+  ----------------------------------------- */
+
+  .profile-window {
+    width: 100%;
+
+    max-width: 100%;
+
+    max-height: 94vh;
+
+    border-radius: 19px;
+  }
+
+  .profile-header {
+    padding:
+      18px
+      18px
+      15px;
+  }
+
+  .profile-header h2 {
+    font-size: 17px;
+  }
+
+  .profile-close {
+    width: 34px;
+    height: 34px;
+
+    font-size: 21px;
+  }
+
+  .profile-main {
+    width: 100%;
+
+    padding:
+      19px
+      18px
+      17px;
+
+    gap: 12px;
+  }
+
+  .profile-avatar {
+    width: 70px;
+    height: 70px;
+
+    border-radius: 18px;
+
+    font-size: 35px;
+  }
+
+  .profile-info {
+    min-width: 0;
+  }
+
+  .profile-info h2 {
+    font-size: 17px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .profile-info > span {
+    font-size: 10px;
+  }
+
+  .profile-info p {
+    margin-top: 7px;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+  }
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2,1fr);
+
+    padding:
+      14px
+      18px
+      16px;
+
+    gap: 7px;
+  }
+
+  .profile-stat {
+    padding:
+      12px
+      5px;
+
+    border-radius: 10px;
+  }
+
+  .profile-stat strong {
+    font-size: 19px;
+  }
+
+  .profile-stat span {
+    font-size: 8px;
+  }
+
+  .profile-edit {
+    width:
+      calc(100% - 36px);
+
+    margin:
+      0
+      18px
+      18px;
+
+    min-height: 40px;
+  }
+
+  .profile-form {
+    padding:
+      0
+      18px
+      18px;
+  }
+
+  .profile-form input,
+  .profile-form textarea {
+    font-size: 11px;
+  }
+
+
+  /* -----------------------------------------
+     INFO MODAL
+  ----------------------------------------- */
+
+  .info-window {
+    width: 100%;
+
+    max-width: 100%;
+  }
+
+  .info-content {
+    padding:
+      16px;
+  }
+
+  .info-block {
+    padding:
+      12px;
+
+    gap: 10px;
+
+    border-radius: 12px;
+  }
+
+  .info-icon {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
+
+    font-size: 8px;
+  }
+
+  .info-block h3 {
+    font-size: 11px;
+  }
+
+  .info-block p {
+    font-size: 9px;
+
+    line-height: 1.5;
+  }
+
+  .info-footer {
+    margin-top: 4px;
+
+    padding-top: 12px;
+  }
+
+  .info-footer strong {
+    font-size: 9px;
+  }
+
+  .info-footer span {
+    font-size: 8px;
+  }
+
+
+  /* -----------------------------------------
+     FOOTER
+  ----------------------------------------- */
+
+  footer {
+    padding:
+      24px
+      16px;
+
+    font-size: 9px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .navbar {
+    padding:
+      0
+      11px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .login {
+    padding:
+      8px
+      9px;
+
+    font-size: 9px;
+  }
+
+  .hero {
+    padding:
+      55px
+      15px
+      45px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+
+    letter-spacing: -1.8px;
+  }
+
+  .section {
+    padding:
+      40px
+      14px;
+  }
+
+  .section h2 {
+    font-size: 24px;
+  }
+
+  .trade-box {
+    padding: 12px;
+  }
+
+  .trade-items-grid {
+    gap: 6px !important;
+  }
+
+  .trade-slot {
+    min-height: 99px;
+  }
+
+  .trade-slot-image {
+    height: 50px;
+  }
+
+  .trade-slot-photo {
+    width: 45px !important;
+    height: 45px !important;
+  }
+
+  .trade-slot-name {
+    font-size: 7px;
+  }
+
+  .trade-slot-value {
+    font-size: 7px;
+  }
+
+  .trade-slot-badge {
+    width: 15px;
+    height: 15px;
+
+    font-size: 7px;
+  }
+
+  .pet-choice-grid {
+    grid-template-columns:
+      repeat(2,minmax(0,1fr));
+
+    max-height: 285px;
+  }
+
+  .pet-choice {
+    min-height: 138px;
+  }
+
+  .choice-image {
+    width: 64px;
+    height: 64px;
+  }
+
+  .choice-image img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .result-card h3 {
+    font-size: 17px;
+  }
+
+  .trade-result-card .result-score strong {
+    font-size: 27px;
+  }
+
+}
