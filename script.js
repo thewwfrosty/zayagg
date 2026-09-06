@@ -10697,3 +10697,577 @@ document.addEventListener(
 
 
 })();
+/* =========================================
+   ZAYAXRA — PREMIUM PICKER POLISH
+========================================= */
+
+(function () {
+
+  const style = document.createElement("style");
+
+  style.id = "zayaxra-premium-picker";
+
+  style.textContent = `
+
+    /* =====================================
+       PICKER BACKGROUND
+    ===================================== */
+
+    .pet-modal-window {
+
+      background:
+        radial-gradient(
+          circle at 80% 10%,
+          rgba(118,86,255,.08),
+          transparent 35%
+        ),
+        radial-gradient(
+          circle at 20% 90%,
+          rgba(66,110,255,.05),
+          transparent 35%
+        ),
+        rgba(10,12,20,.96) !important;
+
+    }
+
+
+    /* =====================================
+       SEARCH
+    ===================================== */
+
+    .pet-modal-window #petSearch {
+
+      height: 46px !important;
+
+      padding:
+        0 16px 0 17px !important;
+
+      border-radius: 13px !important;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08) !important;
+
+      background:
+        rgba(255,255,255,.035) !important;
+
+      color: #fff !important;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.025),
+        0 8px 28px
+        rgba(0,0,0,.12) !important;
+
+      transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease !important;
+
+    }
+
+
+    .pet-modal-window #petSearch:focus {
+
+      outline: none !important;
+
+      border-color:
+        rgba(135,105,255,.55) !important;
+
+      background:
+        rgba(255,255,255,.055) !important;
+
+      box-shadow:
+        0 0 0 3px
+        rgba(120,90,255,.08),
+        0 12px 30px
+        rgba(0,0,0,.18) !important;
+
+    }
+
+
+    /* =====================================
+       GRID
+    ===================================== */
+
+    .pet-modal-window #pickerPets {
+
+      padding:
+        12px 5px 18px !important;
+
+      scrollbar-width:
+        thin;
+
+      scrollbar-color:
+        rgba(255,255,255,.12)
+        transparent;
+
+    }
+
+
+    .pet-modal-window
+    #pickerPets::-webkit-scrollbar {
+
+      width: 7px;
+
+    }
+
+
+    .pet-modal-window
+    #pickerPets::-webkit-scrollbar-track {
+
+      background: transparent;
+
+    }
+
+
+    .pet-modal-window
+    #pickerPets::-webkit-scrollbar-thumb {
+
+      background:
+        rgba(255,255,255,.10);
+
+      border-radius: 99px;
+
+    }
+
+
+    .pet-modal-window
+    #pickerPets::-webkit-scrollbar-thumb:hover {
+
+      background:
+        rgba(255,255,255,.18);
+
+    }
+
+
+    /* =====================================
+       PET CARDS
+    ===================================== */
+
+    .pet-modal-window
+    .pet-choice {
+
+      position: relative;
+
+      overflow: hidden;
+
+      border:
+        1px solid
+        rgba(255,255,255,.06) !important;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.022)
+        ) !important;
+
+      box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.14) !important;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease !important;
+
+      transform:
+        translateZ(0);
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice::before {
+
+      content: "";
+
+      position: absolute;
+
+      top: -80px;
+      right: -60px;
+
+      width: 150px;
+      height: 150px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(130,100,255,.09);
+
+      filter:
+        blur(35px);
+
+      pointer-events:
+        none;
+
+      opacity: .5;
+
+      transition:
+        opacity .2s ease;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice:hover {
+
+      transform:
+        translateY(-5px);
+
+      border-color:
+        rgba(138,112,255,.38) !important;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(130,100,255,.11),
+          rgba(255,255,255,.04)
+        ) !important;
+
+      box-shadow:
+        0 14px 35px
+        rgba(0,0,0,.25),
+        0 0 0 1px
+        rgba(130,100,255,.05) !important;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice:hover::before {
+
+      opacity:
+        1;
+
+    }
+
+
+    /* =====================================
+       IMAGE
+    ===================================== */
+
+    .pet-modal-window
+    .pet-choice-image {
+
+      position: relative;
+
+      display: flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice-image img {
+
+      max-width: 92px;
+
+      max-height: 92px;
+
+      object-fit: contain;
+
+      filter:
+        drop-shadow(
+          0 8px 14px
+          rgba(0,0,0,.28)
+        );
+
+      transition:
+        transform .22s ease,
+        filter .22s ease;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice:hover
+    .pet-choice-image img {
+
+      transform:
+        scale(1.08)
+        translateY(-2px);
+
+      filter:
+        drop-shadow(
+          0 11px 18px
+          rgba(0,0,0,.35)
+        );
+
+    }
+
+
+    /* =====================================
+       NAME
+    ===================================== */
+
+    .pet-modal-window
+    .pet-choice-name {
+
+      color:
+        rgba(255,255,255,.88) !important;
+
+      font-weight:
+        800 !important;
+
+      letter-spacing:
+        -.01em;
+
+      transition:
+        color .18s ease;
+
+    }
+
+
+    .pet-modal-window
+    .pet-choice:hover
+    .pet-choice-name {
+
+      color:
+        #fff !important;
+
+    }
+
+
+    /* =====================================
+       VALUE
+    ===================================== */
+
+    .pet-modal-window
+    .pet-choice-value {
+
+      color:
+        rgba(173,155,255,.9) !important;
+
+      font-weight:
+        900 !important;
+
+      letter-spacing:
+        .02em;
+
+    }
+
+
+    .zayaxra-values-hidden
+    .pet-choice-value {
+
+      opacity:
+        0 !important;
+
+      filter:
+        blur(8px) !important;
+
+      transform:
+        scale(.96);
+
+    }
+
+
+    /* =====================================
+       CATEGORY BUTTONS
+    ===================================== */
+
+    .zayaxra-category-btn {
+
+      position:
+        relative;
+
+      overflow:
+        hidden;
+
+      transition:
+        transform .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        color .18s ease !important;
+
+    }
+
+
+    .zayaxra-category-btn:hover {
+
+      transform:
+        translateX(3px);
+
+    }
+
+
+    .zayaxra-category-btn.active {
+
+      box-shadow:
+        0 8px 25px
+        rgba(90,65,210,.17),
+        inset 0 1px 0
+        rgba(255,255,255,.04) !important;
+
+    }
+
+
+    .zayaxra-category-btn.active::after {
+
+      content: "";
+
+      position: absolute;
+
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+
+      width: 3px;
+
+      border-radius:
+        99px;
+
+      background:
+        rgba(170,145,255,.95);
+
+      box-shadow:
+        0 0 14px
+        rgba(140,110,255,.65);
+
+    }
+
+
+    /* =====================================
+       SHOW VALUES BUTTON
+    ===================================== */
+
+    .zayaxra-value-toggle {
+
+      position:
+        relative;
+
+      overflow:
+        hidden;
+
+      border:
+        1px solid
+        rgba(255,255,255,.08) !important;
+
+      background:
+        rgba(255,255,255,.045) !important;
+
+      box-shadow:
+        inset 0 1px 0
+        rgba(255,255,255,.03),
+        0 8px 20px
+        rgba(0,0,0,.12);
+
+      transition:
+        transform .18s ease,
+        background .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease !important;
+
+    }
+
+
+    .zayaxra-value-toggle:hover {
+
+      transform:
+        translateY(-2px);
+
+      border-color:
+        rgba(135,110,255,.35) !important;
+
+      box-shadow:
+        0 10px 26px
+        rgba(60,40,150,.16);
+
+    }
+
+
+    .zayaxra-value-toggle.active {
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(128,100,255,.22),
+          rgba(75,110,255,.10)
+        ) !important;
+
+      border-color:
+        rgba(140,115,255,.48) !important;
+
+      box-shadow:
+        0 0 20px
+        rgba(110,85,255,.13);
+
+    }
+
+
+    /* =====================================
+       VALUE SMOOTH REVEAL
+    ===================================== */
+
+    .pet-choice-value {
+
+      transition:
+        opacity .22s ease,
+        filter .22s ease,
+        transform .22s ease !important;
+
+    }
+
+
+    /* =====================================
+       EMPTY STATE
+    ===================================== */
+
+    .zayaxra-no-items {
+
+      border:
+        1px dashed
+        rgba(255,255,255,.08);
+
+      border-radius:
+        16px;
+
+      background:
+        rgba(255,255,255,.02);
+
+      margin:
+        10px 3px;
+
+    }
+
+
+    /* =====================================
+       MOBILE
+    ===================================== */
+
+    @media (max-width: 800px) {
+
+      .pet-modal-window
+      .pet-choice {
+
+        min-height:
+          155px !important;
+
+      }
+
+      .pet-modal-window
+      .pet-choice-image img {
+
+        max-width:
+          76px;
+
+        max-height:
+          76px;
+
+      }
+
+    }
+
+  `;
+
+  document.head.appendChild(style);
+
+})();
