@@ -1,2317 +1,2526 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Zayaxra — Adopt Me Trade Values</title>
-  <meta
-    name="description"
-    content="Zayaxra Adopt Me trade calculator, item values ve W/F/L hesaplama."
-  >
-
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-  <!-- =========================
-       BACKGROUND
-  ========================== -->
-  <div class="bg-glow bg-glow-one"></div>
-  <div class="bg-glow bg-glow-two"></div>
-
-  <!-- =========================
-       NAVBAR
-  ========================== -->
-  <header class="navbar">
-
-    <div class="nav-inner">
-
-      <a href="#home" class="logo" onclick="showSection('home')">
-        <span class="logo-mark">Z</span>
-
-        <span class="logo-text">
-          <strong>ZAYAXRA</strong>
-          <small>ADOPT ME VALUES</small>
-        </span>
-      </a>
-
-      <nav class="nav-links" id="navLinks">
-        <a href="#home" id="homeLink" class="active" onclick="showSection('home')">
-          Ana Sayfa
-        </a>
-
-        <a href="#calculator" id="calculatorLink" onclick="showSection('calculator')">
-          Trade Calculator
-        </a>
-
-        <a href="#values" id="valuesLink" onclick="showSection('values')">
-          Values
-        </a>
-      </nav>
-
-      <div class="nav-right">
-
-        <button
-          class="profile-button"
-          type="button"
-          onclick="openProfile()"
-        >
-          <span id="navAvatar">🐱</span>
-          <span class="profile-button-text">Profil</span>
-        </button>
-
-        <button
-          class="menu-button"
-          type="button"
-          onclick="toggleMenu()"
-          aria-label="Menü"
-        >
-          ☰
-        </button>
-
-      </div>
-
-    </div>
+```css
+/* =========================================================
+   ZAYAXRA — STYLES.CSS
+   PREMIUM DARK TRADE CALCULATOR
+========================================================= */
+
+:root {
+  --bg: #080a12;
+  --bg-2: #0d101b;
+  --card: #111522;
+  --card-2: #151a29;
+  --card-3: #1a2030;
+
+  --border: rgba(255,255,255,.08);
+  --border-light: rgba(255,255,255,.13);
+
+  --text: #f5f7ff;
+  --muted: #8d96aa;
+  --muted-2: #646d81;
+
+  --purple: #8b5cf6;
+  --purple-light: #a78bfa;
+
+  --green: #4ade80;
+  --red: #fb7185;
+  --yellow: #facc15;
+  --blue: #60a5fa;
+  --cyan: #22d3ee;
+
+  --radius: 20px;
+  --radius-small: 13px;
+
+  --shadow:
+    0 25px 80px rgba(0,0,0,.35);
+
+  --transition:
+    180ms ease;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 15% 0%,
+      rgba(139,92,246,.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(34,211,238,.06),
+      transparent 25%
+    ),
+    var(--bg);
+
+  color: var(--text);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  overflow-x: hidden;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
 
-  </header>
-
-
-  <main>
-
-    <!-- =========================
-         HOME
-    ========================== -->
-    <section id="home" class="page-section active-section">
-
-      <div class="hero">
-
-        <div class="hero-content">
-
-          <div class="hero-badge">
-            <span></span>
-            ZAYAXRA VALUES
-          </div>
-
-          <h1>
-            Adopt Me
-            <span>Trade Values</span>
-          </h1>
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
 
-          <p>
-            Petlerini, araçlarını, oyuncaklarını ve diğer itemlerini
-            kolayca karşılaştır. Zayaxra ile trade değerini saniyeler
-            içinde öğren.
-          </p>
+  width: 100%;
+  height: 76px;
 
-          <div class="hero-buttons">
+  z-index: 1000;
 
-            <button
-              class="primary-button"
-              type="button"
-              onclick="showSection('calculator')"
-            >
-              <span>⚡</span>
-              Trade Hesapla
-            </button>
-
-            <button
-              class="secondary-button"
-              type="button"
-              onclick="showSection('values')"
-            >
-              <span>◈</span>
-              Item Değerleri
-            </button>
-
-          </div>
-
-          <div class="hero-stats">
-
-            <div class="hero-stat">
-              <strong id="homeItemCount">—</strong>
-              <span>Item</span>
-            </div>
-
-            <div class="hero-stat">
-              <strong>W/F/L</strong>
-              <span>Calculator</span>
-            </div>
-
-            <div class="hero-stat">
-              <strong>24/7</strong>
-              <span>Values</span>
-            </div>
+  border-bottom: 1px solid transparent;
 
-          </div>
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    backdrop-filter var(--transition);
+}
 
-        </div>
+.navbar.scrolled {
+  background: rgba(8,10,18,.82);
+  border-color: var(--border);
+  backdrop-filter: blur(20px);
+}
 
-        <div class="hero-visual">
+.nav-container {
+  width: min(1180px, calc(100% - 40px));
+  height: 100%;
 
-          <div class="hero-card hero-card-back">
-            <span>MEGA</span>
-          </div>
+  margin: auto;
 
-          <div class="hero-card hero-card-main">
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
 
-            <div class="hero-card-top">
-              <span>YOUR PET</span>
-              <span class="online-dot"></span>
-            </div>
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
 
-            <div class="hero-pet-icon">
-              🐉
-            </div>
+  font-weight: 900;
+  letter-spacing: -.5px;
+}
 
-            <h3>Shadow Dragon</h3>
+.logo-mark {
+  width: 37px;
+  height: 37px;
 
-            <div class="hero-value">
-              <span>VALUE</span>
-              <strong>100</strong>
-            </div>
+  display: grid;
+  place-items: center;
 
-          </div>
+  border-radius: 11px;
 
-          <div class="floating-card floating-card-one">
-            <span>W</span>
-            <div>
-              <strong>WIN</strong>
-              <small>Good Trade</small>
-            </div>
-          </div>
+  background:
+    linear-gradient(
+      135deg,
+      var(--purple),
+      #6d28d9
+    );
 
-          <div class="floating-card floating-card-two">
-            <span>⚡</span>
-            <div>
-              <strong>ZAYAXRA</strong>
-              <small>Values</small>
-            </div>
-          </div>
+  box-shadow:
+    0 8px 30px rgba(139,92,246,.35);
 
-        </div>
+  font-size: 18px;
+}
 
-      </div>
+.logo-text {
+  font-size: 17px;
+}
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
 
-      <!-- FEATURES -->
+.nav-links a {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
 
-      <div class="home-features">
+  transition:
+    color var(--transition);
+}
 
-        <div class="feature-card">
-          <div class="feature-icon">⚖️</div>
-          <h3>W/F/L Calculator</h3>
-          <p>
-            İki tarafın teklifini karşılaştır ve trade'in
-            Win, Fair veya Lose olduğunu öğren.
-          </p>
-        </div>
+.nav-links a:hover {
+  color: var(--text);
+}
 
-        <div class="feature-card">
-          <div class="feature-icon">🐾</div>
-          <h3>Tüm Itemler</h3>
-          <p>
-            Pets, Vehicles, Toys, Eggs, Pet Wear ve daha
-            fazlasını tek yerde bul.
-          </p>
-        </div>
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-        <div class="feature-card">
-          <div class="feature-icon">⚡</div>
-          <h3>Hızlı Hesaplama</h3>
-          <p>
-            Itemlerini ekle, değerler otomatik hesaplansın.
-          </p>
-        </div>
+.profile-nav-btn {
+  border: 1px solid var(--border-light);
 
-      </div>
+  background: rgba(255,255,255,.035);
+  color: var(--text);
 
-    </section>
+  padding: 10px 15px;
 
+  border-radius: 11px;
 
-    <!-- =========================
-         TRADE CALCULATOR
-    ========================== -->
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    <section
-      class="calculator-section page-section"
-      id="calculator"
-    >
+  font-size: 13px;
+  font-weight: 700;
 
-      <div class="trade-page-head">
+  transition:
+    transform var(--transition),
+    background var(--transition);
+}
 
-        <div>
+.profile-nav-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.07);
+}
 
-          <span class="section-eyebrow">
-            ZAYAXRA TRADE
-          </span>
+.menu-button {
+  display: none;
 
-          <h2>
-            Trade Calculator
-          </h2>
+  width: 43px;
+  height: 43px;
 
-          <p>
-            İki tarafın itemlerini ekle ve teklifin değerini karşılaştır.
-          </p>
+  border: 1px solid var(--border);
+  border-radius: 12px;
 
-        </div>
+  background: var(--card);
+}
 
-        <div class="trade-online">
-          <span></span>
-          TRADE CALCULATOR
-        </div>
+.menu-button span {
+  display: block;
 
-      </div>
+  width: 19px;
+  height: 2px;
 
+  margin: 4px auto;
 
-      <div class="z-trade-layout">
+  border-radius: 5px;
 
+  background: var(--text);
+}
 
-        <!-- =====================
-             YOU
-        ====================== -->
 
-        <div class="z-trade-panel z-you">
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
-          <div class="z-panel-header">
+.mobile-menu {
+  position: fixed;
+  top: 76px;
+  left: 15px;
+  right: 15px;
 
-            <div class="z-user">
+  z-index: 999;
 
-              <div
-                class="z-avatar"
-                id="youTradeAvatar"
-              >
-                🐱
-              </div>
+  padding: 12px;
 
-              <div>
+  border: 1px solid var(--border);
+  border-radius: 18px;
 
-                <span class="z-side-label">
-                  SEN
-                </span>
+  background: rgba(15,18,29,.96);
+  backdrop-filter: blur(20px);
 
-                <h3 id="youTradeName">
-                  Zayaxra User
-                </h3>
+  box-shadow: var(--shadow);
 
-              </div>
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
 
-            </div>
+  transition:
+    opacity var(--transition),
+    transform var(--transition),
+    visibility var(--transition);
+}
 
+.menu-open .mobile-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
 
-            <div class="z-total-box">
+.mobile-menu a,
+.mobile-menu button {
+  width: 100%;
 
-              <span>
-                TOPLAM DEĞER
-              </span>
+  display: flex;
+  align-items: center;
 
-              <strong id="youTotal">
-                0
-              </strong>
+  padding: 14px;
 
-            </div>
+  border: 0;
+  border-radius: 11px;
 
-          </div>
+  background: transparent;
+  color: var(--muted);
 
+  text-align: left;
 
-          <div
-            class="z-offer-area"
-            id="youItems"
-          >
+  font-weight: 700;
+}
 
-            <div class="z-empty-trade">
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+  background: rgba(255,255,255,.05);
+  color: var(--text);
+}
 
-              <div class="z-empty-plus">
-                ＋
-              </div>
 
-              <strong>
-                Teklifine item ekle
-              </strong>
+/* =========================================================
+   HERO
+========================================================= */
 
-              <span>
-                Pet, araç, toy ve diğer itemleri seç.
-              </span>
+.hero {
+  position: relative;
 
-            </div>
+  min-height: 760px;
 
-          </div>
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  overflow: hidden;
 
-          <div class="z-panel-bottom">
+  padding:
+    140px 20px
+    100px;
+}
 
-            <button
-              class="z-add-button"
-              onclick="openPetPicker('you')"
-              type="button"
-            >
-              <span>＋</span>
-              Item Ekle
-            </button>
+.hero-content {
+  position: relative;
+  z-index: 2;
 
-            <button
-              class="z-clear-button"
-              onclick="clearTrade('you')"
-              type="button"
-            >
-              Temizle
-            </button>
+  width: min(850px, 100%);
 
-          </div>
+  text-align: center;
+}
 
-        </div>
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
+  padding: 8px 13px;
 
-        <!-- =====================
-             CENTER
-        ====================== -->
+  border: 1px solid rgba(139,92,246,.2);
+  border-radius: 999px;
 
-        <div class="z-center-result">
+  background: rgba(139,92,246,.07);
 
-          <div class="z-vs-circle">
-            VS
-          </div>
+  color: var(--purple-light);
 
-          <div
-            class="z-result-box"
-            id="resultCard"
-          >
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
 
-            <span class="z-result-mini">
-              TRADE RESULT
-            </span>
+.status-dot {
+  width: 7px;
+  height: 7px;
 
-            <div class="z-result-icon">
-              ⚖️
-            </div>
+  border-radius: 50%;
 
-            <h3 id="resultTitle">
-              Item ekleyerek başla
-            </h3>
+  background: var(--green);
 
-            <p id="resultText">
-              İki tarafa da item eklediğinde trade sonucu
-              burada görünecek.
-            </p>
+  box-shadow:
+    0 0 12px rgba(74,222,128,.7);
+}
 
-            <div
-              class="z-result-difference"
-              id="resultDifference"
-            >
-              —
-            </div>
+.hero h1 {
+  margin-top: 24px;
 
-          </div>
+  font-size:
+    clamp(48px, 8vw, 86px);
 
-        </div>
+  line-height: .98;
 
+  letter-spacing: -4px;
+}
 
-        <!-- =====================
-             THEM
-        ====================== -->
+.hero h1 span {
+  display: block;
 
-        <div class="z-trade-panel z-them">
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      var(--purple-light),
+      #c4b5fd
+    );
 
-          <div class="z-panel-header">
+  -webkit-background-clip: text;
+  background-clip: text;
 
-            <div class="z-user">
+  color: transparent;
+}
 
-              <div class="z-avatar opponent-avatar">
-                👤
-              </div>
+.hero-description {
+  width: min(650px, 100%);
 
-              <div>
+  margin: 28px auto 0;
 
-                <span class="z-side-label">
-                  KARŞI TARAF
-                </span>
+  color: var(--muted);
 
-                <h3>
-                  Opponent
-                </h3>
+  font-size: 17px;
+  line-height: 1.7;
+}
 
-              </div>
+.hero-buttons {
+  margin-top: 32px;
 
-            </div>
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
 
+.primary-btn,
+.secondary-btn {
+  min-height: 48px;
 
-            <div class="z-total-box">
+  padding: 0 22px;
 
-              <span>
-                TOPLAM DEĞER
-              </span>
+  border-radius: 12px;
 
-              <strong id="themTotal">
-                0
-              </strong>
+  font-weight: 800;
+  font-size: 14px;
 
-            </div>
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    background var(--transition);
+}
 
-          </div>
+.primary-btn {
+  border: 0;
 
+  background:
+    linear-gradient(
+      135deg,
+      var(--purple),
+      #6d28d9
+    );
 
-          <div
-            class="z-offer-area"
-            id="themItems"
-          >
+  color: white;
 
-            <div class="z-empty-trade">
+  box-shadow:
+    0 12px 35px rgba(139,92,246,.25);
+}
 
-              <div class="z-empty-plus">
-                ＋
-              </div>
+.primary-btn:hover {
+  transform: translateY(-2px);
 
-              <strong>
-                Karşı tarafın itemlerini ekle
-              </strong>
+  box-shadow:
+    0 18px 45px rgba(139,92,246,.35);
+}
 
-              <span>
-                Teklifleri karşılaştırmaya başla.
-              </span>
+.secondary-btn {
+  border: 1px solid var(--border-light);
 
-            </div>
+  background: rgba(255,255,255,.035);
+  color: var(--text);
+}
 
-          </div>
+.secondary-btn:hover {
+  background: rgba(255,255,255,.07);
+  transform: translateY(-2px);
+}
 
+.hero-stats {
+  margin-top: 65px;
 
-          <div class="z-panel-bottom">
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
 
-            <button
-              class="z-add-button"
-              onclick="openPetPicker('them')"
-              type="button"
-            >
-              <span>＋</span>
-              Item Ekle
-            </button>
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
-            <button
-              class="z-clear-button"
-              onclick="clearTrade('them')"
-              type="button"
-            >
-              Temizle
-            </button>
+.hero-stat strong {
+  font-size: 19px;
+}
 
-          </div>
+.hero-stat span {
+  color: var(--muted-2);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
 
-        </div>
+.hero-glow {
+  position: absolute;
 
-      </div>
+  border-radius: 50%;
 
+  filter: blur(80px);
 
-      <!-- TRADE INFO -->
+  pointer-events: none;
+}
 
-      <div class="z-trade-info">
+.glow-one {
+  width: 400px;
+  height: 400px;
 
-        <div class="z-info-item">
+  left: -200px;
+  top: 100px;
 
-          <span class="z-info-icon">
-            ⚡
-          </span>
+  background: rgba(139,92,246,.13);
+}
 
-          <div>
-            <strong>
-              Hızlı Hesaplama
-            </strong>
+.glow-two {
+  width: 300px;
+  height: 300px;
 
-            <span>
-              Item eklediğinde değer otomatik hesaplanır.
-            </span>
-          </div>
+  right: -150px;
+  bottom: 50px;
 
-        </div>
+  background: rgba(34,211,238,.07);
+}
 
 
-        <div class="z-info-item">
+/* =========================================================
+   SECTION
+========================================================= */
 
-          <span class="z-info-icon">
-            📊
-          </span>
+.calculator-section,
+.values-section,
+.about-section {
+  width: min(1180px, calc(100% - 40px));
 
-          <div>
-            <strong>
-              Değer Karşılaştırma
-            </strong>
+  margin: auto;
 
-            <span>
-              Tekliflerin toplam değerini karşılaştır.
-            </span>
-          </div>
+  padding:
+    100px 0;
+}
 
-        </div>
+.section-heading {
+  margin-bottom: 35px;
+}
 
+.section-eyebrow,
+.modal-eyebrow,
+.trade-eyebrow,
+.result-eyebrow {
+  color: var(--purple-light);
 
-        <div class="z-info-item">
+  font-size: 10px;
+  font-weight: 900;
 
-          <span class="z-info-icon">
-            🛡️
-          </span>
+  letter-spacing: 1.5px;
+}
 
-          <div>
-            <strong>
-              Zayaxra Values
-            </strong>
+.section-heading h2 {
+  margin-top: 10px;
 
-            <span>
-              Veritabanındaki item değerlerini kullanır.
-            </span>
-          </div>
+  font-size: clamp(32px, 5vw, 48px);
 
-        </div>
+  letter-spacing: -2px;
+}
 
-      </div>
+.section-heading p {
+  margin-top: 10px;
 
-    </section>
+  color: var(--muted);
 
+  line-height: 1.6;
+}
 
-    <!-- =========================
-         VALUES
-    ========================== -->
 
-    <section
-      class="values-section page-section"
-      id="values"
-    >
+/* =========================================================
+   CALCULATOR SHELL
+========================================================= */
 
-      <div class="section-heading">
+.calculator-shell {
+  display: grid;
 
-        <div>
+  grid-template-columns:
+    minmax(0, 1fr)
+    60px
+    minmax(0, 1fr);
 
-          <span class="section-eyebrow">
-            ZAYAXRA DATABASE
-          </span>
+  gap: 16px;
 
-          <h2>
-            Item Values
-          </h2>
+  align-items: stretch;
+}
 
-          <p id="valueDescription">
-            Adopt Me item değerlerini incele.
-          </p>
+.trade-column {
+  min-height: 440px;
 
-        </div>
+  padding: 22px;
 
-        <div class="item-count-box">
-          <strong id="itemCount">0</strong>
-          <span>ITEM</span>
-        </div>
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-      </div>
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.035),
+      rgba(255,255,255,.015)
+    );
 
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+}
 
-      <!-- SEARCH -->
+.trade-column-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
 
-      <div class="values-toolbar">
+  padding-bottom: 20px;
 
-        <div class="search-box">
+  border-bottom: 1px solid var(--border);
+}
 
-          <span>
-            🔎
-          </span>
+.trade-column-header h3 {
+  margin-top: 5px;
 
-          <input
-            id="search"
-            type="text"
-            placeholder="Pet, araç, toy veya item ara..."
-            autocomplete="off"
-          >
+  font-size: 23px;
+}
 
-          <button
-            id="clearSearch"
-            type="button"
-            onclick="clearSearchInput()"
-          >
-            ×
-          </button>
+.trade-total {
+  text-align: right;
+}
 
-        </div>
+.trade-total span,
+.picker-total span,
+.result-middle span {
+  display: block;
 
+  color: var(--muted-2);
 
-        <select
-          id="sortSelect"
-          onchange="applyValueFilters()"
-        >
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
 
-          <option value="value-desc">
-            Değer: Yüksek → Düşük
-          </option>
+.trade-total strong {
+  display: block;
 
-          <option value="value-asc">
-            Değer: Düşük → Yüksek
-          </option>
+  margin-top: 4px;
 
-          <option value="name-asc">
-            İsim: A → Z
-          </option>
+  color: var(--purple-light);
 
-          <option value="name-desc">
-            İsim: Z → A
-          </option>
+  font-size: 22px;
+}
 
-        </select>
+.trade-items {
+  min-height: 300px;
 
+  padding: 18px 0;
 
-        <select
-          id="rarityFilter"
-          onchange="applyValueFilters()"
-        >
+  display: grid;
 
-          <option value="all">
-            Tüm Rarity
-          </option>
+  grid-template-columns:
+    repeat(auto-fill, minmax(100px, 1fr));
 
-          <option value="common">
-            Common
-          </option>
+  align-content: start;
 
-          <option value="uncommon">
-            Uncommon
-          </option>
+  gap: 10px;
+}
 
-          <option value="rare">
-            Rare
-          </option>
+.empty-items {
+  grid-column: 1 / -1;
 
-          <option value="ultra-rare">
-            Ultra-Rare
-          </option>
+  min-height: 280px;
 
-          <option value="legendary">
-            Legendary
-          </option>
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        </select>
+  flex-direction: column;
 
-      </div>
+  gap: 7px;
 
+  color: var(--muted);
+  text-align: center;
+}
 
-      <!-- CATEGORY BAR -->
+.empty-plus {
+  width: 50px;
+  height: 50px;
 
-      <div
-        class="category-bar"
-        id="categoryBar"
-      >
+  display: grid;
+  place-items: center;
 
-        <button
-          class="category-button active"
-          onclick="setValueCategory('all')"
-        >
-          Tümü
-        </button>
+  margin-bottom: 5px;
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('pets')"
-        >
-          🐾 Pets
-        </button>
+  border: 1px dashed rgba(255,255,255,.14);
+  border-radius: 15px;
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('pet-wear')"
-        >
-          👒 Pet Wear
-        </button>
+  color: var(--muted-2);
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('eggs')"
-        >
-          🥚 Eggs
-        </button>
+  font-size: 25px;
+}
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('vehicles')"
-        >
-          🚗 Vehicles
-        </button>
+.empty-items strong {
+  color: #b8c0d1;
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('toys')"
-        >
-          🧸 Toys
-        </button>
+  font-size: 13px;
+}
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('strollers')"
-        >
-          🛒 Strollers
-        </button>
+.empty-items small {
+  color: var(--muted-2);
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('food')"
-        >
-          🍎 Food
-        </button>
+  font-size: 11px;
+}
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('gifts')"
-        >
-          🎁 Gifts
-        </button>
+.add-pet-btn {
+  width: 100%;
+  height: 48px;
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('stickers')"
-        >
-          ⭐ Stickers
-        </button>
+  border: 1px dashed rgba(139,92,246,.4);
+  border-radius: 12px;
 
-        <button
-          class="category-button"
-          onclick="setValueCategory('other')"
-        >
-          📦 Other
-        </button>
+  background: rgba(139,92,246,.06);
 
-      </div>
+  color: var(--purple-light);
 
+  font-size: 13px;
+  font-weight: 800;
 
-      <!-- GRID -->
+  transition:
+    background var(--transition),
+    transform var(--transition);
+}
 
-      <div
-        class="value-grid"
-        id="valueGrid"
-      >
+.add-pet-btn:hover {
+  background: rgba(139,92,246,.12);
+  transform: translateY(-1px);
+}
 
-        <div class="loading-state">
-          <div class="loading-spinner"></div>
-          <p>Itemler yükleniyor...</p>
-        </div>
+.add-pet-btn span {
+  font-size: 18px;
+  margin-right: 5px;
+}
 
-      </div>
 
+/* =========================================================
+   VS
+========================================================= */
 
-      <div
-        id="loadMoreWrapper"
-        class="load-more-wrapper"
-      >
+.trade-vs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-        <button
-          id="loadMoreBtn"
-          type="button"
-          onclick="loadMoreItems()"
-        >
-          Daha Fazla Göster
-        </button>
+  gap: 12px;
+}
 
-      </div>
+.vs-line {
+  flex: 1;
+  width: 1px;
 
-    </section>
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255,255,255,.13),
+      transparent
+    );
+}
 
-  </main>
+.vs-circle {
+  width: 42px;
+  height: 42px;
 
+  flex-shrink: 0;
 
-  <!-- =========================
-       PET / ITEM PICKER
-  ========================== -->
+  display: grid;
+  place-items: center;
 
-  <div
-    class="modal-overlay"
-    id="petPickerModal"
-  >
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
 
-    <div class="picker-modal">
+  background: var(--card-2);
 
-      <div class="picker-header">
+  color: var(--muted);
 
-        <div>
+  font-size: 10px;
+  font-weight: 900;
+}
 
-          <span class="section-eyebrow">
-            ZAYAXRA ITEMS
-          </span>
 
-          <h2 id="petPickerTitle">
-            Item Seç
-          </h2>
+/* =========================================================
+   TRADE SLOT
+========================================================= */
 
-        </div>
+.trade-slot {
+  position: relative;
 
-        <button
-          type="button"
-          class="modal-close"
-          onclick="closePetPicker()"
-        >
-          ×
-        </button>
+  min-width: 0;
 
-      </div>
+  padding: 8px;
 
+  border: 1px solid var(--border);
+  border-radius: 14px;
 
-      <!-- SEARCH -->
+  background: rgba(255,255,255,.025);
 
-      <div class="picker-search">
+  text-align: center;
 
-        <span>
-          🔎
-        </span>
+  transition:
+    transform var(--transition),
+    border-color var(--transition);
+}
 
-        <input
-          id="pickerSearch"
-          type="text"
-          placeholder="Item ara..."
-          autocomplete="off"
-        >
+.trade-slot:hover {
+  transform: translateY(-3px);
+  border-color: rgba(139,92,246,.35);
+}
 
-      </div>
+.trade-slot-image {
+  position: relative;
 
+  width: 100%;
+  aspect-ratio: 1;
 
-      <!-- PICKER CATEGORIES -->
+  display: grid;
+  place-items: center;
 
-      <div
-        class="picker-category-bar"
-        id="pickerCategoryBar"
-      >
+  overflow: hidden;
 
-        <button
-          class="picker-category active"
-          onclick="setPickerCategory('all')"
-        >
-          Tümü
-        </button>
+  border-radius: 10px;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('pets')"
-        >
-          🐾 Pets
-        </button>
+  background: #0b0e17;
+}
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('pet-wear')"
-        >
-          👒 Pet Wear
-        </button>
+.trade-slot-photo {
+  width: 82%;
+  height: 82%;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('eggs')"
-        >
-          🥚 Eggs
-        </button>
+  object-fit: contain;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('vehicles')"
-        >
-          🚗 Vehicles
-        </button>
+  position: relative;
+  z-index: 2;
+}
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('toys')"
-        >
-          🧸 Toys
-        </button>
+.trade-slot-name {
+  margin-top: 7px;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('strollers')"
-        >
-          🛒 Strollers
-        </button>
+  overflow: hidden;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('food')"
-        >
-          🍎 Food
-        </button>
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('gifts')"
-        >
-          🎁 Gifts
-        </button>
+  color: #c8cede;
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('stickers')"
-        >
-          ⭐ Stickers
-        </button>
+  font-size: 10px;
+  font-weight: 700;
+}
 
-        <button
-          class="picker-category"
-          onclick="setPickerCategory('other')"
-        >
-          📦 Other
-        </button>
+.trade-slot-value {
+  margin-top: 3px;
 
-      </div>
+  color: var(--purple-light);
 
+  font-size: 11px;
+  font-weight: 900;
+}
 
-      <div class="picker-content">
+.remove-item {
+  position: absolute;
 
-        <!-- ITEM LIST -->
+  top: -6px;
+  right: -6px;
 
-        <div class="picker-list">
+  width: 20px;
+  height: 20px;
 
-          <div
-            class="picker-bar"
-            id="pickerBar"
-          >
-          </div>
+  z-index: 10;
 
-          <div
-            class="picker-pet-list"
-            id="pickerPetList"
-          >
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
 
-            <div class="loading-state">
-              <div class="loading-spinner"></div>
-              <p>Itemler yükleniyor...</p>
-            </div>
+  background: #202636;
+  color: #fff;
 
-          </div>
+  font-size: 14px;
+  line-height: 1;
 
-        </div>
+  opacity: 0;
 
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+}
 
-        <!-- PREVIEW -->
+.trade-slot:hover .remove-item {
+  opacity: 1;
+}
 
-        <div class="picker-preview">
+.remove-item:hover {
+  background: #ef4444;
+  transform: scale(1.08);
+}
 
-          <div class="picker-preview-image">
+.trade-slot-badges {
+  position: absolute;
 
-            <img
-              id="pickerPreview"
-              src=""
-              alt=""
-            >
+  left: 4px;
+  bottom: 4px;
 
-          </div>
+  z-index: 5;
 
+  display: flex;
+  gap: 3px;
+}
 
-          <div class="picker-preview-name">
-            Item seç
-          </div>
+.trade-slot-badge,
+.mini-chip,
+.vchip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
+  font-size: 8px;
+  font-weight: 900;
 
-          <div class="picker-preview-value">
+  border-radius: 5px;
+}
 
-            <span>
-              VALUE
-            </span>
+.trade-slot-badge {
+  min-width: 16px;
+  height: 16px;
 
-            <strong id="pickerValue">
-              0
-            </strong>
+  padding: 0 4px;
 
-          </div>
+  background: rgba(0,0,0,.75);
+}
 
+.trade-slot-badge.neon,
+.mini-chip.neon,
+.vchip.neon {
+  color: #67e8f9;
+}
 
-          <!-- PET FORM -->
+.trade-slot-badge.mega,
+.mini-chip.mega,
+.vchip.mega {
+  color: #f0abfc;
+}
 
-          <div
-            id="formOptions"
-            class="picker-option-section"
-          >
+.trade-slot-badge.fly,
+.mini-chip.fly,
+.vchip.fly {
+  color: #93c5fd;
+}
 
-            <span class="picker-option-title">
-              FORM
-            </span>
+.trade-slot-badge.ride,
+.mini-chip.ride,
+.vchip.ride {
+  color: #fcd34d;
+}
 
-            <div class="picker-option-buttons">
 
-              <button
-                type="button"
-                class="option-button active"
-                onclick="toggleForm('normal')"
-              >
-                Normal
-              </button>
+/* =========================================================
+   NEON / MEGA EFFECT
+========================================================= */
 
-              <button
-                type="button"
-                class="option-button"
-                onclick="toggleForm('neon')"
-              >
-                Neon
-              </button>
+.neon-effect,
+.mega-effect {
+  position: absolute;
 
-              <button
-                type="button"
-                class="option-button"
-                onclick="toggleForm('mega')"
-              >
-                Mega
-              </button>
+  inset: 5%;
 
-            </div>
+  border-radius: 50%;
 
-          </div>
+  filter: blur(14px);
 
+  opacity: .65;
 
-          <!-- POTIONS -->
+  z-index: 1;
+}
 
-          <div
-            id="potionOptions"
-            class="picker-option-section"
-          >
+.neon-effect {
+  background:
+    conic-gradient(
+      #22d3ee,
+      #a78bfa,
+      #f472b6,
+      #4ade80,
+      #22d3ee
+    );
 
-            <span class="picker-option-title">
-              POTION
-            </span>
+  animation:
+    rotateGlow 4s linear infinite;
+}
 
-            <div class="picker-option-buttons">
+.mega-effect {
+  background:
+    conic-gradient(
+      #f472b6,
+      #facc15,
+      #a78bfa,
+      #60a5fa,
+      #f472b6
+    );
 
-              <button
-                type="button"
-                class="option-button"
-                onclick="togglePotion('fly')"
-              >
-                Fly
-              </button>
+  animation:
+    rotateGlow 3s linear infinite;
+}
 
-              <button
-                type="button"
-                class="option-button"
-                onclick="togglePotion('ride')"
-              >
-                Ride
-              </button>
+@keyframes rotateGlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-            </div>
 
-          </div>
+/* =========================================================
+   RESULT
+========================================================= */
 
+.result-card {
+  margin-top: 18px;
 
-          <button
-            type="button"
-            class="picker-confirm"
-            onclick="confirmAddPet()"
-          >
-            <span>＋</span>
-            Trade'e Ekle
-          </button>
+  min-height: 115px;
 
-        </div>
+  padding: 22px;
 
-      </div>
+  display: grid;
 
-    </div>
+  grid-template-columns:
+    1fr
+    auto
+    auto;
 
-  </div>
+  gap: 25px;
 
+  align-items: center;
 
-  <!-- =========================
-       PROFILE MODAL
-  ========================== -->
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-  <div
-    class="modal-overlay"
-    id="profileModal"
-  >
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.035),
+      rgba(255,255,255,.015)
+    );
 
-    <div class="profile-modal">
+  transition:
+    border-color var(--transition),
+    background var(--transition);
+}
 
-      <button
-        type="button"
-        class="modal-close"
-        onclick="closeProfile()"
-      >
-        ×
-      </button>
+.result-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
+.result-icon {
+  width: 48px;
+  height: 48px;
 
-      <!-- PROFILE VIEW -->
+  display: grid;
+  place-items: center;
 
-      <div id="profileView">
+  flex-shrink: 0;
 
-        <div class="profile-cover">
+  border-radius: 14px;
 
-          <div
-            class="profile-big-avatar"
-            id="profileAvatar"
-          >
-            🐱
-          </div>
+  background: rgba(139,92,246,.1);
 
-        </div>
+  font-size: 20px;
+}
 
+.result-left h3 {
+  margin-top: 5px;
 
-        <div class="profile-main">
+  font-size: 18px;
+}
 
-          <h2 id="profileName">
-            Zayaxra User
-          </h2>
+.result-left p {
+  margin-top: 4px;
 
-          <span id="profileUsername">
-            @user
-          </span>
+  color: var(--muted);
 
+  font-size: 11px;
+}
 
-          <div class="profile-stats">
+.result-middle {
+  text-align: right;
+}
 
-            <div class="profile-stat">
+.result-middle strong {
+  display: block;
 
-              <strong id="profileTrades">
-                0
-              </strong>
+  margin-top: 4px;
 
-              <span>
-                Trades
-              </span>
+  color: var(--text);
 
-            </div>
+  font-size: 24px;
+}
 
-            <div class="profile-stat">
+.trade-status-bar {
+  padding: 9px 13px;
 
-              <strong id="profileWins">
-                0
-              </strong>
+  border: 1px solid var(--border);
 
-              <span>
-                Wins
-              </span>
+  border-radius: 9px;
 
-            </div>
+  background: rgba(255,255,255,.04);
 
-            <div class="profile-stat">
+  color: var(--muted);
 
-              <strong id="profileFair">
-                0
-              </strong>
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
 
-              <span>
-                Fair
-              </span>
+.trade-result-card.fair {
+  border-color: rgba(250,204,21,.2);
+}
 
-            </div>
+.trade-result-card.small-win,
+.trade-result-card.big-win {
+  border-color: rgba(74,222,128,.25);
+}
 
-            <div class="profile-stat">
+.trade-result-card.small-lose,
+.trade-result-card.big-lose {
+  border-color: rgba(251,113,133,.25);
+}
 
-              <strong id="profileLosses">
-                0
-              </strong>
+.trade-status-bar.fair {
+  color: var(--yellow);
+}
 
-              <span>
-                Losses
-              </span>
+.trade-status-bar.small-win,
+.trade-status-bar.big-win {
+  color: var(--green);
+}
 
-            </div>
+.trade-status-bar.small-lose,
+.trade-status-bar.big-lose {
+  color: var(--red);
+}
 
-          </div>
+.calculator-actions {
+  margin-top: 14px;
 
+  display: flex;
+  justify-content: flex-end;
+}
 
-          <button
-            id="profileEdit"
-            type="button"
-            class="profile-edit-button"
-            onclick="openEditProfile()"
-          >
-            ✎ Profili Düzenle
-          </button>
+.clear-trade-btn {
+  border: 0;
 
-        </div>
+  background: transparent;
 
-      </div>
+  color: var(--muted-2);
 
+  font-size: 11px;
+  font-weight: 700;
+}
 
-      <!-- PROFILE EDIT -->
+.clear-trade-btn:hover {
+  color: var(--red);
+}
 
-      <div
-        id="editProfile"
-        class="edit-profile"
-        style="display:none;"
-      >
 
-        <div class="edit-profile-header">
+/* =========================================================
+   VALUES
+========================================================= */
 
-          <h2>
-            Profili Düzenle
-          </h2>
+.values-panel {
+  padding: 20px;
 
-          <p>
-            Zayaxra profil bilgilerini güncelle.
-          </p>
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-        </div>
+  background: rgba(255,255,255,.018);
+}
 
+.values-search-wrap,
+.picker-search {
+  position: relative;
+}
 
-        <label>
-          İsim
-        </label>
+.values-search-wrap input,
+.picker-search input {
+  width: 100%;
+  height: 52px;
 
-        <input
-          id="editProfileName"
-          type="text"
-          maxlength="30"
-          placeholder="İsmin"
-        >
+  padding:
+    0 18px 0 48px;
 
+  border: 1px solid var(--border);
+  border-radius: 13px;
 
-        <label>
-          Kullanıcı adı
-        </label>
+  outline: none;
 
-        <input
-          id="editProfileUsername"
-          type="text"
-          maxlength="25"
-          placeholder="@username"
-        >
+  background: var(--card);
+  color: var(--text);
 
+  font-size: 13px;
 
-        <label>
-          Avatar
-        </label>
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
 
-        <div
-          id="avatarPicker"
-          class="avatar-picker"
-        >
+.values-search-wrap input:focus,
+.picker-search input:focus {
+  border-color: rgba(139,92,246,.55);
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐱')"
-            data-avatar="🐱"
-          >
-            🐱
-          </button>
+  box-shadow:
+    0 0 0 4px rgba(139,92,246,.08);
+}
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐶')"
-            data-avatar="🐶"
-          >
-            🐶
-          </button>
+.search-icon,
+.picker-search > span {
+  position: absolute;
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐰')"
-            data-avatar="🐰"
-          >
-            🐰
-          </button>
+  left: 17px;
+  top: 50%;
 
-          <button
-            type="button"
-            onclick="selectAvatar('🦊')"
-            data-avatar="🦊"
-          >
-            🦊
-          </button>
+  transform: translateY(-50%);
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐼')"
-            data-avatar="🐼"
-          >
-            🐼
-          </button>
+  color: var(--muted);
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐸')"
-            data-avatar="🐸"
-          >
-            🐸
-          </button>
+  z-index: 2;
+}
 
-          <button
-            type="button"
-            onclick="selectAvatar('🐨')"
-            data-avatar="🐨"
-          >
-            🐨
-          </button>
+.values-grid {
+  margin-top: 18px;
 
-          <button
-            type="button"
-            onclick="selectAvatar('🦁')"
-            data-avatar="🦁"
-          >
-            🦁
-          </button>
+  display: grid;
 
-        </div>
+  grid-template-columns:
+    repeat(auto-fill, minmax(150px, 1fr));
 
+  gap: 10px;
+}
 
-        <div class="edit-profile-actions">
 
-          <button
-            type="button"
-            class="secondary-button"
-            onclick="closeEditProfile()"
-          >
-            İptal
-          </button>
+/* =========================================================
+   ABOUT
+========================================================= */
 
-          <button
-            type="button"
-            class="primary-button"
-            onclick="saveEditedProfile()"
-          >
-            Kaydet
-          </button>
+.about-card {
+  padding: 38px;
 
-        </div>
+  display: flex;
+  gap: 28px;
 
-      </div>
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 
-    </div>
+  background:
+    radial-gradient(
+      circle at 0 0,
+      rgba(139,92,246,.09),
+      transparent 40%
+    ),
+    var(--card);
+}
 
-  </div>
+.about-icon {
+  width: 55px;
+  height: 55px;
 
+  display: grid;
+  place-items: center;
 
-  <!-- =========================
-       TOAST
-  ========================== -->
+  flex-shrink: 0;
 
-  <div
-    class="toast"
-    id="toast"
-  >
+  border-radius: 16px;
 
-    <span id="toastIcon">
-      ✓
-    </span>
+  background: rgba(139,92,246,.1);
 
-    <span id="toastText">
-      Tamamlandı
-    </span>
+  color: var(--purple-light);
 
-  </div>
+  font-size: 25px;
+}
 
+.about-content h2 {
+  margin-top: 9px;
 
-  <!-- =========================
-       FOOTER
-  ========================== -->
+  font-size: 35px;
 
-  <footer class="footer">
+  letter-spacing: -1.5px;
+}
 
-    <div class="footer-inner">
+.about-content p {
+  max-width: 650px;
 
-      <div class="footer-brand">
+  margin-top: 12px;
 
-        <div class="footer-logo">
-          ZAYAXRA
-        </div>
+  color: var(--muted);
 
-        <p>
-          Adopt Me trade values & calculator.
-        </p>
+  line-height: 1.7;
+}
 
-      </div>
+.info-toggle {
+  margin-top: 20px;
 
+  padding: 0;
 
-      <div class="footer-links">
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-        <a
-          href="#home"
-          onclick="showSection('home')"
-        >
-          Ana Sayfa
-        </a>
+  border: 0;
 
-        <a
-          href="#calculator"
-          onclick="showSection('calculator')"
-        >
-          Calculator
-        </a>
+  background: transparent;
 
-        <a
-          href="#values"
-          onclick="showSection('values')"
-        >
-          Values
-        </a>
+  color: var(--purple-light);
 
-      </div>
+  font-size: 12px;
+  font-weight: 800;
+}
 
+.info-toggle span {
+  transition: transform var(--transition);
+}
 
-      <div class="footer-copy">
-        © 2026 Zayaxra. Fan-made project.
-      </div>
+.info-toggle.active span {
+  transform: rotate(180deg);
+}
 
-    </div>
+.zayaxra-info-panel {
+  max-height: 0;
 
-  </footer>
+  overflow: hidden;
 
+  transition:
+    max-height .3s ease;
+}
 
-  <!-- =========================
-       EXTRA TRADE CSS
-  ========================== -->
+.zayaxra-info-panel.open {
+  max-height: 200px;
+}
 
-  <style>
 
-    /* =====================================================
-       ZAYAXRA TRADE INTERFACE
-    ===================================================== */
+/* =========================================================
+   FOOTER
+========================================================= */
 
-    .trade-page-head {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 25px;
-      margin-bottom: 32px;
-    }
+.footer {
+  width: min(1180px, calc(100% - 40px));
 
-    .trade-page-head h2 {
-      margin: 6px 0 8px;
-      font-size: clamp(30px, 4vw, 46px);
-      font-weight: 900;
-      letter-spacing: -1.5px;
-    }
+  margin: 60px auto 0;
 
-    .trade-page-head p {
-      margin: 0;
-      opacity: .65;
-    }
+  padding:
+    35px 0 25px;
 
-    .section-eyebrow {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 2px;
-      opacity: .65;
-    }
+  border-top: 1px solid var(--border);
+}
 
-    .trade-online {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      padding: 10px 15px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.035);
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: .7px;
-      white-space: nowrap;
-    }
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
 
-    .trade-online span {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #6dff9b;
-      box-shadow: 0 0 12px rgba(109,255,155,.8);
-    }
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 
+  font-weight: 900;
+}
 
-    /* MAIN */
+.footer-logo .logo-mark {
+  width: 30px;
+  height: 30px;
 
-    .z-trade-layout {
-      display: grid;
-      grid-template-columns: minmax(0,1fr) 230px minmax(0,1fr);
-      align-items: stretch;
-      gap: 18px;
-    }
+  border-radius: 9px;
 
+  font-size: 14px;
+}
 
-    /* PANEL */
+.footer-brand p {
+  margin-top: 9px;
 
-    .z-trade-panel {
-      min-width: 0;
-      border: 1px solid rgba(255,255,255,.09);
-      border-radius: 24px;
-      overflow: hidden;
-      background:
-        linear-gradient(
-          145deg,
-          rgba(255,255,255,.065),
-          rgba(255,255,255,.025)
-        );
-      box-shadow:
-        0 25px 80px rgba(0,0,0,.24),
-        inset 0 1px rgba(255,255,255,.04);
-    }
+  color: var(--muted-2);
 
-    .z-you {
-      border-color: rgba(102,174,255,.16);
-    }
+  font-size: 11px;
+}
 
-    .z-them {
-      border-color: rgba(255,125,155,.13);
-    }
+.footer-links {
+  display: flex;
+  gap: 20px;
 
+  color: var(--muted);
 
-    /* HEADER */
+  font-size: 11px;
+  font-weight: 700;
+}
 
-    .z-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      padding: 20px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-    }
+.footer-links a:hover {
+  color: var(--text);
+}
 
-    .z-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
+.footer-bottom {
+  margin-top: 30px;
 
-    .z-avatar {
-      width: 48px;
-      height: 48px;
-      flex: 0 0 48px;
-      display: grid;
-      place-items: center;
-      border-radius: 15px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.09);
-      font-size: 25px;
-    }
+  color: var(--muted-2);
 
-    .opponent-avatar {
-      opacity: .8;
-    }
+  font-size: 10px;
+}
 
-    .z-side-label {
-      display: block;
-      margin-bottom: 3px;
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 1.8px;
-      opacity: .45;
-    }
 
-    .z-user h3 {
-      margin: 0;
-      font-size: 15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 150px;
-    }
+/* =========================================================
+   MODAL
+========================================================= */
 
-    .z-total-box {
-      text-align: right;
-      flex-shrink: 0;
-    }
+.modal-overlay {
+  position: fixed;
 
-    .z-total-box span {
-      display: block;
-      font-size: 8px;
-      letter-spacing: 1px;
-      font-weight: 800;
-      opacity: .4;
-    }
+  inset: 0;
 
-    .z-total-box strong {
-      display: block;
-      margin-top: 3px;
-      font-size: 25px;
-      font-weight: 950;
-    }
+  z-index: 2000;
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    /* OFFER */
+  padding: 20px;
 
-    .z-offer-area {
-      min-height: 430px;
-      padding: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap: 11px;
-      align-content: start;
-    }
+  background: rgba(3,5,10,.78);
 
-    .z-empty-trade {
-      grid-column: 1/-1;
-      min-height: 380px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      opacity: .55;
-      border: 1px dashed rgba(255,255,255,.1);
-      border-radius: 18px;
-    }
+  backdrop-filter: blur(12px);
 
-    .z-empty-plus {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 13px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.055);
-      border: 1px solid rgba(255,255,255,.08);
-      font-size: 28px;
-    }
+  opacity: 0;
+  visibility: hidden;
 
-    .z-empty-trade strong {
-      font-size: 14px;
-      margin-bottom: 5px;
-    }
+  transition:
+    opacity var(--transition),
+    visibility var(--transition);
+}
 
-    .z-empty-trade span {
-      max-width: 220px;
-      font-size: 11px;
-      opacity: .65;
-      line-height: 1.5;
-    }
+.modal-overlay.show,
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 
+.modal-close {
+  width: 38px;
+  height: 38px;
 
-    /* TRADE ITEMS */
+  display: grid;
+  place-items: center;
 
-    .z-offer-area .trade-item {
-      position: relative;
-      min-width: 0;
-      padding: 10px;
-      border-radius: 15px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.035);
-      transition:
-        transform .18s ease,
-        background .18s ease,
-        border-color .18s ease;
-    }
+  border: 1px solid var(--border);
+  border-radius: 11px;
 
-    .z-offer-area .trade-item:hover {
-      transform: translateY(-3px);
-      background: rgba(255,255,255,.065);
-      border-color: rgba(255,255,255,.15);
-    }
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
 
-    .z-offer-area .trade-item-image {
-      width: 100%;
-      height: 90px;
-      display: grid;
-      place-items: center;
-      margin-bottom: 7px;
-      border-radius: 11px;
-      background: rgba(0,0,0,.16);
-    }
+  font-size: 23px;
 
-    .z-offer-area .trade-item-image img {
-      width: 76px;
-      height: 76px;
-      object-fit: contain;
-    }
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
 
-    .z-offer-area .trade-item-info {
-      min-width: 0;
-    }
+.modal-close:hover {
+  background: rgba(255,255,255,.08);
+  color: white;
+}
 
-    .z-offer-area .trade-item-info strong,
-    .z-offer-area .trade-item-name {
-      display: block;
-      font-size: 10px;
-      line-height: 1.3;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
 
-    .z-offer-area .trade-item-value {
-      margin-top: 4px;
-      font-size: 10px;
-      font-weight: 900;
-      opacity: .7;
-    }
+/* =========================================================
+   PET PICKER
+========================================================= */
 
-    .z-offer-area .trade-badge {
-      display: inline-block;
-      margin-top: 4px;
-      padding: 3px 6px;
-      border-radius: 5px;
-      background: rgba(255,255,255,.07);
-      font-size: 7px;
-      font-weight: 900;
-      letter-spacing: .5px;
-    }
+.pet-picker-card {
+  width: min(1050px, 100%);
 
-    .z-offer-area .remove-item-btn {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      z-index: 3;
-      width: 23px;
-      height: 23px;
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border: 0;
-      border-radius: 7px;
-      background: rgba(0,0,0,.65);
-      color: white;
-      cursor: pointer;
-      opacity: 0;
-      transition: opacity .15s ease;
-    }
+  max-height: calc(100vh - 40px);
 
-    .z-offer-area .trade-item:hover .remove-item-btn {
-      opacity: 1;
-    }
+  display: flex;
+  flex-direction: column;
 
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
 
-    /* BOTTOM */
+  background:
+    linear-gradient(
+      180deg,
+      #111522,
+      #0d101a
+    );
 
-    .z-panel-bottom {
-      display: flex;
-      gap: 9px;
-      padding: 14px 18px 18px;
-    }
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.6);
 
-    .z-add-button,
-    .z-clear-button {
-      min-height: 42px;
-      border-radius: 11px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: .18s ease;
-    }
+  overflow: hidden;
 
-    .z-add-button {
-      flex: 1;
-      border: 1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.07);
-      color: inherit;
-      font-weight: 850;
-    }
+  transform: translateY(15px) scale(.98);
 
-    .z-add-button:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.11);
-    }
+  transition:
+    transform .2s ease;
+}
 
-    .z-add-button span {
-      font-size: 17px;
-      margin-right: 4px;
-    }
+.modal-overlay.show .pet-picker-card,
+.modal-overlay.active .pet-picker-card {
+  transform: translateY(0) scale(1);
+}
 
-    .z-clear-button {
-      padding: 0 15px;
-      border: 1px solid rgba(255,255,255,.06);
-      background: transparent;
-      color: inherit;
-      opacity: .55;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .z-clear-button:hover {
-      opacity: 1;
-      background: rgba(255,255,255,.05);
-    }
+.modal-header {
+  padding: 22px 24px;
 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 
-    /* CENTER */
-
-    .z-center-result {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .z-vs-circle {
-      width: 62px;
-      height: 62px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background:
-        radial-gradient(
-          circle,
-          rgba(255,255,255,.12),
-          rgba(255,255,255,.025)
-        );
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow:
-        0 0 35px rgba(255,255,255,.04),
-        inset 0 0 20px rgba(255,255,255,.03);
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: 1px;
-    }
-
-
-    /* RESULT */
-
-    .z-result-box {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 25px 18px;
-      text-align: center;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.035);
-    }
-
-    .z-result-mini {
-      display: block;
-      font-size: 8px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      opacity: .4;
-    }
-
-    .z-result-icon {
-      margin: 16px 0 10px;
-      font-size: 31px;
-    }
-
-    .z-result-box h3 {
-      margin: 0 0 8px;
-      font-size: 15px;
-    }
-
-    .z-result-box p {
-      margin: 0;
-      font-size: 10px;
-      line-height: 1.55;
-      opacity: .55;
-    }
-
-    .z-result-difference {
-      margin-top: 16px;
-      padding: 8px;
-      border-radius: 9px;
-      background: rgba(255,255,255,.045);
-      font-size: 11px;
-      font-weight: 900;
-    }
-
-    .z-result-box.fair {
-      border-color: rgba(255,255,255,.2);
-    }
-
-    .z-result-box.small-win,
-    .z-result-box.big-win {
-      border-color: rgba(80,255,150,.28);
-      background: rgba(80,255,150,.055);
-    }
-
-    .z-result-box.small-lose,
-    .z-result-box.big-lose {
-      border-color: rgba(255,90,120,.28);
-      background: rgba(255,90,120,.055);
-    }
-
-
-    /* INFO */
-
-    .z-trade-info {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .z-info-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 15px;
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 15px;
-      background: rgba(255,255,255,.025);
-    }
-
-    .z-info-icon {
-      width: 37px;
-      height: 37px;
-      flex: 0 0 37px;
-      display: grid;
-      place-items: center;
-      border-radius: 11px;
-      background: rgba(255,255,255,.055);
-    }
-
-    .z-info-item strong {
-      display: block;
-      margin-bottom: 3px;
-      font-size: 11px;
-    }
-
-    .z-info-item span:last-child {
-      display: block;
-      font-size: 9px;
-      line-height: 1.4;
-      opacity: .5;
-    }
-
-
-    /* =====================================================
-       PICKER
-    ===================================================== */
-
-    .picker-modal {
-      width: min(1050px, calc(100vw - 30px));
-      max-height: min(820px, calc(100vh - 30px));
-      overflow: hidden;
-      border-radius: 25px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: #101216;
-      box-shadow: 0 30px 100px rgba(0,0,0,.6);
-    }
-
-    .picker-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 21px 24px 16px;
-    }
-
-    .picker-header h2 {
-      margin: 4px 0 0;
-      font-size: 24px;
-    }
-
-    .modal-close {
-      width: 37px;
-      height: 37px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 10px;
-      background: rgba(255,255,255,.04);
-      color: inherit;
-      font-size: 22px;
-      cursor: pointer;
-    }
-
-    .picker-search {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0 24px 13px;
-      padding: 0 14px;
-      height: 45px;
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 12px;
-      background: rgba(255,255,255,.035);
-    }
-
-    .picker-search input {
-      width: 100%;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: inherit;
-      font: inherit;
-    }
-
-    .picker-category-bar,
-    .category-bar {
-      display: flex;
-      gap: 7px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-    }
-
-    .picker-category-bar {
-      padding: 0 24px 15px;
-    }
-
-    .picker-category,
-    .category-button {
-      flex-shrink: 0;
-      padding: 9px 12px;
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 9px;
-      background: rgba(255,255,255,.035);
-      color: inherit;
-      font: inherit;
-      font-size: 10px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .picker-category.active,
-    .category-button.active {
-      background: rgba(255,255,255,.11);
-      border-color: rgba(255,255,255,.15);
-    }
-
-    .picker-content {
-      display: grid;
-      grid-template-columns: 1fr 285px;
-      min-height: 520px;
-      border-top: 1px solid rgba(255,255,255,.07);
-    }
-
-    .picker-list {
-      min-width: 0;
-      overflow: hidden;
-    }
-
-    .picker-bar {
-      padding: 10px 18px;
-      font-size: 10px;
-      opacity: .5;
-    }
-
-    .picker-pet-list {
-      height: 440px;
-      overflow-y: auto;
-      padding: 0 18px 18px;
-      display: grid;
-      grid-template-columns: repeat(5,1fr);
-      align-content: start;
-      gap: 9px;
-    }
-
-    .picker-preview {
-      padding: 25px 18px;
-      border-left: 1px solid rgba(255,255,255,.07);
-      background: rgba(255,255,255,.018);
-    }
-
-    .picker-preview-image {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto 15px;
-      display: grid;
-      place-items: center;
-      border-radius: 22px;
-      background: rgba(255,255,255,.04);
-    }
-
-    .picker-preview-image img {
-      width: 125px;
-      height: 125px;
-      object-fit: contain;
-    }
-
-    .picker-preview-name {
-      text-align: center;
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .picker-preview-value {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 11px;
-      background: rgba(255,255,255,.045);
-    }
-
-    .picker-preview-value span {
-      font-size: 9px;
-      opacity: .5;
-    }
-
-    .picker-preview-value strong {
-      font-size: 18px;
-    }
-
-    .picker-option-section {
-      margin-top: 17px;
-    }
-
-    .picker-option-title {
-      display: block;
-      margin-bottom: 7px;
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: 1px;
-      opacity: .5;
-    }
-
-    .picker-option-buttons {
-      display: flex;
-      gap: 6px;
-    }
-
-    .option-button {
-      flex: 1;
-      padding: 9px 5px;
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 8px;
-      background: rgba(255,255,255,.035);
-      color: inherit;
-      font: inherit;
-      font-size: 9px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-
-    .option-button.active {
-      background: rgba(255,255,255,.12);
-      border-color: rgba(255,255,255,.17);
-    }
-
-    .picker-confirm {
-      width: 100%;
-      margin-top: 20px;
-      height: 45px;
-      border: 0;
-      border-radius: 11px;
-      background: rgba(255,255,255,.11);
-      color: inherit;
-      font: inherit;
-      font-size: 11px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .picker-confirm:hover {
-      background: rgba(255,255,255,.16);
-    }
-
-
-    /* =====================================================
-       MOBILE
-    ===================================================== */
-
-    @media (max-width: 1050px) {
-
-      .z-trade-layout {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .z-center-result {
-        grid-column: 1/-1;
-        grid-row: 2;
-        display: grid;
-        grid-template-columns: 70px minmax(250px,500px);
-        justify-content: center;
-        align-items: center;
-      }
-
-      .z-trade-info {
-        grid-template-columns: 1fr;
-      }
-
-      .picker-content {
-        grid-template-columns: 1fr;
-      }
-
-      .picker-preview {
-        display: none;
-      }
-
-      .picker-pet-list {
-        grid-template-columns: repeat(6,1fr);
-      }
-
-    }
-
-
-    @media (max-width: 760px) {
-
-      .trade-page-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .trade-online {
-        display: none;
-      }
-
-      .z-trade-layout {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .z-center-result {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-      }
-
-      .z-center-result .z-result-box {
-        flex: 1;
-      }
-
-      .z-vs-circle {
-        flex: 0 0 55px;
-      }
-
-      .z-offer-area {
-        min-height: 280px;
-        grid-template-columns: repeat(4,1fr);
-      }
-
-      .z-empty-trade {
-        min-height: 250px;
-      }
-
-      .picker-pet-list {
-        grid-template-columns: repeat(4,1fr);
-      }
-
-    }
-
-
-    @media (max-width: 520px) {
-
-      .z-panel-header {
-        padding: 14px;
-      }
-
-      .z-avatar {
-        width: 40px;
-        height: 40px;
-        flex-basis: 40px;
-        font-size: 20px;
-      }
-
-      .z-user h3 {
-        max-width: 100px;
-      }
-
-      .z-total-box strong {
-        font-size: 19px;
-      }
-
-      .z-offer-area {
-        padding: 12px;
-        grid-template-columns: repeat(3,1fr);
-        gap: 7px;
-      }
-
-      .z-offer-area .trade-item-image {
-        height: 70px;
-      }
-
-      .z-offer-area .trade-item-image img {
-        width: 58px;
-        height: 58px;
-      }
-
-      .z-panel-bottom {
-        padding: 10px 12px 13px;
-      }
-
-      .z-clear-button {
-        padding: 0 10px;
-      }
-
-      .z-center-result {
-        flex-direction: column;
-      }
-
-      .picker-pet-list {
-        grid-template-columns: repeat(3,1fr);
-      }
-
-    }
-
-  </style>
-
-
-  <!-- =========================
-       SCRIPT
-  ========================== -->
-
-  <script src="script.js"></script>
-
-</body>
-</html>
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+  margin-top: 6px;
+
+  font-size: 22px;
+}
+
+.picker-search {
+  padding: 16px 20px;
+}
+
+.picker-pets {
+  min-height: 250px;
+  max-height: 420px;
+
+  overflow-y: auto;
+
+  padding:
+    0 20px 20px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fill, minmax(125px, 1fr));
+
+  gap: 9px;
+}
+
+.picker-pets::-webkit-scrollbar {
+  width: 6px;
+}
+
+.picker-pets::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #2b3244;
+}
+
+.pet-choice {
+  min-width: 0;
+
+  padding: 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.025);
+  color: var(--text);
+
+  text-align: center;
+
+  transition:
+    transform var(--transition),
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.pet-choice:hover {
+  transform: translateY(-3px);
+
+  border-color:
+    rgba(139,92,246,.4);
+
+  background:
+    rgba(139,92,246,.07);
+}
+
+.choice-image {
+  width: 100%;
+  aspect-ratio: 1;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 8px;
+
+  border-radius: 10px;
+
+  background: #0b0e17;
+}
+
+.pet-photo {
+  width: 88%;
+  height: 88%;
+
+  object-fit: contain;
+}
+
+.pet-choice strong {
+  display: block;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 11px;
+}
+
+.pet-choice small {
+  display: block;
+
+  margin-top: 5px;
+
+  color: var(--purple-light);
+
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.rarity-tag {
+  display: inline-block;
+
+  margin-top: 5px;
+
+  padding: 3px 6px;
+
+  border-radius: 5px;
+
+  background: rgba(255,255,255,.05);
+
+  color: var(--muted);
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   PICKER BAR
+========================================================= */
+
+.picker-bar {
+  padding: 16px 20px;
+
+  border-top: 1px solid var(--border);
+
+  background:
+    rgba(7,9,15,.9);
+}
+
+.picker-bar.hidden {
+  display: none;
+}
+
+.picker-preview {
+  min-height: 85px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+.pet-image-wrap {
+  position: relative;
+
+  width: 75px;
+  height: 75px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  background: #0b0e17;
+}
+
+.pet-image-wrap .pet-photo {
+  position: relative;
+  z-index: 2;
+}
+
+.pet-badges {
+  position: absolute;
+
+  bottom: 5px;
+  left: 5px;
+
+  z-index: 5;
+
+  display: flex;
+  gap: 3px;
+}
+
+.mini-chip {
+  min-width: 17px;
+  height: 17px;
+
+  padding: 0 4px;
+
+  background: rgba(0,0,0,.75);
+}
+
+.preview-info {
+  min-width: 0;
+}
+
+.preview-info strong {
+  display: block;
+
+  font-size: 15px;
+}
+
+.preview-info > span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+}
+
+.vchip-row {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 4px;
+
+  margin-top: 7px;
+}
+
+.vchip {
+  padding: 4px 6px;
+
+  background: rgba(255,255,255,.06);
+}
+
+.picker-options {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+  padding: 15px 0;
+}
+
+.option-title {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: var(--muted-2);
+
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.option-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option-btn {
+  min-height: 34px;
+
+  padding: 0 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.option-btn:hover {
+  color: var(--text);
+  background: rgba(255,255,255,.07);
+}
+
+.option-btn.active {
+  border-color: rgba(139,92,246,.5);
+
+  background:
+    rgba(139,92,246,.13);
+
+  color: var(--purple-light);
+}
+
+.picker-confirm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+.picker-total strong {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--purple-light);
+
+  font-size: 20px;
+}
+
+.confirm-pet-btn {
+  min-height: 43px;
+
+  padding: 0 18px;
+
+  border: 0;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--purple),
+      #6d28d9
+    );
+
+  color: white;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+
+/* =========================================================
+   EMPTY PICKER
+========================================================= */
+
+.empty-picker {
+  grid-column: 1 / -1;
+
+  min-height: 200px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+  color: var(--muted);
+
+  text-align: center;
+}
+
+.empty-picker span {
+  font-size: 28px;
+}
+
+.empty-picker strong {
+  font-size: 13px;
+}
+
+.empty-picker small {
+  color: var(--muted-2);
+
+  font-size: 10px;
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile-card {
+  position: relative;
+
+  width: min(520px, 100%);
+
+  max-height: calc(100vh - 40px);
+
+  overflow-y: auto;
+
+  padding: 30px;
+
+  border: 1px solid var(--border-light);
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #121625,
+      #0d101a
+    );
+
+  box-shadow:
+    0 40px 120px rgba(0,0,0,.6);
+}
+
+.profile-top {
+  text-align: center;
+}
+
+.profile-top > .modal-close {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+
+  margin: 5px auto 15px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid var(--border-light);
+  border-radius: 25px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(139,92,246,.16),
+      rgba(255,255,255,.03)
+    );
+
+  font-size: 45px;
+}
+
+.profile-name,
+.profile-top h2 {
+  font-size: 25px;
+}
+
+.profile-username {
+  margin-top: 4px;
+
+  color: var(--purple-light);
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-top p {
+  max-width: 360px;
+
+  margin: 12px auto 0;
+
+  color: var(--muted);
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.profile-stats {
+  margin-top: 25px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  border: 1px solid var(--border);
+  border-radius: 15px;
+
+  overflow: hidden;
+}
+
+.profile-stat {
+  padding: 15px 7px;
+
+  text-align: center;
+
+  border-right: 1px solid var(--border);
+}
+
+.profile-stat:last-child {
+  border-right: 0;
+}
+
+.profile-stat strong {
+  display: block;
+
+  font-size: 18px;
+}
+
+.profile-stat span {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--muted-2);
+
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.profile-actions {
+  margin-top: 20px;
+}
+
+.profile-edit-btn {
+  width: 100%;
+  height: 45px;
+
+  border: 1px solid var(--border);
+  border-radius: 11px;
+
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-edit-form {
+  margin-top: 20px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid var(--border);
+}
+
+.profile-edit-form.hidden {
+  display: none;
+}
+
+.profile-edit-form label {
+  display: block;
+
+  margin-bottom: 13px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.profile-edit-form input,
+.profile-edit-form textarea {
+  width: 100%;
+
+  margin-top: 6px;
+
+  padding: 11px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  outline: none;
+
+  resize: vertical;
+
+  background: rgba(255,255,255,.035);
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.profile-edit-form input:focus,
+.profile-edit-form textarea:focus {
+  border-color: rgba(139,92,246,.5);
+}
+
+.avatar-section > span {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--muted);
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.avatar-pick {
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, 1fr);
+
+  gap: 6px;
+}
+
+.avatar-opt {
+  height: 45px;
+
+  border: 1px solid var(--border);
+  border-radius: 9px;
+
+  background: rgba(255,255,255,.03);
+
+  font-size: 21px;
+}
+
+.avatar-opt.active {
+  border-color: rgba(139,92,246,.6);
+
+  background: rgba(139,92,246,.12);
+}
+
+.edit-buttons {
+  margin-top: 18px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 8px;
+}
+
+.cancel-edit,
+.save-profile {
+  height: 43px;
+
+  border-radius: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.cancel-edit {
+  border: 1px solid var(--border);
+
+  background: transparent;
+  color: var(--muted);
+}
+
+.save-profile {
+  border: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--purple),
+      #6d28d9
+    );
+
+  color: white;
+}
+
+
+/* =========================================================
+   INFO MODAL
+========================================================= */
+
+.info-modal-card {
+  position: relative;
+
+  width: min(470px, 100%);
+
+  padding: 35px;
+
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #121625,
+      #0d101a
+    );
+
+  box-shadow: var(--shadow);
+
+  text-align: center;
+}
+
+.info-modal-card > .modal-close {
+  position: absolute;
+
+  top: 16px;
+  right: 16px;
+}
+
+.info-modal-icon {
+  width: 60px;
+  height: 60px;
+
+  margin: 0 auto 18px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 18px;
+
+  background: rgba(139,92,246,.1);
+
+  color: var(--purple-light);
+
+  font-size: 27px;
+}
+
+.info-modal-card h2 {
+  margin-top: 7px;
+
+  font-size: 28px;
+}
+
+.info-modal-card > p {
+  margin-top: 10px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.info-list {
+  margin-top: 22px;
+
+  display: grid;
+
+  gap: 7px;
+
+  text-align: left;
+}
+
+.info-list div {
+  padding: 11px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: rgba(255,255,255,.025);
+
+  color: #c4cada;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.info-list span {
+  margin-right: 7px;
+}
+
+.full-btn {
+  width: 100%;
+
+  margin-top: 20px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .nav-links {
+    display: none;
+  }
+
+  .menu-button {
+    display: block;
+  }
+
+  .calculator-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .trade-vs {
+    flex-direction: row;
+
+    height: 45px;
+  }
+
+  .vs-line {
+    height: 1px;
+    width: auto;
+  }
+
+  .result-card {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .result-right {
+    grid-column: 1 / -1;
+  }
+
+  .result-right .trade-status-bar {
+    text-align: center;
+  }
+
+  .picker-options {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .nav-container,
+  .calculator-section,
+  .values-section,
+  .about-section,
+  .footer {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .profile-nav-btn {
+    padding: 9px 10px;
+  }
+
+  .profile-nav-btn span {
+    display: none;
+  }
+
+  .hero {
+    min-height: 680px;
+
+    padding-top: 120px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2.5px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons button {
+    width: 100%;
+  }
+
+  .hero-stats {
+    gap: 20px;
+  }
+
+  .hero-stat strong {
+    font-size: 15px;
+  }
+
+  .calculator-section,
+  .values-section,
+  .about-section {
+    padding: 70px 0;
+  }
+
+  .trade-column {
+    padding: 15px;
+  }
+
+  .trade-items {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+  .result-card {
+    grid-template-columns: 1fr;
+  }
+
+  .result-middle {
+    text-align: left;
+  }
+
+  .about-card {
+    padding: 24px;
+
+    flex-direction: column;
+  }
+
+  .about-content h2 {
+    font-size: 28px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+  }
+
+  .picker-pets {
+    grid-template-columns:
+      repeat(3, 1fr);
+
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .pet-picker-card {
+    max-height: calc(100vh - 20px);
+
+    border-radius: 18px;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-header {
+    padding: 16px;
+  }
+
+  .picker-search {
+    padding: 12px;
+  }
+
+  .picker-bar {
+    padding: 12px;
+  }
+
+  .profile-card {
+    padding: 22px 16px;
+  }
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .profile-stat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .profile-stat:nth-child(-n+2) {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .avatar-pick {
+    grid-template-columns:
+      repeat(4, 1fr);
+  }
+
+  .info-modal-card {
+    padding: 28px 20px;
+  }
+
+}
+
+
+@media (max-width: 400px) {
+
+  .trade-items {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .picker-pets {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080a12;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #252b3b;
+
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #343c52;
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+::selection {
+  background: rgba(139,92,246,.35);
+  color: white;
+}
+```
