@@ -10,8 +10,48 @@
    DATABASE
 ========================================================= */
 
-const PET_DATA_URL =
-  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
+function resolveImage(imagePath, name) {
+
+  if (imagePath) {
+
+    let path = String(imagePath);
+
+    // JSON'daki hatalı /images/pets/ yolunu
+    // repository'deki gerçek /images/ yoluna çevir
+    path = path.replace(
+      /^\/images\/pets\//,
+      "/images/"
+    );
+
+    path = path.replace(
+      /^images\/pets\//,
+      "images/"
+    );
+
+    if (/^https?:\/\//i.test(path)) {
+      return path;
+    }
+
+    return (
+      PET_IMAGE_BASE +
+      (
+        path.startsWith("/")
+          ? ""
+          : "/"
+      ) +
+      path
+    );
+  }
+
+  // JSON'da image yoksa
+  // gerçek repository dosya adını kullan
+  return (
+    PET_IMAGE_BASE +
+    "/images/" +
+    encodeURIComponent(name) +
+    ".png"
+  );
+}
 
 const PET_IMAGE_BASE =
   "https://ironbabatekkral.github.io/adoptme-values";
