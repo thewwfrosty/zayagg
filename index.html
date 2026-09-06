@@ -2,507 +2,821 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Zayaxra — Adopt Me Trading Values, W/F/L Calculator ve item değerleri."
+  >
 
   <title>Zayaxra — Adopt Me Trading</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet"
-  >
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="navbar">
+  <!-- =========================
+       NAVBAR
+  ========================== -->
+  <nav class="navbar">
 
-  <a href="#" class="logo">Zayaxra</a>
+    <div class="nav-inner">
 
-  <nav id="mainNav">
-    <a href="#" class="active" onclick="closeMenu()">Ana Sayfa</a>
-    <a href="#calculator" onclick="closeMenu()">W/F/L Calculator</a>
-    <a href="#values" onclick="closeMenu()">Değerler</a>
+      <a href="#" class="logo">
+        <span class="logo-icon">🐾</span>
+        <span>Zayaxra</span>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#home" onclick="closeMenu()">Ana Sayfa</a>
+        <a href="#calculator" onclick="closeMenu()">W/F/L Calculator</a>
+        <a href="#values" onclick="closeMenu()">Değerler</a>
+      </div>
+
+      <div class="nav-actions">
+
+        <button
+          class="profile-btn"
+          onclick="openProfile()"
+          type="button"
+        >
+          <span id="navAvatar">🐱</span>
+          <span class="profile-btn-text">Profil</span>
+        </button>
+
+        <button
+          class="menu-btn"
+          onclick="toggleMenu()"
+          type="button"
+          aria-label="Menüyü aç"
+        >
+          ☰
+        </button>
+
+      </div>
+
+    </div>
+
   </nav>
 
-  <div class="nav-actions">
-    <button
-      type="button"
-      id="profileBtn"
-      class="login"
-      onclick="openProfile()"
-    >
-      👤 Profil
-    </button>
 
-    <button
-      type="button"
-      class="menu-btn"
-      onclick="toggleMenu()"
-      aria-label="Menü"
-    >
-      ☰
-    </button>
-  </div>
+  <!-- =========================
+       MAIN
+  ========================== -->
+  <main id="home">
 
-</header>
+    <!-- HERO -->
+    <section class="hero">
 
+      <div class="hero-content">
 
-<main>
+        <div class="hero-badge">
+          🐾 Adopt Me Trading
+        </div>
 
-<section class="hero">
+        <h1>
+          Trade'inin değerini
+          <span>anında öğren.</span>
+        </h1>
 
-  <div class="hero-content">
+        <p>
+          Zayaxra ile Adopt Me itemlerini karşılaştır,
+          W/F/L sonucunu öğren ve güncel değerleri keşfet.
+        </p>
 
-    <div class="badge">
-      🐾 Adopt Me Trading
-    </div>
+        <div class="hero-buttons">
 
-    <h1>
-      Trade'inin değerini<br>
-      <span>anında öğren.</span>
-    </h1>
+          <a
+            href="#calculator"
+            class="primary-btn"
+          >
+            ⚖️ Calculator'a Git
+          </a>
 
-    <p>
-      Petlerini seç, iki tarafı karşılaştır ve trade'inin
-      Win, Fair veya Lose olduğunu saniyeler içinde gör.
-    </p>
+          <a
+            href="#values"
+            class="secondary-btn"
+          >
+            📊 Değerlere Bak
+          </a>
 
-    <a class="hero-btn" href="#calculator">
-      Calculator'ı Aç →
-    </a>
+        </div>
 
-  </div>
-
-</section>
-
-
-<section id="calculator" class="section">
-
-  <div class="section-head">
-
-    <div>
-      <div class="eyebrow">
-        TRADE CALCULATOR
       </div>
 
-      <h2>
-        W/F/L Calculator
-      </h2>
-    </div>
+    </section>
 
-    <button
-      type="button"
-      id="clearBtn"
-      class="ghost"
-      onclick="clearTrade()"
+
+    <!-- =========================
+         TRADE CALCULATOR
+    ========================== -->
+    <section
+      class="calculator-section"
+      id="calculator"
     >
-      Temizle
-    </button>
 
-  </div>
-
-
-  <div class="trade-status-bar" id="tradeStatusBar">
-
-    <div class="trade-status-pill">
-      <span class="status-dot"></span>
-
-      <span id="tradeStatusLabel">
-        TRADE HAZIR
-      </span>
-    </div>
-
-    <div
-      class="trade-status-diff"
-      id="resultDiffNumber"
-    >
-      —
-    </div>
-
-  </div>
-
-
-  <div class="trade-grid">
-
-
-    <!-- SEN -->
-
-    <div class="trade-box trade-box-you">
-
-      <div class="box-head trade-box-head">
+      <div class="section-heading">
 
         <div>
-
-          <span class="trade-side-label">
-            SEN
+          <span class="section-eyebrow">
+            TRADE CALCULATOR
           </span>
 
-          <h3>
-            Senin teklifin
-          </h3>
+          <h2>
+            W / F / L Calculator
+          </h2>
 
+          <p>
+            İki tarafın itemlerini ekle ve trade'in değerini karşılaştır.
+          </p>
         </div>
-
-        <div class="trade-total-wrap">
-
-          <span class="trade-total-label">
-            VALUE
-          </span>
-
-          <span
-            id="youTotal"
-            class="trade-total"
-          >
-            0.0
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="youItems"
-        class="items trade-items-grid"
-      >
-
-        <div class="empty-items trade-empty">
-
-          <span class="empty-plus">
-            ＋
-          </span>
-
-          <strong>
-            Henüz pet eklenmedi
-          </strong>
-
-          <small>
-            Teklifini oluşturmak için pet ekle
-          </small>
-
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="add trade-add"
-        onclick="openPetPicker('you')"
-      >
-
-        <span>
-          ＋
-        </span>
-
-        Pet Ekle
-
-      </button>
-
-    </div>
-
-
-    <!-- VS -->
-
-    <div class="vs trade-vs">
-
-      <div class="vs-ring">
-        <span>
-          VS
-        </span>
-      </div>
-
-    </div>
-
-
-    <!-- KARŞI -->
-
-    <div class="trade-box trade-box-them">
-
-      <div class="box-head trade-box-head">
-
-        <div>
-
-          <span class="trade-side-label">
-            KARŞI TARAF
-          </span>
-
-          <h3>
-            Karşı taraf
-          </h3>
-
-        </div>
-
-        <div class="trade-total-wrap">
-
-          <span class="trade-total-label">
-            VALUE
-          </span>
-
-          <span
-            id="themTotal"
-            class="trade-total"
-          >
-            0.0
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div
-        id="themItems"
-        class="items trade-items-grid"
-      >
-
-        <div class="empty-items trade-empty">
-
-          <span class="empty-plus">
-            ＋
-          </span>
-
-          <strong>
-            Henüz pet eklenmedi
-          </strong>
-
-          <small>
-            Karşı tarafın teklifini oluştur
-          </small>
-
-        </div>
-
-      </div>
-
-
-      <button
-        type="button"
-        class="add trade-add"
-        onclick="openPetPicker('them')"
-      >
-
-        <span>
-          ＋
-        </span>
-
-        Pet Ekle
-
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <!-- RESULT -->
-
-  <div
-    id="resultCard"
-    class="result-card trade-result-card"
-  >
-
-    <div class="result-main">
-
-      <div class="result-kicker">
-        TRADE ANALİZİ
-      </div>
-
-      <h3 id="resultStatusText">
-        Pet ekleyerek başla
-      </h3>
-
-      <p id="resultHint">
-        İki tarafa da pet eklediğinde avantajı burada göreceksin.
-      </p>
-
-    </div>
-
-    <div class="result-score">
-
-      <span class="result-score-label">
-        FARK
-      </span>
-
-      <strong id="resultDiffDisplay">
-        —
-      </strong>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- VALUES -->
-
-<section
-  id="values"
-  class="section values"
->
-
-  <div class="section-head">
-
-    <div>
-
-      <div class="eyebrow">
-        POPULAR VALUES
-      </div>
-
-      <h2>
-        Popüler Pet Değerleri
-      </h2>
-
-    </div>
-
-    <input
-      id="search"
-      type="search"
-      placeholder="🔎 Pet ara..."
-      autocomplete="off"
-    >
-
-  </div>
-
-
-  <div
-    id="valueGrid"
-    class="value-grid"
-  ></div>
-
-</section>
-
-</main>
-
-
-<!-- PET PICKER -->
-
-<div
-  id="petPickerModal"
-  class="profile-modal"
-  aria-hidden="true"
->
-
-  <div
-    class="profile-window pet-modal-window"
-    role="dialog"
-    aria-modal="true"
-  >
-
-    <div class="profile-header">
-
-      <div>
-
-        <div class="profile-eyebrow">
-          SEÇİM YAP
-        </div>
-
-        <h2 id="petPickerTitle">
-          Pet Ekle
-        </h2>
-
-      </div>
-
-      <button
-        type="button"
-        class="profile-close"
-        onclick="closePetPicker()"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="modal-search">
-
-      <input
-        id="pickerSearch"
-        class="pet-search"
-        type="search"
-        placeholder="🔎 Pet ara..."
-        autocomplete="off"
-      >
-
-    </div>
-
-
-    <div
-      id="pickerPetList"
-      class="pet-choice-grid"
-    ></div>
-
-
-    <div class="picker-settings">
-
-      <div
-        id="pickerBar"
-        class="picker-bar hidden"
-      >
 
         <div
-          id="pickerPreview"
-          class="picker-preview"
-        ></div>
+          class="calculator-status"
+          id="calculatorStatus"
+        >
+          ● Sistem hazır
+        </div>
+
+      </div>
 
 
-        <div class="picker-options">
+      <!-- TRADE AREA -->
+      <div class="trade-container">
 
-          <div class="form-toggles">
 
-            <button
-              type="button"
-              id="btnNormal"
-              class="form-btn normal active"
-              onclick="toggleForm('normal')"
+        <!-- YOU -->
+        <div class="trade-box you-box">
+
+          <div class="trade-box-header">
+
+            <div>
+              <span class="trade-label">
+                SEN
+              </span>
+
+              <h3>
+                Senin Teklifin
+              </h3>
+            </div>
+
+            <div
+              class="trade-total"
+              id="youTotal"
             >
-              D
-            </button>
-
-            <button
-              type="button"
-              id="btnNeon"
-              class="form-btn neon"
-              onclick="toggleForm('neon')"
-            >
-              N
-            </button>
-
-            <button
-              type="button"
-              id="btnMega"
-              class="form-btn mega"
-              onclick="toggleForm('mega')"
-            >
-              M
-            </button>
+              0
+            </div>
 
           </div>
 
 
-          <div class="potion-toggles">
+          <div
+            class="trade-items"
+            id="youItems"
+          >
+
+            <div class="empty-trade">
+              <div class="empty-icon">📦</div>
+
+              <strong>
+                Henüz item yok
+              </strong>
+
+              <span>
+                Trade'e item eklemek için aşağıdaki butona bas.
+              </span>
+            </div>
+
+          </div>
+
+
+          <button
+            class="add-item-btn"
+            onclick="openPetPicker('you')"
+            type="button"
+          >
+            <span>＋</span>
+            Item Ekle
+          </button>
+
+        </div>
+
+
+        <!-- VS -->
+        <div class="trade-vs">
+          <span>VS</span>
+        </div>
+
+
+        <!-- THEM -->
+        <div class="trade-box them-box">
+
+          <div class="trade-box-header">
+
+            <div>
+              <span class="trade-label">
+                KARŞI TARAF
+              </span>
+
+              <h3>
+                Onların Teklifi
+              </h3>
+            </div>
+
+            <div
+              class="trade-total"
+              id="themTotal"
+            >
+              0
+            </div>
+
+          </div>
+
+
+          <div
+            class="trade-items"
+            id="themItems"
+          >
+
+            <div class="empty-trade">
+              <div class="empty-icon">📦</div>
+
+              <strong>
+                Henüz item yok
+              </strong>
+
+              <span>
+                Karşı tarafın itemlerini buraya ekle.
+              </span>
+            </div>
+
+          </div>
+
+
+          <button
+            class="add-item-btn"
+            onclick="openPetPicker('them')"
+            type="button"
+          >
+            <span>＋</span>
+            Item Ekle
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- RESULT -->
+      <div
+        class="result-card"
+        id="resultCard"
+      >
+
+        <div class="result-icon">
+          ⚖️
+        </div>
+
+        <div class="result-content">
+
+          <span class="result-label">
+            TRADE SONUCU
+          </span>
+
+          <h3 id="resultTitle">
+            Item ekleyerek başla
+          </h3>
+
+          <p id="resultText">
+            İki tarafa da item eklediğinde trade sonucu burada görünecek.
+          </p>
+
+        </div>
+
+        <div
+          class="result-difference"
+          id="resultDifference"
+        >
+          —
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         VALUES
+    ========================== -->
+    <section
+      class="values-section"
+      id="values"
+    >
+
+      <div class="section-heading">
+
+        <div>
+
+          <span class="section-eyebrow">
+            ADOPT ME VALUES
+          </span>
+
+          <h2>
+            Item Değerleri
+          </h2>
+
+          <p id="valueDescription">
+            Tüm Adopt Me itemlerini kategorilere göre keşfet.
+          </p>
+
+        </div>
+
+        <div
+          class="item-count"
+          id="itemCount"
+        >
+          0 item
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH -->
+      <div class="values-tools">
+
+        <div class="search-wrapper">
+
+          <span class="search-icon">
+            🔎
+          </span>
+
+          <input
+            type="text"
+            id="search"
+            placeholder="Pet, araç, toy, pet wear ara..."
+            autocomplete="off"
+          >
+
+          <button
+            class="clear-search"
+            id="clearSearch"
+            onclick="clearSearchInput()"
+            type="button"
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- SORT -->
+        <select
+          id="sortSelect"
+          class="filter-select"
+          onchange="applyValueFilters()"
+        >
+
+          <option value="value-desc">
+            Değer: Yüksek → Düşük
+          </option>
+
+          <option value="value-asc">
+            Değer: Düşük → Yüksek
+          </option>
+
+          <option value="name-asc">
+            İsim: A → Z
+          </option>
+
+          <option value="name-desc">
+            İsim: Z → A
+          </option>
+
+        </select>
+
+
+        <!-- RARITY -->
+        <select
+          id="rarityFilter"
+          class="filter-select"
+          onchange="applyValueFilters()"
+        >
+
+          <option value="all">
+            Tüm Rarity
+          </option>
+
+          <option value="common">
+            Common
+          </option>
+
+          <option value="uncommon">
+            Uncommon
+          </option>
+
+          <option value="rare">
+            Rare
+          </option>
+
+          <option value="ultra rare">
+            Ultra Rare
+          </option>
+
+          <option value="legendary">
+            Legendary
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- =========================
+           CATEGORIES
+      ========================== -->
+      <div
+        class="category-bar"
+        id="categoryBar"
+      >
+
+        <button
+          class="category-btn active"
+          data-category="all"
+          onclick="setValueCategory('all')"
+          type="button"
+        >
+          <span>✨</span>
+          Tümü
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="pets"
+          onclick="setValueCategory('pets')"
+          type="button"
+        >
+          <span>🐾</span>
+          Pets
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="petwear"
+          onclick="setValueCategory('petwear')"
+          type="button"
+        >
+          <span>👕</span>
+          Pet Wear
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="eggs"
+          onclick="setValueCategory('eggs')"
+          type="button"
+        >
+          <span>🥚</span>
+          Eggs
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="vehicles"
+          onclick="setValueCategory('vehicles')"
+          type="button"
+        >
+          <span>🚗</span>
+          Vehicles
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="toys"
+          onclick="setValueCategory('toys')"
+          type="button"
+        >
+          <span>🧸</span>
+          Toys
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="strollers"
+          onclick="setValueCategory('strollers')"
+          type="button"
+        >
+          <span>🛒</span>
+          Strollers
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="food"
+          onclick="setValueCategory('food')"
+          type="button"
+        >
+          <span>🍎</span>
+          Food
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="gifts"
+          onclick="setValueCategory('gifts')"
+          type="button"
+        >
+          <span>🎁</span>
+          Gifts
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="stickers"
+          onclick="setValueCategory('stickers')"
+          type="button"
+        >
+          <span>🏷️</span>
+          Stickers
+        </button>
+
+
+        <button
+          class="category-btn"
+          data-category="other"
+          onclick="setValueCategory('other')"
+          type="button"
+        >
+          <span>📦</span>
+          Other
+        </button>
+
+      </div>
+
+
+      <!-- VALUE GRID -->
+      <div
+        class="value-grid"
+        id="valueGrid"
+      >
+
+        <div class="loading-state">
+
+          <div class="loading-spinner"></div>
+
+          <strong>
+            Itemler yükleniyor...
+          </strong>
+
+          <span>
+            Zayaxra veri tabanına bağlanıyor.
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- LOAD MORE -->
+      <div
+        class="load-more-wrapper"
+        id="loadMoreWrapper"
+        style="display:none;"
+      >
+
+        <button
+          class="secondary-btn"
+          id="loadMoreBtn"
+          onclick="loadMoreItems()"
+          type="button"
+        >
+          Daha Fazla Göster
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ==================================================
+       ITEM PICKER MODAL
+  =================================================== -->
+  <div
+    class="modal-overlay"
+    id="petPickerModal"
+  >
+
+    <div class="modal item-picker-modal">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+
+        <div>
+
+          <span class="modal-eyebrow">
+            ITEM SELECTOR
+          </span>
+
+          <h2 id="petPickerTitle">
+            Item Seç
+          </h2>
+
+        </div>
+
+        <button
+          class="modal-close"
+          onclick="closePetPicker()"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- SEARCH -->
+      <div class="picker-search">
+
+        <span>
+          🔎
+        </span>
+
+        <input
+          type="text"
+          id="pickerSearch"
+          placeholder="Item ara..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- PICKER CATEGORY BAR -->
+      <div
+        class="picker-category-bar"
+        id="pickerCategoryBar"
+      >
+
+        <button
+          class="picker-category-btn active"
+          data-picker-category="all"
+          onclick="setPickerCategory('all')"
+          type="button"
+        >
+          ✨ Tümü
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="pets"
+          onclick="setPickerCategory('pets')"
+          type="button"
+        >
+          🐾 Pets
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="petwear"
+          onclick="setPickerCategory('petwear')"
+          type="button"
+        >
+          👕 Pet Wear
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="eggs"
+          onclick="setPickerCategory('eggs')"
+          type="button"
+        >
+          🥚 Eggs
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="vehicles"
+          onclick="setPickerCategory('vehicles')"
+          type="button"
+        >
+          🚗 Vehicles
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="toys"
+          onclick="setPickerCategory('toys')"
+          type="button"
+        >
+          🧸 Toys
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="strollers"
+          onclick="setPickerCategory('strollers')"
+          type="button"
+        >
+          🛒 Strollers
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="food"
+          onclick="setPickerCategory('food')"
+          type="button"
+        >
+          🍎 Food
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="gifts"
+          onclick="setPickerCategory('gifts')"
+          type="button"
+        >
+          🎁 Gifts
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="stickers"
+          onclick="setPickerCategory('stickers')"
+          type="button"
+        >
+          🏷️ Stickers
+        </button>
+
+        <button
+          class="picker-category-btn"
+          data-picker-category="other"
+          onclick="setPickerCategory('other')"
+          type="button"
+        >
+          📦 Other
+        </button>
+
+      </div>
+
+
+      <!-- PICKER SETTINGS -->
+      <div
+        class="picker-bar"
+        id="pickerBar"
+      >
+
+        <!-- FORM -->
+        <div
+          class="picker-option-group"
+          id="formOptions"
+        >
+
+          <span class="picker-option-label">
+            Form
+          </span>
+
+          <div class="picker-options">
 
             <button
+              class="picker-option active"
+              data-form="normal"
+              onclick="toggleForm('normal')"
               type="button"
-              id="btnFly"
-              class="potion-btn fly"
-              onclick="togglePotion('fly')"
             >
-              F
+              Normal
             </button>
 
             <button
+              class="picker-option"
+              data-form="neon"
+              onclick="toggleForm('neon')"
               type="button"
-              id="btnRide"
-              class="potion-btn ride"
-              onclick="togglePotion('ride')"
             >
-              R
+              Neon
+            </button>
+
+            <button
+              class="picker-option"
+              data-form="mega"
+              onclick="toggleForm('mega')"
+              type="button"
+            >
+              Mega
             </button>
 
           </div>
@@ -510,21 +824,316 @@
         </div>
 
 
-        <div class="picker-add">
+        <!-- POTIONS -->
+        <div
+          class="picker-option-group"
+          id="potionOptions"
+        >
 
-          <div
-            id="pickerValue"
-            class="picker-value"
-          >
-            0
+          <span class="picker-option-label">
+            Potions
+          </span>
+
+          <div class="picker-options">
+
+            <button
+              class="picker-option"
+              data-potion="fly"
+              onclick="togglePotion('fly')"
+              type="button"
+            >
+              🪽 Fly
+            </button>
+
+            <button
+              class="picker-option"
+              data-potion="ride"
+              onclick="togglePotion('ride')"
+              type="button"
+            >
+              🐎 Ride
+            </button>
+
           </div>
 
-          <button
-            type="button"
-            class="add-confirm"
-            onclick="confirmAddPet()"
+        </div>
+
+      </div>
+
+
+      <!-- ITEM LIST -->
+      <div
+        class="picker-list"
+        id="pickerPetList"
+      >
+
+        <div class="loading-state">
+
+          <div class="loading-spinner"></div>
+
+          <strong>
+            Itemler yükleniyor...
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- PREVIEW -->
+      <div
+        class="picker-preview"
+        id="pickerPreview"
+      >
+
+        <div class="preview-empty">
+          <span>👆</span>
+          Bir item seç
+        </div>
+
+      </div>
+
+
+      <!-- FOOTER -->
+      <div class="picker-footer">
+
+        <div class="picker-selected-value">
+
+          <span>
+            Değer
+          </span>
+
+          <strong id="pickerValue">
+            0
+          </strong>
+
+        </div>
+
+        <button
+          class="primary-btn confirm-btn"
+          onclick="confirmAddPet()"
+          type="button"
+        >
+          ✓ Trade'e Ekle
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==================================================
+       PROFILE MODAL
+  =================================================== -->
+  <div
+    class="modal-overlay"
+    id="profileModal"
+  >
+
+    <div class="modal profile-modal">
+
+      <div class="modal-header">
+
+        <div>
+
+          <span class="modal-eyebrow">
+            ZAYAXRA PROFILE
+          </span>
+
+          <h2>
+            Profil
+          </h2>
+
+        </div>
+
+        <button
+          class="modal-close"
+          onclick="closeProfile()"
+          type="button"
+        >
+          ×
+        </button>
+
+      </div>
+
+
+      <!-- PROFILE VIEW -->
+      <div
+        class="profile-view"
+        id="profileView"
+      >
+
+        <div class="profile-main">
+
+          <div
+            class="profile-avatar"
+            id="profileAvatar"
           >
-            Ekle
+            🐱
+          </div>
+
+          <div class="profile-info">
+
+            <h3 id="profileName">
+              Zayaxra User
+            </h3>
+
+            <p id="profileUsername">
+              @user
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- STATS -->
+        <div class="profile-stats">
+
+          <div class="profile-stat">
+
+            <strong id="profileTrades">
+              0
+            </strong>
+
+            <span>
+              Trade
+            </span>
+
+          </div>
+
+          <div class="profile-stat">
+
+            <strong id="profileWins">
+              0
+            </strong>
+
+            <span>
+              WIN
+            </span>
+
+          </div>
+
+          <div class="profile-stat">
+
+            <strong id="profileFair">
+              0
+            </strong>
+
+            <span>
+              FAIR
+            </span>
+
+          </div>
+
+          <div class="profile-stat">
+
+            <strong id="profileLosses">
+              0
+            </strong>
+
+            <span>
+              LOSE
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="secondary-btn profile-edit-btn"
+          onclick="openEditProfile()"
+          type="button"
+        >
+          ✏️ Profili Düzenle
+        </button>
+
+      </div>
+
+
+      <!-- PROFILE EDIT -->
+      <div
+        class="profile-edit"
+        id="profileEdit"
+        style="display:none;"
+      >
+
+        <div class="form-group">
+
+          <label for="editProfileName">
+            Kullanıcı adı
+          </label>
+
+          <input
+            id="editProfileName"
+            type="text"
+            maxlength="24"
+            placeholder="Kullanıcı adın"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label for="editProfileUsername">
+            @Username
+          </label>
+
+          <input
+            id="editProfileUsername"
+            type="text"
+            maxlength="24"
+            placeholder="@username"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Avatar
+          </label>
+
+          <div
+            class="avatar-picker"
+            id="avatarPicker"
+          >
+
+            <button type="button" onclick="selectAvatar('🐱')">🐱</button>
+            <button type="button" onclick="selectAvatar('🐶')">🐶</button>
+            <button type="button" onclick="selectAvatar('🦊')">🦊</button>
+            <button type="button" onclick="selectAvatar('🐼')">🐼</button>
+            <button type="button" onclick="selectAvatar('🐸')">🐸</button>
+            <button type="button" onclick="selectAvatar('🐨')">🐨</button>
+            <button type="button" onclick="selectAvatar('🐯')">🐯</button>
+            <button type="button" onclick="selectAvatar('🐲')">🐲</button>
+
+          </div>
+
+        </div>
+
+
+        <div class="profile-edit-actions">
+
+          <button
+            class="secondary-btn"
+            onclick="closeEditProfile()"
+            type="button"
+          >
+            Vazgeç
+          </button>
+
+          <button
+            class="primary-btn"
+            onclick="saveEditedProfile()"
+            type="button"
+          >
+            Kaydet
           </button>
 
         </div>
@@ -535,223 +1144,43 @@
 
   </div>
 
-</div>
 
-
-<!-- PROFILE -->
-
-<div
-  id="profileModal"
-  class="profile-modal"
-  aria-hidden="true"
->
-
+  <!-- =========================
+       TOAST
+  ========================== -->
   <div
-    class="profile-window"
-    role="dialog"
-    aria-modal="true"
+    class="toast"
+    id="toast"
   >
-
-    <div class="profile-header">
-
-      <div>
-
-        <div class="profile-eyebrow">
-          ZAYAGG PROFILE
-        </div>
-
-        <h2>
-          Profil
-        </h2>
-
-      </div>
-
-      <button
-        type="button"
-        class="profile-close"
-        onclick="closeProfile()"
-      >
-        ×
-      </button>
-
-    </div>
-
-
-    <div class="profile-main">
-
-      <div
-        id="profileAvatar"
-        class="profile-avatar"
-      >
-        🐉
-      </div>
-
-      <div class="profile-info">
-
-        <h2 id="profileName">
-          Zayagg Kullanıcısı
-        </h2>
-
-        <span id="profileUsername">
-          @kullanici
-        </span>
-
-        <p id="profileBio">
-          Henüz bir biyografi eklenmedi.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <div class="profile-stats">
-
-      <div class="profile-stat">
-
-        <strong id="profileTrades">
-          0
-        </strong>
-
-        <span>
-          Trade
-        </span>
-
-      </div>
-
-
-      <div class="profile-stat win-stat">
-
-        <strong id="profileWins">
-          0
-        </strong>
-
-        <span>
-          WIN
-        </span>
-
-      </div>
-
-
-      <div class="profile-stat fair-stat">
-
-        <strong id="profileFair">
-          0
-        </strong>
-
-        <span>
-          FAIR
-        </span>
-
-      </div>
-
-
-      <div class="profile-stat lose-stat">
-
-        <strong id="profileLoses">
-          0
-        </strong>
-
-        <span>
-          LOSE
-        </span>
-
-      </div>
-
-    </div>
-
-
-    <button
-      type="button"
-      id="profileEditBtn"
-      class="profile-edit"
-      onclick="openEditProfile()"
-    >
-      Profili Düzenle
-    </button>
-
-
-    <form
-      id="profileEditForm"
-      class="profile-form hidden"
-      onsubmit="saveEditedProfile(event)"
-    >
-
-      <label for="editName">
-        Ad
-      </label>
-
-      <input
-        id="editName"
-        maxlength="24"
-        required
-      >
-
-
-      <label for="editUsername">
-        Kullanıcı adı
-      </label>
-
-      <input
-        id="editUsername"
-        maxlength="20"
-        required
-      >
-
-
-      <label for="editBio">
-        Biyografi
-      </label>
-
-      <textarea
-        id="editBio"
-        maxlength="120"
-        rows="3"
-      ></textarea>
-
-
-      <div class="avatar-pick-label">
-        Avatar
-      </div>
-
-      <div
-        id="avatarPick"
-        class="avatar-pick"
-      ></div>
-
-
-      <div class="form-actions">
-
-        <button
-          type="button"
-          class="ghost"
-          onclick="closeEditProfile()"
-        >
-          Vazgeç
-        </button>
-
-        <button
-          type="submit"
-          class="profile-edit"
-        >
-          Kaydet
-        </button>
-
-      </div>
-
-    </form>
-
+    <span id="toastIcon">✓</span>
+    <span id="toastText">İşlem tamamlandı.</span>
   </div>
 
-</div>
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+  <footer class="footer">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        🐾 <strong>Zayaxra</strong>
+      </div>
+
+      <div class="footer-text">
+        Zayaxra © 2026 — Adopt Me Trading Values
+      </div>
+
+    </div>
+
+  </footer>
 
 
-<footer>
-  Zayagg © 2026 — Adopt Me Trading Values
-</footer>
-
-
-<script src="script.js"></script>
+  <!-- =========================
+       SCRIPT
+  ========================== -->
+  <script src="script.js"></script>
 
 </body>
 </html>
