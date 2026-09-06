@@ -5658,3 +5658,163 @@ body.modal-open {
   }
 
 }
+/* =========================================================
+   ZAYAXRA — COMPACT PET OPTIONS
+========================================================= */
+
+.picker-settings {
+  padding-top: 8px !important;
+  padding-bottom: 16px !important;
+}
+
+.picker-bar {
+  grid-template-columns:
+    170px
+    1fr
+    95px !important;
+
+  gap: 10px !important;
+
+  padding: 10px !important;
+
+  border-radius: 14px !important;
+
+  min-height: 74px;
+}
+
+.picker-preview {
+  min-height: 66px !important;
+
+  padding: 6px !important;
+
+  gap: 8px !important;
+
+  border-radius: 11px !important;
+}
+
+.picker-preview .pet-image-wrap {
+  width: 54px !important;
+  height: 54px !important;
+}
+
+.picker-preview .pet-photo {
+  width: 50px !important;
+  height: 50px !important;
+}
+
+.preview-info strong {
+  font-size: 11px !important;
+}
+
+.preview-info > span {
+  font-size: 8px !important;
+  margin: 2px 0 3px !important;
+}
+
+.vchip-row {
+  gap: 3px !important;
+}
+
+.vchip {
+  padding: 2px 5px !important;
+  font-size: 7px !important;
+}
+
+.picker-options {
+  gap: 5px !important;
+}
+
+.form-toggles,
+.potion-toggles {
+  gap: 5px !important;
+}
+
+.form-btn,
+.potion-btn {
+  min-height: 29px !important;
+  padding: 6px 7px !important;
+
+  font-size: 8px !important;
+
+  border-radius: 7px !important;
+}
+
+.picker-add {
+  padding-left: 8px !important;
+  gap: 5px !important;
+}
+
+.picker-value {
+  font-size: 17px !important;
+}
+
+.add-confirm {
+  min-height: 31px !important;
+
+  padding: 6px 10px !important;
+
+  font-size: 10px !important;
+
+  border-radius: 8px !important;
+}
+
+
+/* TABLET */
+
+@media (max-width: 900px) {
+
+  .picker-bar {
+    grid-template-columns:
+      1fr
+      1fr !important;
+
+    min-height: auto;
+  }
+
+  .picker-add {
+    grid-column: 1 / -1 !important;
+
+    padding-top: 8px !important;
+  }
+
+}
+
+
+/* MOBİL */
+
+@media (max-width: 700px) {
+
+  .picker-bar {
+    grid-template-columns: 1fr !important;
+
+    padding: 10px !important;
+
+    gap: 8px !important;
+  }
+
+  .picker-preview {
+    min-height: 62px !important;
+  }
+
+  .picker-add {
+    grid-column: auto !important;
+
+    padding-top: 0 !important;
+
+    padding-left: 0 !important;
+
+    flex-direction: row !important;
+
+    justify-content: space-between !important;
+  }
+
+  .picker-value {
+    font-size: 18px !important;
+  }
+
+  .add-confirm {
+    width: auto !important;
+    min-width: 100px;
+  }
+
+}
