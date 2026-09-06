@@ -1,3 +1,141 @@
+// ===============================
+// ZAYAXRA - PET PICKER FIX
+// ===============================
+
+let currentTradeSide = "you";
+let selectedPet = null;
+
+function openPetPicker(side) {
+    currentTradeSide = side;
+
+    const modal = document.getElementById("petPicker");
+
+    if (!modal) {
+        console.error("petPicker bulunamadı!");
+        return;
+    }
+
+    modal.classList.add("active");
+    modal.style.display = "flex";
+    modal.style.visibility = "visible";
+    modal.style.opacity = "1";
+
+    const title = document.getElementById("petPickerTitle");
+
+    if (title) {
+        title.textContent =
+            side === "you"
+                ? "SENİN PETİNİ SEÇ"
+                : "KARŞI TARAFIN PETİNİ SEÇ";
+    }
+
+    const search = document.getElementById("petSearch");
+
+    if (search) {
+        search.value = "";
+        setTimeout(() => search.focus(), 100);
+    }
+
+    // Veri yüklenmediyse yine de picker açılsın
+    renderPetPicker();
+}
+
+function closePetPicker() {
+    const modal = document.getElementById("petPicker");
+
+    if (!modal) return;
+
+    modal.classList.remove("active");
+    modal.style.display = "none";
+    modal.style.visibility = "hidden";
+    modal.style.opacity = "0";
+}
+
+function renderPetPicker() {
+    const grid = document.getElementById("pickerPets");
+
+    if (!grid) return;
+
+    grid.innerHTML = `
+        <div style="
+            grid-column:1/-1;
+            padding:40px;
+            text-align:center;
+            color:white;
+            font-size:16px;
+        ">
+            Petler yükleniyor...
+        </div>
+    `;
+
+    // Global items varsa onları göster
+    if (typeof items !== "undefined" && Array.isArray(items) && items.length) {
+        renderPetList(items);
+    }
+}
+
+function renderPetList(list) {
+    const grid = document.getElementById("pickerPets");
+
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    list.forEach((pet) => {
+        const card = document.createElement("button");
+
+        card.type = "button";
+        card.className = "pet-choice";
+
+        card.innerHTML = `
+            <img
+                src="${pet.image || ""}"
+                alt="${pet.name || "Pet"}"
+                class="pet-choice-image"
+                onerror="this.style.display='none'"
+            >
+            <span>${pet.name || "Bilinmeyen Pet"}</span>
+        `;
+
+        card.onclick = () => {
+            selectPet(pet);
+        };
+
+        grid.appendChild(card);
+    });
+}
+
+function selectPet(pet) {
+    selectedPet = pet;
+
+    console.log("Seçilen pet:", pet);
+
+    const preview = document.getElementById("pickerPreview");
+
+    if (preview) {
+        preview.innerHTML = `
+            <img
+                src="${pet.image || ""}"
+                style="width:70px;height:70px;object-fit:contain"
+                onerror="this.style.display='none'"
+            >
+            <div>
+                <strong>${pet.name}</strong>
+            </div>
+        `;
+    }
+}
+
+// Modalı dışarı tıklayınca kapat
+document.addEventListener("click", function (e) {
+    const modal = document.getElementById("petPicker");
+
+    if (!modal) return;
+
+    if (e.target === modal) {
+        closePetPicker();
+    }
+}); 
 /* =========================================================
    ZAYAXRA — FINAL SCRIPT
    Adopt Me Trading Calculator
