@@ -1,6 +1,8 @@
-/* =========================================================
-   ZAYAXRA — FULL ITEM / W-F/L SYSTEM
-   ========================================================= */
+```javascript
+// ============================================================
+// ZAYAXRA — ADOPT ME TRADING
+// Tam script.js
+// ============================================================
 
 const DATA_URL =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
@@ -8,299 +10,87 @@ const DATA_URL =
 const IMAGE_BASE =
   "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main";
 
-
-/* =========================================================
-   GLOBAL DATA
-   ========================================================= */
-
-let pets = [];
-let allItems = [];
-
-let youTrade = [];
-let themTrade = [];
+let items = [];
 
 let pickerSide = null;
-let selectedPet = null;
+let selectedItem = null;
 
 let selectedForm = "normal";
-
 let selectedPotion = {
   fly: false,
   ride: false
 };
 
-let selectedValueCategory = "all";
-let selectedPickerCategory = "all";
+let valueCategory = "all";
+let pickerCategory = "all";
+let visibleValueCount = 60;
 
-let visibleValueItems = 60;
+let tradeData = {
+  you: [],
+  them: []
+};
+
+let profileData = {
+  name: "Zayaxra User",
+  username: "@user",
+  avatar: "🐱",
+  trades: 0,
+  wins: 0,
+  fair: 0,
+  losses: 0
+};
 
 let recordedTradeKey = "";
-
-let selectedAvatar = "🐉";
-
-
-/* =========================================================
-   HELPERS
-   ========================================================= */
-
-function $(id) {
-  return document.getElementById(id);
-}
+let toastTimer = null;
 
 
-function formatValue(value) {
+// ============================================================
+// DOM
+// ============================================================
 
-  const n = Number(value || 0);
-
-  if (!Number.isFinite(n)) {
-    return "0";
-  }
-
-  return Number.isInteger(n)
-    ? String(n)
-    : n.toFixed(2).replace(/\.?0+$/, "");
-
-}
+const $ = (id) => document.getElementById(id);
 
 
-function escapeHTML(value) {
+// ============================================================
+// CATEGORY
+// ============================================================
 
-  return String(value ?? "")
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-}
-
-
-function normalizeText(value) {
-
-  return String(value || "")
+function normalizeCategory(type) {
+  const value = String(type || "")
     .toLowerCase()
-    .trim();
+    .trim()
+    .replace(/[\s_-]/g, "");
 
-}
-
-
-function normalizeImage(url) {
-
-  if (!url) {
-    return "";
-  }
-
-  url = String(url);
+  if (value === "pet" || value === "pets") return "pets";
 
   if (
-    url.startsWith("http://") ||
-    url.startsWith("https://") ||
-    url.startsWith("data:")
-  ) {
-    return url;
-  }
-
-  if (url.startsWith("//")) {
-    return "https:" + url;
-  }
-
-  if (!url.startsWith("/")) {
-    url = "/" + url;
-  }
-
-  return IMAGE_BASE + url;
-
-}
-
-
-function imageHTML(item, className = "pet-photo") {
-
-  const image =
-    normalizeImage(item?.image);
-
-  if (!image) {
-
-    return `
-      <div class="${className} image-fallback">
-        📦
-      </div>
-    `;
-
-  }
-
-  return `
-    <img
-      src="${escapeHTML(image)}"
-      alt="${escapeHTML(item?.name || "Item")}"
-      class="${className}"
-      loading="lazy"
-      onerror="
-        this.style.display='none';
-        if(this.nextElementSibling)
-          this.nextElementSibling.style.display='flex';
-      "
-    >
-
-    <div
-      class="${className} image-fallback"
-      style="display:none;"
-    >
-      📦
-    </div>
-  `;
-
-}
-
-
-/* =========================================================
-   RARITY
-   ========================================================= */
-
-function rarityName(rarity) {
-
-  const r =
-    normalizeText(rarity)
-      .replace(/_/g, " ")
-      .replace(/-/g, " ");
-
-  const names = {
-
-    legendary: "Legendary",
-
-    "ultra rare": "Ultra-Rare",
-    ultra: "Ultra-Rare",
-
-    rare: "Rare",
-
-    uncommon: "Uncommon",
-
-    common: "Common",
-
-    "super rare": "Super-Rare",
-
-    unknown: "Unknown"
-
-  };
-
-  return names[r] || rarity || "Unknown";
-
-}
-
-
-/* =========================================================
-   CATEGORY
-   ========================================================= */
-
-function normalizeCategory(type, name = "") {
-
-  const t =
-    normalizeText(type)
-      .replace(/[_-]/g, "")
-      .replace(/\s+/g, "");
-
-  const n =
-    normalizeText(name);
-
-  if (
-    t === "pets" ||
-    t === "pet"
-  ) {
-    return "pets";
-  }
-
-  if (
-    t === "petwear" ||
-    t === "petwears" ||
-    t === "petaccessories" ||
-    t === "accessories" ||
-    t === "wearables"
+    value === "petwear" ||
+    value === "petwears" ||
+    value === "petaccessories" ||
+    value === "accessories"
   ) {
     return "petwear";
   }
 
-  if (
-    t === "eggs" ||
-    t === "egg"
-  ) {
-    return "eggs";
-  }
+  if (value === "egg" || value === "eggs") return "eggs";
 
-  if (
-    t === "vehicles" ||
-    t === "vehicle" ||
-    t === "cars"
-  ) {
-    return "vehicles";
-  }
+  if (value === "vehicle" || value === "vehicles") return "vehicles";
 
-  if (
-    t === "toys" ||
-    t === "toy"
-  ) {
-    return "toys";
-  }
+  if (value === "toy" || value === "toys") return "toys";
 
-  if (
-    t === "strollers" ||
-    t === "stroller"
-  ) {
-    return "strollers";
-  }
+  if (value === "stroller" || value === "strollers") return "strollers";
 
-  if (
-    t === "food" ||
-    t === "foods"
-  ) {
-    return "food";
-  }
+  if (value === "food") return "food";
 
-  if (
-    t === "gifts" ||
-    t === "gift"
-  ) {
-    return "gifts";
-  }
+  if (value === "gift" || value === "gifts") return "gifts";
 
-  if (
-    t === "stickers" ||
-    t === "sticker"
-  ) {
-    return "stickers";
-  }
-
-  if (
-    t === "other" ||
-    t === "others" ||
-    t === "potions" ||
-    t === "potion"
-  ) {
-    return "other";
-  }
-
-
-  /* İsimden tahmin */
-
-  if (
-    n.includes("egg")
-  ) {
-    return "eggs";
-  }
-
-  if (
-    n.includes("stroller")
-  ) {
-    return "strollers";
-  }
+  if (value === "sticker" || value === "stickers") return "stickers";
 
   return "other";
-
 }
 
-
-function categoryName(category) {
-
-  const names = {
-
+function getCategoryLabel(category) {
+  const labels = {
     pets: "Pets",
     petwear: "Pet Wear",
     eggs: "Eggs",
@@ -311,1913 +101,1298 @@ function categoryName(category) {
     gifts: "Gifts",
     stickers: "Stickers",
     other: "Other"
-
   };
 
-  return names[category] || "Other";
-
+  return labels[category] || "Other";
 }
 
 
-function categoryIcon(category) {
+// ============================================================
+// IMAGE
+// ============================================================
 
-  const icons = {
+function normalizeImage(image) {
+  if (!image) return "";
 
-    pets: "🐾",
-    petwear: "👕",
-    eggs: "🥚",
-    vehicles: "🚗",
-    toys: "🧸",
-    strollers: "🛒",
-    food: "🍎",
-    gifts: "🎁",
-    stickers: "🏷️",
-    other: "📦"
-
-  };
-
-  return icons[category] || "📦";
-
-}
-
-
-/* =========================================================
-   ITEM NORMALIZATION
-   ========================================================= */
-
-function getBaseValue(item) {
+  const value = String(image).trim();
 
   if (
-    item?.regular &&
-    typeof item.regular === "object"
+    value.startsWith("http://") ||
+    value.startsWith("https://") ||
+    value.startsWith("data:")
   ) {
-
-    return Number(
-      item.regular.value ??
-      item.regular.no_potion ??
-      0
-    );
-
+    return value;
   }
 
-  return Number(
-    item?.value ??
+  if (value.startsWith("/")) {
+    return IMAGE_BASE + value;
+  }
+
+  return IMAGE_BASE + "/" + value;
+}
+
+
+// ============================================================
+// NORMALIZE ITEM
+// ============================================================
+
+function normalizeItem(item, index) {
+  const category = normalizeCategory(item.type);
+
+  const regular = item.regular || {};
+
+  let baseValue = Number(
+    regular.value ??
+    item.value ??
     0
   );
 
-}
-
-
-function normalizeItem(item, index) {
-
-  const category =
-    normalizeCategory(
-      item?.type,
-      item?.name
-    );
-
-  const isPet =
-    category === "pets";
+  if (!Number.isFinite(baseValue)) {
+    baseValue = 0;
+  }
 
   return {
-
-    id:
-      item?.id ??
-      `item_${index}`,
-
-    name:
-      item?.name ||
-      "Unknown Item",
-
-    type:
-      item?.type ||
-      "other",
-
+    id: String(item.id ?? `item-${index}`),
+    name: item.name || "Unknown Item",
     category,
-
-    categoryLabel:
-      categoryName(category),
-
-    rarity:
-      normalizeText(
-        item?.rarity || "unknown"
-      ),
-
-    image:
-      normalizeImage(
-        item?.image
-      ),
-
-    value:
-      getBaseValue(item),
-
-    pet:
-      isPet,
-
-    raw:
-      item
-
+    categoryLabel: getCategoryLabel(category),
+    rarity: String(item.rarity || "unknown").toLowerCase(),
+    image: normalizeImage(item.image),
+    value: baseValue,
+    raw: item,
+    isPet: category === "pets"
   };
-
 }
 
 
-/* =========================================================
-   DATA LOADING
-   ========================================================= */
+// ============================================================
+// LOAD DATA
+// ============================================================
 
-async function loadPets() {
-
-  const grid =
-    $("valueGrid");
-
-  if (grid) {
-
-    grid.innerHTML = `
-      <div class="empty-picker">
-
-        <span>⏳</span>
-
-        <strong>
-          Zayaxra itemleri yükleniyor...
-        </strong>
-
-        <small>
-          Veritabanındaki itemler hazırlanıyor.
-        </small>
-
-      </div>
-    `;
-
-  }
-
+async function loadItems() {
+  const status = $("calculatorStatus");
 
   try {
-
-    const response =
-      await fetch(
-        DATA_URL + "?v=" + Date.now()
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        "Veri yüklenemedi"
-      );
+    if (status) {
+      status.textContent = "● Itemler yükleniyor";
     }
 
-
-    const data =
-      await response.json();
-
-
-    if (!Array.isArray(data)) {
-      throw new Error(
-        "Geçersiz veri formatı"
-      );
-    }
-
-
-    allItems =
-      data
-        .map(
-          (item, index) =>
-            normalizeItem(
-              item,
-              index
-            )
-        )
-        .filter(
-          item =>
-            item.name
-        );
-
-
-    pets =
-      allItems.filter(
-        item =>
-          item.category === "pets"
-      );
-
-
-    console.log(
-      `Zayaxra: ${allItems.length} item yüklendi.`
-    );
-
-    console.log(
-      "Kategoriler:",
-      countCategories()
-    );
-
-
-    renderValues();
-
-    renderPickerPets();
-
-    updateItemCount();
-
-    updateCalculatorStatus(
-      `${allItems.length.toLocaleString("tr-TR")} item yüklendi`
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "ZAYAXRA DATA ERROR:",
-      error
-    );
-
-    allItems = [];
-    pets = [];
-
-
-    if (grid) {
-
-      grid.innerHTML = `
-        <div class="empty-picker">
-
-          <span>⚠️</span>
-
-          <strong>
-            Item verileri yüklenemedi
-          </strong>
-
-          <small>
-            İnternet bağlantısını veya veri kaynağını kontrol et.
-          </small>
-
-        </div>
-      `;
-
-    }
-
-    updateCalculatorStatus(
-      "Veri yüklenemedi"
-    );
-
-  }
-
-}
-
-
-function countCategories() {
-
-  const counts = {};
-
-  allItems.forEach(item => {
-
-    counts[item.category] =
-      (counts[item.category] || 0) + 1;
-
-  });
-
-  return counts;
-
-}
-
-
-/* =========================================================
-   VALUE FILTERS
-   ========================================================= */
-
-function getFilteredValues() {
-
-  const search =
-    normalizeText(
-      $("search")?.value
-    );
-
-  const rarity =
-    normalizeText(
-      $("rarityFilter")?.value || "all"
-    );
-
-
-  let list =
-    allItems.filter(item => {
-
-      if (
-        selectedValueCategory !== "all" &&
-        item.category !== selectedValueCategory
-      ) {
-        return false;
-      }
-
-
-      if (
-        rarity !== "all" &&
-        item.rarity !== rarity
-      ) {
-        return false;
-      }
-
-
-      if (!search) {
-        return true;
-      }
-
-
-      return (
-
-        normalizeText(item.name)
-          .includes(search)
-
-        ||
-
-        normalizeText(item.categoryLabel)
-          .includes(search)
-
-        ||
-
-        normalizeText(item.rarity)
-          .includes(search)
-
-      );
-
+    const response = await fetch(DATA_URL, {
+      cache: "no-store"
     });
 
-
-  const sort =
-    $("sortSelect")?.value ||
-    "value-desc";
-
-
-  if (sort === "value-desc") {
-
-    list.sort(
-      (a, b) =>
-        b.value - a.value
-    );
-
-  }
-
-  else if (sort === "value-asc") {
-
-    list.sort(
-      (a, b) =>
-        a.value - b.value
-    );
-
-  }
-
-  else if (sort === "name-asc") {
-
-    list.sort(
-      (a, b) =>
-        a.name.localeCompare(
-          b.name
-        )
-    );
-
-  }
-
-  else if (sort === "name-desc") {
-
-    list.sort(
-      (a, b) =>
-        b.name.localeCompare(
-          a.name
-        )
-    );
-
-  }
-
-
-  return list;
-
-}
-
-
-function renderValues() {
-
-  const grid =
-    $("valueGrid");
-
-  if (!grid) {
-    return;
-  }
-
-
-  const list =
-    getFilteredValues();
-
-
-  updateItemCount(
-    list.length
-  );
-
-
-  grid.innerHTML = "";
-
-
-  if (!list.length) {
-
-    grid.innerHTML = `
-      <div class="empty-picker">
-
-        <span>🔎</span>
-
-        <strong>
-          Item bulunamadı
-        </strong>
-
-        <small>
-          Arama veya filtreleri değiştir.
-        </small>
-
-      </div>
-    `;
-
-    $("loadMoreWrapper")
-      ?.style
-      && (
-        $("loadMoreWrapper").style.display =
-          "none"
-      );
-
-    return;
-
-  }
-
-
-  const visible =
-    list.slice(
-      0,
-      visibleValueItems
-    );
-
-
-  visible.forEach(
-    item => {
-
-      const card =
-        document.createElement(
-          "div"
-        );
-
-
-      card.className =
-        "value-card";
-
-
-      card.innerHTML = `
-
-        <div class="value-image">
-
-          ${imageHTML(item)}
-
-        </div>
-
-
-        <div class="value-info">
-
-          <h3>
-            ${escapeHTML(item.name)}
-          </h3>
-
-
-          <div class="item-category-small">
-
-            ${categoryIcon(item.category)}
-
-            ${escapeHTML(
-              item.categoryLabel
-            )}
-
-          </div>
-
-
-          <span
-            class="rarity-small ${escapeHTML(item.rarity)}"
-          >
-            ${escapeHTML(
-              rarityName(item.rarity)
-            )}
-          </span>
-
-
-          <strong>
-            Value: ${formatValue(item.value)}
-          </strong>
-
-        </div>
-
-      `;
-
-
-      grid.appendChild(
-        card
-      );
-
+    if (!response.ok) {
+      throw new Error("Veri alınamadı.");
     }
+
+    const data = await response.json();
+
+    let rawItems = [];
+
+    if (Array.isArray(data)) {
+      rawItems = data;
+    } else if (Array.isArray(data.items)) {
+      rawItems = data.items;
+    } else if (Array.isArray(data.data)) {
+      rawItems = data.data;
+    } else if (typeof data === "object") {
+      rawItems = Object.values(data);
+    }
+
+    items = rawItems
+      .filter(Boolean)
+      .map((item, index) => normalizeItem(item, index))
+      .filter((item) => item.name);
+
+    if (status) {
+      status.textContent = "● Sistem hazır";
+    }
+
+    applyValueFilters();
+    renderPickerItems();
+
+    showToast(`${items.length} item yüklendi`, "✓");
+
+  } catch (error) {
+    console.error("Zayaxra veri hatası:", error);
+
+    if (status) {
+      status.textContent = "● Veri yüklenemedi";
+    }
+
+    const grid = $("valueGrid");
+
+    if (grid) {
+      grid.innerHTML = `
+        <div class="loading-state">
+          <strong>Itemler yüklenemedi.</strong>
+          <span>İnternet bağlantını kontrol edip sayfayı yenile.</span>
+        </div>
+      `;
+    }
+  }
+}
+
+
+// ============================================================
+// VALUE
+// ============================================================
+
+function getPetVariantValue(item) {
+  if (!item || !item.isPet) {
+    return Number(item?.value || 0);
+  }
+
+  const raw = item.raw || {};
+
+  let variant = raw.regular;
+
+  if (selectedForm === "neon") {
+    variant = raw.neon || raw.regular;
+  }
+
+  if (selectedForm === "mega") {
+    variant = raw.mega || raw.neon || raw.regular;
+  }
+
+  if (!variant) {
+    return Number(item.value || 0);
+  }
+
+  let key = "no_potion";
+
+  if (selectedPotion.fly && selectedPotion.ride) {
+    key = "fly_ride";
+  } else if (selectedPotion.fly) {
+    key = "fly";
+  } else if (selectedPotion.ride) {
+    key = "ride";
+  }
+
+  let value = Number(
+    variant[key] ??
+    variant.value ??
+    item.value ??
+    0
   );
 
-
-  const wrapper =
-    $("loadMoreWrapper");
-
-  const button =
-    $("loadMoreBtn");
-
-
-  if (wrapper) {
-
-    wrapper.style.display =
-      list.length > visibleValueItems
-        ? "flex"
-        : "none";
-
+  if (!Number.isFinite(value)) {
+    value = Number(item.value || 0);
   }
 
-
-  if (button) {
-
-    button.textContent =
-      list.length > visibleValueItems
-        ? `Daha Fazla Göster (${Math.min(
-            list.length - visibleValueItems,
-            100
-          )})`
-        : "Daha Fazla";
-
-  }
-
+  return value;
 }
 
 
-function loadMoreItems() {
+// ============================================================
+// FILTER
+// ============================================================
 
-  visibleValueItems += 60;
+function applyValueFilters() {
+  const searchInput = $("search");
+  const rarityFilter = $("rarityFilter");
+  const sortSelect = $("sortSelect");
 
-  renderValues();
+  const search = String(searchInput?.value || "")
+    .toLowerCase()
+    .trim();
 
+  const rarity = String(
+    rarityFilter?.value || "all"
+  ).toLowerCase();
+
+  const sort = sortSelect?.value || "value-desc";
+
+  let filtered = items.filter((item) => {
+
+    const matchesCategory =
+      valueCategory === "all" ||
+      item.category === valueCategory;
+
+    const matchesRarity =
+      rarity === "all" ||
+      item.rarity === rarity;
+
+    const matchesSearch =
+      !search ||
+      item.name.toLowerCase().includes(search) ||
+      item.categoryLabel.toLowerCase().includes(search) ||
+      item.rarity.toLowerCase().includes(search);
+
+    return (
+      matchesCategory &&
+      matchesRarity &&
+      matchesSearch
+    );
+  });
+
+  filtered.sort((a, b) => {
+
+    if (sort === "name-asc") {
+      return a.name.localeCompare(b.name, "tr");
+    }
+
+    if (sort === "name-desc") {
+      return b.name.localeCompare(a.name, "tr");
+    }
+
+    if (sort === "value-asc") {
+      return a.value - b.value;
+    }
+
+    return b.value - a.value;
+  });
+
+  const count = $("itemCount");
+
+  if (count) {
+    count.textContent = `${filtered.length} item`;
+  }
+
+  renderValueGrid(filtered);
+
+  const clearButton = $("clearSearch");
+
+  if (clearButton) {
+    clearButton.style.opacity = search ? "1" : "0.35";
+  }
 }
 
+
+// ============================================================
+// CATEGORY BUTTON
+// ============================================================
 
 function setValueCategory(category) {
-
-  selectedValueCategory =
-    category || "all";
-
-  visibleValueItems = 60;
-
+  valueCategory = category;
 
   document
-    .querySelectorAll(
-      ".category-btn"
-    )
-    .forEach(button => {
+    .querySelectorAll(".category-btn")
+    .forEach((button) => {
 
       button.classList.toggle(
         "active",
-        button.dataset.category ===
-          selectedValueCategory
+        button.dataset.category === category
       );
 
     });
 
+  visibleValueCount = 60;
 
-  renderValues();
-
+  applyValueFilters();
 }
 
 
-function applyValueFilters() {
+// ============================================================
+// VALUE GRID
+// ============================================================
 
-  visibleValueItems = 60;
+function renderValueGrid(list) {
+  const grid = $("valueGrid");
 
-  renderValues();
+  if (!grid) return;
 
-}
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="loading-state">
+        <strong>Item bulunamadı.</strong>
+        <span>Arama veya kategori filtrelerini değiştirmeyi dene.</span>
+      </div>
+    `;
 
+    const wrapper = $("loadMoreWrapper");
 
-function updateItemCount(customCount) {
+    if (wrapper) {
+      wrapper.style.display = "none";
+    }
 
-  const element =
-    $("itemCount");
-
-  if (!element) {
     return;
   }
 
+  const visible = list.slice(
+    0,
+    visibleValueCount
+  );
 
-  const count =
-    customCount ??
-    (
-      selectedValueCategory === "all"
-        ? allItems.length
-        : allItems.filter(
-            item =>
-              item.category ===
-              selectedValueCategory
-          ).length
-    );
+  grid.innerHTML = visible
+    .map((item) => {
 
+      const image = item.image
+        ? `<img src="${escapeAttribute(item.image)}"
+                alt="${escapeAttribute(item.name)}"
+                loading="lazy"
+                onerror="this.style.display='none';">`
+        : `<span class="value-image-placeholder">🐾</span>`;
 
-  element.textContent =
-    `${count.toLocaleString("tr-TR")} item`;
+      return `
+        <article class="value-card">
 
+          <div class="value-image">
+            ${image}
+          </div>
+
+          <div class="value-info">
+
+            <span class="value-category">
+              ${escapeHTML(item.categoryLabel)}
+            </span>
+
+            <h3>
+              ${escapeHTML(item.name)}
+            </h3>
+
+            <span class="rarity-small ${rarityClass(item.rarity)}">
+              ${escapeHTML(capitalize(item.rarity))}
+            </span>
+
+            <div class="value-number">
+              ${formatValue(item.value)}
+            </div>
+
+          </div>
+
+        </article>
+      `;
+    })
+    .join("");
+
+  const wrapper = $("loadMoreWrapper");
+
+  if (wrapper) {
+    wrapper.style.display =
+      visibleValueCount < list.length
+        ? "flex"
+        : "none";
+  }
 }
 
 
-/* =========================================================
-   SEARCH CLEAR
-   ========================================================= */
+// ============================================================
+// LOAD MORE
+// ============================================================
+
+function loadMoreItems() {
+  visibleValueCount += 60;
+  applyValueFilters();
+}
+
+
+// ============================================================
+// CLEAR SEARCH
+// ============================================================
 
 function clearSearchInput() {
+  const search = $("search");
 
-  const search =
-    $("search");
-
-  if (!search) {
-    return;
+  if (search) {
+    search.value = "";
+    search.focus();
   }
 
-  search.value = "";
-
-  visibleValueItems = 60;
-
-  renderValues();
-
-  search.focus();
-
+  visibleValueCount = 60;
+  applyValueFilters();
 }
 
 
-/* =========================================================
-   PICKER
-   ========================================================= */
+// ============================================================
+// PICKER
+// ============================================================
 
-function resetPickerSettings() {
+function openPetPicker(side) {
+  pickerSide = side;
 
-  selectedForm =
-    "normal";
+  selectedItem = null;
+  selectedForm = "normal";
 
   selectedPotion = {
     fly: false,
     ride: false
   };
 
+  pickerCategory = "all";
 
-  selectedPickerCategory =
-    "all";
-
-
-  document
-    .querySelectorAll(
-      ".picker-category-btn"
-    )
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.pickerCategory ===
-          "all"
-      );
-
-    });
-
-
-  updatePickerButtons();
-
-}
-
-
-function openPetPicker(side) {
-
-  pickerSide =
-    side;
-
-  selectedPet =
-    null;
-
-
-  resetPickerSettings();
-
-
-  const title =
-    $("petPickerTitle");
-
+  const title = $("petPickerTitle");
 
   if (title) {
-
     title.textContent =
       side === "you"
-        ? "Senin teklifine item ekle"
-        : "Karşı tarafın teklifine item ekle";
-
+        ? "Item Seç — Senin Teklifin"
+        : "Item Seç — Karşı Taraf";
   }
 
-
-  const search =
-    $("pickerSearch");
-
+  const search = $("pickerSearch");
 
   if (search) {
     search.value = "";
   }
 
+  updatePickerCategoryButtons();
+  updatePickerButtons();
+  updatePickerOptionsVisibility();
+  updatePickerPreview();
 
-  const bar =
-    $("pickerBar");
-
-
-  if (bar) {
-    bar.classList.add(
-      "hidden"
-    );
-  }
-
-
-  renderPickerPets();
-
-
-  const modal =
-    $("petPickerModal");
-
+  const modal = $("petPickerModal");
 
   if (modal) {
-
-    modal.classList.add(
-      "show"
-    );
-
-    modal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
+    modal.classList.add("active");
+    modal.style.display = "flex";
   }
 
+  document.body.classList.add("modal-open");
 
-  document.body.classList.add(
-    "profile-open"
-  );
-
-
-  setTimeout(
-    () => {
-      search?.focus();
-    },
-    100
-  );
-
+  renderPickerItems();
 }
 
 
 function closePetPicker() {
+  const modal = $("petPickerModal");
 
-  const modal =
-    $("petPickerModal");
-
-
-  if (!modal) {
-    return;
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "";
   }
 
+  pickerSide = null;
+  selectedItem = null;
 
-  modal.classList.remove(
-    "show"
-  );
-
-
-  modal.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-
-  document.body.classList.remove(
-    "profile-open"
-  );
-
-
-  pickerSide =
-    null;
-
-  selectedPet =
-    null;
-
+  document.body.classList.remove("modal-open");
 }
 
 
+// ============================================================
+// PICKER CATEGORY
+// ============================================================
+
 function setPickerCategory(category) {
+  pickerCategory = category;
 
-  selectedPickerCategory =
-    category || "all";
+  updatePickerCategoryButtons();
+  renderPickerItems();
+}
 
 
+function updatePickerCategoryButtons() {
   document
-    .querySelectorAll(
-      ".picker-category-btn"
-    )
-    .forEach(button => {
+    .querySelectorAll(".picker-category-btn")
+    .forEach((button) => {
 
       button.classList.toggle(
         "active",
-        button.dataset.pickerCategory ===
-          selectedPickerCategory
+        button.dataset.pickerCategory === pickerCategory
       );
 
     });
-
-
-  renderPickerPets();
-
 }
 
 
-function renderPickerPets() {
+// ============================================================
+// PICKER RENDER
+// ============================================================
 
-  const box =
-    $("pickerPetList");
+function renderPickerItems() {
+  const listElement = $("pickerPetList");
 
+  if (!listElement) return;
 
-  if (!box) {
-    return;
-  }
+  const search = String(
+    $("pickerSearch")?.value || ""
+  )
+    .toLowerCase()
+    .trim();
 
+  let filtered = items.filter((item) => {
 
-  const query =
-    normalizeText(
-      $("pickerSearch")?.value
-    );
+    const categoryMatch =
+      pickerCategory === "all" ||
+      item.category === pickerCategory;
 
+    const searchMatch =
+      !search ||
+      item.name.toLowerCase().includes(search) ||
+      item.categoryLabel.toLowerCase().includes(search) ||
+      item.rarity.toLowerCase().includes(search);
 
-  let list =
-    allItems.filter(item => {
+    return categoryMatch && searchMatch;
+  });
 
-      if (
-        selectedPickerCategory !== "all" &&
-        item.category !==
-          selectedPickerCategory
-      ) {
-        return false;
-      }
-
-
-      if (!query) {
-        return true;
-      }
-
-
-      return (
-
-        normalizeText(item.name)
-          .includes(query)
-
-        ||
-
-        normalizeText(item.categoryLabel)
-          .includes(query)
-
-        ||
-
-        normalizeText(item.rarity)
-          .includes(query)
-
-      );
-
-    });
-
-
-  list =
-    list.slice(
-      0,
-      150
-    );
-
-
-  box.innerHTML = "";
-
-
-  if (!list.length) {
-
-    box.innerHTML = `
-      <div class="empty-picker">
-
-        <span>🔎</span>
-
-        <strong>
-          Item bulunamadı
-        </strong>
-
-        <small>
-          Başka bir isim veya kategori dene.
-        </small>
-
+  if (!filtered.length) {
+    listElement.innerHTML = `
+      <div class="loading-state">
+        <strong>Item bulunamadı.</strong>
+        <span>Farklı bir isim veya kategori dene.</span>
       </div>
     `;
 
     return;
-
   }
 
+  // Çok fazla DOM oluşturmamak için picker'da ilk 250 gösterilir.
+  // Arama yaptığında eşleşen sonuçlar yine çalışır.
+  const displayItems = filtered.slice(0, 250);
 
-  list.forEach(
-    item => {
+  listElement.innerHTML =
+    displayItems
+      .map((item) => {
 
-      const button =
-        document.createElement(
-          "button"
-        );
+        const selected =
+          selectedItem &&
+          selectedItem.id === item.id;
 
+        const image = item.image
+          ? `<img src="${escapeAttribute(item.image)}"
+                  alt="${escapeAttribute(item.name)}"
+                  loading="lazy"
+                  onerror="this.style.display='none';">`
+          : `<span>🐾</span>`;
 
-      button.type =
-        "button";
+        return `
+          <button
+            type="button"
+            class="picker-item ${selected ? "selected" : ""}"
+            onclick="selectPickerItem('${escapeAttribute(item.id)}')"
+          >
 
+            <div class="picker-item-image">
+              ${image}
+            </div>
 
-      button.className =
-        "pet-choice";
+            <div class="picker-item-info">
 
+              <strong>
+                ${escapeHTML(item.name)}
+              </strong>
 
-      if (
-        selectedPet &&
-        selectedPet.id === item.id
-      ) {
+              <span>
+                ${escapeHTML(item.categoryLabel)}
+              </span>
 
-        button.classList.add(
-          "selected"
-        );
+              <small>
+                ${formatValue(item.value)}
+              </small>
 
-      }
+            </div>
 
+          </button>
+        `;
+      })
+      .join("");
 
-      button.innerHTML = `
-
-        <div class="choice-image">
-
-          ${imageHTML(item)}
-
-        </div>
-
-
-        <strong>
-          ${escapeHTML(item.name)}
-        </strong>
-
-
-        <span
-          class="rarity-tag ${escapeHTML(item.rarity)}"
-        >
-          ${escapeHTML(
-            rarityName(item.rarity)
-          )}
-        </span>
-
-
-        <span class="choice-category">
-
-          ${categoryIcon(item.category)}
-          ${escapeHTML(item.categoryLabel)}
-
-        </span>
-
-
-        <small>
-          ${formatValue(item.value)}
-        </small>
-
-      `;
-
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          selectPickerPet(item);
-
-          box
-            .querySelectorAll(
-              ".pet-choice"
-            )
-            .forEach(
-              element =>
-                element.classList.remove(
-                  "selected"
-                )
-            );
-
-
-          button.classList.add(
-            "selected"
-          );
-
-        }
-      );
-
-
-      box.appendChild(
-        button
-      );
-
-    }
-  );
-
+  if (filtered.length > 250) {
+    listElement.innerHTML += `
+      <div class="loading-state">
+        <strong>${filtered.length} sonuç bulundu</strong>
+        <span>Aramayı daraltarak daha hızlı seçim yapabilirsin.</span>
+      </div>
+    `;
+  }
 }
 
 
-function selectPickerPet(item) {
+// ============================================================
+// SELECT PICKER ITEM
+// ============================================================
 
-  if (!item) {
-    return;
-  }
+function selectPickerItem(id) {
+  const item = items.find(
+    (entry) => entry.id === String(id)
+  );
 
+  if (!item) return;
 
-  selectedPet =
-    item;
+  selectedItem = item;
 
-
-  const bar =
-    $("pickerBar");
-
-
-  /*
-   * Sadece PETS için
-   * Normal / Neon / Mega / Fly / Ride
-   */
-
-  if (item.pet) {
-
-    bar?.classList.remove(
-      "hidden"
-    );
-
-  } else {
-
-    bar?.classList.add(
-      "hidden"
-    );
-
-    selectedForm =
-      "normal";
+  if (!item.isPet) {
+    selectedForm = "normal";
 
     selectedPotion = {
       fly: false,
       ride: false
     };
-
   }
 
-
-  renderPickerPreview();
-
+  updatePickerOptionsVisibility();
   updatePickerButtons();
-
-  updatePickerValue();
-
+  updatePickerPreview();
+  renderPickerItems();
 }
 
 
-/* =========================================================
-   PICKER PREVIEW
-   ========================================================= */
-
-function renderPickerPreview() {
-
-  const box =
-    $("pickerPreview");
-
-
-  if (!box) {
-    return;
-  }
-
-
-  if (!selectedPet) {
-
-    box.innerHTML = `
-      <div class="preview-empty">
-
-        <span>👆</span>
-
-        Bir item seç
-
-      </div>
-    `;
-
-    return;
-
-  }
-
-
-  const isPet =
-    selectedPet.pet;
-
-
-  box.innerHTML = `
-
-    <div class="pet-image-wrap">
-
-      ${
-        isPet && selectedForm === "neon"
-          ? `<div class="neon-effect"></div>`
-          : ""
-      }
-
-
-      ${
-        isPet && selectedForm === "mega"
-          ? `<div class="mega-effect"></div>`
-          : ""
-      }
-
-
-      ${imageHTML(selectedPet)}
-
-
-      <div class="pet-badges">
-
-        ${
-          isPet && selectedForm === "neon"
-            ? `<span class="mini-chip neon">N</span>`
-            : ""
-        }
-
-
-        ${
-          isPet && selectedForm === "mega"
-            ? `<span class="mini-chip mega">M</span>`
-            : ""
-        }
-
-
-        ${
-          isPet && selectedPotion.fly
-            ? `<span class="mini-chip fly">F</span>`
-            : ""
-        }
-
-
-        ${
-          isPet && selectedPotion.ride
-            ? `<span class="mini-chip ride">R</span>`
-            : ""
-        }
-
-      </div>
-
-    </div>
-
-
-    <div class="preview-info">
-
-      <strong>
-        ${escapeHTML(selectedPet.name)}
-      </strong>
-
-
-      <span>
-
-        ${categoryIcon(selectedPet.category)}
-
-        ${escapeHTML(
-          selectedPet.categoryLabel
-        )}
-
-      </span>
-
-
-      <small>
-
-        ${escapeHTML(
-          rarityName(selectedPet.rarity)
-        )}
-
-      </small>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   PET FORM
-   ========================================================= */
+// ============================================================
+// FORM
+// ============================================================
 
 function toggleForm(form) {
+  if (!selectedItem || !selectedItem.isPet) {
+    return;
+  }
 
   if (
-    ![
-      "normal",
-      "neon",
-      "mega"
-    ].includes(form)
+    form !== "normal" &&
+    form !== "neon" &&
+    form !== "mega"
   ) {
     return;
   }
 
-
-  if (
-    !selectedPet ||
-    !selectedPet.pet
-  ) {
-    return;
-  }
-
-
-  selectedForm =
-    form;
-
+  selectedForm = form;
 
   updatePickerButtons();
-
-  renderPickerPreview();
-
-  updatePickerValue();
-
+  updatePickerPreview();
 }
 
 
-function togglePotion(type) {
-
-  if (
-    ![
-      "fly",
-      "ride"
-    ].includes(type)
-  ) {
+function togglePotion(potion) {
+  if (!selectedItem || !selectedItem.isPet) {
     return;
   }
 
-
-  if (
-    !selectedPet ||
-    !selectedPet.pet
-  ) {
+  if (potion !== "fly" && potion !== "ride") {
     return;
   }
 
-
-  selectedPotion[type] =
-    !selectedPotion[type];
-
+  selectedPotion[potion] =
+    !selectedPotion[potion];
 
   updatePickerButtons();
-
-  renderPickerPreview();
-
-  updatePickerValue();
-
+  updatePickerPreview();
 }
 
+
+// ============================================================
+// PICKER BUTTONS
+// ============================================================
 
 function updatePickerButtons() {
 
   document
-    .querySelectorAll(
-      "[data-form]"
-    )
-    .forEach(button => {
+    .querySelectorAll("[data-form]")
+    .forEach((button) => {
 
       button.classList.toggle(
         "active",
-        button.dataset.form ===
-          selectedForm
+        button.dataset.form === selectedForm
       );
 
     });
 
-
   document
-    .querySelectorAll(
-      "[data-potion]"
-    )
-    .forEach(button => {
+    .querySelectorAll("[data-potion]")
+    .forEach((button) => {
 
       const potion =
         button.dataset.potion;
 
       button.classList.toggle(
         "active",
-        !!selectedPotion[potion]
+        Boolean(selectedPotion[potion])
       );
 
     });
-
 }
 
 
-/* =========================================================
-   REAL PET VALUE CALCULATION
-   ========================================================= */
+// ============================================================
+// PICKER OPTIONS VISIBILITY
+// ============================================================
 
-function getPetValue(item) {
+function updatePickerOptionsVisibility() {
+  const formOptions = $("formOptions");
+  const potionOptions = $("potionOptions");
+  const pickerBar = $("pickerBar");
 
-  if (!item) {
+  const isPet =
+    selectedItem &&
+    selectedItem.isPet;
+
+  if (formOptions) {
+    formOptions.style.display =
+      isPet ? "" : "none";
+  }
+
+  if (potionOptions) {
+    potionOptions.style.display =
+      isPet ? "" : "none";
+  }
+
+  if (pickerBar) {
+    pickerBar.style.display =
+      isPet ? "" : "none";
+  }
+}
+
+
+// ============================================================
+// PICKER VALUE
+// ============================================================
+
+function getSelectedItemValue() {
+  if (!selectedItem) {
     return 0;
   }
 
-
-  const raw =
-    item.raw || {};
-
-
-  const form =
-    selectedForm;
-
-
-  let variant =
-    raw.regular || {};
-
-
-  if (
-    form === "neon" &&
-    raw.neon
-  ) {
-
-    variant =
-      raw.neon;
-
-  }
-
-
-  if (
-    form === "mega" &&
-    raw.mega
-  ) {
-
-    variant =
-      raw.mega;
-
-  }
-
-
-  let key =
-    "no_potion";
-
-
-  if (
-    selectedPotion.fly &&
-    selectedPotion.ride
-  ) {
-
-    key =
-      "fly_ride";
-
-  }
-
-  else if (
-    selectedPotion.fly
-  ) {
-
-    key =
-      "fly";
-
-  }
-
-  else if (
-    selectedPotion.ride
-  ) {
-
-    key =
-      "ride";
-
-  }
-
-
-  /*
-   * Öncelik:
-   * JSON'daki gerçek değer
-   */
-
-  if (
-    variant &&
-    variant[key] !== undefined
-  ) {
-
-    return Number(
-      variant[key]
-    ) || 0;
-
-  }
-
-
-  if (
-    variant &&
-    variant.value !== undefined
-  ) {
-
-    let value =
-      Number(
-        variant.value
-      ) || 0;
-
-
-    /*
-     * Eski veri setlerinde potion
-     * alanı yoksa küçük fallback.
-     */
-
-    if (
-      key === "fly" ||
-      key === "ride"
-    ) {
-
-      value += 0.25;
-
-    }
-
-    else if (
-      key === "fly_ride"
-    ) {
-
-      value += 0.5;
-
-    }
-
-
-    return value;
-
-  }
-
-
-  return Number(
-    item.value || 0
-  );
-
+  return getPetVariantValue(selectedItem);
 }
 
 
-function getModifiedValue() {
+// ============================================================
+// PICKER PREVIEW
+// ============================================================
 
-  if (!selectedPet) {
-    return 0;
+function updatePickerPreview() {
+  const preview = $("pickerPreview");
+  const valueElement = $("pickerValue");
+
+  if (!preview) return;
+
+  if (!selectedItem) {
+
+    preview.innerHTML = `
+      <div class="preview-empty">
+        <span>👆</span>
+        Bir item seç
+      </div>
+    `;
+
+    if (valueElement) {
+      valueElement.textContent = "0";
+    }
+
+    return;
   }
-
-
-  if (!selectedPet.pet) {
-
-    return Number(
-      selectedPet.value || 0
-    );
-
-  }
-
-
-  return getPetValue(
-    selectedPet
-  );
-
-}
-
-
-function updatePickerValue() {
 
   const value =
-    selectedPet
-      ? getModifiedValue()
-      : 0;
+    getSelectedItemValue();
 
+  const image = selectedItem.image
+    ? `
+      <img
+        src="${escapeAttribute(selectedItem.image)}"
+        alt="${escapeAttribute(selectedItem.name)}"
+        onerror="this.style.display='none';"
+      >
+    `
+    : "🐾";
 
-  if ($("pickerValue")) {
+  let badges = "";
 
-    $("pickerValue")
-      .textContent =
-      formatValue(value);
+  if (selectedItem.isPet) {
 
+    badges += `
+      <span class="trade-badge">
+        ${selectedForm.toUpperCase()}
+      </span>
+    `;
+
+    if (selectedPotion.fly) {
+      badges += `
+        <span class="trade-badge">
+          FLY
+        </span>
+      `;
+    }
+
+    if (selectedPotion.ride) {
+      badges += `
+        <span class="trade-badge">
+          RIDE
+        </span>
+      `;
+    }
   }
 
+  preview.innerHTML = `
+    <div class="preview-item">
+
+      <div class="preview-image">
+        ${image}
+      </div>
+
+      <div class="preview-info">
+
+        <span class="preview-category">
+          ${escapeHTML(selectedItem.categoryLabel)}
+        </span>
+
+        <strong>
+          ${escapeHTML(selectedItem.name)}
+        </strong>
+
+        <div class="preview-badges">
+          ${badges}
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  if (valueElement) {
+    valueElement.textContent =
+      formatValue(value);
+  }
 }
 
 
-/* =========================================================
-   ADD ITEM
-   ========================================================= */
+// ============================================================
+// ADD TO TRADE
+// ============================================================
 
 function confirmAddPet() {
+  if (!selectedItem) {
+    showToast("Önce bir item seç.", "!");
+    return;
+  }
 
   if (
-    !selectedPet ||
-    !pickerSide
+    pickerSide !== "you" &&
+    pickerSide !== "them"
   ) {
     return;
   }
 
+  const value =
+    getSelectedItemValue();
 
-  const isPet =
-    selectedPet.pet;
+  const tradeItem = {
+    uid:
+      `${selectedItem.id}-${Date.now()}-${Math.random()
+        .toString(36)
+        .slice(2)}`,
 
+    id: selectedItem.id,
 
-  const item = {
+    name: selectedItem.name,
 
-    ...selectedPet,
+    image: selectedItem.image,
 
-    baseValue:
-      Number(
-        selectedPet.value || 0
-      ),
+    category: selectedItem.category,
 
-    value:
-      getModifiedValue(),
+    categoryLabel:
+      selectedItem.categoryLabel,
+
+    rarity: selectedItem.rarity,
+
+    value,
 
     form:
-      isPet
+      selectedItem.isPet
         ? selectedForm
         : "normal",
 
     fly:
-      isPet
-        ? !!selectedPotion.fly
+      selectedItem.isPet
+        ? selectedPotion.fly
         : false,
 
     ride:
-      isPet
-        ? !!selectedPotion.ride
+      selectedItem.isPet
+        ? selectedPotion.ride
         : false,
 
-    uniqueId:
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .slice(2)
-
+    isPet:
+      selectedItem.isPet
   };
 
+  tradeData[pickerSide].push(
+    tradeItem
+  );
 
-  if (
-    pickerSide === "you"
-  ) {
-
-    youTrade.push(
-      item
-    );
-
-  } else {
-
-    themTrade.push(
-      item
-    );
-
-  }
-
+  renderTradeSide(pickerSide);
+  updateTradeUI();
 
   closePetPicker();
 
-  updateTradeUI();
-
-}
-
-
-/* =========================================================
-   TRADE CALCULATION
-   ========================================================= */
-
-function calculateTotal(trade) {
-
-  return trade.reduce(
-    (total, item) =>
-      total +
-      Number(
-        item.value || 0
-      ),
-    0
+  showToast(
+    `${selectedItem.name} trade'e eklendi`,
+    "✓"
   );
-
 }
 
 
-/* =========================================================
-   TRADE ITEM HTML
-   ========================================================= */
+// ============================================================
+// RENDER TRADE
+// ============================================================
 
-function tradeItemHTML(
-  item,
-  side
-) {
+function renderTradeSide(side) {
+  const container =
+    side === "you"
+      ? $("youItems")
+      : $("themItems");
 
-  const isPet =
-    item.pet;
+  if (!container) return;
 
+  const tradeItems =
+    tradeData[side];
 
-  return `
+  if (!tradeItems.length) {
 
-    <div class="trade-item">
+    container.innerHTML = `
+      <div class="empty-trade">
 
-
-      <div class="pet-image-wrap">
-
-        ${
-          isPet &&
-          item.form === "neon"
-            ? `<div class="neon-effect"></div>`
-            : ""
-        }
-
-
-        ${
-          isPet &&
-          item.form === "mega"
-            ? `<div class="mega-effect"></div>`
-            : ""
-        }
-
-
-        ${imageHTML(item)}
-
-
-        <div class="pet-badges">
-
-          ${
-            isPet &&
-            item.form === "neon"
-              ? `<span class="mini-chip neon">N</span>`
-              : ""
-          }
-
-
-          ${
-            isPet &&
-            item.form === "mega"
-              ? `<span class="mini-chip mega">M</span>`
-              : ""
-          }
-
-
-          ${
-            isPet &&
-            item.fly
-              ? `<span class="mini-chip fly">F</span>`
-              : ""
-          }
-
-
-          ${
-            isPet &&
-            item.ride
-              ? `<span class="mini-chip ride">R</span>`
-              : ""
-          }
-
+        <div class="empty-icon">
+          📦
         </div>
-
-      </div>
-
-
-      <div class="trade-item-info">
 
         <strong>
-          ${escapeHTML(item.name)}
+          Henüz item yok
         </strong>
 
-
-        <small>
-
-          ${categoryIcon(item.category)}
-
-          ${escapeHTML(
-            item.categoryLabel
-          )}
-
-        </small>
-
-
-        <div class="item-chips">
-
+        <span>
           ${
-            isPet &&
-            item.form === "neon"
-              ? `<span class="mini-chip neon">Neon</span>`
-              : ""
+            side === "you"
+              ? "Trade'e item eklemek için aşağıdaki butona bas."
+              : "Karşı tarafın itemlerini buraya ekle."
           }
-
-
-          ${
-            isPet &&
-            item.form === "mega"
-              ? `<span class="mini-chip mega">Mega</span>`
-              : ""
-          }
-
-
-          ${
-            isPet &&
-            item.fly
-              ? `<span class="mini-chip fly">Fly</span>`
-              : ""
-          }
-
-
-          ${
-            isPet &&
-            item.ride
-              ? `<span class="mini-chip ride">Ride</span>`
-              : ""
-          }
-
-        </div>
-
-      </div>
-
-
-      <strong>
-        ${formatValue(item.value)}
-      </strong>
-
-
-      <button
-        type="button"
-        class="remove-item"
-        onclick="removeTradePet(
-          '${escapeHTML(side)}',
-          '${escapeHTML(item.uniqueId)}'
-        )"
-      >
-        ×
-      </button>
-
-    </div>
-
-  `;
-
-}
-
-
-/* =========================================================
-   TRADE SIDES
-   ========================================================= */
-
-function renderTradeSide(
-  id,
-  trade,
-  side
-) {
-
-  const element =
-    $(id);
-
-
-  if (!element) {
-    return;
-  }
-
-
-  if (!trade.length) {
-
-    element.innerHTML = `
-
-      <div class="empty-items">
-
-        <span class="empty-plus">
-          ＋
         </span>
 
-        <strong>
-          Henüz item eklenmedi
-        </strong>
-
-        <small>
-          Item eklemek için aşağıdaki butonu kullan
-        </small>
-
       </div>
-
     `;
 
     return;
-
   }
 
+  container.innerHTML =
+    tradeItems
+      .map((item) => {
 
-  element.innerHTML =
-    trade
-      .map(
-        item =>
-          tradeItemHTML(
-            item,
-            side
-          )
-      )
+        const image =
+          item.image
+            ? `
+              <img
+                src="${escapeAttribute(item.image)}"
+                alt="${escapeAttribute(item.name)}"
+                onerror="this.style.display='none';"
+              >
+            `
+            : "🐾";
+
+        let badges = "";
+
+        if (item.isPet) {
+
+          badges += `
+            <span class="trade-badge">
+              ${item.form.toUpperCase()}
+            </span>
+          `;
+
+          if (item.fly) {
+            badges += `
+              <span class="trade-badge">
+                FLY
+              </span>
+            `;
+          }
+
+          if (item.ride) {
+            badges += `
+              <span class="trade-badge">
+                RIDE
+              </span>
+            `;
+          }
+        }
+
+        return `
+          <div class="trade-item">
+
+            <div class="trade-item-image">
+              ${image}
+            </div>
+
+            <div class="trade-item-info">
+
+              <strong>
+                ${escapeHTML(item.name)}
+              </strong>
+
+              <span class="trade-item-category">
+                ${escapeHTML(item.categoryLabel)}
+              </span>
+
+              <div class="trade-item-badges">
+                ${badges}
+              </div>
+
+            </div>
+
+            <div class="trade-item-value">
+              ${formatValue(item.value)}
+            </div>
+
+            <button
+              class="remove-item-btn"
+              type="button"
+              onclick="removeTradePet('${escapeAttribute(side)}','${escapeAttribute(item.uid)}')"
+              aria-label="Itemi kaldır"
+            >
+              ×
+            </button>
+
+          </div>
+        `;
+      })
       .join("");
-
 }
 
 
-function removeTradePet(
-  side,
-  uniqueId
-) {
+// ============================================================
+// REMOVE
+// ============================================================
 
+function removeTradePet(side, uid) {
+  if (!tradeData[side]) return;
+
+  tradeData[side] =
+    tradeData[side].filter(
+      (item) =>
+        item.uid !== String(uid)
+    );
+
+  renderTradeSide(side);
+  updateTradeUI();
+
+  showToast("Item trade'den kaldırıldı", "✓");
+}
+
+
+// ============================================================
+// CLEAR TRADE
+// ============================================================
+
+function clearTrade(side) {
   if (
-    side === "you"
+    side !== "you" &&
+    side !== "them"
   ) {
-
-    youTrade =
-      youTrade.filter(
-        item =>
-          item.uniqueId !==
-          uniqueId
-      );
-
-  } else {
-
-    themTrade =
-      themTrade.filter(
-        item =>
-          item.uniqueId !==
-          uniqueId
-      );
-
+    return;
   }
 
+  tradeData[side] = [];
 
-  recordedTradeKey =
-    "";
-
-
+  renderTradeSide(side);
   updateTradeUI();
-
 }
 
 
-function clearTrade() {
+// ============================================================
+// TOTAL
+// ============================================================
 
-  youTrade = [];
-
-  themTrade = [];
-
-  recordedTradeKey =
-    "";
-
-  updateTradeUI();
-
+function getTradeTotal(side) {
+  return tradeData[side]
+    .reduce(
+      (total, item) =>
+        total + Number(item.value || 0),
+      0
+    );
 }
 
+
+// ============================================================
+// TRADE UI
+// ============================================================
 
 function updateTradeUI() {
+  const youTotal =
+    getTradeTotal("you");
 
-  const you =
-    calculateTotal(
-      youTrade
-    );
-
-
-  const them =
-    calculateTotal(
-      themTrade
-    );
-
-
-  renderTradeSide(
-    "youItems",
-    youTrade,
-    "you"
-  );
-
-
-  renderTradeSide(
-    "themItems",
-    themTrade,
-    "them"
-  );
-
+  const themTotal =
+    getTradeTotal("them");
 
   if ($("youTotal")) {
-
-    $("youTotal")
-      .textContent =
-      formatValue(you);
-
+    $("youTotal").textContent =
+      formatValue(youTotal);
   }
-
 
   if ($("themTotal")) {
-
-    $("themTotal")
-      .textContent =
-      formatValue(them);
-
+    $("themTotal").textContent =
+      formatValue(themTotal);
   }
 
-
   updateResult(
-    you,
-    them
+    youTotal,
+    themTotal
   );
-
 }
 
 
-/* =========================================================
-   RESULT
-   ========================================================= */
+// ============================================================
+// RESULT
+// ============================================================
 
 function updateResult(
-  you,
-  them
+  youTotal,
+  themTotal
 ) {
+  const title =
+    $("resultTitle");
+
+  const text =
+    $("resultText");
+
+  const difference =
+    $("resultDifference");
+
+  const status =
+    $("calculatorStatus");
 
   const card =
     $("resultCard");
 
-
-  if (!card) {
+  if (!title || !text || !difference) {
     return;
   }
 
+  if (
+    youTotal === 0 &&
+    themTotal === 0
+  ) {
+
+    title.textContent =
+      "Item ekleyerek başla";
+
+    text.textContent =
+      "İki tarafa da item eklediğinde trade sonucu burada görünecek.";
+
+    difference.textContent =
+      "—";
+
+    if (status) {
+      status.textContent =
+        "● Sistem hazır";
+    }
+
+    resetResultClasses(card);
+
+    return;
+  }
+
+  if (
+    youTotal === 0 ||
+    themTotal === 0
+  ) {
+
+    title.textContent =
+      "İki tarafa da item ekle";
+
+    text.textContent =
+      "W/F/L sonucunu görmek için iki tarafa da en az bir item eklemelisin.";
+
+    difference.textContent =
+      "—";
+
+    if (status) {
+      status.textContent =
+        "● Trade bekleniyor";
+    }
+
+    resetResultClasses(card);
+
+    return;
+  }
+
+  const diff =
+    themTotal - youTotal;
+
+  const percentage =
+    youTotal > 0
+      ? (diff / youTotal) * 100
+      : 0;
+
+  resetResultClasses(card);
+
+  if (Math.abs(diff) < 0.0001) {
+
+    title.textContent =
+      "FAIR";
+
+    text.textContent =
+      "İki tarafın toplam değeri neredeyse eşit.";
+
+    difference.textContent =
+      "0";
+
+    if (status) {
+      status.textContent =
+        "● FAIR";
+    }
+
+    card?.classList.add("fair");
+
+    return;
+  }
+
+  if (diff > 0) {
+
+    title.textContent =
+      percentage >= 15
+        ? "BIG WIN"
+        : "WIN";
+
+    text.textContent =
+      `Karşı tarafın teklifi yaklaşık %${Math.abs(
+        percentage
+      ).toFixed(1)} daha değerli.`;
+
+    difference.textContent =
+      "+" + formatValue(diff);
+
+    if (status) {
+      status.textContent =
+        percentage >= 15
+          ? "● BIG WIN"
+          : "● WIN";
+    }
+
+    card?.classList.add(
+      percentage >= 15
+        ? "big-win"
+        : "small-win"
+    );
+
+  } else {
+
+    title.textContent =
+      Math.abs(percentage) >= 15
+        ? "BIG LOSE"
+        : "LOSE";
+
+    text.textContent =
+      `Senin teklifin yaklaşık %${Math.abs(
+        percentage
+      ).toFixed(1)} daha düşük.`;
+
+    difference.textContent =
+      formatValue(diff);
+
+    if (status) {
+      status.textContent =
+        Math.abs(percentage) >= 15
+          ? "● BIG LOSE"
+          : "● LOSE";
+    }
+
+    card?.classList.add(
+      Math.abs(percentage) >= 15
+        ? "big-lose"
+        : "small-lose"
+    );
+  }
+
+  recordTradeResult(
+    youTotal,
+    themTotal
+  );
+}
+
+
+// ============================================================
+// RESULT CLASSES
+// ============================================================
+
+function resetResultClasses(card) {
+  if (!card) return;
 
   card.classList.remove(
     "fair",
@@ -2226,1008 +1401,587 @@ function updateResult(
     "small-lose",
     "big-lose"
   );
+}
 
 
-  const title =
-    $("resultTitle");
+// ============================================================
+// RECORD TRADE
+// ============================================================
 
-
-  const text =
-    $("resultText");
-
-
-  const difference =
-    $("resultDifference");
-
-
+function recordTradeResult(
+  youTotal,
+  themTotal
+) {
   if (
-    you === 0 &&
-    them === 0
+    youTotal <= 0 ||
+    themTotal <= 0
   ) {
-
-    if (title) {
-      title.textContent =
-        "Item ekleyerek başla";
-    }
-
-
-    if (text) {
-      text.textContent =
-        "İki tarafa da item eklediğinde trade sonucu burada görünecek.";
-    }
-
-
-    if (difference) {
-      difference.textContent =
-        "—";
-    }
-
-
     return;
-
   }
 
+  const key =
+    `${tradeData.you
+      .map((x) => x.uid)
+      .join(",")}|${tradeData.them
+      .map((x) => x.uid)
+      .join(",")}`;
 
   if (
-    you === 0 ||
-    them === 0
+    !key ||
+    key === recordedTradeKey
   ) {
-
-    if (title) {
-      title.textContent =
-        "İki tarafa da item ekle";
-    }
-
-
-    if (text) {
-      text.textContent =
-        "Sonucu görmek için iki tarafa da item ekle.";
-    }
-
-
-    if (difference) {
-      difference.textContent =
-        "—";
-    }
-
-
     return;
-
   }
 
+  recordedTradeKey = key;
+
+  profileData.trades++;
 
   const diff =
-    them - you;
+    themTotal - youTotal;
 
-
-  const percent =
-    (diff / you) * 100;
-
-
-  let result =
-    "fair";
-
-
-  let label =
-    "FAIR";
-
-
-  let message =
-    "Değerler birbirine çok yakın.";
-
-
-  if (percent >= 10) {
-
-    result =
-      "big-win";
-
-    label =
-      "BIG WIN";
-
-    message =
-      "Bu trade senin için oldukça avantajlı.";
-
+  if (Math.abs(diff) < 0.0001) {
+    profileData.fair++;
+  } else if (diff > 0) {
+    profileData.wins++;
+  } else {
+    profileData.losses++;
   }
 
-  else if (percent > 3) {
-
-    result =
-      "small-win";
-
-    label =
-      "SMALL WIN";
-
-    message =
-      "Trade senin lehine.";
-
-  }
-
-  else if (percent <= -10) {
-
-    result =
-      "big-lose";
-
-    label =
-      "BIG LOSE";
-
-    message =
-      "Bu trade senin için ciddi şekilde dezavantajlı.";
-
-  }
-
-  else if (percent < -3) {
-
-    result =
-      "small-lose";
-
-    label =
-      "SMALL LOSE";
-
-    message =
-      "Trade karşı tarafın lehine.";
-
-  }
-
-
-  card.classList.add(
-    result
-  );
-
-
-  if (title) {
-    title.textContent =
-      label;
-  }
-
-
-  if (text) {
-
-    text.textContent =
-      `${message} Sen: ${formatValue(you)} • Karşı taraf: ${formatValue(them)}.`;
-
-  }
-
-
-  if (difference) {
-
-    difference.textContent =
-      diff > 0
-        ? "+" + formatValue(diff)
-        : formatValue(diff);
-
-  }
-
-
-  recordTradeResult(
-    result
-  );
-
+  saveProfile();
+  renderProfile();
 }
 
 
-/* =========================================================
-   CALCULATOR STATUS
-   ========================================================= */
-
-function updateCalculatorStatus(
-  message
-) {
-
-  const element =
-    $("calculatorStatus");
-
-  if (!element) {
-    return;
-  }
-
-
-  element.textContent =
-    "● " + message;
-
-}
-
-
-/* =========================================================
-   PROFILE
-   ========================================================= */
-
-const DEFAULT_PROFILE = {
-
-  name:
-    "Zayaxra Kullanıcısı",
-
-  username:
-    "@kullanici",
-
-  bio:
-    "Henüz bir biyografi eklenmedi.",
-
-  avatar:
-    "🐉",
-
-  stats: {
-
-    trades: 0,
-    wins: 0,
-    fairs: 0,
-    loses: 0
-
-  }
-
-};
-
+// ============================================================
+// PROFILE STORAGE
+// ============================================================
 
 function loadProfile() {
 
-  try {
+  let saved =
+    localStorage.getItem(
+      "zayaxra_profile"
+    );
 
-    const raw =
+  // Eski sürümle uyumluluk
+  if (!saved) {
+    saved =
       localStorage.getItem(
-        "zayaxra_profile"
+        "zayagg_profile"
       );
-
-
-    if (!raw) {
-
-      return {
-        ...DEFAULT_PROFILE,
-
-        stats: {
-          ...DEFAULT_PROFILE.stats
-        }
-
-      };
-
-    }
-
-
-    const saved =
-      JSON.parse(raw);
-
-
-    return {
-
-      ...DEFAULT_PROFILE,
-
-      ...saved,
-
-      stats: {
-
-        ...DEFAULT_PROFILE.stats,
-
-        ...(saved.stats || {})
-
-      }
-
-    };
-
-  } catch {
-
-    return {
-
-      ...DEFAULT_PROFILE,
-
-      stats: {
-        ...DEFAULT_PROFILE.stats
-      }
-
-    };
-
   }
 
+  if (!saved) {
+    renderProfile();
+    return;
+  }
+
+  try {
+
+    const parsed =
+      JSON.parse(saved);
+
+    profileData = {
+      ...profileData,
+      ...parsed
+    };
+
+  } catch (error) {
+    console.warn(
+      "Profil okunamadı.",
+      error
+    );
+  }
+
+  renderProfile();
 }
-
-
-let profileData =
-  loadProfile();
 
 
 function saveProfile() {
-
   localStorage.setItem(
     "zayaxra_profile",
-    JSON.stringify(
-      profileData
-    )
+    JSON.stringify(profileData)
   );
-
 }
 
 
-function openProfile() {
-
-  renderProfile();
-
-
-  const modal =
-    $("profileModal");
-
-
-  modal?.classList.add(
-    "show"
-  );
-
-
-  modal?.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-
-  document.body.classList.add(
-    "profile-open"
-  );
-
-}
-
-
-function closeProfile() {
-
-  const modal =
-    $("profileModal");
-
-
-  modal?.classList.remove(
-    "show"
-  );
-
-
-  modal?.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-
-  document.body.classList.remove(
-    "profile-open"
-  );
-
-
-  closeEditProfile();
-
-}
-
+// ============================================================
+// PROFILE RENDER
+// ============================================================
 
 function renderProfile() {
 
   if ($("profileName")) {
-
-    $("profileName")
-      .textContent =
+    $("profileName").textContent =
       profileData.name;
-
   }
-
 
   if ($("profileUsername")) {
-
-    $("profileUsername")
-      .textContent =
+    $("profileUsername").textContent =
       profileData.username;
-
   }
-
-
-  if ($("profileBio")) {
-
-    $("profileBio")
-      .textContent =
-      profileData.bio;
-
-  }
-
 
   if ($("profileAvatar")) {
-
-    $("profileAvatar")
-      .textContent =
+    $("profileAvatar").textContent =
       profileData.avatar;
-
   }
-
 
   if ($("navAvatar")) {
-
-    $("navAvatar")
-      .textContent =
+    $("navAvatar").textContent =
       profileData.avatar;
-
   }
-
 
   if ($("profileTrades")) {
-
-    $("profileTrades")
-      .textContent =
-      profileData.stats.trades;
-
+    $("profileTrades").textContent =
+      profileData.trades;
   }
-
 
   if ($("profileWins")) {
-
-    $("profileWins")
-      .textContent =
-      profileData.stats.wins;
-
+    $("profileWins").textContent =
+      profileData.wins;
   }
-
 
   if ($("profileFair")) {
-
-    $("profileFair")
-      .textContent =
-      profileData.stats.fairs;
-
+    $("profileFair").textContent =
+      profileData.fair;
   }
-
-
-  if ($("profileLoses")) {
-
-    $("profileLoses")
-      .textContent =
-      profileData.stats.loses;
-
-  }
-
 
   if ($("profileLosses")) {
-
-    $("profileLosses")
-      .textContent =
-      profileData.stats.loses;
-
+    $("profileLosses").textContent =
+      profileData.losses;
   }
-
 }
 
 
-/* =========================================================
-   PROFILE EDIT
-   ========================================================= */
+// ============================================================
+// PROFILE OPEN
+// ============================================================
+
+function openProfile() {
+  renderProfile();
+
+  const modal =
+    $("profileModal");
+
+  if (!modal) return;
+
+  modal.classList.add("active");
+  modal.style.display = "flex";
+
+  document.body.classList.add(
+    "modal-open"
+  );
+
+  closeEditProfile();
+}
+
+
+function closeProfile() {
+  const modal =
+    $("profileModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "";
+  }
+
+  document.body.classList.remove(
+    "modal-open"
+  );
+}
+
+
+// ============================================================
+// PROFILE EDIT
+// ============================================================
 
 function openEditProfile() {
 
-  const form =
-    $("profileEditForm");
+  const view =
+    $("profileView");
 
+  const edit =
+    $("profileEdit");
 
-  /*
-   * Senin gönderdiğin HTML'de eski/yeni
-   * profil yapısı farklı olabildiği için
-   * iki sistemi de destekliyoruz.
-   */
+  const name =
+    $("editProfileName");
 
-  if (
-    $("editName") &&
-    $("editUsername")
-  ) {
+  const username =
+    $("editProfileUsername");
 
-    $("editName").value =
-      profileData.name;
-
-    $("editUsername").value =
-      profileData.username;
-
-    if ($("editBio")) {
-
-      $("editBio").value =
-        profileData.bio;
-
-    }
-
-
-    renderAvatars();
-
-    form?.classList.remove(
-      "hidden"
-    );
-
-    $("profileEditBtn")
-      ?.classList.add(
-        "hidden"
-      );
-
-    return;
-
+  if (name) {
+    name.value =
+      profileData.name || "";
   }
 
-
-  if (
-    $("editProfileName") &&
-    $("editProfileUsername")
-  ) {
-
-    $("editProfileName").value =
-      profileData.name;
-
-    $("editProfileUsername").value =
-      profileData.username;
-
-    selectedAvatar =
-      profileData.avatar;
-
-    $("profileView")
-      ?.style
-      && (
-        $("profileView").style.display =
-          "none"
-      );
-
-    $("profileEdit")
-      ?.style
-      && (
-        $("profileEdit").style.display =
-          "block"
-      );
-
-    return;
-
+  if (username) {
+    username.value =
+      profileData.username || "";
   }
 
+  if (view) {
+    view.style.display =
+      "none";
+  }
+
+  if (edit) {
+    edit.style.display =
+      "block";
+  }
+
+  updateAvatarButtons();
 }
 
 
 function closeEditProfile() {
 
-  $("profileEditForm")
-    ?.classList.add(
-      "hidden"
-    );
+  const view =
+    $("profileView");
 
+  const edit =
+    $("profileEdit");
 
-  $("profileEditBtn")
-    ?.classList.remove(
-      "hidden"
-    );
-
-
-  if ($("profileView")) {
-
-    $("profileView").style.display =
-      "";
-
-  }
-
-
-  if ($("profileEdit")) {
-
-    $("profileEdit").style.display =
+  if (edit) {
+    edit.style.display =
       "none";
-
   }
 
+  if (view) {
+    view.style.display =
+      "block";
+  }
 }
 
 
-function renderAvatars() {
-
-  const box =
-    $("avatarPick");
-
-
-  if (!box) {
-    return;
-  }
-
-
-  box.innerHTML =
-    "";
-
-
-  [
-    "🐉",
-    "🐲",
-    "🦊",
-    "🐺",
-    "🦁",
-    "🐯",
-    "🐻",
-    "🐼",
-    "🦄",
-    "🐸",
-    "🦋",
-    "🌙"
-
-  ].forEach(
-    avatar => {
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.type =
-        "button";
-
-
-      button.className =
-        "avatar-opt" +
-        (
-          avatar ===
-          profileData.avatar
-            ? " active"
-            : ""
-        );
-
-
-      button.textContent =
-        avatar;
-
-
-      button.onclick =
-        () => {
-
-          profileData.avatar =
-            avatar;
-
-
-          box
-            .querySelectorAll(
-              ".avatar-opt"
-            )
-            .forEach(
-              item =>
-                item.classList.remove(
-                  "active"
-                )
-            );
-
-
-          button.classList.add(
-            "active"
-          );
-
-        };
-
-
-      box.appendChild(
-        button
-      );
-
-    }
-  );
-
-}
-
+// ============================================================
+// AVATAR
+// ============================================================
 
 function selectAvatar(avatar) {
-
-  selectedAvatar =
-    avatar;
-
-
   profileData.avatar =
     avatar;
 
+  updateAvatarButtons();
+}
+
+
+function updateAvatarButtons() {
 
   document
     .querySelectorAll(
-      ".avatar-picker button"
+      "#avatarPicker button"
     )
-    .forEach(
-      button => {
+    .forEach((button) => {
 
-        button.classList.toggle(
-          "active",
-          button.textContent ===
-            avatar
-        );
+      button.classList.toggle(
+        "active",
+        button.textContent.trim() ===
+          profileData.avatar
+      );
 
-      }
-    );
-
+    });
 }
 
 
-function saveEditedProfile(event) {
+// ============================================================
+// SAVE PROFILE
+// ============================================================
 
-  if (event) {
-    event.preventDefault();
-  }
+function saveEditedProfile() {
 
+  const nameInput =
+    $("editProfileName");
+
+  const usernameInput =
+    $("editProfileUsername");
 
   let name =
-    $("editName")?.value?.trim();
-
+    String(nameInput?.value || "")
+      .trim();
 
   let username =
-    $("editUsername")?.value?.trim();
-
-
-  let bio =
-    $("editBio")?.value?.trim();
-
-
-  /*
-   * Yeni HTML yapısı
-   */
+    String(usernameInput?.value || "")
+      .trim();
 
   if (!name) {
+    showToast(
+      "Kullanıcı adı boş olamaz.",
+      "!"
+    );
 
-    name =
-      $("editProfileName")
-        ?.value
-        ?.trim();
-
+    return;
   }
-
 
   if (!username) {
-
     username =
-      $("editProfileUsername")
-        ?.value
-        ?.trim();
-
+      "@user";
   }
 
-
-  if (!bio) {
-
-    bio =
-      profileData.bio;
-
+  if (!username.startsWith("@")) {
+    username =
+      "@" + username;
   }
-
-
-  if (!name || !username) {
-    return;
-  }
-
 
   profileData.name =
-    name;
-
+    name.slice(0, 24);
 
   profileData.username =
-    username.startsWith("@")
-      ? username
-      : "@" + username;
-
-
-  profileData.bio =
-    bio ||
-    DEFAULT_PROFILE.bio;
-
-
-  if (selectedAvatar) {
-
-    profileData.avatar =
-      selectedAvatar;
-
-  }
-
+    username.slice(0, 25);
 
   saveProfile();
-
   renderProfile();
-
   closeEditProfile();
 
+  showToast(
+    "Profil kaydedildi.",
+    "✓"
+  );
 }
 
 
-/* =========================================================
-   TRADE HISTORY
-   ========================================================= */
-
-function recordTradeResult(status) {
-
-  if (
-    !youTrade.length ||
-    !themTrade.length
-  ) {
-    return;
-  }
-
-
-  const key =
-    youTrade
-      .map(
-        item =>
-          item.uniqueId
-      )
-      .join(",") +
-
-    "|" +
-
-    themTrade
-      .map(
-        item =>
-          item.uniqueId
-      )
-      .join(",") +
-
-    "|" +
-
-    status;
-
-
-  if (
-    key ===
-    recordedTradeKey
-  ) {
-    return;
-  }
-
-
-  recordedTradeKey =
-    key;
-
-
-  profileData.stats.trades++;
-
-
-  if (
-    status === "big-win" ||
-    status === "small-win"
-  ) {
-
-    profileData.stats.wins++;
-
-  }
-
-
-  if (
-    status === "fair"
-  ) {
-
-    profileData.stats.fairs++;
-
-  }
-
-
-  if (
-    status === "big-lose" ||
-    status === "small-lose"
-  ) {
-
-    profileData.stats.loses++;
-
-  }
-
-
-  saveProfile();
-
-  renderProfile();
-
-}
-
-
-/* =========================================================
-   MENU
-   ========================================================= */
+// ============================================================
+// MENU
+// ============================================================
 
 function toggleMenu() {
 
-  document.body.classList.toggle(
-    "menu-open"
-  );
+  const nav =
+    $("navLinks");
 
+  if (!nav) return;
+
+  nav.classList.toggle(
+    "open"
+  );
 }
 
 
 function closeMenu() {
 
-  document.body.classList.remove(
-    "menu-open"
-  );
+  const nav =
+    $("navLinks");
 
+  if (!nav) return;
+
+  nav.classList.remove(
+    "open"
+  );
 }
 
 
-/* =========================================================
-   MODAL EVENTS
-   ========================================================= */
+// ============================================================
+// TOAST
+// ============================================================
+
+function showToast(
+  message,
+  icon = "✓"
+) {
+  const toast =
+    $("toast");
+
+  const toastText =
+    $("toastText");
+
+  const toastIcon =
+    $("toastIcon");
+
+  if (!toast) return;
+
+  if (toastText) {
+    toastText.textContent =
+      message;
+  }
+
+  if (toastIcon) {
+    toastIcon.textContent =
+      icon;
+  }
+
+  toast.classList.add("show");
+
+  clearTimeout(
+    toastTimer
+  );
+
+  toastTimer =
+    setTimeout(() => {
+      toast.classList.remove(
+        "show"
+      );
+    }, 2500);
+}
+
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+function formatValue(value) {
+  const number =
+    Number(value || 0);
+
+  if (!Number.isFinite(number)) {
+    return "0";
+  }
+
+  if (
+    Number.isInteger(number)
+  ) {
+    return String(number);
+  }
+
+  return number
+    .toFixed(2)
+    .replace(/\.00$/, "")
+    .replace(/(\.\d)0$/, "$1");
+}
+
+
+function capitalize(text) {
+  if (!text) return "";
+
+  return (
+    text.charAt(0).toUpperCase() +
+    text.slice(1)
+  );
+}
+
+
+function rarityClass(rarity) {
+  const value =
+    String(rarity || "")
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+
+  return `rarity-${value}`;
+}
+
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
+
+
+// ============================================================
+// MODAL CLICK
+// ============================================================
 
 document.addEventListener(
   "click",
-  event => {
+  (event) => {
+
+    const target =
+      event.target;
 
     if (
-      event.target ===
-      $("profileModal")
+      target?.classList?.contains(
+        "modal-overlay"
+      )
     ) {
 
-      closeProfile();
+      if (
+        target.id ===
+        "petPickerModal"
+      ) {
+        closePetPicker();
+      }
 
+      if (
+        target.id ===
+        "profileModal"
+      ) {
+        closeProfile();
+      }
     }
-
-
-    if (
-      event.target ===
-      $("petPickerModal")
-    ) {
-
-      closePetPicker();
-
-    }
-
   }
 );
 
+
+// ============================================================
+// ESCAPE
+// ============================================================
 
 document.addEventListener(
   "keydown",
-  event => {
+  (event) => {
 
     if (
-      event.key ===
-      "Escape"
+      event.key !== "Escape"
     ) {
-
-      closeProfile();
-
-      closePetPicker();
-
-      closeMenu();
-
+      return;
     }
 
+    closePetPicker();
+    closeProfile();
+    closeMenu();
   }
 );
 
 
-/* =========================================================
-   DOM READY
-   ========================================================= */
+// ============================================================
+// INPUT LISTENERS
+// ============================================================
 
 document.addEventListener(
   "DOMContentLoaded",
-  async () => {
+  () => {
 
-    $("search")
-      ?.addEventListener(
+    const search =
+      $("search");
+
+    if (search) {
+      search.addEventListener(
         "input",
         () => {
-
-          visibleValueItems =
-            60;
-
-          renderValues();
-
+          visibleValueCount = 60;
+          applyValueFilters();
         }
       );
+    }
 
+    const pickerSearch =
+      $("pickerSearch");
 
-    $("pickerSearch")
-      ?.addEventListener(
+    if (pickerSearch) {
+      pickerSearch.addEventListener(
         "input",
-        renderPickerPets
+        () => {
+          renderPickerItems();
+        }
       );
+    }
 
+    loadProfile();
 
-    $("rarityFilter")
-      ?.addEventListener(
-        "change",
-        applyValueFilters
-      );
-
-
-    $("sortSelect")
-      ?.addEventListener(
-        "change",
-        applyValueFilters
-      );
-
-
-    updatePickerButtons();
+    renderTradeSide("you");
+    renderTradeSide("them");
 
     updateTradeUI();
 
-    renderProfile();
+    updatePickerButtons();
+    updatePickerOptionsVisibility();
 
-    await loadPets();
-
+    loadItems();
   }
 );
 
 
-/* =========================================================
-   GLOBALS
-   ========================================================= */
+// ============================================================
+// GLOBAL EXPORTS
+// Inline HTML onclick'leri için
+// ============================================================
 
 window.openPetPicker =
   openPetPicker;
@@ -3244,11 +1998,11 @@ window.togglePotion =
 window.confirmAddPet =
   confirmAddPet;
 
-window.clearTrade =
-  clearTrade;
-
 window.removeTradePet =
   removeTradePet;
+
+window.clearTrade =
+  clearTrade;
 
 window.openProfile =
   openProfile;
@@ -3265,6 +2019,9 @@ window.closeEditProfile =
 window.saveEditedProfile =
   saveEditedProfile;
 
+window.selectAvatar =
+  selectAvatar;
+
 window.toggleMenu =
   toggleMenu;
 
@@ -3274,17 +2031,18 @@ window.closeMenu =
 window.setValueCategory =
   setValueCategory;
 
-window.setPickerCategory =
-  setPickerCategory;
-
 window.applyValueFilters =
   applyValueFilters;
-
-window.loadMoreItems =
-  loadMoreItems;
 
 window.clearSearchInput =
   clearSearchInput;
 
-window.selectAvatar =
-  selectAvatar;
+window.loadMoreItems =
+  loadMoreItems;
+
+window.setPickerCategory =
+  setPickerCategory;
+
+window.selectPickerItem =
+  selectPickerItem;
+```
