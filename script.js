@@ -2080,3 +2080,1254 @@ window.toggleMenu =
 
 window.closeMenu =
   closeMenu;
+/* =========================================================
+   ZAYAXRA — FINAL PET PICKER PATCH
+   SADECE BU KODU SCRIPT.JS'NİN EN ALTINA EKLE
+   ========================================================= */
+
+(function () {
+  "use strict";
+
+  /* ---------------------------------------------------------
+     STATE
+  --------------------------------------------------------- */
+
+  let zayaxraCategory = "all";
+  let zayaxraShowValues = true;
+
+  /*
+    Mevcut scriptteki:
+    pets
+    selectedPet
+    selectedForm
+    selectedPotion
+    pickerSide
+
+    değişkenlerini kullanır.
+  */
+
+  /* ---------------------------------------------------------
+     ELEMENT HELPERS
+  --------------------------------------------------------- */
+
+  function Z(id) {
+    return document.getElementById(id);
+  }
+
+  function getPickerModal() {
+    return (
+      Z("petPicker") ||
+      Z("petPickerModal")
+    );
+  }
+
+  function getPickerGrid() {
+    return (
+      Z("pickerPets") ||
+      Z("pickerPetList")
+    );
+  }
+
+  function getPickerSearch() {
+    return (
+      Z("petSearch") ||
+      Z("pickerSearch")
+    );
+  }
+
+  /* ---------------------------------------------------------
+     CATEGORY
+  --------------------------------------------------------- */
+
+  function getZayaxraCategory(item) {
+
+    const type = String(
+      item?.type ||
+      item?.category ||
+      item?.kind ||
+      item?.itemType ||
+      ""
+    ).toLowerCase();
+
+    const name = String(
+      item?.name || ""
+    ).toLowerCase();
+
+    /* DATABASE'DEN GELİYORSA ÖNCE TYPE */
+    if (
+      type.includes("petwear") ||
+      type.includes("pet wear") ||
+      type.includes("pet_wear") ||
+      type.includes("wear") ||
+      type.includes("accessory")
+    ) {
+      return "petwear";
+    }
+
+    if (
+      type.includes("egg")
+    ) {
+      return "eggs";
+    }
+
+    if (
+      type.includes("vehicle") ||
+      type.includes("car") ||
+      type.includes("bike") ||
+      type.includes("veh")
+    ) {
+      return "vehicles";
+    }
+
+    if (
+      type.includes("toy")
+    ) {
+      return "toys";
+    }
+
+    if (
+      type.includes("gift")
+    ) {
+      return "gifts";
+    }
+
+    /* NAME YEDEĞİ */
+    if (
+      name.includes("egg")
+    ) {
+      return "eggs";
+    }
+
+    return "pets";
+  }
+
+  /* ---------------------------------------------------------
+     FILTER
+  --------------------------------------------------------- */
+
+  function getPickerFilteredList() {
+
+    const search =
+      getPickerSearch();
+
+    const query =
+      String(
+        search?.value || ""
+      )
+      .trim()
+      .toLowerCase();
+
+    const source =
+      Array.isArray(window.pets)
+        ? window.pets
+        : (
+            typeof pets !== "undefined"
+              ? pets
+              : []
+          );
+
+    return source.filter(item => {
+
+      const category =
+        getZayaxraCategory(item);
+
+      const categoryOK =
+        zayaxraCategory === "all" ||
+        category === zayaxraCategory;
+
+      const searchOK =
+        !query ||
+        String(
+          item.name || ""
+        )
+        .toLowerCase()
+        .includes(query) ||
+
+        String(
+          item.rarity || ""
+        )
+        .toLowerCase()
+        .includes(query);
+
+      return (
+        categoryOK &&
+        searchOK
+      );
+    });
+  }
+
+  /* ---------------------------------------------------------
+     CATEGORY BAR
+  --------------------------------------------------------- */
+
+  function renderZayaxraCategories() {
+
+    const modal =
+      getPickerModal();
+
+    if (!modal) return;
+
+    let sidebar =
+      modal.querySelector(
+        ".zayaxra-final-categories"
+      );
+
+    if (!sidebar) {
+
+      sidebar =
+        document.createElement(
+          "div"
+        );
+
+      sidebar.className =
+        "zayaxra-final-categories";
+
+      modal
+        .querySelector(
+          ".profile-header"
+        )
+        ?.after(sidebar);
+
+      if (
+        !sidebar.parentNode
+      ) {
+        modal.prepend(sidebar);
+      }
+    }
+
+    const categories = [
+      ["all", "ALL"],
+      ["pets", "PETS"],
+      ["petwear", "PET WEAR"],
+      ["eggs", "EGGS"],
+      ["vehicles", "VEHICLES"],
+      ["toys", "TOYS"],
+      ["gifts", "GIFTS"]
+    ];
+
+    sidebar.innerHTML = "";
+
+    categories.forEach(
+      ([key, label]) => {
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+        button.type = "button";
+
+        button.className =
+          "zayaxra-final-category" +
+          (
+            zayaxraCategory === key
+              ? " active"
+              : ""
+          );
+
+        button.textContent =
+          label;
+
+        button.onclick = function (
+          event
+        ) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          zayaxraCategory =
+            key;
+
+          renderZayaxraCategories();
+
+          renderZayaxraPicker();
+        };
+
+        sidebar.appendChild(
+          button
+        );
+      }
+    );
+  }
+
+  /* ---------------------------------------------------------
+     PET CARDS
+  --------------------------------------------------------- */
+
+  function renderZayaxraPicker() {
+
+    const grid =
+      getPickerGrid();
+
+    if (!grid) return;
+
+    const list =
+      getPickerFilteredList();
+
+    grid.innerHTML = "";
+
+    if (!list.length) {
+
+      grid.innerHTML = `
+        <div class="empty-picker">
+          <span>🔎</span>
+          <strong>Bulunamadı</strong>
+          <small>
+            Bu kategoride sonuç yok.
+          </small>
+        </div>
+      `;
+
+      return;
+    }
+
+    list.forEach(
+      pet => {
+
+        const card =
+          document.createElement(
+            "button"
+          );
+
+        card.type = "button";
+
+        card.className =
+          "pet-choice" +
+          (
+            selectedPet?.id === pet.id
+              ? " selected"
+              : ""
+          );
+
+        const value =
+          Number(
+            pet.value || 0
+          );
+
+        card.innerHTML = `
+          <div class="choice-image">
+            ${imageHTML(pet)}
+          </div>
+
+          <strong>
+            ${escapeHTML(
+              pet.name
+            )}
+          </strong>
+
+          <span
+            class="rarity-tag ${
+              escapeHTML(
+                pet.rarity || ""
+              )
+            }"
+          >
+            ${escapeHTML(
+              rarityName(
+                pet.rarity
+              )
+            )}
+          </span>
+
+          <small class="zayaxra-picker-value">
+            ${
+              zayaxraShowValues
+                ? formatValue(value)
+                : "•••"
+            }
+          </small>
+        `;
+
+        card.addEventListener(
+          "click",
+          function (event) {
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            /*
+              PET SEÇİLİYOR.
+              FORM SIFIRLANMIYOR.
+              POTION SIFIRLANMIYOR.
+            */
+
+            selectedPet =
+              pet;
+
+            Z("pickerBar")
+              ?.classList
+              .remove("hidden");
+
+            /*
+              SADECE ÖNİZLEME
+              Liste yeniden çizilmiyor.
+            */
+
+            renderPickerPreview();
+            updatePickerButtons();
+            updatePickerValue();
+
+            document
+              .querySelectorAll(
+                ".pet-choice"
+              )
+              .forEach(
+                el =>
+                  el.classList
+                    .remove(
+                      "selected"
+                    )
+              );
+
+            card.classList.add(
+              "selected"
+            );
+          }
+        );
+
+        grid.appendChild(
+          card
+        );
+      }
+    );
+  }
+
+  /* ---------------------------------------------------------
+     SEARCH
+  --------------------------------------------------------- */
+
+  function zayaxraPickerSearch() {
+    renderZayaxraPicker();
+  }
+
+  /* ---------------------------------------------------------
+     OPEN PICKER
+  --------------------------------------------------------- */
+
+  window.openPetPicker =
+    function (side) {
+
+      pickerSide =
+        side;
+
+      /*
+        DİKKAT:
+        BURADA selectedForm
+        SIFIRLANMIYOR.
+
+        BURADA selectedPotion
+        SIFIRLANMIYOR.
+      */
+
+      selectedPet =
+        null;
+
+      const title =
+        Z("petPickerTitle");
+
+      if (title) {
+
+        title.textContent =
+          side === "you"
+            ? "Senin teklifine pet ekle"
+            : "Karşı tarafın teklifine pet ekle";
+      }
+
+      const search =
+        getPickerSearch();
+
+      if (search) {
+        search.value = "";
+      }
+
+      zayaxraCategory =
+        "all";
+
+      Z("pickerBar")
+        ?.classList
+        .add("hidden");
+
+      renderZayaxraCategories();
+
+      updatePickerButtons();
+      updatePickerValue();
+
+      renderZayaxraPicker();
+
+      const modal =
+        getPickerModal();
+
+      if (modal) {
+
+        modal.classList.add(
+          "show"
+        );
+
+        modal.classList.add(
+          "open"
+        );
+
+        modal.setAttribute(
+          "aria-hidden",
+          "false"
+        );
+      }
+
+      document.body.classList.add(
+        "profile-open"
+      );
+
+      setTimeout(
+        () =>
+          search?.focus(),
+        50
+      );
+    };
+
+  /* ---------------------------------------------------------
+     CLOSE PICKER
+  --------------------------------------------------------- */
+
+  window.closePetPicker =
+    function () {
+
+      const modal =
+        getPickerModal();
+
+      if (!modal) return;
+
+      modal.classList.remove(
+        "show"
+      );
+
+      modal.classList.remove(
+        "open"
+      );
+
+      modal.setAttribute(
+        "aria-hidden",
+        "true"
+      );
+
+      document.body.classList.remove(
+        "profile-open"
+      );
+
+      pickerSide =
+        null;
+
+      selectedPet =
+        null;
+    };
+
+  /* ---------------------------------------------------------
+     FORM
+  --------------------------------------------------------- */
+
+  window.toggleForm =
+    function (form) {
+
+      if (
+        form !== "normal" &&
+        form !== "neon" &&
+        form !== "mega"
+      ) {
+        return false;
+      }
+
+      selectedForm =
+        form;
+
+      /*
+        SADECE BUTON / PREVIEW GÜNCELLENİYOR.
+        PET LİSTESİNE DOKUNULMUYOR.
+      */
+
+      updatePickerButtons();
+
+      if (selectedPet) {
+        renderPickerPreview();
+      }
+
+      updatePickerValue();
+
+      return false;
+    };
+
+  /* ---------------------------------------------------------
+     POTION
+  --------------------------------------------------------- */
+
+  window.togglePotion =
+    function (type) {
+
+      if (
+        type !== "fly" &&
+        type !== "ride"
+      ) {
+        return false;
+      }
+
+      if (
+        !selectedPotion ||
+        typeof selectedPotion !== "object"
+      ) {
+        selectedPotion = {
+          fly: false,
+          ride: false
+        };
+      }
+
+      selectedPotion[type] =
+        !selectedPotion[type];
+
+      /*
+        SADECE F / R DURUMU DEĞİŞİR.
+        LİSTE YENİLENMEZ.
+      */
+
+      updatePickerButtons();
+
+      if (selectedPet) {
+        renderPickerPreview();
+      }
+
+      updatePickerValue();
+
+      return false;
+    };
+
+  /* ---------------------------------------------------------
+     BUTTONS
+  --------------------------------------------------------- */
+
+  window.updatePickerButtons =
+    function () {
+
+      const normal =
+        Z("normalFormBtn");
+
+      const neon =
+        Z("btnNeon");
+
+      const mega =
+        Z("btnMega");
+
+      const fly =
+        Z("btnFly");
+
+      const ride =
+        Z("btnRide");
+
+      const noPotion =
+        Z("noPotionBtn");
+
+      const flyRide =
+        Z("flyRideBtn");
+
+      if (normal) {
+        normal.textContent =
+          "D";
+
+        normal.type =
+          "button";
+
+        normal.disabled =
+          false;
+
+        normal.classList.toggle(
+          "active",
+          selectedForm ===
+            "normal"
+        );
+      }
+
+      if (neon) {
+        neon.textContent =
+          "N";
+
+        neon.type =
+          "button";
+
+        neon.disabled =
+          false;
+
+        neon.classList.toggle(
+          "active",
+          selectedForm ===
+            "neon"
+        );
+      }
+
+      if (mega) {
+        mega.textContent =
+          "M";
+
+        mega.type =
+          "button";
+
+        mega.disabled =
+          false;
+
+        mega.classList.toggle(
+          "active",
+          selectedForm ===
+            "mega"
+        );
+      }
+
+      if (fly) {
+        fly.textContent =
+          "F";
+
+        fly.type =
+          "button";
+
+        fly.disabled =
+          false;
+
+        fly.classList.toggle(
+          "active",
+          !!selectedPotion?.fly
+        );
+      }
+
+      if (ride) {
+        ride.textContent =
+          "R";
+
+        ride.type =
+          "button";
+
+        ride.disabled =
+          false;
+
+        ride.classList.toggle(
+          "active",
+          !!selectedPotion?.ride
+        );
+      }
+
+      /*
+        ESKİ NORMAL POTION
+        BUTONUNU SAKLA
+      */
+
+      if (noPotion) {
+        noPotion.style.display =
+          "none";
+      }
+
+      /*
+        BİRLEŞİK F/R BUTONU YOK
+      */
+
+      if (flyRide) {
+        flyRide.style.display =
+          "none";
+      }
+    };
+
+  /* ---------------------------------------------------------
+     VALUE
+  --------------------------------------------------------- */
+
+  window.updatePickerValue =
+    function () {
+
+      const element =
+        Z("pickerValue");
+
+      if (!element) return;
+
+      if (!selectedPet) {
+
+        element.textContent =
+          "0";
+
+        return;
+      }
+
+      let value =
+        Number(
+          selectedPet.value || 0
+        );
+
+      if (
+        selectedForm ===
+        "neon"
+      ) {
+        value *= 4;
+      }
+
+      if (
+        selectedForm ===
+        "mega"
+      ) {
+        value *= 16;
+      }
+
+      if (
+        selectedPotion?.fly
+      ) {
+        value += .25;
+      }
+
+      if (
+        selectedPotion?.ride
+      ) {
+        value += .25;
+      }
+
+      element.textContent =
+        formatValue(value);
+    };
+
+  /* ---------------------------------------------------------
+     ADD PET
+  --------------------------------------------------------- */
+
+  window.confirmAddPet =
+    function () {
+
+      if (
+        !selectedPet ||
+        !pickerSide
+      ) {
+        return false;
+      }
+
+      let value =
+        Number(
+          selectedPet.value || 0
+        );
+
+      if (
+        selectedForm ===
+        "neon"
+      ) {
+        value *= 4;
+      }
+
+      if (
+        selectedForm ===
+        "mega"
+      ) {
+        value *= 16;
+      }
+
+      if (
+        selectedPotion?.fly
+      ) {
+        value += .25;
+      }
+
+      if (
+        selectedPotion?.ride
+      ) {
+        value += .25;
+      }
+
+      const item = {
+        ...selectedPet,
+
+        baseValue:
+          Number(
+            selectedPet.value || 0
+          ),
+
+        value:
+
+          value,
+
+        form:
+          selectedForm,
+
+        fly:
+          !!selectedPotion?.fly,
+
+        ride:
+          !!selectedPotion?.ride,
+
+        uniqueId:
+          `${Date.now()}_${Math.random()
+            .toString(36)
+            .slice(2)}`
+      };
+
+      if (
+        pickerSide ===
+        "you"
+      ) {
+
+        youTrade.push(
+          item
+        );
+
+      } else {
+
+        themTrade.push(
+          item
+        );
+      }
+
+      closePetPicker();
+
+      updateTradeUI();
+
+      return false;
+    };
+
+  /* ---------------------------------------------------------
+     SHOW VALUES
+  --------------------------------------------------------- */
+
+  window.togglePickerValues =
+    function () {
+
+      zayaxraShowValues =
+        !zayaxraShowValues;
+
+      renderZayaxraPicker();
+    };
+
+  /* ---------------------------------------------------------
+     SEARCH EVENT
+  --------------------------------------------------------- */
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+      const search =
+        getPickerSearch();
+
+      if (
+        search &&
+        !search.dataset
+          .zayaxraBound
+      ) {
+
+        search.dataset
+          .zayaxraBound =
+          "1";
+
+        search.addEventListener(
+          "input",
+          zayaxraPickerSearch
+        );
+      }
+
+      renderZayaxraCategories();
+
+      updatePickerButtons();
+
+      /*
+        BU CSS:
+        - Kategorileri geri getirir
+        - D/N/M/F/R'yi yatay yapar
+        - F/R birleşik butonunu gizler
+        - Eski "Normal" potion butonunu gizler
+      */
+
+      if (
+        !document.getElementById(
+          "zayaxra-final-picker-css"
+        )
+      ) {
+
+        const style =
+          document.createElement(
+            "style"
+          );
+
+        style.id =
+          "zayaxra-final-picker-css";
+
+        style.textContent = `
+
+          /* ============================
+             CATEGORY SIDEBAR
+          ============================ */
+
+          .zayaxra-final-categories {
+
+            position: absolute;
+
+            left: 18px;
+            top: 86px;
+
+            width: 125px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 7px;
+
+            z-index: 50;
+          }
+
+          .zayaxra-final-category {
+
+            width: 100%;
+
+            min-height: 38px;
+
+            border-radius: 11px;
+
+            border:
+              1px solid
+              rgba(255,255,255,.07);
+
+            background:
+              rgba(255,255,255,.025);
+
+            color:
+              rgba(255,255,255,.48);
+
+            font-size: 9px;
+
+            font-weight: 900;
+
+            letter-spacing:
+              .09em;
+
+            text-align: left;
+
+            padding:
+              0 12px;
+
+            cursor: pointer;
+
+            transition:
+              .18s ease;
+          }
+
+          .zayaxra-final-category:hover {
+
+            color: #fff;
+
+            background:
+              rgba(255,255,255,.06);
+
+            transform:
+              translateX(2px);
+          }
+
+          .zayaxra-final-category.active {
+
+            color: #fff;
+
+            background:
+              rgba(139,124,255,.16);
+
+            border-color:
+              rgba(139,124,255,.36);
+
+            box-shadow:
+              0 0 20px
+              rgba(139,124,255,.10);
+          }
+
+          /* ============================
+             LIST SPACE
+          ============================ */
+
+          .zayaxra-final-categories
+          ~ .modal-search,
+
+          .zayaxra-final-categories
+          ~ #pickerPets,
+
+          .zayaxra-final-categories
+          ~ #pickerPetList {
+
+            margin-left: 155px;
+          }
+
+          /* ============================
+             D N M F R
+          ============================ */
+
+          .picker-options {
+
+            display: flex
+            !important;
+
+            align-items: center
+            !important;
+
+            justify-content: center
+            !important;
+          }
+
+          .form-toggles,
+          .potion-toggles {
+
+            display:
+              contents
+              !important;
+          }
+
+          .form-btn,
+          .potion-btn {
+
+            width:
+              48px
+            !important;
+
+            min-width:
+              48px
+            !important;
+
+            max-width:
+              48px
+            !important;
+
+            height:
+              42px
+            !important;
+
+            flex:
+              0 0 48px
+            !important;
+
+            margin:
+              0 4px
+            !important;
+
+            padding:
+              0
+            !important;
+
+            display:
+              inline-flex
+            !important;
+
+            align-items:
+              center
+            !important;
+
+            justify-content:
+              center
+            !important;
+
+            font-size:
+              13px
+            !important;
+
+            font-weight:
+              900
+            !important;
+          }
+
+          /* ============================
+             PET CARD
+          ============================ */
+
+          .pet-choice {
+
+            cursor:
+              pointer
+            !important;
+          }
+
+          .pet-choice:hover {
+
+            transform:
+              translateY(-3px);
+          }
+
+          .pet-choice.selected {
+
+            border-color:
+              rgba(139,124,255,.55)
+            !important;
+
+            box-shadow:
+              0 0 0 1px
+              rgba(139,124,255,.18),
+              0 10px 30px
+              rgba(0,0,0,.24);
+          }
+
+          /* ============================
+             MOBILE
+          ============================ */
+
+          @media (max-width: 800px) {
+
+            .zayaxra-final-categories {
+
+              position:
+                static;
+
+              width:
+                100%;
+
+              flex-direction:
+                row;
+
+              overflow-x:
+                auto;
+
+              padding-bottom:
+                10px;
+            }
+
+            .zayaxra-final-category {
+
+              width:
+                auto;
+
+              flex:
+                0 0 auto;
+
+              white-space:
+                nowrap;
+            }
+
+            .zayaxra-final-categories
+            ~ .modal-search,
+
+            .zayaxra-final-categories
+            ~ #pickerPets,
+
+            .zayaxra-final-categories
+            ~ #pickerPetList {
+
+              margin-left:
+                0;
+            }
+
+            .form-btn,
+            .potion-btn {
+
+              width:
+                42px
+              !important;
+
+              min-width:
+                42px
+              !important;
+
+              max-width:
+                42px
+              !important;
+
+              flex-basis:
+                42px
+              !important;
+            }
+          }
+        `;
+
+        document.head.appendChild(
+          style
+        );
+      }
+    }
+  );
+
+})();
