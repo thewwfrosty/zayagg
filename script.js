@@ -10,56 +10,15 @@
    DATABASE
 ========================================================= */
 
-function resolveImage(imagePath, name) {
-
-  if (imagePath) {
-
-    let path = String(imagePath);
-
-    // JSON'daki hatalı /images/pets/ yolunu
-    // repository'deki gerçek /images/ yoluna çevir
-    path = path.replace(
-      /^\/images\/pets\//,
-      "/images/"
-    );
-
-    path = path.replace(
-      /^images\/pets\//,
-      "images/"
-    );
-
-    if (/^https?:\/\//i.test(path)) {
-      return path;
-    }
-
-    return (
-      PET_IMAGE_BASE +
-      (
-        path.startsWith("/")
-          ? ""
-          : "/"
-      ) +
-      path
-    );
-  }
-
-  // JSON'da image yoksa
-  // gerçek repository dosya adını kullan
-  return (
-    PET_IMAGE_BASE +
-    "/images/" +
-    encodeURIComponent(name) +
-    ".png"
-  );
-}
+const PET_DATA_URL =
+  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main/adoptme_values.json";
 
 const PET_IMAGE_BASE =
-  "https://ironbabatekkral.github.io/adoptme-values";
+  "https://raw.githubusercontent.com/ironbabatekkral/adoptme-values/main";
 
 
 /* =========================================================
-   ZAYAXRA CUSTOM VALUES
-   Bunlar öncelikli kullanılır.
+   CUSTOM VALUES
 ========================================================= */
 
 const CUSTOM_VALUE_OVERRIDES = {
@@ -169,7 +128,7 @@ const CUSTOM_VALUE_OVERRIDES = {
 
 
 /* =========================================================
-   DATABASE BAŞLANGIÇ
+   PET DATABASE
 ========================================================= */
 
 let PET_DATABASE = [];
@@ -202,7 +161,7 @@ let databaseReady = false;
 
 
 /* =========================================================
-   HELPERS
+   BASIC HELPER
 ========================================================= */
 
 function $(id) {
@@ -229,11 +188,9 @@ function slug(name) {
 
   };
 
-
   if (special[name]) {
     return special[name];
   }
-
 
   return String(name)
 
@@ -258,8 +215,7 @@ function slug(name) {
 
     .replace(
       /^_+|_+$/g,
-      ""
-    );
+      "");
 
 }
 
@@ -273,7 +229,6 @@ function isEgg(pet) {
   if (!pet) {
     return false;
   }
-
 
   return (
 
@@ -297,8 +252,7 @@ function isEgg(pet) {
 
 
 /* =========================================================
-   IMAGE URL
-   VERİTABANINDAKİ GERÇEK IMAGE PATH'İ KULLANILIR
+   REAL IMAGE RESOLVER
 ========================================================= */
 
 function resolveImage(
@@ -306,32 +260,70 @@ function resolveImage(
   name
 ) {
 
+  let path =
+    String(
+      imagePath || ""
+    ).trim();
+
+
+  /*
+    JSON'daki yol:
+
+    /images/pets/Hedgehog.png
+
+    Repository'deki gerçek yol:
+
+    /images/Hedgehog.png
+  */
+
+  path =
+    path.replace(
+      /^\/images\/pets\//i,
+      "/images/"
+    );
+
+
+  path =
+    path.replace(
+      /^images\/pets\//i,
+      "images/"
+    );
+
+
+  /*
+    Tam URL ise direkt döndür.
+  */
+
   if (
-    imagePath
+    /^https?:\/\//i.test(
+      path
+    )
   ) {
 
-    if (
-      /^https?:\/\//i.test(
-        imagePath
-      )
-    ) {
+    return path;
 
-      return imagePath;
+  }
 
-    }
 
+  /*
+    Image path varsa onu kullan.
+  */
+
+  if (
+    path
+  ) {
 
     return (
 
       PET_IMAGE_BASE +
 
       (
-        imagePath.startsWith("/")
+        path.startsWith("/")
           ? ""
           : "/"
       ) +
 
-      imagePath
+      path
 
     );
 
@@ -339,17 +331,18 @@ function resolveImage(
 
 
   /*
-    Sadece son çare.
+    Son çare:
+    repository'deki gerçek dosya
   */
 
   return (
 
     PET_IMAGE_BASE +
 
-    "/images/pets/" +
+    "/images/" +
 
     encodeURIComponent(
-      name
+      String(name || "")
     ) +
 
     ".png"
@@ -360,7 +353,7 @@ function resolveImage(
 
 
 /* =========================================================
-   RARITY
+   RARITY NORMALIZER
 ========================================================= */
 
 function normalizeRarity(
@@ -398,7 +391,6 @@ function normalizeRarity(
 
 
   if (
-    value === "rare" ||
     value.includes(
       "rare"
     )
@@ -435,6 +427,10 @@ function normalizeRarity(
 
 }
 
+
+/* =========================================================
+   RARITY DISPLAY
+========================================================= */
 
 function rarityName(
   rarity
@@ -527,7 +523,7 @@ function formatValue(
 
 
 /* =========================================================
-   HTML ESCAPE
+   ESCAPE HTML
 ========================================================= */
 
 function escapeHTML(
@@ -633,17 +629,19 @@ function imageHTML(
   className = "pet-photo"
 ) {
 
+  const image =
+    resolveImage(
+      pet?.image,
+      pet?.name
+    );
+
+
   return `
 
     <img
 
       src="${escapeHTML(
-        pet?.image ||
-        resolveImage(
-          "",
-          pet?.name ||
-          "Pet"
-        )
+        image
       )}"
 
       alt="${escapeHTML(
@@ -665,7 +663,7 @@ function imageHTML(
 
 
 /* =========================================================
-   FULL DATABASE LOAD
+   LOAD FULL PET DATABASE
 ========================================================= */
 
 async function loadFullPetDatabase() {
@@ -715,10 +713,6 @@ async function loadFullPetDatabase() {
     }
 
 
-    /*
-      Pet + egg kayıtları
-    */
-
     const remotePets =
       raw
 
@@ -761,11 +755,10 @@ async function loadFullPetDatabase() {
               String(
                 item?.name ||
                 ""
-              )
-                .trim();
+              ).trim();
 
 
-            const regularValue =
+            const normalValue =
               Number(
                 item?.regular?.value
               );
@@ -777,50 +770,43 @@ async function loadFullPetDatabase() {
               );
 
 
-            const customValue =
+            let value =
               CUSTOM_VALUE_OVERRIDES[
                 name
               ];
 
 
-            let value;
-
-
             if (
-              customValue !==
-              undefined
+              value === undefined
             ) {
 
-              value =
-                customValue;
+              if (
+                Number.isFinite(
+                  normalValue
+                )
+              ) {
 
-            }
+                value =
+                  normalValue;
 
-            else if (
-              Number.isFinite(
-                regularValue
-              )
-            ) {
+              }
 
-              value =
-                regularValue;
+              else if (
+                Number.isFinite(
+                  fallbackValue
+                )
+              ) {
 
-            }
+                value =
+                  fallbackValue;
 
-            else if (
-              Number.isFinite(
-                fallbackValue
-              )
-            ) {
+              }
 
-              value =
-                fallbackValue;
+              else {
 
-            }
+                value = 0;
 
-            else {
-
-              value = 0;
+              }
 
             }
 
@@ -836,11 +822,15 @@ async function loadFullPetDatabase() {
             return {
 
               id:
-                `pet_${item?.id ?? index}_${slug(name)}`,
+
+                `remote_${item?.id ?? index}_${slug(
+                  name
+                )}`,
 
               name,
 
               rarity:
+
                 normalizeRarity(
                   item?.rarity
                 ),
@@ -857,11 +847,11 @@ async function loadFullPetDatabase() {
 
 
               /*
-                EN ÖNEMLİ KISIM:
-                JSON'daki GERÇEK IMAGE PATH
+                GERÇEK GÖRSEL
               */
 
               image:
+
                 resolveImage(
                   item?.image,
                   name
@@ -869,14 +859,20 @@ async function loadFullPetDatabase() {
 
 
               type:
+
                 type.includes(
                   "egg"
-                ) ||
+                )
+
+                ||
+
                 isEgg({
                   name,
                   type
                 })
+
                   ? "egg"
+
                   : "pet"
 
             };
@@ -892,7 +888,7 @@ async function loadFullPetDatabase() {
 
 
     /*
-      Duplicate temizleme
+      Duplicate temizle
     */
 
     const unique =
@@ -918,15 +914,12 @@ async function loadFullPetDatabase() {
       );
 
 
-    /*
-      İsme göre sırala
-    */
-
     PET_DATABASE.sort(
       (
         a,
         b
       ) =>
+
         a.name.localeCompare(
           b.name,
           "en",
@@ -935,6 +928,7 @@ async function loadFullPetDatabase() {
               "base"
           }
         )
+
     );
 
 
@@ -943,27 +937,20 @@ async function loadFullPetDatabase() {
 
 
     console.log(
+
       `ZAYAXRA: ${PET_DATABASE.length} pet/egg yüklendi.`
+
     );
 
-
-    /*
-      Liste açıksa yenile
-    */
 
     renderPickerPets();
 
 
   }
 
-
   catch (
     error
   ) {
-
-    databaseReady =
-      false;
-
 
     console.error(
       "ZAYAXRA DATABASE HATASI:",
@@ -971,14 +958,20 @@ async function loadFullPetDatabase() {
     );
 
 
+    databaseReady =
+      false;
+
+
     /*
-      En azından özel değerleri
-      kaybetme.
+      İnternet/veritabanı açılmazsa
+      en azından senin özel değerlerin
+      çalışmaya devam eder.
     */
 
-    PET_DATABASE = Object.entries(
-      CUSTOM_VALUE_OVERRIDES
-    )
+    PET_DATABASE =
+      Object.entries(
+        CUSTOM_VALUE_OVERRIDES
+      )
       .map(
         (
           [name, value],
@@ -986,7 +979,9 @@ async function loadFullPetDatabase() {
         ) => ({
 
           id:
-            `fallback_${index}_${slug(name)}`,
+            `fallback_${index}_${slug(
+              name
+            )}`,
 
           name,
 
@@ -1029,9 +1024,11 @@ function getTradeStats() {
 
     const data =
       JSON.parse(
+
         localStorage.getItem(
           "zayaggTradeStats"
         ) || "{}"
+
       );
 
 
@@ -1061,7 +1058,9 @@ function getTradeStats() {
     return {
 
       wins: 0,
+
       fair: 0,
+
       loses: 0
 
     };
@@ -1127,7 +1126,7 @@ function ensureStorageData() {
 
 
 /* =========================================================
-   PROFILE STORAGE
+   PROFILE
 ========================================================= */
 
 function getProfileData() {
@@ -1136,9 +1135,11 @@ function getProfileData() {
 
     const data =
       JSON.parse(
+
         localStorage.getItem(
           "zayaggProfile"
         ) || "{}"
+
       );
 
 
@@ -1272,13 +1273,18 @@ function migrateLegacyProfile() {
 
 
     const isOldZayagg =
+
       name.includes(
         "zayagg"
-      ) ||
+      )
+
+      ||
 
       username.includes(
         "zayagg"
-      ) ||
+      )
+
+      ||
 
       bio.includes(
         "adm"
@@ -1346,7 +1352,7 @@ function migrateLegacyProfile() {
 
 
 /* =========================================================
-   PET PICKER OPEN
+   OPEN PET PICKER
 ========================================================= */
 
 function openPetPicker(
@@ -1415,7 +1421,8 @@ function openPetPicker(
     search
   ) {
 
-    search.value = "";
+    search.value =
+      "";
 
   }
 
@@ -1477,7 +1484,7 @@ function openPetPicker(
 
 
 /* =========================================================
-   CLOSE PET PICKER
+   CLOSE PICKER
 ========================================================= */
 
 function closePetPicker() {
@@ -1536,7 +1543,7 @@ function closePetPicker() {
 
 
 /* =========================================================
-   PICKER LIST
+   RENDER PICKER
 ========================================================= */
 
 function renderPickerPets(
@@ -1552,7 +1559,8 @@ function renderPickerPets(
   }
 
 
-  box.innerHTML = "";
+  box.innerHTML =
+    "";
 
 
   if (
@@ -1566,7 +1574,9 @@ function renderPickerPets(
 
       <div class="empty-picker">
 
-        <span>🔎</span>
+        <span>
+          🔎
+        </span>
 
         <strong>
           Pet bulunamadı
@@ -1680,7 +1690,7 @@ function renderPickerPets(
 
 
 /* =========================================================
-   SEARCH
+   FILTER PICKER
 ========================================================= */
 
 function filterPickerPets() {
@@ -1903,7 +1913,8 @@ function renderPickerPreview() {
     <div class="pet-image-wrap">
 
       ${
-        selectedForm === "neon" &&
+        selectedForm ===
+          "neon" &&
         !isEgg(selectedPet)
 
           ? `<div class="neon-effect"></div>`
@@ -1913,7 +1924,8 @@ function renderPickerPreview() {
 
 
       ${
-        selectedForm === "mega" &&
+        selectedForm ===
+          "mega" &&
         !isEgg(selectedPet)
 
           ? `<div class="mega-effect"></div>`
@@ -1930,7 +1942,8 @@ function renderPickerPreview() {
       <div class="pet-badges">
 
         ${
-          selectedForm === "neon" &&
+          selectedForm ===
+            "neon" &&
           !isEgg(selectedPet)
 
             ? `<span class="mini-chip neon">N</span>`
@@ -1940,7 +1953,8 @@ function renderPickerPreview() {
 
 
         ${
-          selectedForm === "mega" &&
+          selectedForm ===
+            "mega" &&
           !isEgg(selectedPet)
 
             ? `<span class="mini-chip mega">M</span>`
@@ -2094,9 +2108,11 @@ function updatePickerButtons() {
 
   $("noPotionBtn")
     ?.classList.toggle(
+
       "active",
 
       egg ||
+
       (
         !selectedPotion.fly &&
         !selectedPotion.ride
@@ -2107,6 +2123,7 @@ function updatePickerButtons() {
 
   $("btnFly")
     ?.classList.toggle(
+
       "active",
 
       !egg &&
@@ -2118,6 +2135,7 @@ function updatePickerButtons() {
 
   $("btnRide")
     ?.classList.toggle(
+
       "active",
 
       !egg &&
@@ -2129,6 +2147,7 @@ function updatePickerButtons() {
 
   $("flyRideBtn")
     ?.classList.toggle(
+
       "active",
 
       !egg &&
@@ -2203,6 +2222,12 @@ function toggleForm(
     selectedForm =
       "normal";
 
+    updatePickerButtons();
+
+    renderPickerPreview();
+
+    updatePickerValue();
+
     return;
 
   }
@@ -2225,7 +2250,8 @@ function toggleForm(
 
   selectedForm =
 
-    selectedForm === form
+    selectedForm ===
+      form
 
       ? "normal"
 
@@ -2314,7 +2340,8 @@ function togglePotion(
           !selectedPotion.ride
         ),
 
-      ride: false
+      ride:
+        false
 
     };
 
@@ -2328,7 +2355,8 @@ function togglePotion(
 
     selectedPotion = {
 
-      fly: false,
+      fly:
+        false,
 
       ride:
         !(
@@ -2405,7 +2433,7 @@ function getModifiedValue(
 
 
   /*
-    Egg = sadece normal
+    Egg = normal only
   */
 
   if (
@@ -2552,7 +2580,9 @@ function confirmAddPet() {
       isEgg(
         selectedPet
       )
+
         ? "egg"
+
         : "pet",
 
     baseValue:
@@ -2571,14 +2601,18 @@ function confirmAddPet() {
 
     fly:
       isEgg(selectedPet)
+
         ? false
+
         : Boolean(
             selectedPotion.fly
           ),
 
     ride:
       isEgg(selectedPet)
+
         ? false
+
         : Boolean(
             selectedPotion.ride
           ),
@@ -2817,21 +2851,16 @@ function renderTradeSide(
         return `
 
           <div
-
             class="trade-slot"
-
             data-trade-id="${escapeHTML(
               pet.uniqueId
             )}"
-
           >
-
 
             <div class="trade-slot-image">
 
               ${
-                pet.form ===
-                  "neon" &&
+                pet.form === "neon" &&
                 !isEgg(pet)
 
                   ? `<div class="neon-effect"></div>`
@@ -2841,8 +2870,7 @@ function renderTradeSide(
 
 
               ${
-                pet.form ===
-                  "mega" &&
+                pet.form === "mega" &&
                 !isEgg(pet)
 
                   ? `<div class="mega-effect"></div>`
@@ -2859,7 +2887,9 @@ function renderTradeSide(
 
               <div class="trade-slot-badges">
 
-                ${badges.join("")}
+                ${badges.join(
+                  ""
+                )}
 
               </div>
 
@@ -2867,13 +2897,10 @@ function renderTradeSide(
 
 
             <div
-
               class="trade-slot-name"
-
               title="${escapeHTML(
                 pet.name
               )}"
-
             >
 
               ${escapeHTML(
@@ -2893,25 +2920,18 @@ function renderTradeSide(
 
 
             <button
-
               type="button"
-
               class="remove-item"
-
               data-side="${side}"
-
               data-id="${escapeHTML(
                 pet.uniqueId
               )}"
-
               aria-label="Pet sil"
-
             >
 
               ×
 
             </button>
-
 
           </div>
 
@@ -2978,9 +2998,11 @@ function removeTradePet(
 
 function clearTrade() {
 
-  youTrade = [];
+  youTrade =
+    [];
 
-  themTrade = [];
+  themTrade =
+    [];
 
   recordedTradeKey =
     "";
@@ -3061,20 +3083,26 @@ function updateResult() {
   const resultCard =
     $("resultCard");
 
+
   const resultText =
     $("resultStatusText");
+
 
   const resultHint =
     $("resultHint");
 
+
   const diffNumber =
     $("resultDiffNumber");
+
 
   const diffDisplay =
     $("resultDiffDisplay");
 
+
   const statusBar =
     $("tradeStatusBar");
+
 
   const statusLabel =
     $("tradeStatusLabel");
@@ -3199,7 +3227,8 @@ function updateResult() {
 
 
   if (
-    roundedPercent > 0
+    roundedPercent >
+    0
   ) {
 
     diffText =
@@ -3211,7 +3240,8 @@ function updateResult() {
 
 
   else if (
-    roundedPercent < 0
+    roundedPercent <
+    0
   ) {
 
     diffText =
@@ -3265,7 +3295,8 @@ function updateResult() {
   if (
     Math.abs(
       percent
-    ) <= 3
+    ) <=
+    3
   ) {
 
     status =
@@ -3287,11 +3318,13 @@ function updateResult() {
 
 
   else if (
-    percent > 0
+    percent >
+    0
   ) {
 
     if (
-      percent >= 10
+      percent >=
+      10
     ) {
 
       status =
@@ -3339,7 +3372,8 @@ function updateResult() {
     if (
       Math.abs(
         percent
-      ) >= 10
+      ) >=
+      10
     ) {
 
       status =
@@ -3519,8 +3553,10 @@ function recordTradeResult(
 
 
   if (
-    status === "BIG WIN" ||
-    status === "SMALL WIN"
+    status ===
+      "BIG WIN" ||
+    status ===
+      "SMALL WIN"
   ) {
 
     stats.wins++;
@@ -3529,7 +3565,8 @@ function recordTradeResult(
 
 
   else if (
-    status === "FAIR"
+    status ===
+    "FAIR"
   ) {
 
     stats.fair++;
@@ -3870,7 +3907,8 @@ function renderAvatarPicker() {
             type="button"
 
             class="avatar-opt ${
-              selectedAvatar === avatar
+              selectedAvatar ===
+              avatar
                 ? "active"
                 : ""
             }"
@@ -4025,9 +4063,7 @@ function toggleMenu() {
       document.body.classList.contains(
         "menu-open"
       )
-
         ? "true"
-
         : "false"
 
     );
@@ -4216,7 +4252,7 @@ function initNavbar() {
 
 
 /* =========================================================
-   SEARCH
+   MAIN SEARCH
 ========================================================= */
 
 function initSearch() {
@@ -4660,31 +4696,45 @@ function initZayaxra() {
 
   migrateLegacyProfile();
 
+
   ensureStorageData();
+
 
   validateDatabase();
 
+
   updateProfileStats();
+
 
   renderProfile();
 
+
   updateTradeUI();
+
 
   initSearch();
 
+
   initPickerSearch();
+
 
   initRemoveTradeEvents();
 
+
   initClearTrade();
+
 
   initNavigation();
 
+
   initNavbar();
+
 
   initModalEvents();
 
+
   initKeyboard();
+
 
   initVisibility();
 
@@ -4693,10 +4743,6 @@ function initZayaxra() {
     "ZAYAXRA başarıyla başlatıldı."
   );
 
-
-  /*
-    Gerçek pet + gerçek image verilerini yükle.
-  */
 
   loadFullPetDatabase();
 
@@ -4778,7 +4824,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   HTML'DEN ÇAĞRILABİLSİN
+   GLOBAL FUNCTIONS
 ========================================================= */
 
 window.openPetPicker =
